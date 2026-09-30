@@ -1,0 +1,2218 @@
+# Thai translation of Kabacus.
+# This file is distributed under the same license as the kabacus package.
+msgid ""
+msgstr ""
+"Project-Id-Version: kabacus\n"
+"Report-Msgid-Bugs-To: https://github.com/BrannenGH/kabacus/issues\n"
+"Language-Team: Thai\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml
+#, kde-format
+msgctxt "@label a form field's name"
+msgid "%1:"
+msgstr "%1:"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is the field, %2 what's wrong with it"
+msgid "%1 problem: %2"
+msgstr "ปัญหาที่ %1: %2"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml
+#, kde-format
+msgctxt "%1 is the closest account to what was typed"
+msgid "Use %1"
+msgstr "ใช้ %1"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Add"
+msgstr "เพิ่ม"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Not signed in"
+msgstr "ยังไม่ได้เข้าสู่ระบบ"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml
+#, kde-format
+msgid "Can't reach kabacus-server"
+msgstr "ติดต่อ kabacus-server ไม่ได้"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml
+#, kde-format
+msgid "No accounts"
+msgstr "ไม่มีบัญชี"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Activity"
+msgstr "กิจกรรม"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "changes made by"
+msgid "All"
+msgstr "ทั้งหมด"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "changes made by"
+msgid "MCP"
+msgstr "MCP"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "changes made by"
+msgid "This app"
+msgstr "แอปนี้"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "changes made by"
+msgid "External"
+msgstr "ภายนอก"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "%1 is who made a change, %2 its commit"
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgid "Can't load the history"
+msgstr "โหลดประวัติไม่ได้"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgid "No changes"
+msgstr "ไม่มีการเปลี่ยนแปลง"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action what happened"
+msgid "Spent"
+msgstr "ใช้จ่าย"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money left an account"
+msgstr "เงินออกจากบัญชี"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action what happened"
+msgid "Received"
+msgstr "ได้รับ"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Income or a refund"
+msgstr "รายรับหรือเงินคืน"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Card purchase"
+msgstr "ซื้อด้วยบัตร"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "เพิ่มบรรทัดเงินสำรองให้คุณ"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Transfer"
+msgstr "โอน"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Between two bank accounts"
+msgstr "ระหว่างบัญชีธนาคารสองบัญชี"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Set aside"
+msgstr "กันไว้"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Into a reserve, out, or between reserves"
+msgstr "เข้าเงินสำรอง ออก หรือย้ายระหว่างเงินสำรอง"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Pay a card"
+msgstr "ชำระบัตร"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "From its reserve"
+msgstr "จากเงินสำรองของบัตร"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Split with someone"
+msgstr "แบ่งกับคนอื่น"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "They owe you, or you owe them"
+msgstr "เขาติดเงินคุณ หรือคุณติดเงินเขา"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Postings"
+msgstr "รายการบัญชี"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Any two accounts"
+msgstr "บัญชีใดก็ได้สองบัญชี"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Can't load cards"
+msgstr "โหลดบัตรไม่ได้"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "No credit cards"
+msgstr "ไม่มีบัตรเครดิต"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Record purchase"
+msgstr "บันทึกการซื้อ"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Pay card"
+msgstr "ชำระบัตร"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgctxt "what a card owes"
+msgid "Owes"
+msgstr "ยอดค้าง"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgctxt "a card's reserve"
+msgid "Reserve"
+msgstr "เงินสำรอง"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Still to reserve"
+msgstr "ยังต้องสำรอง"
+
+#: crates/kabacus-kde/qml/CardsPage.qml crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "%1 is a label, %2 an amount"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "%1 transaction moves the card without moving its reserve."
+msgid_plural "%1 transactions move the card without moving its reserve."
+msgstr[0] "มี %1 รายการที่เปลี่ยนยอดบัตรโดยไม่เปลี่ยนเงินสำรอง"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Add all reserve lines"
+msgstr "เพิ่มบรรทัดเงินสำรองทั้งหมด"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgctxt "%1 is a transaction"
+msgid "%1 unreserved"
+msgstr "%1 ไม่มีเงินสำรอง"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgctxt "%1 is an amount"
+msgid "Missing reserve %1"
+msgstr "เงินสำรองขาด %1"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Add reserve lines"
+msgstr "เพิ่มบรรทัดเงินสำรอง"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "What the reserve holds"
+msgstr "เงินสำรองประกอบด้วยอะไร"
+
+#: crates/kabacus-kde/qml/CommitPage.qml
+#, kde-format
+msgid "Open transaction"
+msgstr "เปิดรายการ"
+
+#: crates/kabacus-kde/qml/CommitPage.qml
+#, kde-format
+msgid "Void…"
+msgstr "ยกเลิก…"
+
+#: crates/kabacus-kde/qml/CommitPage.qml
+#, kde-format
+msgctxt "%1 is who made a change, %2 when"
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: crates/kabacus-kde/qml/Fetch.qml
+#, kde-format
+msgctxt "%1 is a screen, %2 the problem"
+msgid "Couldn't update %1: %2"
+msgstr "ปรับปรุง %1 ไม่ได้: %2"
+
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action money out of a fund"
+msgid "Release"
+msgstr "ปล่อยคืน"
+
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action money between funds"
+msgid "Move"
+msgstr "ย้าย"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgid "Can't load reserves"
+msgstr "โหลดเงินสำรองไม่ได้"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgid "No bank accounts with reserves yet"
+msgstr "ยังไม่มีบัญชีธนาคารที่มีเงินสำรอง"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgid "in the bank"
+msgstr "ในธนาคาร"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgctxt "free money"
+msgid "Free"
+msgstr "อิสระ"
+
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Card reserves"
+msgstr "เงินสำรองของบัตร"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgctxt "%1 is a fund"
+msgid "Set aside for %1"
+msgstr "กันไว้สำหรับ %1"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgctxt "%1 is a card"
+msgid "%1 reserve"
+msgstr "เงินสำรองของ %1"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgid "Covers the card"
+msgstr "ครอบคลุมบัตร"
+
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 is an amount"
+msgid "%1 still to reserve"
+msgstr "ยังต้องสำรอง %1"
+
+#: crates/kabacus-kde/qml/LoansPage.qml
+#, kde-format
+msgid "No loans"
+msgstr "ไม่มีเงินกู้"
+
+#: crates/kabacus-kde/qml/LoansPage.qml
+#, kde-format
+msgid "A loan or mortgage shows here once it's in the books."
+msgstr "เงินกู้หรือสินเชื่อบ้านจะแสดงที่นี่ทันทีที่อยู่ในสมุดบัญชี"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/src/translation.rs
+#, kde-format
+msgctxt "Which way this language is written: translate as RTL if right to left, LTR otherwise"
+msgid "LTR"
+msgstr "LTR"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Signed out"
+msgstr "ออกจากระบบแล้ว"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Overview"
+msgstr "ภาพรวม"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "destination: the accounts and their transactions"
+msgid "Transactions"
+msgstr "ธุรกรรม"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "destination: money set aside for later"
+msgid "Reserves"
+msgstr "เงินสำรอง"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "destination: loans and mortgages"
+msgid "Loans"
+msgstr "เงินกู้"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "destination: credit cards"
+msgid "Credit"
+msgstr "เครดิต"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/PeoplePage.qml
+#, kde-format
+msgid "People"
+msgstr "บุคคล"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Reports"
+msgstr "รายงาน"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is the commit's short hash"
+msgid "Saved as commit %1"
+msgstr "บันทึกเป็นคอมมิต %1 แล้ว"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Settings"
+msgstr "ตั้งค่า"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "@title:menu"
+msgid "File"
+msgstr "แฟ้ม"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Add transaction"
+msgstr "เพิ่มรายการ"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Refresh"
+msgstr "รีเฟรช"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Quit"
+msgstr "ออก"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "@title:menu"
+msgid "Go"
+msgstr "ไป"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Configure Kabacus…"
+msgstr "ปรับแต่ง Kabacus…"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml
+#, kde-format
+msgctxt "the other destinations"
+msgid "More"
+msgstr "เพิ่มเติม"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Authentication off (local mode)"
+msgstr "ปิดการยืนยันตัวตน (โหมดเฉพาะเครื่อง)"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is why sign-in failed"
+msgid "Sign-in didn't finish: %1"
+msgstr "เข้าสู่ระบบไม่เสร็จ: %1"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Your session has ended. Sign in again to see and change your books."
+msgstr "เซสชันของคุณหมดอายุแล้ว เข้าสู่ระบบอีกครั้งเพื่อดูและแก้ไขบัญชีของคุณ"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is the sign-in provider's address"
+msgid "Sign in with %1 to see your books."
+msgstr "เข้าสู่ระบบด้วย %1 เพื่อดูบัญชีของคุณ"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Sign in again"
+msgstr "เข้าสู่ระบบอีกครั้ง"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Sign in"
+msgstr "เข้าสู่ระบบ"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Finish signing in in your browser…"
+msgstr "ทำการเข้าสู่ระบบให้เสร็จในเบราว์เซอร์…"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is why the server can't be reached, as one sentence"
+msgid "%1 Showing what was loaded; changes are off until it's back."
+msgstr "%1 กำลังแสดงข้อมูลที่โหลดไว้ ปิดการแก้ไขจนกว่าการเชื่อมต่อจะกลับมา"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Retry"
+msgstr "ลองใหม่"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Details"
+msgstr "รายละเอียด"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Connection settings"
+msgstr "การตั้งค่าการเชื่อมต่อ"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Error details"
+msgstr "รายละเอียดข้อผิดพลาด"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Discard this change?"
+msgstr "ทิ้งการเปลี่ยนแปลงนี้หรือไม่?"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "What you typed hasn't been saved."
+msgstr "สิ่งที่คุณพิมพ์ยังไม่ได้บันทึก"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Keep editing"
+msgstr "แก้ไขต่อ"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Discard"
+msgstr "ทิ้ง"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "The books changed"
+msgstr "บัญชีเปลี่ยนไปแล้ว"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is who, %2 what they changed"
+msgid "%1 saved a change while you were reviewing: %2. Yours hasn't been written."
+msgstr "%1 บันทึกการเปลี่ยนแปลงระหว่างที่คุณตรวจทาน: %2 การเปลี่ยนแปลงของคุณยังไม่ถูกเขียน"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is who"
+msgid "%1 saved a change while you were reviewing. Yours hasn't been written."
+msgstr "%1 บันทึกการเปลี่ยนแปลงระหว่างที่คุณตรวจทาน การเปลี่ยนแปลงของคุณยังไม่ถูกเขียน"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Discard mine"
+msgstr "ทิ้งของฉัน"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Review again"
+msgstr "ตรวจทานอีกครั้ง"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Can't load Cash on Hand"
+msgstr "โหลดเงินที่ใช้จ่ายได้ไม่ได้"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Loading…"
+msgstr "กำลังโหลด…"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgid "Cash on Hand"
+msgstr "เงินที่ใช้จ่ายได้"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "About Cash on Hand"
+msgstr "เกี่ยวกับเงินที่ใช้จ่ายได้"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Free money you can spend right now, after reserves and card reserves."
+msgstr "เงินอิสระที่ใช้จ่ายได้ทันที หลังหักเงินสำรองและเงินสำรองของบัตร"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%1 ตั้งแต่ %2"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 is an amount"
+msgid "Cash on Hand %1"
+msgstr "เงินที่ใช้จ่ายได้ %1"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Money on Hand"
+msgstr "เงินที่มีอยู่"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "About Money on Hand"
+msgstr "เกี่ยวกับเงินที่มีอยู่"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Everything in your bank accounts, reserves and card reserves included, plus what people owe you. Cash on Hand is what's left once reserves, card reserves and what you're owed are set apart."
+msgstr "ทุกอย่างในบัญชีธนาคารของคุณ รวมเงินสำรองและเงินสำรองของบัตร บวกกับที่ผู้อื่นค้างคุณ เงินที่ใช้จ่ายได้คือส่วนที่เหลือหลังกันเงินสำรอง เงินสำรองของบัตร และเงินที่คุณจะได้รับออกไป"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "− Future allocations (reserves and card reserves)"
+msgstr "− การจัดสรรในอนาคต (เงินสำรองและเงินสำรองของบัตร)"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "− Receivables (owed to you)"
+msgstr "− ลูกหนี้ (เงินที่คนอื่นติดคุณ)"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Free money by account"
+msgstr "เงินอิสระตามบัญชี"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 is an account, %2 its free money"
+msgid "%1 free %2"
+msgstr "%1 อิสระ %2"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "No account has free money right now."
+msgstr "ตอนนี้ไม่มีบัญชีใดมีเงินอิสระ"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Nothing is set aside in a reserve."
+msgstr "ยังไม่ได้กันเงินไว้ในเงินสำรองใด"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "a card's reserve covers what it owes"
+msgid "covered"
+msgstr "ครอบคลุมแล้ว"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Each card's reserve should equal what it owes."
+msgstr "เงินสำรองของบัตรแต่ละใบควรเท่ากับยอดค้างของบัตร"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Cash on Hand over time"
+msgstr "เงินที่ใช้จ่ายได้ตามเวลา"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 and %3 are amounts on dates %2 and %4; %5 and %6 the lowest and highest amounts"
+msgid "From %1 on %2 to %3 on %4; lowest %5, highest %6"
+msgstr "จาก %1 วันที่ %2 ถึง %3 วันที่ %4 ต่ำสุด %5 สูงสุด %6"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "the chart's first point: %1 is its date, %2 its amount"
+msgid "%1  %2"
+msgstr "%1  %2"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "the chart's last point, at its far end: %1 is its amount, %2 its date"
+msgid "%1  %2"
+msgstr "%1  %2"
+
+#: crates/kabacus-kde/qml/PeoplePage.qml
+#, kde-format
+msgctxt "@action split a cost with someone"
+msgid "Split"
+msgstr "แบ่ง"
+
+#: crates/kabacus-kde/qml/PeoplePage.qml
+#, kde-format
+msgid "Can't load people"
+msgstr "โหลดรายชื่อบุคคลไม่ได้"
+
+#: crates/kabacus-kde/qml/PeoplePage.qml
+#, kde-format
+msgid "Nobody owes or is owed anything"
+msgstr "ไม่มีใครติดเงินหรือถูกติดเงิน"
+
+#: crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgid "What changes"
+msgstr "สิ่งที่เปลี่ยน"
+
+#: crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgctxt "%1 is an account, %2 and %3 its balance before and after"
+msgid "%1 %2 to %3"
+msgstr "%1 %2 → %3"
+
+#: crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgctxt "%1 and %2 are amounts"
+msgid "Cash on Hand %1 to %2"
+msgstr "เงินที่ใช้จ่ายได้ %1 → %2"
+
+#: crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgctxt "%1 is the warning's text"
+msgid "Warning: %1"
+msgstr "คำเตือน: %1"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "%1 is an account"
+msgid "Reconcile %1"
+msgstr "กระทบยอด %1"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Statement date:"
+msgstr "วันที่ในใบแจ้งยอด:"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgid "Statement date"
+msgstr "วันที่ในใบแจ้งยอด"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "the date format to type; dates are always typed this way"
+msgid "YYYY-MM-DD"
+msgstr "YYYY-MM-DD"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Statement balance:"
+msgstr "ยอดคงเหลือในใบแจ้งยอด:"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgid "Statement balance"
+msgstr "ยอดคงเหลือในใบแจ้งยอด"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "@action:button compare with the statement"
+msgid "Check"
+msgstr "ตรวจสอบ"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "%1 is a balance, %2 a date"
+msgid "Matched: %1 on %2, the same as the statement."
+msgstr "ตรงกัน: %1 ณ %2 เท่ากับใบแจ้งยอด"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "%1 is the books' balance, %2 the statement's, %3 the difference"
+msgid "Doesn't match yet: the books say %1, the statement %2 (difference %3). Nothing has been written."
+msgstr "ยังไม่ตรงกัน: บัญชีระบุ %1 ใบแจ้งยอดระบุ %2 (ต่างกัน %3) ยังไม่มีการเขียนอะไร"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Reconcile"
+msgstr "กระทบยอด"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgid "Likely explanations"
+msgstr "คำอธิบายที่เป็นไปได้"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgid "Edit"
+msgstr "แก้ไข"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "a card transaction without its reserve lines"
+msgid "unreserved"
+msgstr "ไม่มีเงินสำรอง"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "money moved between an account and its funds"
+msgid "within account"
+msgstr "ภายในบัญชี"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Account type"
+msgstr "ประเภทบัญชี"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "@action compare an account with its statement"
+msgid "Reconcile…"
+msgstr "กระทบยอด…"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Search"
+msgstr "ค้นหา"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Search payee, memo, account"
+msgstr "ค้นหาผู้รับเงิน บันทึก บัญชี"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Unreserved only"
+msgstr "เฉพาะที่ไม่มีเงินสำรอง"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is a payee, %2 a date"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is an account, %2 a memo"
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is an amount"
+msgid "%1 moved"
+msgstr "ย้าย %1 แล้ว"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is a date, %2 an account"
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Can't load this register"
+msgstr "โหลดสมุดบัญชีนี้ไม่ได้"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is what was searched for"
+msgid "No transactions match “%1”"
+msgstr "ไม่มีรายการที่ตรงกับ “%1”"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "No unreserved transactions"
+msgstr "ไม่มีรายการที่ไม่มีเงินสำรอง"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "No transactions"
+msgstr "ไม่มีรายการ"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Clear search"
+msgstr "ล้างการค้นหา"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "%1 is a month's name, %2 its year"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Previous month"
+msgstr "เดือนก่อน"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Next month"
+msgstr "เดือนถัดไป"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Cash flow"
+msgstr "กระแสเงินสด"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Income statement"
+msgstr "งบกำไรขาดทุน"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Categories"
+msgstr "หมวดหมู่"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "%1 is a month and year"
+msgid "Why Cash on Hand changed in %1"
+msgstr "ทำไมเงินที่ใช้จ่ายได้เปลี่ยนใน %1"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "column: money moved in cash"
+msgid "Cash"
+msgstr "เงินสด"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "column: changes that aren't cash"
+msgid "Not cash"
+msgstr "ไม่ใช่เงินสด"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Income:"
+msgstr "รายรับ:"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Expenses:"
+msgstr "รายจ่าย:"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Loan principal:"
+msgstr "เงินต้นกู้:"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "@label income less expenses"
+msgid "Net:"
+msgstr "สุทธิ:"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Count loan principal as money spent"
+msgstr "นับการชำระเงินต้นกู้เป็นเงินที่ใช้จ่าย"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "column: money spent"
+msgid "Spent"
+msgstr "ใช้จ่าย"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "column: compared with %1, the month before"
+msgid "vs %1"
+msgstr "เทียบกับ %1"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "%1 is a month and year"
+msgid "No spending in %1"
+msgstr "ไม่มีการใช้จ่ายใน %1"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml
+#, kde-format
+msgid "Review before saving"
+msgstr "ตรวจทานก่อนบันทึก"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml
+#, kde-format
+msgid "Back to edit"
+msgstr "กลับไปแก้ไข"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Saving…"
+msgstr "กำลังบันทึก…"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Save"
+msgstr "บันทึก"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Checking with the server…"
+msgstr "กำลังตรวจสอบกับเซิร์ฟเวอร์…"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml
+#, kde-format
+msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
+msgid "This would break a balance check: %1 should be %2 but would be %3. Check the date and amount; never move the date just to get past it."
+msgstr "การนี้จะทำให้การตรวจยอดคงเหลือไม่ผ่าน: %1 ควรเป็น %2 แต่จะเป็น %3 ตรวจสอบวันที่และจำนวนเงิน อย่าเลื่อนวันที่เพียงเพื่อให้ผ่าน"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml
+#, kde-format
+msgid "Change the transaction"
+msgstr "เปลี่ยนรายการ"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Test connection"
+msgstr "ทดสอบการเชื่อมต่อ"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Connection settings saved"
+msgstr "บันทึกการตั้งค่าการเชื่อมต่อแล้ว"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Server:"
+msgstr "เซิร์ฟเวอร์:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "On this computer"
+msgstr "บนคอมพิวเตอร์เครื่องนี้"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "On another computer (HTTPS)"
+msgstr "บนคอมพิวเตอร์เครื่องอื่น (HTTPS)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "the server's unix socket"
+msgid "Socket"
+msgstr "ซ็อกเก็ต"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label the server's unix socket"
+msgid "Socket:"
+msgstr "ซ็อกเก็ต:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Server address"
+msgstr "ที่อยู่เซิร์ฟเวอร์"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Server address:"
+msgstr "ที่อยู่เซิร์ฟเวอร์:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label a private certificate authority"
+msgid "Private CA:"
+msgstr "CA ส่วนตัว:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "a private certificate authority"
+msgid "Private CA"
+msgstr "CA ส่วนตัว"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "System certificates only"
+msgstr "เฉพาะใบรับรองของระบบ"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Choose…"
+msgstr "เลือก…"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Only needed when the server's certificate comes from your own CA."
+msgstr "จำเป็นเฉพาะเมื่อใบรับรองของเซิร์ฟเวอร์มาจาก CA ของคุณเอง"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@title the signed-in user"
+msgid "Account"
+msgstr "บัญชีผู้ใช้"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Signed in:"
+msgstr "เข้าสู่ระบบแล้ว:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Not needed: authentication is off (local mode)"
+msgstr "ไม่จำเป็น: ปิดการยืนยันตัวตนอยู่ (โหมดเฉพาะเครื่อง)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "%1 is the user, %2 the sign-in provider"
+msgid "%1 (%2)"
+msgstr "%1 (%2)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "signed in; %1 is the sign-in provider"
+msgid "Yes (%1)"
+msgstr "ใช่ (%1)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Session ended; sign in again"
+msgstr "เซสชันหมดอายุ เข้าสู่ระบบอีกครั้ง"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "not signed in"
+msgid "No"
+msgstr "ไม่"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Unknown: can't reach the server"
+msgstr "ไม่ทราบ: ติดต่อเซิร์ฟเวอร์ไม่ได้"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Waiting for the browser…"
+msgstr "กำลังรอเบราว์เซอร์…"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Sign out"
+msgstr "ออกจากระบบ"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@title about the server"
+msgid "About"
+msgstr "เกี่ยวกับ"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Can't reach the server to read its version"
+msgstr "ไม่สามารถเข้าถึงเซิร์ฟเวอร์เพื่ออ่านเวอร์ชันได้"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label the server's version"
+msgid "Server version:"
+msgstr "เวอร์ชันของเซิร์ฟเวอร์:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label the commit the server was built from"
+msgid "Commit:"
+msgstr "คอมมิต:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label where the server's source code is"
+msgid "Source code:"
+msgstr "ซอร์สโค้ด:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Open the source code"
+msgstr "เปิดซอร์สโค้ด"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Choose the private CA"
+msgstr "เลือก CA ส่วนตัว"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Certificates (*.pem *.crt)"
+msgstr "ใบรับรอง (*.pem *.crt)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "All files (*)"
+msgstr "ทุกแฟ้ม (*)"
+
+#: crates/kabacus-kde/qml/StatementPage.qml
+#, kde-format
+msgid "Open items only"
+msgstr "เฉพาะรายการที่ยังเปิดอยู่"
+
+#: crates/kabacus-kde/qml/StatementPage.qml
+#, kde-format
+msgctxt "%1 is a transaction, %2 its date"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: crates/kabacus-kde/qml/StatementPage.qml
+#, kde-format
+msgid "Can't load the statement"
+msgstr "โหลดใบแจ้งยอดไม่ได้"
+
+#: crates/kabacus-kde/qml/StatementPage.qml
+#, kde-format
+msgid "Nothing this year"
+msgstr "ปีนี้ไม่มี"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Set money aside"
+msgstr "กันเงินไว้"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Edit transaction"
+msgstr "แก้ไขรายการ"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Fix reserve lines"
+msgstr "ซ่อมบรรทัดเงินสำรอง"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "the payee a transfer is given"
+msgid "Transfer"
+msgstr "โอน"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Review"
+msgstr "ตรวจทาน"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
+msgid "This would break a balance check: %1 should be %2 but would be %3. Check the date and amount."
+msgstr "การนี้จะทำให้การตรวจยอดคงเหลือไม่ผ่าน: %1 ควรเป็น %2 แต่จะเป็น %3 ตรวจสอบวันที่และจำนวนเงิน"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Edit in place"
+msgstr "แก้ไขในที่เดิม"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Changes it where it is. History keeps the old version."
+msgstr "เปลี่ยนในที่เดิม ประวัติเก็บรุ่นเก่าไว้"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@option cancel a transaction with a reversal"
+msgid "Void"
+msgstr "ยกเลิก"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Only the reversal: it didn't happen."
+msgstr "เฉพาะรายการกลับ: ถือว่าไม่เคยเกิดขึ้น"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Real account"
+msgstr "บัญชีจริง"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Synthetic account"
+msgstr "บัญชีเสมือน"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "a credit card"
+msgid "Card"
+msgstr "บัตร"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label what a shared cost was for"
+msgid "What:"
+msgstr "อะไร:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Payee:"
+msgstr "ผู้รับเงิน:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Payee"
+msgstr "ผู้รับเงิน"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is a payee, %2 the category it usually has, %3 the amount it had last"
+msgid "%1 — usually %2, last %3"
+msgstr "%1 — ปกติเป็น %2 ครั้งล่าสุด %3"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Paid with"
+msgstr "จ่ายด้วย"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "the account money comes from"
+msgid "From"
+msgstr "จาก"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "That's a card: record a card purchase so its reserve stays covered."
+msgstr "นี่คือบัตร: บันทึกเป็นการซื้อด้วยบัตรเพื่อให้เงินสำรองยังครอบคลุม"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Category"
+msgstr "หมวดหมู่"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "the account money goes to"
+msgid "To"
+msgstr "ไปยัง"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is a new reserve's name, %2 the account it goes in"
+msgid "%1 isn't a reserve yet. Saving creates it in %2."
+msgstr "%1 ยังไม่ใช่เงินสำรอง การบันทึกจะสร้างไว้ใน %2"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Paid from:"
+msgstr "จ่ายจาก:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Free money"
+msgstr "เงินอิสระ"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "A reserve"
+msgstr "เงินสำรองหนึ่งรายการ"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "money set aside"
+msgid "Reserve"
+msgstr "เงินสำรอง"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "the person a cost is split with"
+msgid "With"
+msgstr "กับ"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Total:"
+msgstr "รวม:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Amount:"
+msgstr "จำนวนเงิน:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Amount"
+msgstr "จำนวนเงิน"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Their share:"
+msgstr "ส่วนของเขา:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Their share"
+msgstr "ส่วนของเขา"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "their share is half the total"
+msgid "Half"
+msgstr "ครึ่งหนึ่ง"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "their share is the whole total"
+msgid "All of it"
+msgstr "ทั้งหมด"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Date:"
+msgstr "วันที่:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Date"
+msgstr "วันที่"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Description:"
+msgstr "คำอธิบาย:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Memo:"
+msgstr "บันทึก:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Memo"
+msgstr "บันทึก"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Transactions:"
+msgstr "รายการ:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is how many of the chosen transactions"
+msgid "%1 missing its reserve lines"
+msgid_plural "%1 missing their reserve lines"
+msgstr[0] "%1 รายการที่ไม่มีบรรทัดเงินสำรอง"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Also moves the amount from free money into the card's reserve, so the card stays covered."
+msgstr "ย้ายจำนวนเงินจากเงินอิสระเข้าเงินสำรองของบัตรด้วย เพื่อให้บัตรยังครอบคลุม"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Also moves the amount from the reserve into the card's reserve, so the card stays covered."
+msgstr "ย้ายจำนวนเงินจากเงินสำรองไปยังเงินสำรองของบัตรด้วย เพื่อให้บัตรยังมีเงินครอบคลุม"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Preview"
+msgstr "ตัวอย่าง"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Updates as you type. Nothing is written until you save."
+msgstr "อัปเดตขณะที่คุณพิมพ์ จะไม่มีการเขียนอะไรจนกว่าคุณจะบันทึก"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgid "The server uses OAuth but didn't say which provider"
+msgstr "เซิร์ฟเวอร์ใช้ OAuth แต่ไม่ได้บอกว่าใช้ผู้ให้บริการใด"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgid "The server uses OAuth but has no client id for the app"
+msgstr "เซิร์ฟเวอร์ใช้ OAuth แต่ไม่มี client id สำหรับแอป"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Can't read the secret store: %1"
+msgstr "อ่านที่เก็บความลับไม่ได้: %1"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgid "This server doesn't use sign-in (authentication is off)"
+msgstr "เซิร์ฟเวอร์นี้ไม่ใช้การเข้าสู่ระบบ (ปิดการยืนยันตัวตนอยู่)"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Signed out, but couldn't clear the secret store: %1"
+msgstr "ออกจากระบบแล้ว แต่ล้างที่เก็บความลับไม่ได้: %1"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Signed out, but the provider couldn't revoke the session: %1"
+msgstr "ออกจากระบบแล้ว แต่ผู้ให้บริการเพิกถอนเซสชันไม่ได้: %1"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Signed in, but the secret store couldn't keep it (%1); you'll be asked again next time"
+msgstr "เข้าสู่ระบบแล้ว แต่ที่เก็บความลับเก็บไว้ไม่ได้ (%1) ครั้งหน้าจะถามอีก"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Couldn't save the settings: %1"
+msgstr "บันทึกการตั้งค่าไม่ได้: %1"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgid "Can't reach the server to find out how to sign in"
+msgstr "ติดต่อเซิร์ฟเวอร์เพื่อหาวิธีเข้าสู่ระบบไม่ได้"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Can't reach kabacus-server. Is it running?"
+msgstr "ติดต่อ kabacus-server ไม่ได้ กำลังทำงานอยู่หรือไม่?"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgctxt "%1 is the server's address"
+msgid "Can't reach kabacus-server at %1. Is it running?"
+msgstr "ติดต่อ kabacus-server ที่ %1 ไม่ได้ กำลังทำงานอยู่หรือไม่?"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "The server is taking too long to answer."
+msgstr "เซิร์ฟเวอร์ใช้เวลาตอบนานเกินไป"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Your session ended. Sign in again."
+msgstr "เซสชันของคุณหมดอายุแล้ว เข้าสู่ระบบอีกครั้ง"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Signing in didn't work. Try again."
+msgstr "เข้าสู่ระบบไม่สำเร็จ ลองอีกครั้ง"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "You can view these books but not change them."
+msgstr "คุณดูบัญชีนี้ได้แต่แก้ไขไม่ได้"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "That isn't in the books any more."
+msgstr "ไม่มีในบัญชีแล้ว"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "The books changed while you were editing. Review again."
+msgstr "บัญชีเปลี่ยนไประหว่างที่คุณแก้ไข ตรวจทานอีกครั้ง"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "The server had a problem."
+msgstr "เซิร์ฟเวอร์มีปัญหา"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgctxt "between the items of a list, such as amounts or account names"
+msgid ", "
+msgstr ", "
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "All transactions"
+msgstr "ทุกรายการ"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgctxt "%1 is the account money came from, %2 the account it went to"
+msgid "%1 → %2"
+msgstr "%1 → %2"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Date must be YYYY-MM-DD"
+msgstr "วันที่ต้องเป็น YYYY-MM-DD"
+
+#: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a form field"
+msgid "%1 is required"
+msgstr "ต้องระบุ %1"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Choose both accounts"
+msgstr "เลือกทั้งสองบัญชี"
+
+#: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "From and To must differ"
+msgstr "จากและไปยังต้องไม่ใช่บัญชีเดียวกัน"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Amount must be more than zero"
+msgstr "จำนวนเงินต้องมากกว่าศูนย์"
+
+#: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "The books have no commits yet"
+msgstr "บัญชียังไม่มีคอมมิต"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Split transactions can't be edited here yet"
+msgstr "ยังแก้ไขรายการที่แยกส่วนที่นี่ไม่ได้"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Multi-currency transactions can't be edited here yet"
+msgstr "ยังแก้ไขรายการหลายสกุลเงินที่นี่ไม่ได้"
+
+#: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a transaction id"
+msgid "Transaction %1 wasn't found"
+msgstr "ไม่พบรายการ %1"
+
+#: crates/kabacus-kde/src/secrets.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "can't reach the secret store: %1"
+msgstr "เข้าถึงที่เก็บความลับไม่ได้: %1"
+
+#: crates/kabacus-kde/src/secrets.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "the secret store has no wallet or keyring to keep it in (%1)"
+msgstr "ที่เก็บความลับไม่มีกระเป๋าหรือพวงกุญแจสำหรับเก็บ (%1)"
+
+#: crates/kabacus-kde/src/secrets.rs
+#, kde-format
+msgctxt "%1 is the server's address"
+msgid "Kabacus sign-in for %1"
+msgstr "การเข้าสู่ระบบ Kabacus สำหรับ %1"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgid "Enter the server's address"
+msgstr "ป้อนที่อยู่เซิร์ฟเวอร์"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is a file, %2 why it can't be read"
+msgid "Can't read the private CA %1: %2"
+msgstr "อ่าน CA ส่วนตัว %1 ไม่ได้: %2"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgid "The server address must start with https://"
+msgstr "ที่อยู่เซิร์ฟเวอร์ต้องขึ้นต้นด้วย https://"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgid "Can't reach the server: no answer within 10 seconds"
+msgstr "ติดต่อเซิร์ฟเวอร์ไม่ได้: ไม่มีคำตอบภายใน 10 วินาที"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%2 is the server's version"
+msgid "Connected to kabacus-server %2: %1 account"
+msgid_plural "Connected to kabacus-server %2: %1 accounts"
+msgstr[0] "เชื่อมต่อกับ kabacus-server %2 แล้ว: %1 บัญชี"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is the server's version, %2 the sign-in provider's address"
+msgid "Reached kabacus-server %1. It needs you to sign in with %2."
+msgstr "ติดต่อ kabacus-server %1 ได้ คุณต้องเข้าสู่ระบบด้วย %2"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is the server's version"
+msgid "Reached kabacus-server %1. It needs you to sign in with its OAuth provider."
+msgstr "ติดต่อ kabacus-server %1 ได้ คุณต้องเข้าสู่ระบบกับผู้ให้บริการ OAuth ของเซิร์ฟเวอร์"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is a role's name"
+msgid "Reached the server, but you lack the %1 role"
+msgstr "ติดต่อเซิร์ฟเวอร์ได้ แต่คุณไม่มีบทบาท %1"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "The server's certificate isn't trusted. If it comes from a private CA, choose that CA's file. (%1)"
+msgstr "ใบรับรองของเซิร์ฟเวอร์ไม่น่าเชื่อถือ ถ้ามาจาก CA ส่วนตัว ให้เลือกแฟ้มของ CA นั้น (%1)"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Can't reach the server: %1"
+msgstr "ติดต่อเซิร์ฟเวอร์ไม่ได้: %1"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "@action fix a card"
+msgid "Fix"
+msgstr "ซ่อม"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Categorize"
+msgstr "จัดหมวดหมู่"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Move money"
+msgstr "ย้ายเงิน"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Money"
+msgstr "เงิน"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Cards"
+msgstr "บัตร"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Loans"
+msgstr "เงินกู้"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Investments"
+msgstr "การลงทุน"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "People"
+msgstr "บุคคล"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Spending"
+msgstr "การใช้จ่าย"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Income"
+msgstr "รายรับ"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Other"
+msgstr "อื่นๆ"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "%1 is the free money, %2 how many reserves (“2 reserves”), %3 how many card reserves (“1 card reserve”)"
+msgid "Free %1 · %2 · %3"
+msgstr "อิสระ %1 · %2 · %3"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "%1 reserve"
+msgid_plural "%1 reserves"
+msgstr[0] "เงินสำรอง %1 รายการ"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "%1 card reserve"
+msgid_plural "%1 card reserves"
+msgstr[0] "เงินสำรองของบัตร %1 รายการ"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "%1 is the card's reserve"
+msgid "Reserve %1"
+msgstr "เงินสำรอง %1"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Owes you"
+msgstr "ติดเงินคุณ"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "You owe"
+msgstr "คุณติดเงิน"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "nobody owes anything"
+msgid "Settled"
+msgstr "เคลียร์แล้ว"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "Cash on Hand at the start"
+msgid "Opening"
+msgstr "ยอดยกมา"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "Cash on Hand at the end"
+msgid "Closing"
+msgstr "ยอดยกไป"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Set aside in reserves"
+msgstr "กันไว้ในเงินสำรอง"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Loan principal"
+msgstr "เงินต้นกู้"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Fronted for others"
+msgstr "ออกเงินแทนคนอื่น"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Owed to others"
+msgstr "ติดเงินคนอื่น"
+
+#: crates/kabacus-kde/src/views.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "MCP"
+msgstr "MCP"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "This app"
+msgstr "แอปนี้"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "External edit"
+msgstr "การแก้ไขจากภายนอก"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "Unknown"
+msgstr "ไม่ทราบ"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an account"
+msgid "This would break a balance check on %1"
+msgstr "การนี้จะทำให้การตรวจยอดคงเหลือของ %1 ไม่ผ่าน"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is the change made meanwhile"
+msgid "The books changed: %1"
+msgstr "บัญชีเปลี่ยนไปแล้ว: %1"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Use a date like 2026-10-03"
+msgstr "ใช้วันที่เช่น 2026-10-03"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Must be more than zero"
+msgstr "ต้องมากกว่าศูนย์"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Enter an amount"
+msgstr "ป้อนจำนวนเงิน"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Not an amount: use digits and a decimal point, like 12.34"
+msgstr "ไม่ใช่จำนวนเงิน: ใช้ตัวเลขและจุดทศนิยม เช่น 12.34"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is the amount as it should be typed"
+msgid "Use a decimal point: %1"
+msgstr "ใช้จุดทศนิยม: %1"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Use a whole number, without decimal places"
+msgstr "ใช้จำนวนเต็ม ไม่มีทศนิยม"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Use at most %1 decimal place"
+msgid_plural "Use at most %1 decimal places"
+msgstr[0] "ใช้ทศนิยมได้ไม่เกิน %1 ตำแหน่ง"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Name the new reserve"
+msgstr "ตั้งชื่อเงินสำรองใหม่"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is what was typed"
+msgid "“%1” can't name a reserve: no “:” or “;”"
+msgstr "“%1” ใช้เป็นชื่อเงินสำรองไม่ได้: ห้ามมี “:” หรือ “;”"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is what was typed"
+msgid "There's no account called %1"
+msgstr "ไม่มีบัญชีชื่อ %1"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee, %2 an amount, %3 and %4 accounts, %5 a date"
+msgid "%1: %2 from %3 to %4, %5."
+msgstr "%1: %2 จาก %3 ไป %4, %5"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee, %2 an amount, %3 a card, %4 a date"
+msgid "%1: %2 on %3, paid from free money, %4."
+msgstr "%1: %2 ด้วย %3 จ่ายจากเงินอิสระ, %4"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee, %2 an amount, %3 a card, %4 a reserve, %5 a date"
+msgid "%1: %2 on %3, paid from the %4 reserve, %5."
+msgstr "%1: %2 ด้วย %3 จ่ายจากเงินสำรอง %4, %5"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 an account, %3 the new reserve's name"
+msgid "Set aside %1 from %2 into a new reserve, %3."
+msgstr "กัน %1 จาก %2 ไว้ในเงินสำรองใหม่ %3"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 and %3 accounts"
+msgid "Move %1 from %2 to %3."
+msgstr "ย้าย %1 จาก %2 ไป %3"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a card"
+msgid "Pay %1 to %2 from its reserve."
+msgstr "จ่าย %1 ให้ %2 จากเงินสำรองของบัตร"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee, %2 the total, %3 an account, %4 a person, %5 their share"
+msgid "%1: %2 paid with %3; %4 owes %5 of it."
+msgstr "%1: %2 จ่ายด้วย %3; %4 ติดเงิน %5 ในจำนวนนี้"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee"
+msgid "Edit %1 in place. History keeps the old version."
+msgstr "แก้ไข %1 ในที่เดิม ประวัติเก็บรุ่นเก่าไว้"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Void it: add a reversal, dated today."
+msgstr "ยกเลิก: เพิ่มรายการกลับ ลงวันที่วันนี้"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an account, %2 a date, %3 a balance"
+msgid "Record that %1 matched the statement on %2: %3."
+msgstr "บันทึกว่า %1 ตรงกับใบแจ้งยอด ณ %2: %3"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%2 is a card"
+msgid "Add the missing reserve lines to %1 transaction on %2, as one change."
+msgid_plural "Add the missing reserve lines to %1 transactions on %2, as one change."
+msgstr[0] "เพิ่มบรรทัดเงินสำรองที่ขาดให้ %1 รายการของ %2 ในการเปลี่ยนแปลงเดียว"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "the person a cost is split with"
+msgid "Who"
+msgstr "ใคร"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Their share can't be more than the total"
+msgstr "ส่วนของเขามากกว่ายอดรวมไม่ได้"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "The transaction"
+msgstr "รายการนั้น"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Choose at least one transaction"
+msgstr "เลือกอย่างน้อยหนึ่งรายการ"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a card"
+msgid "%1 has no reserve account"
+msgstr "%1 ไม่มีบัญชีเงินสำรอง"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a transaction's payee"
+msgid "%1 isn't missing reserve lines"
+msgstr "%1 ไม่ได้ขาดบรรทัดเงินสำรอง"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is the new reserve's name"
+msgid "kabacus-server didn't make the new reserve %1: it's older than this app. Update kabacus-server, or pick a reserve that exists."
+msgstr "kabacus-server ไม่ได้สร้างเงินสำรองใหม่ %1: รุ่นเก่ากว่าแอปนี้ ปรับรุ่น kabacus-server หรือเลือกเงินสำรองที่มีอยู่"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "This app, on another device"
+msgstr "แอปนี้ บนอุปกรณ์อื่น"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "An external edit"
+msgstr "การแก้ไขจากภายนอก"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "Someone"
+msgstr "ใครบางคน"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Nothing to save: the books already say this."
+msgstr "ไม่มีอะไรต้องบันทึก: บัญชีระบุไว้แบบนี้แล้ว"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "The books still check out with this change"
+msgstr "บัญชียังถูกต้องเมื่อมีการเปลี่ยนแปลงนี้"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a card"
+msgid "%1 stays covered by its reserve"
+msgstr "%1 ยังได้รับการครอบคลุมจากเงินสำรอง"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "A card is missing its reserve lines; it will be flagged"
+msgstr "บัตรใบหนึ่งขาดบรรทัดเงินสำรอง จะถูกทำเครื่องหมาย"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Missing reserve %1 · a corrected original"
+#~ msgstr "เงินสำรองขาด %1 · ต้นฉบับที่แก้ไขแล้ว"
+
+#, kde-format
+#~ msgid "Correct…"
+#~ msgstr "แก้ไขให้ถูก…"
+
+#, kde-format
+#~ msgctxt "a transaction that was corrected"
+#~ msgid "correction"
+#~ msgstr "การแก้ไขให้ถูก"
+
+#, kde-format
+#~ msgid "Changes it where it is. Git keeps the old version."
+#~ msgstr "เปลี่ยนในที่เดิม Git เก็บรุ่นเก่าไว้"
+
+#, kde-format
+#~ msgid "Add a correction"
+#~ msgstr "เพิ่มการแก้ไขให้ถูก"
+
+#, kde-format
+#~ msgid "A reversal and a replacement, dated today. For books that mustn't change after the fact (reconciled or shared)."
+#~ msgstr "รายการกลับและรายการแทนที่ ลงวันที่วันนี้ สำหรับบัญชีที่ห้ามเปลี่ยนภายหลัง (กระทบยอดแล้วหรือแบ่งปันอยู่)"
+
+#, kde-format
+#~ msgid "A correction is dated today."
+#~ msgstr "การแก้ไขให้ถูกจะลงวันที่วันนี้"
+
+#, kde-format
+#~ msgctxt "%1 is a payee"
+#~ msgid "Edit %1 in place. Git keeps the old version."
+#~ msgstr "แก้ไข %1 ในที่เดิม Git เก็บรุ่นเก่าไว้"
+
+#, kde-format
+#~ msgctxt "%1 is a payee"
+#~ msgid "Correct %1: a reversal and a replacement, dated today."
+#~ msgstr "แก้ไข %1 ให้ถูก: รายการกลับและรายการแทนที่ ลงวันที่วันนี้"
+
+#, kde-format
+#~ msgid "hledger check passed on a scratch copy"
+#~ msgstr "ผ่านการตรวจของ hledger บนสำเนาทดลอง"
+
+#, kde-format
+#~ msgctxt "%1 is a file, %2–%3 lines in it"
+#~ msgid "%1 · lines %2–%3"
+#~ msgstr "%1 · บรรทัด %2–%3"
+
+#, kde-format
+#~ msgid "Amount is too large"
+#~ msgstr "จำนวนเงินมากเกินไป"
+
+#, kde-format
+#~ msgctxt "@label"
+#~ msgid "Account:"
+#~ msgstr "บัญชี:"
+
+#, kde-format
+#~ msgid "Account"
+#~ msgstr "บัญชี"
+
+#, kde-format
+#~ msgid "Accounts"
+#~ msgstr "บัญชี"
+
+#, kde-format
+#~ msgid "Into a fund, out, or between funds"
+#~ msgstr "เข้ากองเงิน ออกจากกองเงิน หรือระหว่างกองเงิน"
+
+#, kde-format
+#~ msgid "Cards"
+#~ msgstr "บัตร"
+
+#, kde-format
+#~ msgid "Funds"
+#~ msgstr "กองเงิน"
+
+#, kde-format
+#~ msgid "Can't load funds"
+#~ msgstr "โหลดกองเงินไม่ได้"
+
+#, kde-format
+#~ msgid "No bank accounts with funds yet"
+#~ msgstr "ยังไม่มีบัญชีธนาคารที่มีกองเงิน"
+
+#, kde-format
+#~ msgctxt "card reserves"
+#~ msgid "Reserves"
+#~ msgstr "เงินสำรอง"
+
+#, kde-format
+#~ msgid "Free money you can spend right now, after funds and card reserves."
+#~ msgstr "เงินอิสระที่คุณใช้จ่ายได้ทันที หลังหักกองเงินและเงินสำรองของบัตร"
+
+#, kde-format
+#~ msgid "− Future allocations (funds and card reserves)"
+#~ msgstr "− การจัดสรรในอนาคต (กองเงินและเงินสำรองของบัตร)"
+
+#, kde-format
+#~ msgctxt "%1 is a new fund's name, %2 the account it goes in"
+#~ msgid "%1 isn't a fund yet. Saving creates it in %2."
+#~ msgstr "%1 ยังไม่ใช่กองเงิน การบันทึกจะสร้างไว้ใน %2"
+
+#, kde-format
+#~ msgid "A fund"
+#~ msgstr "กองเงิน"
+
+#, kde-format
+#~ msgid "Fund"
+#~ msgstr "กองเงิน"
+
+#, kde-format
+#~ msgid "Also moves the amount from the fund into the card's reserve, so the card stays covered."
+#~ msgstr "ย้ายจำนวนเงินจากกองเงินเข้าเงินสำรองของบัตรด้วย เพื่อให้บัตรยังครอบคลุม"
+
+#, kde-format
+#~ msgctxt "%1 is the free money, %2 how many funds (“2 funds”), %3 how many card reserves (“1 reserve”)"
+#~ msgid "Free %1 · %2 · %3"
+#~ msgstr "อิสระ %1 · %2 · %3"
+
+#, kde-format
+#~ msgid "%1 fund"
+#~ msgid_plural "%1 funds"
+#~ msgstr[0] "%1 กองเงิน"
+
+#, kde-format
+#~ msgid "Set aside in funds"
+#~ msgstr "กันไว้ในกองเงิน"
+
+#, kde-format
+#~ msgid "Name the new fund"
+#~ msgstr "ตั้งชื่อกองเงินใหม่"
+
+#, kde-format
+#~ msgctxt "%1 is what was typed"
+#~ msgid "“%1” can't name a fund: no “:” or “;”"
+#~ msgstr "“%1” เป็นชื่อกองเงินไม่ได้: ห้ามมี “:” หรือ “;”"
+
+#, kde-format
+#~ msgctxt "%1 is a payee, %2 an amount, %3 a card, %4 a fund, %5 a date"
+#~ msgid "%1: %2 on %3, paid from the %4 fund, %5."
+#~ msgstr "%1: %2 ด้วย %3 จ่ายจากกองเงิน %4, %5"
+
+#, kde-format
+#~ msgctxt "%1 is an amount, %2 an account, %3 the new fund's name"
+#~ msgid "Set aside %1 from %2 into a new fund, %3."
+#~ msgstr "กัน %1 จาก %2 ไว้ในกองเงินใหม่ %3"
+
+#, kde-format
+#~ msgctxt "%1 is the new fund's name"
+#~ msgid "kabacus-server didn't make the new fund %1: it's older than this app. Update kabacus-server, or pick a fund that exists."
+#~ msgstr "kabacus-server ไม่ได้สร้างกองเงินใหม่ %1 เพราะเก่ากว่าแอปนี้ อัปเดต kabacus-server หรือเลือกกองเงินที่มีอยู่"

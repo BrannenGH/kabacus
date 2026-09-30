@@ -1,0 +1,57 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Where a package's source is, for GPLv3 §6: the repository URL and the exact
+# commit the package was built from.
+#   scripts/package-source url      the repository URL
+#   scripts/package-source commit   the full commit hash
+#   scripts/package-source text     the SOURCE file the packages install
+#                                   (/usr/share/doc/kabacus/SOURCE)
+# SOURCE_URL and SOURCE_COMMIT override what the checkout says: build-rpm's
+# container has no git history.
+set -e
+cd "$(dirname "$0")/.."
+
+url() {
+  if [ -n "${SOURCE_URL:-}" ]; then
+    u="$SOURCE_URL"
+  else
+    u="$(git remote get-url origin 2>/dev/null || true)"
+    case "$u" in
+      git@*:*) u="https://${u#git@}"; u="${u%%:*}/${u#*:}" ;;
+      ssh://git@*) u="https://${u#ssh://git@}" ;;
+    esac
+    # Credentials a remote might carry never belong in a package.
+    case "$u" in
+      https://*@*) u="https://${u#https://*@}" ;;
+    esac
+    [ -n "$u" ] || u="$(sed -n 's/^repository = "\(.*\)"/\1/p' Cargo.toml | head -n1)"
+  fi
+  u="${u%.git}"
+  echo "${u%/}"
+}
+
+commit() {
+  if [ -n "${SOURCE_COMMIT:-}" ]; then echo "$SOURCE_COMMIT"; else git rev-parse HEAD; fi
+}
+
+case "${1:-}" in
+  url) url ;;
+  commit) commit ;;
+  text)
+    u="$(url)"
+    c="$(commit)"
+    cat <<TEXT
+The source of this package is the commit $c of $u:
+
+  $u/tree/$c
+  $u/archive/$c.tar.gz
+
+It is licensed under the GNU General Public License, version 3 or later.
+TEXT
+    ;;
+  *) echo "usage: scripts/package-source url|commit|text" >&2; exit 2 ;;
+esac

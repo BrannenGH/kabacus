@@ -1,0 +1,2226 @@
+# Finnish translation of Kabacus.
+# This file is distributed under the same license as the kabacus package.
+msgid ""
+msgstr ""
+"Project-Id-Version: kabacus\n"
+"Report-Msgid-Bugs-To: https://github.com/BrannenGH/kabacus/issues\n"
+"Language-Team: Finnish\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml
+#, kde-format
+msgctxt "@label a form field's name"
+msgid "%1:"
+msgstr "%1:"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is the field, %2 what's wrong with it"
+msgid "%1 problem: %2"
+msgstr "Ongelma kentässä %1: %2"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml
+#, kde-format
+msgctxt "%1 is the closest account to what was typed"
+msgid "Use %1"
+msgstr "Käytä: %1"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Add"
+msgstr "Lisää"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Not signed in"
+msgstr "Ei kirjautunut"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml
+#, kde-format
+msgid "Can't reach kabacus-server"
+msgstr "kabacus-serveriin ei saada yhteyttä"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml
+#, kde-format
+msgid "No accounts"
+msgstr "Ei tilejä"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Activity"
+msgstr "Toiminta"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "changes made by"
+msgid "All"
+msgstr "Kaikki"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "changes made by"
+msgid "MCP"
+msgstr "MCP"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "changes made by"
+msgid "This app"
+msgstr "Tämä sovellus"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "changes made by"
+msgid "External"
+msgstr "Ulkoiset"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "%1 is who made a change, %2 its commit"
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgid "Can't load the history"
+msgstr "Historiaa ei voi ladata"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgid "No changes"
+msgstr "Ei muutoksia"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action what happened"
+msgid "Spent"
+msgstr "Käytetty"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money left an account"
+msgstr "Rahaa lähti tililtä"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action what happened"
+msgid "Received"
+msgstr "Saatu"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Income or a refund"
+msgstr "Tulo tai hyvitys"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Card purchase"
+msgstr "Korttiosto"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "Lisää varausrivit puolestasi"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Transfer"
+msgstr "Siirto"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Between two bank accounts"
+msgstr "Kahden pankkitilin välillä"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Set aside"
+msgstr "Siirrä sivuun"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Into a reserve, out, or between reserves"
+msgstr "Varaukseen, siitä pois tai varausten välillä"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Pay a card"
+msgstr "Maksa kortti"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "From its reserve"
+msgstr "Kortin varauksesta"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Split with someone"
+msgstr "Jaa jonkun kanssa"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "They owe you, or you owe them"
+msgstr "He ovat sinulle velkaa, tai sinä heille"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Postings"
+msgstr "Kirjaukset"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Any two accounts"
+msgstr "Mitkä tahansa kaksi tiliä"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Can't load cards"
+msgstr "Kortteja ei voi ladata"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "No credit cards"
+msgstr "Ei luottokortteja"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Record purchase"
+msgstr "Kirjaa osto"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Pay card"
+msgstr "Maksa kortti"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgctxt "what a card owes"
+msgid "Owes"
+msgstr "Velka"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgctxt "a card's reserve"
+msgid "Reserve"
+msgstr "Varaus"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Still to reserve"
+msgstr "Vielä varattavaa"
+
+#: crates/kabacus-kde/qml/CardsPage.qml crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "%1 is a label, %2 an amount"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "%1 transaction moves the card without moving its reserve."
+msgid_plural "%1 transactions move the card without moving its reserve."
+msgstr[0] "%1 tapahtuma muuttaa korttia muuttamatta sen varausta."
+msgstr[1] "%1 tapahtumaa muuttaa korttia muuttamatta sen varausta."
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Add all reserve lines"
+msgstr "Lisää kaikki varausrivit"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgctxt "%1 is a transaction"
+msgid "%1 unreserved"
+msgstr "%1 ilman varausta"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgctxt "%1 is an amount"
+msgid "Missing reserve %1"
+msgstr "Puuttuva varaus %1"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Add reserve lines"
+msgstr "Lisää varausrivit"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "What the reserve holds"
+msgstr "Mistä varaus koostuu"
+
+#: crates/kabacus-kde/qml/CommitPage.qml
+#, kde-format
+msgid "Open transaction"
+msgstr "Avaa tapahtuma"
+
+#: crates/kabacus-kde/qml/CommitPage.qml
+#, kde-format
+msgid "Void…"
+msgstr "Mitätöi…"
+
+#: crates/kabacus-kde/qml/CommitPage.qml
+#, kde-format
+msgctxt "%1 is who made a change, %2 when"
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: crates/kabacus-kde/qml/Fetch.qml
+#, kde-format
+msgctxt "%1 is a screen, %2 the problem"
+msgid "Couldn't update %1: %2"
+msgstr "Kohdetta %1 ei voitu päivittää: %2"
+
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action money out of a fund"
+msgid "Release"
+msgstr "Vapauta"
+
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action money between funds"
+msgid "Move"
+msgstr "Siirrä"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgid "Can't load reserves"
+msgstr "Varauksia ei voi ladata"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgid "No bank accounts with reserves yet"
+msgstr "Varauksia sisältäviä pankkitilejä ei vielä ole"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgid "in the bank"
+msgstr "pankissa"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgctxt "free money"
+msgid "Free"
+msgstr "Vapaa"
+
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Card reserves"
+msgstr "Korttien varaukset"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgctxt "%1 is a fund"
+msgid "Set aside for %1"
+msgstr "Siirrä sivuun rahastoon %1"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgctxt "%1 is a card"
+msgid "%1 reserve"
+msgstr "Kortin %1 varaus"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgid "Covers the card"
+msgstr "Kattaa kortin"
+
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 is an amount"
+msgid "%1 still to reserve"
+msgstr "%1 vielä varattavaa"
+
+#: crates/kabacus-kde/qml/LoansPage.qml
+#, kde-format
+msgid "No loans"
+msgstr "Ei lainoja"
+
+#: crates/kabacus-kde/qml/LoansPage.qml
+#, kde-format
+msgid "A loan or mortgage shows here once it's in the books."
+msgstr "Laina tai asuntolaina näkyy tässä heti, kun se on kirjoissa."
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/src/translation.rs
+#, kde-format
+msgctxt "Which way this language is written: translate as RTL if right to left, LTR otherwise"
+msgid "LTR"
+msgstr "LTR"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Signed out"
+msgstr "Kirjauduttu ulos"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Overview"
+msgstr "Yleiskatsaus"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "destination: the accounts and their transactions"
+msgid "Transactions"
+msgstr "Tapahtumat"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "destination: money set aside for later"
+msgid "Reserves"
+msgstr "Varaukset"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "destination: loans and mortgages"
+msgid "Loans"
+msgstr "Lainat"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "destination: credit cards"
+msgid "Credit"
+msgstr "Luotto"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/PeoplePage.qml
+#, kde-format
+msgid "People"
+msgstr "Henkilöt"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Reports"
+msgstr "Raportit"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is the commit's short hash"
+msgid "Saved as commit %1"
+msgstr "Tallennettu committina %1"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Settings"
+msgstr "Asetukset"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "@title:menu"
+msgid "File"
+msgstr "Tiedosto"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Add transaction"
+msgstr "Lisää tapahtuma"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Refresh"
+msgstr "Päivitä"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Quit"
+msgstr "Lopeta"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "@title:menu"
+msgid "Go"
+msgstr "Siirry"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Configure Kabacus…"
+msgstr "Kabacusin asetukset…"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml
+#, kde-format
+msgctxt "the other destinations"
+msgid "More"
+msgstr "Lisää"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Authentication off (local mode)"
+msgstr "Tunnistautuminen pois (paikallinen tila)"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is why sign-in failed"
+msgid "Sign-in didn't finish: %1"
+msgstr "Kirjautuminen ei valmistunut: %1"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Your session has ended. Sign in again to see and change your books."
+msgstr "Istuntosi on päättynyt. Kirjaudu uudelleen nähdäksesi ja muuttaaksesi kirjanpitoasi."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is the sign-in provider's address"
+msgid "Sign in with %1 to see your books."
+msgstr "Kirjaudu palvelulla %1 nähdäksesi kirjanpitosi."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Sign in again"
+msgstr "Kirjaudu uudelleen"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Sign in"
+msgstr "Kirjaudu"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Finish signing in in your browser…"
+msgstr "Viimeistele kirjautuminen selaimessa…"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Cancel"
+msgstr "Peru"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is why the server can't be reached, as one sentence"
+msgid "%1 Showing what was loaded; changes are off until it's back."
+msgstr "%1 Näytetään se, mitä oli ladattu; muutokset ovat pois päältä, kunnes yhteys palaa."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Retry"
+msgstr "Yritä uudelleen"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Details"
+msgstr "Yksityiskohdat"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Connection settings"
+msgstr "Yhteysasetukset"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Error details"
+msgstr "Virheen yksityiskohdat"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Discard this change?"
+msgstr "Hylätäänkö tämä muutos?"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "What you typed hasn't been saved."
+msgstr "Kirjoittamaasi ei ole tallennettu."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Keep editing"
+msgstr "Jatka muokkaamista"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Discard"
+msgstr "Hylkää"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "The books changed"
+msgstr "Kirjanpito on muuttunut"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is who, %2 what they changed"
+msgid "%1 saved a change while you were reviewing: %2. Yours hasn't been written."
+msgstr "%1 tallensi muutoksen tarkistaessasi: %2. Omaasi ei ole kirjoitettu."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is who"
+msgid "%1 saved a change while you were reviewing. Yours hasn't been written."
+msgstr "%1 tallensi muutoksen tarkistaessasi. Omaasi ei ole kirjoitettu."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Discard mine"
+msgstr "Hylkää omani"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Review again"
+msgstr "Tarkista uudelleen"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Can't load Cash on Hand"
+msgstr "Käytettävissä olevaa rahaa ei voi ladata"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Loading…"
+msgstr "Ladataan…"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Käytettävissä oleva raha"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "About Cash on Hand"
+msgstr "Tietoa käytettävissä olevasta rahasta"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Free money you can spend right now, after reserves and card reserves."
+msgstr "Vapaa raha, jonka voit käyttää heti, varausten ja korttien varausten jälkeen."
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%1 päivästä %2"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 is an amount"
+msgid "Cash on Hand %1"
+msgstr "Käytettävissä oleva raha %1"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Money on Hand"
+msgstr "Rahaa hallussa"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "About Money on Hand"
+msgstr "Tietoa hallussa olevasta rahasta"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Everything in your bank accounts, reserves and card reserves included, plus what people owe you. Cash on Hand is what's left once reserves, card reserves and what you're owed are set apart."
+msgstr "Kaikki pankkitileilläsi, varaukset ja korttien varaukset mukaan lukien, sekä se, mitä muut ovat sinulle velkaa. Käytettävissä oleva raha on se, mikä jää, kun varaukset, korttien varaukset ja saatavasi erotetaan."
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "− Future allocations (reserves and card reserves)"
+msgstr "− Tulevat kohdistukset (varaukset ja korttien varaukset)"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "− Receivables (owed to you)"
+msgstr "− Saatavat (mitä sinulle ollaan velkaa)"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Free money by account"
+msgstr "Vapaa raha tileittäin"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 is an account, %2 its free money"
+msgid "%1 free %2"
+msgstr "%1 vapaa %2"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "No account has free money right now."
+msgstr "Millään tilillä ei nyt ole vapaata rahaa."
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Nothing is set aside in a reserve."
+msgstr "Mihinkään varaukseen ei ole siirretty mitään."
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "a card's reserve covers what it owes"
+msgid "covered"
+msgstr "katettu"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Each card's reserve should equal what it owes."
+msgstr "Kunkin kortin varauksen pitäisi olla yhtä suuri kuin sen velka."
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Cash on Hand over time"
+msgstr "Käytettävissä oleva raha ajan mittaan"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 and %3 are amounts on dates %2 and %4; %5 and %6 the lowest and highest amounts"
+msgid "From %1 on %2 to %3 on %4; lowest %5, highest %6"
+msgstr "%1 päivänä %2 – %3 päivänä %4; pienin %5, suurin %6"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "the chart's first point: %1 is its date, %2 its amount"
+msgid "%1  %2"
+msgstr "%1  %2"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "the chart's last point, at its far end: %1 is its amount, %2 its date"
+msgid "%1  %2"
+msgstr "%1  %2"
+
+#: crates/kabacus-kde/qml/PeoplePage.qml
+#, kde-format
+msgctxt "@action split a cost with someone"
+msgid "Split"
+msgstr "Jaa"
+
+#: crates/kabacus-kde/qml/PeoplePage.qml
+#, kde-format
+msgid "Can't load people"
+msgstr "Henkilöitä ei voi ladata"
+
+#: crates/kabacus-kde/qml/PeoplePage.qml
+#, kde-format
+msgid "Nobody owes or is owed anything"
+msgstr "Kukaan ei ole velkaa eikä saatavaa"
+
+#: crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgid "What changes"
+msgstr "Mikä muuttuu"
+
+#: crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgctxt "%1 is an account, %2 and %3 its balance before and after"
+msgid "%1 %2 to %3"
+msgstr "%1: %2 → %3"
+
+#: crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgctxt "%1 and %2 are amounts"
+msgid "Cash on Hand %1 to %2"
+msgstr "Käytettävissä oleva raha: %1 → %2"
+
+#: crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgctxt "%1 is the warning's text"
+msgid "Warning: %1"
+msgstr "Varoitus: %1"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "%1 is an account"
+msgid "Reconcile %1"
+msgstr "Täsmäytä %1"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Statement date:"
+msgstr "Tiliotteen päiväys:"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgid "Statement date"
+msgstr "Tiliotteen päiväys"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "the date format to type; dates are always typed this way"
+msgid "YYYY-MM-DD"
+msgstr "VVVV-KK-PP"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Statement balance:"
+msgstr "Tiliotteen saldo:"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgid "Statement balance"
+msgstr "Tiliotteen saldo"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "@action:button compare with the statement"
+msgid "Check"
+msgstr "Tarkista"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "%1 is a balance, %2 a date"
+msgid "Matched: %1 on %2, the same as the statement."
+msgstr "Täsmää: %1 päivänä %2, sama kuin tiliotteessa."
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "%1 is the books' balance, %2 the statement's, %3 the difference"
+msgid "Doesn't match yet: the books say %1, the statement %2 (difference %3). Nothing has been written."
+msgstr "Ei vielä täsmää: kirjanpidon mukaan %1, tiliotteen %2 (erotus %3). Mitään ei ole kirjoitettu."
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Reconcile"
+msgstr "Täsmäytä"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgid "Likely explanations"
+msgstr "Todennäköiset selitykset"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgid "Edit"
+msgstr "Muokkaa"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "a card transaction without its reserve lines"
+msgid "unreserved"
+msgstr "ilman varausta"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "money moved between an account and its funds"
+msgid "within account"
+msgstr "tilin sisällä"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Account type"
+msgstr "Tilin tyyppi"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "@action compare an account with its statement"
+msgid "Reconcile…"
+msgstr "Täsmäytä…"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Search"
+msgstr "Haku"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Search payee, memo, account"
+msgstr "Hae saajaa, muistiinpanoa, tiliä"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Unreserved only"
+msgstr "Vain ilman varausta"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is a payee, %2 a date"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is an account, %2 a memo"
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is an amount"
+msgid "%1 moved"
+msgstr "%1 siirretty"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is a date, %2 an account"
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Can't load this register"
+msgstr "Tätä tiliotetta ei voi ladata"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is what was searched for"
+msgid "No transactions match “%1”"
+msgstr "Haulla ”%1” ei löydy tapahtumia"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "No unreserved transactions"
+msgstr "Ei tapahtumia ilman varausta"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "No transactions"
+msgstr "Ei tapahtumia"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Clear search"
+msgstr "Tyhjennä haku"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "%1 is a month's name, %2 its year"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Previous month"
+msgstr "Edellinen kuukausi"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Next month"
+msgstr "Seuraava kuukausi"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Cash flow"
+msgstr "Kassavirta"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Income statement"
+msgstr "Tuloslaskelma"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Categories"
+msgstr "Luokat"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "%1 is a month and year"
+msgid "Why Cash on Hand changed in %1"
+msgstr "Miksi käytettävissä oleva raha muuttui: %1"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "column: money moved in cash"
+msgid "Cash"
+msgstr "Raha"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "column: changes that aren't cash"
+msgid "Not cash"
+msgstr "Muu kuin raha"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Income:"
+msgstr "Tulot:"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Expenses:"
+msgstr "Menot:"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Loan principal:"
+msgstr "Lainan lyhennykset:"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "@label income less expenses"
+msgid "Net:"
+msgstr "Netto:"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Count loan principal as money spent"
+msgstr "Laske lainan lyhennykset käytetyksi rahaksi"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "column: money spent"
+msgid "Spent"
+msgstr "Käytetty"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "column: compared with %1, the month before"
+msgid "vs %1"
+msgstr "vs. %1"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "%1 is a month and year"
+msgid "No spending in %1"
+msgstr "Ei menoja: %1"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml
+#, kde-format
+msgid "Review before saving"
+msgstr "Tarkista ennen tallennusta"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml
+#, kde-format
+msgid "Back to edit"
+msgstr "Takaisin muokkaukseen"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Saving…"
+msgstr "Tallennetaan…"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Save"
+msgstr "Tallenna"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Checking with the server…"
+msgstr "Tarkistetaan palvelimelta…"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml
+#, kde-format
+msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
+msgid "This would break a balance check: %1 should be %2 but would be %3. Check the date and amount; never move the date just to get past it."
+msgstr "Tämä rikkoisi saldotarkistuksen: tilin %1 pitäisi olla %2, mutta se olisi %3. Tarkista päiväys ja summa; älä koskaan siirrä päiväystä vain päästäksesi tarkistuksen ohi."
+
+#: crates/kabacus-kde/qml/ReviewPage.qml
+#, kde-format
+msgid "Change the transaction"
+msgstr "Muuta tapahtumaa"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Test connection"
+msgstr "Kokeile yhteyttä"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Connection settings saved"
+msgstr "Yhteysasetukset tallennettu"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Server:"
+msgstr "Palvelin:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "On this computer"
+msgstr "Tällä tietokoneella"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "On another computer (HTTPS)"
+msgstr "Toisella tietokoneella (HTTPS)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "the server's unix socket"
+msgid "Socket"
+msgstr "Pistoke"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label the server's unix socket"
+msgid "Socket:"
+msgstr "Pistoke:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Server address"
+msgstr "Palvelimen osoite"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Server address:"
+msgstr "Palvelimen osoite:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label a private certificate authority"
+msgid "Private CA:"
+msgstr "Oma varmentaja:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "a private certificate authority"
+msgid "Private CA"
+msgstr "Oma varmentaja"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "System certificates only"
+msgstr "Vain järjestelmän varmenteet"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Choose…"
+msgstr "Valitse…"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Only needed when the server's certificate comes from your own CA."
+msgstr "Tarvitaan vain, jos palvelimen varmenne on omalta varmentajaltasi."
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@title the signed-in user"
+msgid "Account"
+msgstr "Käyttäjätili"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Signed in:"
+msgstr "Kirjautunut:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Not needed: authentication is off (local mode)"
+msgstr "Ei tarpeen: tunnistautuminen on pois (paikallinen tila)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "%1 is the user, %2 the sign-in provider"
+msgid "%1 (%2)"
+msgstr "%1 (%2)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "signed in; %1 is the sign-in provider"
+msgid "Yes (%1)"
+msgstr "Kyllä (%1)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Session ended; sign in again"
+msgstr "Istunto päättyi; kirjaudu uudelleen"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "not signed in"
+msgid "No"
+msgstr "Ei"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Unknown: can't reach the server"
+msgstr "Tuntematon: palvelimeen ei saada yhteyttä"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Waiting for the browser…"
+msgstr "Odotetaan selainta…"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Sign out"
+msgstr "Kirjaudu ulos"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@title about the server"
+msgid "About"
+msgstr "Tietoja"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Can't reach the server to read its version"
+msgstr "Palvelimeen ei saada yhteyttä sen version lukemiseksi"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label the server's version"
+msgid "Server version:"
+msgstr "Palvelimen versio:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label the commit the server was built from"
+msgid "Commit:"
+msgstr "Commit:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label where the server's source code is"
+msgid "Source code:"
+msgstr "Lähdekoodi:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Open the source code"
+msgstr "Avaa lähdekoodi"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Choose the private CA"
+msgstr "Valitse oma varmentaja"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Certificates (*.pem *.crt)"
+msgstr "Varmenteet (*.pem *.crt)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "All files (*)"
+msgstr "Kaikki tiedostot (*)"
+
+#: crates/kabacus-kde/qml/StatementPage.qml
+#, kde-format
+msgid "Open items only"
+msgstr "Vain avoimet erät"
+
+#: crates/kabacus-kde/qml/StatementPage.qml
+#, kde-format
+msgctxt "%1 is a transaction, %2 its date"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: crates/kabacus-kde/qml/StatementPage.qml
+#, kde-format
+msgid "Can't load the statement"
+msgstr "Tiliotetta ei voi ladata"
+
+#: crates/kabacus-kde/qml/StatementPage.qml
+#, kde-format
+msgid "Nothing this year"
+msgstr "Ei mitään tänä vuonna"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Set money aside"
+msgstr "Siirrä rahaa sivuun"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Edit transaction"
+msgstr "Muokkaa tapahtumaa"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Fix reserve lines"
+msgstr "Korjaa varausrivit"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "the payee a transfer is given"
+msgid "Transfer"
+msgstr "Siirto"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Review"
+msgstr "Tarkista"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
+msgid "This would break a balance check: %1 should be %2 but would be %3. Check the date and amount."
+msgstr "Tämä rikkoisi saldotarkistuksen: tilin %1 pitäisi olla %2, mutta se olisi %3. Tarkista päiväys ja summa."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Edit in place"
+msgstr "Muokkaa paikallaan"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Changes it where it is. History keeps the old version."
+msgstr "Muuttaa sitä siinä, missä se on. Historia säilyttää vanhan version."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@option cancel a transaction with a reversal"
+msgid "Void"
+msgstr "Mitätöi"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Only the reversal: it didn't happen."
+msgstr "Vain vastakirjaus: sitä ei tapahtunut."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Real account"
+msgstr "Todellinen tili"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Synthetic account"
+msgstr "Synteettinen tili"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "a credit card"
+msgid "Card"
+msgstr "Kortti"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label what a shared cost was for"
+msgid "What:"
+msgstr "Mitä:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Payee:"
+msgstr "Saaja:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Payee"
+msgstr "Saaja"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is a payee, %2 the category it usually has, %3 the amount it had last"
+msgid "%1 — usually %2, last %3"
+msgstr "%1 — yleensä %2, viimeksi %3"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Paid with"
+msgstr "Maksettu tililtä"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "the account money comes from"
+msgid "From"
+msgstr "Mistä"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "That's a card: record a card purchase so its reserve stays covered."
+msgstr "Tämä on kortti: kirjaa korttiosto, jotta sen varaus pysyy katettuna."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Category"
+msgstr "Luokka"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "the account money goes to"
+msgid "To"
+msgstr "Minne"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is a new reserve's name, %2 the account it goes in"
+msgid "%1 isn't a reserve yet. Saving creates it in %2."
+msgstr "%1 ei ole vielä varaus. Tallennus luo sen tilille %2."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Paid from:"
+msgstr "Maksettu:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Free money"
+msgstr "Vapaasta rahasta"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "A reserve"
+msgstr "Varaus"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "money set aside"
+msgid "Reserve"
+msgstr "Varaus"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "the person a cost is split with"
+msgid "With"
+msgstr "Kenen kanssa"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Total:"
+msgstr "Yhteensä:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Amount:"
+msgstr "Summa:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Amount"
+msgstr "Summa"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Their share:"
+msgstr "Heidän osuutensa:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Their share"
+msgstr "Heidän osuutensa"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "their share is half the total"
+msgid "Half"
+msgstr "Puolet"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "their share is the whole total"
+msgid "All of it"
+msgstr "Kaikki"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Date:"
+msgstr "Päiväys:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Date"
+msgstr "Päiväys"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Description:"
+msgstr "Kuvaus:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Memo:"
+msgstr "Muistiinpano:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Memo"
+msgstr "Muistiinpano"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Transactions:"
+msgstr "Tapahtumat:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is how many of the chosen transactions"
+msgid "%1 missing its reserve lines"
+msgid_plural "%1 missing their reserve lines"
+msgstr[0] "%1 ilman varausrivejään"
+msgstr[1] "%1 ilman varausrivejään"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Also moves the amount from free money into the card's reserve, so the card stays covered."
+msgstr "Siirtää summan myös vapaasta rahasta kortin varaukseen, jotta kortti pysyy katettuna."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Also moves the amount from the reserve into the card's reserve, so the card stays covered."
+msgstr "Siirtää summan myös varauksesta kortin varaukseen, jotta kortti pysyy katettuna."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Preview"
+msgstr "Esikatselu"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Updates as you type. Nothing is written until you save."
+msgstr "Päivittyy kirjoittaessasi. Mitään ei kirjoiteta ennen tallennusta."
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgid "The server uses OAuth but didn't say which provider"
+msgstr "Palvelin käyttää OAuthia mutta ei kertonut, mitä palveluntarjoajaa"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgid "The server uses OAuth but has no client id for the app"
+msgstr "Palvelin käyttää OAuthia mutta sillä ei ole asiakastunnusta sovellukselle"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Can't read the secret store: %1"
+msgstr "Salaisuusvarastoa ei voi lukea: %1"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgid "This server doesn't use sign-in (authentication is off)"
+msgstr "Tämä palvelin ei käytä kirjautumista (tunnistautuminen on pois)"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Signed out, but couldn't clear the secret store: %1"
+msgstr "Kirjauduttu ulos, mutta salaisuusvarastoa ei voitu tyhjentää: %1"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Signed out, but the provider couldn't revoke the session: %1"
+msgstr "Kirjauduttu ulos, mutta palveluntarjoaja ei voinut perua istuntoa: %1"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Signed in, but the secret store couldn't keep it (%1); you'll be asked again next time"
+msgstr "Kirjautunut, mutta salaisuusvarasto ei voinut säilyttää sitä (%1); sinulta kysytään uudelleen ensi kerralla"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Couldn't save the settings: %1"
+msgstr "Asetuksia ei voitu tallentaa: %1"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgid "Can't reach the server to find out how to sign in"
+msgstr "Palvelimeen ei saada yhteyttä kirjautumistavan selvittämiseksi"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Can't reach kabacus-server. Is it running?"
+msgstr "kabacus-serveriin ei saada yhteyttä. Onko se käynnissä?"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgctxt "%1 is the server's address"
+msgid "Can't reach kabacus-server at %1. Is it running?"
+msgstr "kabacus-serveriin osoitteessa %1 ei saada yhteyttä. Onko se käynnissä?"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "The server is taking too long to answer."
+msgstr "Palvelimen vastaus kestää liian kauan."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Your session ended. Sign in again."
+msgstr "Istuntosi on päättynyt. Kirjaudu uudelleen."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Signing in didn't work. Try again."
+msgstr "Kirjautuminen ei onnistunut. Yritä uudelleen."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "You can view these books but not change them."
+msgstr "Voit katsella tätä kirjanpitoa mutta et muuttaa sitä."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "That isn't in the books any more."
+msgstr "Sitä ei ole enää kirjanpidossa."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "The books changed while you were editing. Review again."
+msgstr "Kirjanpito muuttui muokatessasi. Tarkista uudelleen."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "The server had a problem."
+msgstr "Palvelimella oli ongelma."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgctxt "between the items of a list, such as amounts or account names"
+msgid ", "
+msgstr ", "
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "All transactions"
+msgstr "Kaikki tapahtumat"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgctxt "%1 is the account money came from, %2 the account it went to"
+msgid "%1 → %2"
+msgstr "%1 → %2"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Date must be YYYY-MM-DD"
+msgstr "Päiväyksen on oltava muotoa VVVV-KK-PP"
+
+#: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a form field"
+msgid "%1 is required"
+msgstr "%1 vaaditaan"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Choose both accounts"
+msgstr "Valitse molemmat tilit"
+
+#: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "From and To must differ"
+msgstr "Mistä ja Minne on oltava eri tilit"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Amount must be more than zero"
+msgstr "Summan on oltava suurempi kuin nolla"
+
+#: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "The books have no commits yet"
+msgstr "Kirjanpidossa ei ole vielä committeja"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Split transactions can't be edited here yet"
+msgstr "Jaettuja tapahtumia ei voi vielä muokata täällä"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Multi-currency transactions can't be edited here yet"
+msgstr "Monivaluuttaisia tapahtumia ei voi vielä muokata täällä"
+
+#: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a transaction id"
+msgid "Transaction %1 wasn't found"
+msgstr "Tapahtumaa %1 ei löytynyt"
+
+#: crates/kabacus-kde/src/secrets.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "can't reach the secret store: %1"
+msgstr "salaisuusvarastoon ei saada yhteyttä: %1"
+
+#: crates/kabacus-kde/src/secrets.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "the secret store has no wallet or keyring to keep it in (%1)"
+msgstr "salaisuusvarastossa ei ole lompakkoa eikä avainnippua sen säilyttämiseen (%1)"
+
+#: crates/kabacus-kde/src/secrets.rs
+#, kde-format
+msgctxt "%1 is the server's address"
+msgid "Kabacus sign-in for %1"
+msgstr "Kabacus-kirjautuminen palvelimelle %1"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgid "Enter the server's address"
+msgstr "Anna palvelimen osoite"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is a file, %2 why it can't be read"
+msgid "Can't read the private CA %1: %2"
+msgstr "Omaa varmentajaa %1 ei voi lukea: %2"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgid "The server address must start with https://"
+msgstr "Palvelimen osoitteen on alettava https://"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgid "Can't reach the server: no answer within 10 seconds"
+msgstr "Palvelimeen ei saada yhteyttä: ei vastausta 10 sekunnissa"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%2 is the server's version"
+msgid "Connected to kabacus-server %2: %1 account"
+msgid_plural "Connected to kabacus-server %2: %1 accounts"
+msgstr[0] "Yhdistetty kabacus-serveriin %2: %1 tili"
+msgstr[1] "Yhdistetty kabacus-serveriin %2: %1 tiliä"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is the server's version, %2 the sign-in provider's address"
+msgid "Reached kabacus-server %1. It needs you to sign in with %2."
+msgstr "kabacus-server %1 tavoitettiin. Sinun on kirjauduttava palvelulla %2."
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is the server's version"
+msgid "Reached kabacus-server %1. It needs you to sign in with its OAuth provider."
+msgstr "kabacus-server %1 tavoitettiin. Sinun on kirjauduttava sen OAuth-palveluntarjoajalla."
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is a role's name"
+msgid "Reached the server, but you lack the %1 role"
+msgstr "Palvelin tavoitettiin, mutta sinulta puuttuu rooli %1"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "The server's certificate isn't trusted. If it comes from a private CA, choose that CA's file. (%1)"
+msgstr "Palvelimen varmenteeseen ei luoteta. Jos se on omalta varmentajalta, valitse sen varmentajan tiedosto. (%1)"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Can't reach the server: %1"
+msgstr "Palvelimeen ei saada yhteyttä: %1"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "@action fix a card"
+msgid "Fix"
+msgstr "Korjaa"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Categorize"
+msgstr "Luokittele"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Move money"
+msgstr "Siirrä rahaa"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Money"
+msgstr "Raha"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Cards"
+msgstr "Kortit"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Loans"
+msgstr "Lainat"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Investments"
+msgstr "Sijoitukset"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "People"
+msgstr "Henkilöt"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Spending"
+msgstr "Menot"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Income"
+msgstr "Tulot"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Other"
+msgstr "Muut"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "%1 is the free money, %2 how many reserves (“2 reserves”), %3 how many card reserves (“1 card reserve”)"
+msgid "Free %1 · %2 · %3"
+msgstr "Vapaa %1 · %2 · %3"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "%1 reserve"
+msgid_plural "%1 reserves"
+msgstr[0] "%1 varaus"
+msgstr[1] "%1 varausta"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "%1 card reserve"
+msgid_plural "%1 card reserves"
+msgstr[0] "%1 kortin varaus"
+msgstr[1] "%1 korttien varausta"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "%1 is the card's reserve"
+msgid "Reserve %1"
+msgstr "Varaus %1"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Owes you"
+msgstr "On sinulle velkaa"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "You owe"
+msgstr "Olet velkaa"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "nobody owes anything"
+msgid "Settled"
+msgstr "Tasattu"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "Cash on Hand at the start"
+msgid "Opening"
+msgstr "Alku"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "Cash on Hand at the end"
+msgid "Closing"
+msgstr "Loppu"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Set aside in reserves"
+msgstr "Siirretty varauksiin"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Loan principal"
+msgstr "Lainan lyhennykset"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Fronted for others"
+msgstr "Maksettu muiden puolesta"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Owed to others"
+msgstr "Velkaa muille"
+
+#: crates/kabacus-kde/src/views.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "MCP"
+msgstr "MCP"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "This app"
+msgstr "Tämä sovellus"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "External edit"
+msgstr "Ulkoinen muokkaus"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "Unknown"
+msgstr "Tuntematon"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an account"
+msgid "This would break a balance check on %1"
+msgstr "Tämä rikkoisi saldotarkistuksen tilillä %1"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is the change made meanwhile"
+msgid "The books changed: %1"
+msgstr "Kirjanpito on muuttunut: %1"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Use a date like 2026-10-03"
+msgstr "Käytä päiväystä kuten 2026-10-03"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Must be more than zero"
+msgstr "On oltava suurempi kuin nolla"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Enter an amount"
+msgstr "Anna summa"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Not an amount: use digits and a decimal point, like 12.34"
+msgstr "Ei summa: käytä numeroita ja desimaalipistettä, kuten 12.34"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is the amount as it should be typed"
+msgid "Use a decimal point: %1"
+msgstr "Käytä desimaalipistettä: %1"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Use a whole number, without decimal places"
+msgstr "Käytä kokonaislukua ilman desimaaleja"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Use at most %1 decimal place"
+msgid_plural "Use at most %1 decimal places"
+msgstr[0] "Käytä enintään %1 desimaalia"
+msgstr[1] "Käytä enintään %1 desimaalia"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Name the new reserve"
+msgstr "Nimeä uusi varaus"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is what was typed"
+msgid "“%1” can't name a reserve: no “:” or “;”"
+msgstr "”%1” ei kelpaa varauksen nimeksi: ei ”:”- eikä ”;”-merkkiä"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is what was typed"
+msgid "There's no account called %1"
+msgstr "Tiliä nimeltä %1 ei ole"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee, %2 an amount, %3 and %4 accounts, %5 a date"
+msgid "%1: %2 from %3 to %4, %5."
+msgstr "%1: %2 tililtä %3 tilille %4, %5."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee, %2 an amount, %3 a card, %4 a date"
+msgid "%1: %2 on %3, paid from free money, %4."
+msgstr "%1: %2 kortilla %3, maksettu vapaasta rahasta, %4."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee, %2 an amount, %3 a card, %4 a reserve, %5 a date"
+msgid "%1: %2 on %3, paid from the %4 reserve, %5."
+msgstr "%1: %2 kortilla %3, maksettu varauksesta %4, %5."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 an account, %3 the new reserve's name"
+msgid "Set aside %1 from %2 into a new reserve, %3."
+msgstr "Siirrä %1 tililtä %2 uuteen varaukseen %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 and %3 accounts"
+msgid "Move %1 from %2 to %3."
+msgstr "Siirrä %1 tililtä %2 tilille %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a card"
+msgid "Pay %1 to %2 from its reserve."
+msgstr "Maksa %1 kortille %2 sen varauksesta."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee, %2 the total, %3 an account, %4 a person, %5 their share"
+msgid "%1: %2 paid with %3; %4 owes %5 of it."
+msgstr "%1: %2 maksettu tililtä %3; %4 on velkaa siitä %5."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee"
+msgid "Edit %1 in place. History keeps the old version."
+msgstr "Muokkaa tapahtumaa %1 paikallaan. Historia säilyttää vanhan version."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Void it: add a reversal, dated today."
+msgstr "Mitätöi: lisää vastakirjaus, päivättynä tälle päivälle."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an account, %2 a date, %3 a balance"
+msgid "Record that %1 matched the statement on %2: %3."
+msgstr "Kirjaa, että %1 täsmäsi tiliotteen kanssa päivänä %2: %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%2 is a card"
+msgid "Add the missing reserve lines to %1 transaction on %2, as one change."
+msgid_plural "Add the missing reserve lines to %1 transactions on %2, as one change."
+msgstr[0] "Lisää puuttuvat varausrivit kortin %2 %1 tapahtumaan yhtenä muutoksena."
+msgstr[1] "Lisää puuttuvat varausrivit kortin %2 %1 tapahtumaan yhtenä muutoksena."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "the person a cost is split with"
+msgid "Who"
+msgstr "Kuka"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Their share can't be more than the total"
+msgstr "Heidän osuutensa ei voi olla suurempi kuin kokonaissumma"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "The transaction"
+msgstr "Tapahtuma"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Choose at least one transaction"
+msgstr "Valitse vähintään yksi tapahtuma"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a card"
+msgid "%1 has no reserve account"
+msgstr "Kortilla %1 ei ole varaustiliä"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a transaction's payee"
+msgid "%1 isn't missing reserve lines"
+msgstr "Kohteelta %1 ei puutu varausrivejä"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is the new reserve's name"
+msgid "kabacus-server didn't make the new reserve %1: it's older than this app. Update kabacus-server, or pick a reserve that exists."
+msgstr "kabacus-server ei luonut uutta varausta %1: se on tätä sovellusta vanhempi. Päivitä kabacus-server tai valitse olemassa oleva varaus."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "This app, on another device"
+msgstr "Tämä sovellus, toisella laitteella"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "An external edit"
+msgstr "Ulkoinen muokkaus"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "Someone"
+msgstr "Joku"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Nothing to save: the books already say this."
+msgstr "Ei tallennettavaa: kirjanpidossa lukee jo näin."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "The books still check out with this change"
+msgstr "Kirjanpito on yhä kunnossa tämän muutoksen kanssa"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a card"
+msgid "%1 stays covered by its reserve"
+msgstr "%1 pysyy varauksensa kattamana"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "A card is missing its reserve lines; it will be flagged"
+msgstr "Kortilta puuttuvat varausrivit; se merkitään"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Missing reserve %1 · a corrected original"
+#~ msgstr "Puuttuva varaus %1 · korjattu alkuperäinen"
+
+#, kde-format
+#~ msgid "Correct…"
+#~ msgstr "Korjaa…"
+
+#, kde-format
+#~ msgctxt "a transaction that was corrected"
+#~ msgid "correction"
+#~ msgstr "korjaus"
+
+#, kde-format
+#~ msgid "Changes it where it is. Git keeps the old version."
+#~ msgstr "Muuttaa sitä siinä, missä se on. Git säilyttää vanhan version."
+
+#, kde-format
+#~ msgid "Add a correction"
+#~ msgstr "Lisää korjaus"
+
+#, kde-format
+#~ msgid "A reversal and a replacement, dated today. For books that mustn't change after the fact (reconciled or shared)."
+#~ msgstr "Vastakirjaus ja korvaava tapahtuma, päivättynä tälle päivälle. Kirjanpitoon, jota ei saa muuttaa jälkikäteen (täsmäytetty tai jaettu)."
+
+#, kde-format
+#~ msgid "A correction is dated today."
+#~ msgstr "Korjaus päivätään tälle päivälle."
+
+#, kde-format
+#~ msgctxt "%1 is a payee"
+#~ msgid "Edit %1 in place. Git keeps the old version."
+#~ msgstr "Muokkaa tapahtumaa %1 paikallaan. Git säilyttää vanhan version."
+
+#, kde-format
+#~ msgctxt "%1 is a payee"
+#~ msgid "Correct %1: a reversal and a replacement, dated today."
+#~ msgstr "Korjaa %1: vastakirjaus ja korvaava tapahtuma, päivättynä tälle päivälle."
+
+#, kde-format
+#~ msgid "hledger check passed on a scratch copy"
+#~ msgstr "hledger-tarkistus läpäisty työkopiolla"
+
+#, kde-format
+#~ msgctxt "%1 is a file, %2–%3 lines in it"
+#~ msgid "%1 · lines %2–%3"
+#~ msgstr "%1 · rivit %2–%3"
+
+#, kde-format
+#~ msgid "Amount is too large"
+#~ msgstr "Summa on liian suuri"
+
+#, kde-format
+#~ msgctxt "@label"
+#~ msgid "Account:"
+#~ msgstr "Tili:"
+
+#, kde-format
+#~ msgid "Account"
+#~ msgstr "Tili"
+
+#, kde-format
+#~ msgid "Accounts"
+#~ msgstr "Tilit"
+
+#, kde-format
+#~ msgid "Into a fund, out, or between funds"
+#~ msgstr "Rahastoon, sieltä pois tai rahastojen välillä"
+
+#, kde-format
+#~ msgid "Cards"
+#~ msgstr "Kortit"
+
+#, kde-format
+#~ msgid "Funds"
+#~ msgstr "Rahastot"
+
+#, kde-format
+#~ msgid "Can't load funds"
+#~ msgstr "Rahastoja ei voi ladata"
+
+#, kde-format
+#~ msgid "No bank accounts with funds yet"
+#~ msgstr "Ei vielä pankkitilejä, joilla on rahastoja"
+
+#, kde-format
+#~ msgctxt "card reserves"
+#~ msgid "Reserves"
+#~ msgstr "Varaukset"
+
+#, kde-format
+#~ msgid "Free money you can spend right now, after funds and card reserves."
+#~ msgstr "Vapaa raha, jonka voit käyttää heti, rahastojen ja korttien varausten jälkeen."
+
+#, kde-format
+#~ msgid "− Future allocations (funds and card reserves)"
+#~ msgstr "− Tulevat kohdistukset (rahastot ja korttien varaukset)"
+
+#, kde-format
+#~ msgctxt "%1 is a new fund's name, %2 the account it goes in"
+#~ msgid "%1 isn't a fund yet. Saving creates it in %2."
+#~ msgstr "%1 ei ole vielä rahasto. Tallennus luo sen tilille %2."
+
+#, kde-format
+#~ msgid "A fund"
+#~ msgstr "Rahastosta"
+
+#, kde-format
+#~ msgid "Fund"
+#~ msgstr "Rahasto"
+
+#, kde-format
+#~ msgid "Also moves the amount from the fund into the card's reserve, so the card stays covered."
+#~ msgstr "Siirtää summan myös rahastosta kortin varaukseen, jotta kortti pysyy katettuna."
+
+#, kde-format
+#~ msgctxt "%1 is the free money, %2 how many funds (“2 funds”), %3 how many card reserves (“1 reserve”)"
+#~ msgid "Free %1 · %2 · %3"
+#~ msgstr "Vapaa %1 · %2 · %3"
+
+#, kde-format
+#~ msgid "%1 fund"
+#~ msgid_plural "%1 funds"
+#~ msgstr[0] "%1 rahasto"
+#~ msgstr[1] "%1 rahastoa"
+
+#, kde-format
+#~ msgid "Set aside in funds"
+#~ msgstr "Siirretty sivuun rahastoihin"
+
+#, kde-format
+#~ msgid "Name the new fund"
+#~ msgstr "Nimeä uusi rahasto"
+
+#, kde-format
+#~ msgctxt "%1 is what was typed"
+#~ msgid "“%1” can't name a fund: no “:” or “;”"
+#~ msgstr "”%1” ei kelpaa rahaston nimeksi: ei ”:” eikä ”;”"
+
+#, kde-format
+#~ msgctxt "%1 is a payee, %2 an amount, %3 a card, %4 a fund, %5 a date"
+#~ msgid "%1: %2 on %3, paid from the %4 fund, %5."
+#~ msgstr "%1: %2 kortilla %3, maksettu rahastosta %4, %5."
+
+#, kde-format
+#~ msgctxt "%1 is an amount, %2 an account, %3 the new fund's name"
+#~ msgid "Set aside %1 from %2 into a new fund, %3."
+#~ msgstr "Siirrä %1 tililtä %2 uuteen rahastoon, %3."
+
+#, kde-format
+#~ msgctxt "%1 is the new fund's name"
+#~ msgid "kabacus-server didn't make the new fund %1: it's older than this app. Update kabacus-server, or pick a fund that exists."
+#~ msgstr "kabacus-server ei luonut uutta rahastoa %1: se on tätä sovellusta vanhempi. Päivitä kabacus-server tai valitse olemassa oleva rahasto."

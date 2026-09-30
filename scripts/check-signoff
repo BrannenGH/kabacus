@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Fails if a commit lacks a Signed-off-by line matching its author's
+# email (CONTRIBUTING.md). Merge commits and authors listed in MAINTAINERS
+# are exempt. scripts/test-check-signoff tests it.
+#
+#   scripts/check-signoff [<base> [<head>]]   # default origin/master HEAD
+#   MAINTAINERS_FILE=<path> overrides the maintainers list.
+
+set -eu
+
+base="${1:-origin/master}"
+head="${2:-HEAD}"
+maintainers="${MAINTAINERS_FILE:-$(cd "$(dirname "$0")/.." && pwd)/MAINTAINERS}"
+
+failed=0
+for commit in $(git rev-list --no-merges "$base..$head"); do
+    email="$(git log -1 --format=%ae "$commit")"
+    if grep -v '^#' "$maintainers" | grep -qixF "$email"; then
+        continue
+    fi
+    if ! git log -1 --format=%B "$commit" |
+        grep -iE '^Signed-off-by: .+ <[^>]+>[[:space:]]*$' |
+        sed -E 's/.*<([^>]+)>.*/\1/' | grep -qixF "$email"; then
+        echo "$(git log -1 --format=%h "$commit"): no Signed-off-by for $email (use git commit -s)" >&2
+        failed=1
+    fi
+done
+
+if [ "$failed" -ne 0 ]; then
+    echo "Every commit needs a Signed-off-by line matching its author (CONTRIBUTING.md)." >&2
+    exit 1
+fi

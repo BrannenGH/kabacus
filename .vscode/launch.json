@@ -1,0 +1,97 @@
+{
+  // Needs ms-vscode.cpptools. gdb runs where the program does (scripts/gdb
+  // inside the gui or dev container), so it sees the same libraries.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug app (gui container)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/target/dev/debug/kabacus",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        { "name": "KABACUS_SOCKET", "value": "${workspaceFolder}/target/scratch/server.sock" }
+      ],
+      "preLaunchTask": "build: app",
+      "pipeTransport": {
+        "pipeProgram": "${workspaceFolder}/scripts/dev",
+        "pipeArgs": ["--gui", "--wayland", "sh", "-c"],
+        "debuggerPath": "scripts/gdb"
+      },
+      "MIMode": "gdb",
+      "setupCommands": [
+        { "text": "-enable-pretty-printing", "ignoreFailures": true },
+        // Rootless podman doesn't allow turning off ASLR.
+        { "text": "set disable-randomization off" }
+      ]
+    },
+    {
+      "name": "Debug app (after server)",
+      "presentation": { "hidden": true },
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/target/dev/debug/kabacus",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        { "name": "KABACUS_SOCKET", "value": "${workspaceFolder}/target/scratch/server.sock" }
+      ],
+      "preLaunchTask": "build: app, wait for server",
+      "pipeTransport": {
+        "pipeProgram": "${workspaceFolder}/scripts/dev",
+        "pipeArgs": ["--gui", "--wayland", "sh", "-c"],
+        "debuggerPath": "scripts/gdb"
+      },
+      "MIMode": "gdb",
+      "setupCommands": [
+        { "text": "-enable-pretty-printing", "ignoreFailures": true },
+        // Rootless podman doesn't allow turning off ASLR.
+        { "text": "set disable-randomization off" }
+      ]
+    },
+    {
+      "name": "Debug server (dev container, scratch books)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/target/dev/debug/kabacus-server",
+      "args": ["--auth=none", "--socket", "${workspaceFolder}/target/scratch/server.sock"],
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        { "name": "RUST_LOG", "value": "info" },
+        { "name": "KABACUS_DATABASE", "value": "${workspaceFolder}/target/scratch/books.kabacus" }
+      ],
+      "preLaunchTask": "prepare: scratch server",
+      "pipeTransport": {
+        "pipeProgram": "${workspaceFolder}/scripts/dev",
+        "pipeArgs": ["sh", "-c"],
+        "debuggerPath": "scripts/gdb"
+      },
+      "MIMode": "gdb",
+      "setupCommands": [
+        { "text": "-enable-pretty-printing", "ignoreFailures": true },
+        // Rootless podman doesn't allow turning off ASLR.
+        { "text": "set disable-randomization off" }
+      ]
+    },
+    {
+      // Host gdb into a running app or server in a container.
+      "name": "Attach (host gdb)",
+      "type": "cppdbg",
+      "request": "attach",
+      "program": "${workspaceFolder}/target/dev/debug/kabacus",
+      "processId": "${command:pickProcess}",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "miDebuggerArgs": "-iex 'source ${workspaceFolder}/scripts/gdb-attach.py'",
+      "setupCommands": [{ "text": "-enable-pretty-printing", "ignoreFailures": true }]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug server + app",
+      "configurations": ["Debug server (dev container, scratch books)", "Debug app (after server)"],
+      "stopAll": true
+    }
+  ]
+}

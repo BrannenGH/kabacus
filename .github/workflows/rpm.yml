@@ -1,0 +1,144 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: RPM repository
+
+# The app's RPMs for every supported distribution, from
+# packaging/rpm/kabacus.spec, each built, installed and smoke-tested in a
+# container of its distribution (packaging/rpm/build-rpm).
+# - Pushes to master and version tags: build them all, then publish to
+#   repo.hallb.me.
+# - By hand (workflow_dispatch): build and test only.
+# Pull requests don't build RPMs; the CI workflow builds the DEB when the
+# app changes.
+# Versions: scripts/package-version (0.1.0~git<n>.g<commit> on master,
+# 0.1.0 on its tag, which sorts after them); release 1.<run number> on
+# master and 1 on a tag, so no two builds share a file name.
+on:
+  push:
+    branches: [master]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Never cancelled: a publish stopped halfway leaves a target behind.
+concurrency:
+  group: rpm-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  version:
+    name: version
+    runs-on: [self-hosted, podman]
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      release: ${{ steps.version.outputs.release }}
+      publish: ${{ steps.version.outputs.publish }}
+    steps:
+      # All history and tags: scripts/package-version counts commits.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: version
+        env:
+          RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          version="$(scripts/package-version)"
+          if [ "$GITHUB_REF_TYPE" = tag ]; then
+            case "$version" in
+              *~git*)
+                echo "::error::tag $GITHUB_REF_NAME doesn't match Cargo.toml's version (expected v${version%%~git*})"
+                exit 1 ;;
+            esac
+            release=1
+            publish=true
+          else
+            release="1.$RUN_NUMBER"
+            publish=false
+            [ "$GITHUB_EVENT_NAME" = push ] && [ "$GITHUB_REF" = refs/heads/master ] && publish=true
+          fi
+          echo "kabacus $version-$release, publish: $publish"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "release=$release" >> "$GITHUB_OUTPUT"
+          echo "publish=$publish" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: ${{ matrix.target }}
+    needs: version
+    runs-on: [self-hosted, podman]
+    strategy:
+      fail-fast: false
+      # One shared podman host: parallel Qt builds starve it.
+      max-parallel: 2
+      matrix:
+        # repo: the <distro>/<version> on repo.hallb.me. aliases: more
+        # repositories served the same files. Only x86_64. Left out (the
+        # specification's supported platforms say why): EL 8, SLES/SLED,
+        # SLE Micro, Leap Micro, and releases past their end of life.
+        include:
+          - { target: fedora-43, image: "registry.fedoraproject.org/fedora:43", repo: fedora/43 }
+          - { target: fedora-44, image: "registry.fedoraproject.org/fedora:44", repo: fedora/44 }
+          - { target: fedora-45, image: "registry.fedoraproject.org/fedora:45", repo: fedora/45 }
+          - { target: centos-stream-10, image: "quay.io/centos/centos:stream10", repo: centos-stream/10 }
+          # AlmaLinux: binary-compatible with RHEL, and needs no subscription.
+          - { target: rhel-10, image: "docker.io/library/almalinux:10", repo: rhel/10 }
+          - { target: opensuse-leap-16.0, image: "registry.opensuse.org/opensuse/leap:16.0", repo: opensuse-leap/16.0 }
+          # MicroOS, Aeon and Kalpa follow Tumbleweed and install its RPMs
+          # with transactional-update.
+          - { target: opensuse-tumbleweed, image: "registry.opensuse.org/opensuse/tumbleweed:latest", repo: opensuse-tumbleweed/rolling, aliases: opensuse-microos/rolling }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build, install and smoke-test
+        env:
+          RPM_VERSION: ${{ needs.version.outputs.version }}
+          RPM_RELEASE: ${{ needs.version.outputs.release }}
+          IMAGE: ${{ matrix.image }}
+          TARGET: ${{ matrix.target }}
+          # Crates are downloaded once for every target and run: beside
+          # the checkout (whose target/ each checkout cleans), where podman,
+          # outside the runner's container, can see it.
+          KABACUS_RPM_CACHE: ${{ github.workspace }}/../rpm-cache
+        run: packaging/rpm/build-rpm "$IMAGE" "dist/$TARGET"
+      - name: Describe the target
+        env:
+          TARGET: ${{ matrix.target }}
+          REPO: ${{ matrix.repo }}
+          ALIASES: ${{ matrix.aliases }}
+        run: |
+          {
+            echo "TARGET='$TARGET'"
+            echo "REPO='$REPO'"
+            echo "ALIASES='$ALIASES'"
+          } > "dist/$TARGET/target.env"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rpm-${{ matrix.target }}
+          path: dist/${{ matrix.target }}/
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    name: publish to repo.hallb.me
+    needs: [version, build]
+    # Whatever built is published: one broken target doesn't hold back the
+    # others.
+    if: ${{ !cancelled() && needs.version.outputs.publish == 'true' }}
+    runs-on: [self-hosted, podman]
+    # One upload at a time across runs: each rebuilds its directory's
+    # metadata. Never cancelled midway.
+    concurrency:
+      group: rpm-publish
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rpm-*
+          path: dist
+      - name: Publish
+        env:
+          RPM_UPLOAD_TOKEN: ${{ secrets.RPM_UPLOAD_TOKEN }}
+        run: packaging/rpm/publish dist/*/

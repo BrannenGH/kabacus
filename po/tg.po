@@ -1,0 +1,2226 @@
+# Tajik translation of Kabacus.
+# This file is distributed under the same license as the kabacus package.
+msgid ""
+msgstr ""
+"Project-Id-Version: kabacus\n"
+"Report-Msgid-Bugs-To: https://github.com/BrannenGH/kabacus/issues\n"
+"Language-Team: Tajik\n"
+"Language: tg\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml
+#, kde-format
+msgctxt "@label a form field's name"
+msgid "%1:"
+msgstr "%1:"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is the field, %2 what's wrong with it"
+msgid "%1 problem: %2"
+msgstr "Мушкилот дар %1: %2"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml
+#, kde-format
+msgctxt "%1 is the closest account to what was typed"
+msgid "Use %1"
+msgstr "Истифодаи %1"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Add"
+msgstr "Илова кардан"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Not signed in"
+msgstr "Ворид нашудаед"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml
+#, kde-format
+msgid "Can't reach kabacus-server"
+msgstr "Ба kabacus-server пайваст шудан ғайриимкон аст"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml
+#, kde-format
+msgid "No accounts"
+msgstr "Ҳисоб нест"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Activity"
+msgstr "Фаъолият"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "changes made by"
+msgid "All"
+msgstr "Ҳама"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "changes made by"
+msgid "MCP"
+msgstr "MCP"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "changes made by"
+msgid "This app"
+msgstr "Ин барнома"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "changes made by"
+msgid "External"
+msgstr "Берунӣ"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "%1 is who made a change, %2 its commit"
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgid "Can't load the history"
+msgstr "Таърихро бор кардан ғайриимкон аст"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgid "No changes"
+msgstr "Тағйирот нест"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action what happened"
+msgid "Spent"
+msgstr "Харҷ шуд"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money left an account"
+msgstr "Пул аз ҳисоб баромад"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action what happened"
+msgid "Received"
+msgstr "Гирифта шуд"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Income or a refund"
+msgstr "Даромад ё баргардонидан"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Card purchase"
+msgstr "Харид бо корт"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "Сатрҳои захираро ба ҷои шумо илова мекунад"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Transfer"
+msgstr "Интиқол"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Between two bank accounts"
+msgstr "Байни ду ҳисоби бонкӣ"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Set aside"
+msgstr "Ҷудо гузоштан"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Into a reserve, out, or between reserves"
+msgstr "Ба захира, аз он ё байни захираҳо"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Pay a card"
+msgstr "Пардохти корт"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "From its reserve"
+msgstr "Аз захираи он"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Split with someone"
+msgstr "Тақсим бо касе"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "They owe you, or you owe them"
+msgstr "Онҳо аз шумо қарздоранд ё шумо аз онҳо"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Postings"
+msgstr "Сабтҳо"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Any two accounts"
+msgstr "Ҳар ду ҳисоб"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Can't load cards"
+msgstr "Кортҳоро бор кардан ғайриимкон аст"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "No credit cards"
+msgstr "Корти кредитӣ нест"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Record purchase"
+msgstr "Сабти харид"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Pay card"
+msgstr "Пардохти корт"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgctxt "what a card owes"
+msgid "Owes"
+msgstr "Қарз"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgctxt "a card's reserve"
+msgid "Reserve"
+msgstr "Захира"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Still to reserve"
+msgstr "Ҳоло бояд захира шавад"
+
+#: crates/kabacus-kde/qml/CardsPage.qml crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "%1 is a label, %2 an amount"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "%1 transaction moves the card without moving its reserve."
+msgid_plural "%1 transactions move the card without moving its reserve."
+msgstr[0] "%1 амалиёт кортро бе тағйири захираи он тағйир медиҳад."
+msgstr[1] "%1 амалиёт кортро бе тағйири захираи он тағйир медиҳанд."
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Add all reserve lines"
+msgstr "Илова кардани ҳамаи сатрҳои захира"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgctxt "%1 is a transaction"
+msgid "%1 unreserved"
+msgstr "%1 бе захира"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgctxt "%1 is an amount"
+msgid "Missing reserve %1"
+msgstr "Захира намерасад %1"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Add reserve lines"
+msgstr "Илова кардани сатрҳои захира"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "What the reserve holds"
+msgstr "Захира аз чӣ иборат аст"
+
+#: crates/kabacus-kde/qml/CommitPage.qml
+#, kde-format
+msgid "Open transaction"
+msgstr "Кушодани амалиёт"
+
+#: crates/kabacus-kde/qml/CommitPage.qml
+#, kde-format
+msgid "Void…"
+msgstr "Бекор кардан…"
+
+#: crates/kabacus-kde/qml/CommitPage.qml
+#, kde-format
+msgctxt "%1 is who made a change, %2 when"
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: crates/kabacus-kde/qml/Fetch.qml
+#, kde-format
+msgctxt "%1 is a screen, %2 the problem"
+msgid "Couldn't update %1: %2"
+msgstr "%1 нав карда нашуд: %2"
+
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action money out of a fund"
+msgid "Release"
+msgstr "Озод кардан"
+
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action money between funds"
+msgid "Move"
+msgstr "Интиқол додан"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgid "Can't load reserves"
+msgstr "Захираҳо бор карда намешаванд"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgid "No bank accounts with reserves yet"
+msgstr "Ҳоло ҳисоби бонкии дорои захира нест"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgid "in the bank"
+msgstr "дар бонк"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgctxt "free money"
+msgid "Free"
+msgstr "Озод"
+
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Card reserves"
+msgstr "Захираҳои кортҳо"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgctxt "%1 is a fund"
+msgid "Set aside for %1"
+msgstr "Ҷудо гузоштан барои %1"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgctxt "%1 is a card"
+msgid "%1 reserve"
+msgstr "Захираи %1"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgid "Covers the card"
+msgstr "Кортро пӯшонида истодааст"
+
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 is an amount"
+msgid "%1 still to reserve"
+msgstr "Ҳоло %1 бояд захира шавад"
+
+#: crates/kabacus-kde/qml/LoansPage.qml
+#, kde-format
+msgid "No loans"
+msgstr "Қарзҳо нестанд"
+
+#: crates/kabacus-kde/qml/LoansPage.qml
+#, kde-format
+msgid "A loan or mortgage shows here once it's in the books."
+msgstr "Қарз ё ипотека ҳамин ки ба дафтарҳо дарояд, дар ин ҷо намоён мешавад."
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/src/translation.rs
+#, kde-format
+msgctxt "Which way this language is written: translate as RTL if right to left, LTR otherwise"
+msgid "LTR"
+msgstr "LTR"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Signed out"
+msgstr "Баромадед"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Overview"
+msgstr "Шарҳи умумӣ"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "destination: the accounts and their transactions"
+msgid "Transactions"
+msgstr "Амалиётҳо"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "destination: money set aside for later"
+msgid "Reserves"
+msgstr "Захираҳо"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "destination: loans and mortgages"
+msgid "Loans"
+msgstr "Қарзҳо"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "destination: credit cards"
+msgid "Credit"
+msgstr "Кредит"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/PeoplePage.qml
+#, kde-format
+msgid "People"
+msgstr "Одамон"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Reports"
+msgstr "Ҳисоботҳо"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is the commit's short hash"
+msgid "Saved as commit %1"
+msgstr "Ҳамчун commit-и %1 нигоҳ дошта шуд"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Settings"
+msgstr "Танзимот"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "@title:menu"
+msgid "File"
+msgstr "Файл"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Add transaction"
+msgstr "Илова кардани амалиёт"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Refresh"
+msgstr "Навсозӣ"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Quit"
+msgstr "Баромадан"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "@title:menu"
+msgid "Go"
+msgstr "Гузаштан"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Configure Kabacus…"
+msgstr "Танзими Kabacus…"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml
+#, kde-format
+msgctxt "the other destinations"
+msgid "More"
+msgstr "Бештар"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Authentication off (local mode)"
+msgstr "Тасдиқи ҳаққоният хомӯш аст (реҷаи маҳаллӣ)"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is why sign-in failed"
+msgid "Sign-in didn't finish: %1"
+msgstr "Ворид шудан анҷом наёфт: %1"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Your session has ended. Sign in again to see and change your books."
+msgstr "Ҷаласаи шумо анҷом ёфт. Барои дидан ва тағйир додани баҳисобгирии худ аз нав ворид шавед."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is the sign-in provider's address"
+msgid "Sign in with %1 to see your books."
+msgstr "Барои дидани баҳисобгирии худ бо %1 ворид шавед."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Sign in again"
+msgstr "Аз нав ворид шудан"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Sign in"
+msgstr "Ворид шудан"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Finish signing in in your browser…"
+msgstr "Ворид шуданро дар браузер анҷом диҳед…"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Cancel"
+msgstr "Бекор кардан"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is why the server can't be reached, as one sentence"
+msgid "%1 Showing what was loaded; changes are off until it's back."
+msgstr "%1 Он чи бор шуда буд нишон дода мешавад; то баргаштани пайваст тағйирот хомӯш аст."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Retry"
+msgstr "Аз нав кӯшидан"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Details"
+msgstr "Тафсилот"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Connection settings"
+msgstr "Танзимоти пайваст"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Error details"
+msgstr "Тафсилоти хато"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Discard this change?"
+msgstr "Ин тағйирот партофта шавад?"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "What you typed hasn't been saved."
+msgstr "Он чи навиштед нигоҳ дошта нашудааст."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Keep editing"
+msgstr "Идомаи таҳрир"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Discard"
+msgstr "Партофтан"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "The books changed"
+msgstr "Баҳисобгирӣ тағйир ёфт"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is who, %2 what they changed"
+msgid "%1 saved a change while you were reviewing: %2. Yours hasn't been written."
+msgstr "Ҳангоми санҷиши шумо %1 тағйиротро нигоҳ дошт: %2. Тағйироти шумо навишта нашуд."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is who"
+msgid "%1 saved a change while you were reviewing. Yours hasn't been written."
+msgstr "Ҳангоми санҷиши шумо %1 тағйиротро нигоҳ дошт. Тағйироти шумо навишта нашуд."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Discard mine"
+msgstr "Партофтани тағйироти ман"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Review again"
+msgstr "Аз нав санҷидан"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Can't load Cash on Hand"
+msgstr "Пули харҷшавандаро бор кардан ғайриимкон аст"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Loading…"
+msgstr "Бор шуда истодааст…"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Пули харҷшаванда"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "About Cash on Hand"
+msgstr "Дар бораи пули харҷшаванда"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Free money you can spend right now, after reserves and card reserves."
+msgstr "Пули озоде, ки ҳозир метавонед харҷ кунед, пас аз захираҳо ва захираҳои кортҳо."
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%1 аз %2"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 is an amount"
+msgid "Cash on Hand %1"
+msgstr "Пули харҷшаванда %1"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Money on Hand"
+msgstr "Пули мавҷуда"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "About Money on Hand"
+msgstr "Дар бораи пули мавҷуда"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Everything in your bank accounts, reserves and card reserves included, plus what people owe you. Cash on Hand is what's left once reserves, card reserves and what you're owed are set apart."
+msgstr "Ҳама чиз дар ҳисобҳои бонкии шумо, бо захираҳо ва захираҳои кортҳо, илова бар он чи дигарон ба шумо қарздоранд. Пули харҷшаванда он аст, ки пас аз ҷудо кардани захираҳо, захираҳои кортҳо ва талаботи шумо боқӣ мемонад."
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "− Future allocations (reserves and card reserves)"
+msgstr "− Тақсимоти оянда (захираҳо ва захираҳои кортҳо)"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "− Receivables (owed to you)"
+msgstr "− Талабот (он чи ба шумо қарздоранд)"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Free money by account"
+msgstr "Пули озод аз рӯи ҳисоб"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 is an account, %2 its free money"
+msgid "%1 free %2"
+msgstr "%1 озод %2"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "No account has free money right now."
+msgstr "Ҳоло дар ягон ҳисоб пули озод нест."
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Nothing is set aside in a reserve."
+msgstr "Дар ягон захира чизе ҷудо гузошта нашудааст."
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "a card's reserve covers what it owes"
+msgid "covered"
+msgstr "пӯшонида шуд"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Each card's reserve should equal what it owes."
+msgstr "Захираи ҳар корт бояд ба қарзи он баробар бошад."
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Cash on Hand over time"
+msgstr "Пули харҷшаванда дар тӯли вақт"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 and %3 are amounts on dates %2 and %4; %5 and %6 the lowest and highest amounts"
+msgid "From %1 on %2 to %3 on %4; lowest %5, highest %6"
+msgstr "Аз %1 дар %2 то %3 дар %4; камтарин %5, бештарин %6"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "the chart's first point: %1 is its date, %2 its amount"
+msgid "%1  %2"
+msgstr "%1  %2"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "the chart's last point, at its far end: %1 is its amount, %2 its date"
+msgid "%1  %2"
+msgstr "%1  %2"
+
+#: crates/kabacus-kde/qml/PeoplePage.qml
+#, kde-format
+msgctxt "@action split a cost with someone"
+msgid "Split"
+msgstr "Тақсим кардан"
+
+#: crates/kabacus-kde/qml/PeoplePage.qml
+#, kde-format
+msgid "Can't load people"
+msgstr "Одамонро бор кардан ғайриимкон аст"
+
+#: crates/kabacus-kde/qml/PeoplePage.qml
+#, kde-format
+msgid "Nobody owes or is owed anything"
+msgstr "Ҳеҷ кас қарздор нест ва ба ҳеҷ кас қарз нест"
+
+#: crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgid "What changes"
+msgstr "Чӣ тағйир меёбад"
+
+#: crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgctxt "%1 is an account, %2 and %3 its balance before and after"
+msgid "%1 %2 to %3"
+msgstr "%1 аз %2 ба %3"
+
+#: crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgctxt "%1 and %2 are amounts"
+msgid "Cash on Hand %1 to %2"
+msgstr "Пули харҷшаванда аз %1 ба %2"
+
+#: crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgctxt "%1 is the warning's text"
+msgid "Warning: %1"
+msgstr "Огоҳӣ: %1"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "%1 is an account"
+msgid "Reconcile %1"
+msgstr "Мутобиқ кардани %1"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Statement date:"
+msgstr "Санаи иқтибос:"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgid "Statement date"
+msgstr "Санаи иқтибос"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "the date format to type; dates are always typed this way"
+msgid "YYYY-MM-DD"
+msgstr "СССС-ММ-РР"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Statement balance:"
+msgstr "Бақияи иқтибос:"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgid "Statement balance"
+msgstr "Бақияи иқтибос"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "@action:button compare with the statement"
+msgid "Check"
+msgstr "Санҷидан"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "%1 is a balance, %2 a date"
+msgid "Matched: %1 on %2, the same as the statement."
+msgstr "Мувофиқ аст: %1 дар %2, мисли иқтибос."
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "%1 is the books' balance, %2 the statement's, %3 the difference"
+msgid "Doesn't match yet: the books say %1, the statement %2 (difference %3). Nothing has been written."
+msgstr "Ҳоло мувофиқ нест: баҳисобгирӣ %1 мегӯяд, иқтибос %2 (фарқ %3). Ҳеҷ чиз навишта нашуд."
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Reconcile"
+msgstr "Мутобиқ кардан"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgid "Likely explanations"
+msgstr "Шарҳҳои эҳтимолӣ"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgid "Edit"
+msgstr "Таҳрир кардан"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "a card transaction without its reserve lines"
+msgid "unreserved"
+msgstr "бе захира"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "money moved between an account and its funds"
+msgid "within account"
+msgstr "дар дохили ҳисоб"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Account type"
+msgstr "Навъи ҳисоб"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "@action compare an account with its statement"
+msgid "Reconcile…"
+msgstr "Мутобиқ кардан…"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Search"
+msgstr "Ҷустуҷӯ"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Search payee, memo, account"
+msgstr "Ҷустуҷӯи гиранда, эзоҳ, ҳисоб"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Unreserved only"
+msgstr "Танҳо бе захира"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is a payee, %2 a date"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is an account, %2 a memo"
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is an amount"
+msgid "%1 moved"
+msgstr "%1 интиқол ёфт"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is a date, %2 an account"
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Can't load this register"
+msgstr "Ин феҳристро бор кардан ғайриимкон аст"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is what was searched for"
+msgid "No transactions match “%1”"
+msgstr "Амалиёте, ки ба «%1» мувофиқ бошад, нест"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "No unreserved transactions"
+msgstr "Амалиёти бе захира нест"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "No transactions"
+msgstr "Амалиёт нест"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Clear search"
+msgstr "Тоза кардани ҷустуҷӯ"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "%1 is a month's name, %2 its year"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Previous month"
+msgstr "Моҳи гузашта"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Next month"
+msgstr "Моҳи оянда"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Cash flow"
+msgstr "Гардиши пул"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Income statement"
+msgstr "Ҳисоботи даромад ва хароҷот"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Categories"
+msgstr "Категорияҳо"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "%1 is a month and year"
+msgid "Why Cash on Hand changed in %1"
+msgstr "Чаро пули харҷшаванда дар %1 тағйир ёфт"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "column: money moved in cash"
+msgid "Cash"
+msgstr "Нақд"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "column: changes that aren't cash"
+msgid "Not cash"
+msgstr "Ғайринақд"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Income:"
+msgstr "Даромад:"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Expenses:"
+msgstr "Хароҷот:"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Loan principal:"
+msgstr "Асли қарз:"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "@label income less expenses"
+msgid "Net:"
+msgstr "Соф:"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Count loan principal as money spent"
+msgstr "Пардохти асли қарзро ҳамчун харҷ ҳисоб кардан"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "column: money spent"
+msgid "Spent"
+msgstr "Харҷ шуд"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "column: compared with %1, the month before"
+msgid "vs %1"
+msgstr "нисбат ба %1"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "%1 is a month and year"
+msgid "No spending in %1"
+msgstr "Дар %1 харҷ нест"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml
+#, kde-format
+msgid "Review before saving"
+msgstr "Санҷиш пеш аз нигоҳдорӣ"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml
+#, kde-format
+msgid "Back to edit"
+msgstr "Бозгашт ба таҳрир"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Saving…"
+msgstr "Нигоҳ дошта истодааст…"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Save"
+msgstr "Нигоҳ доштан"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Checking with the server…"
+msgstr "Бо сервер санҷида истодааст…"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml
+#, kde-format
+msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
+msgid "This would break a balance check: %1 should be %2 but would be %3. Check the date and amount; never move the date just to get past it."
+msgstr "Ин санҷиши бақияро вайрон мекунад: %1 бояд %2 бошад, вале %3 мешавад. Сана ва маблағро санҷед; ҳеҷ гоҳ санаро танҳо барои гузаштан аз санҷиш наҷунбонед."
+
+#: crates/kabacus-kde/qml/ReviewPage.qml
+#, kde-format
+msgid "Change the transaction"
+msgstr "Тағйир додани амалиёт"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Test connection"
+msgstr "Санҷиши пайваст"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Connection settings saved"
+msgstr "Танзимоти пайваст нигоҳ дошта шуд"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Server:"
+msgstr "Сервер:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "On this computer"
+msgstr "Дар ин компютер"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "On another computer (HTTPS)"
+msgstr "Дар компютери дигар (HTTPS)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "the server's unix socket"
+msgid "Socket"
+msgstr "Сокет"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label the server's unix socket"
+msgid "Socket:"
+msgstr "Сокет:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Server address"
+msgstr "Суроғаи сервер"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Server address:"
+msgstr "Суроғаи сервер:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label a private certificate authority"
+msgid "Private CA:"
+msgstr "CA-и хусусӣ:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "a private certificate authority"
+msgid "Private CA"
+msgstr "CA-и хусусӣ"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "System certificates only"
+msgstr "Танҳо сертификатҳои система"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Choose…"
+msgstr "Интихоб…"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Only needed when the server's certificate comes from your own CA."
+msgstr "Танҳо вақте лозим аст, ки сертификати сервер аз CA-и худи шумо бошад."
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@title the signed-in user"
+msgid "Account"
+msgstr "Ҳисоби корбар"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Signed in:"
+msgstr "Воридшуда:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Not needed: authentication is off (local mode)"
+msgstr "Лозим нест: тасдиқи ҳаққоният хомӯш аст (реҷаи маҳаллӣ)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "%1 is the user, %2 the sign-in provider"
+msgid "%1 (%2)"
+msgstr "%1 (%2)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "signed in; %1 is the sign-in provider"
+msgid "Yes (%1)"
+msgstr "Ҳа (%1)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Session ended; sign in again"
+msgstr "Ҷаласа анҷом ёфт; аз нав ворид шавед"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "not signed in"
+msgid "No"
+msgstr "Не"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Unknown: can't reach the server"
+msgstr "Номаълум: ба сервер пайваст шудан ғайриимкон аст"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Waiting for the browser…"
+msgstr "Интизори браузер…"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Sign out"
+msgstr "Баромадан"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@title about the server"
+msgid "About"
+msgstr "Дар бораи барнома"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Can't reach the server to read its version"
+msgstr "Барои хондани версияи сервер ба он пайваст шудан мумкин нест"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label the server's version"
+msgid "Server version:"
+msgstr "Версияи сервер:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label the commit the server was built from"
+msgid "Commit:"
+msgstr "Коммит:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label where the server's source code is"
+msgid "Source code:"
+msgstr "Рамзи сарчашма:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Open the source code"
+msgstr "Кушодани рамзи сарчашма"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Choose the private CA"
+msgstr "Интихоби CA-и хусусӣ"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Certificates (*.pem *.crt)"
+msgstr "Сертификатҳо (*.pem *.crt)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "All files (*)"
+msgstr "Ҳамаи файлҳо (*)"
+
+#: crates/kabacus-kde/qml/StatementPage.qml
+#, kde-format
+msgid "Open items only"
+msgstr "Танҳо мавқеъҳои кушода"
+
+#: crates/kabacus-kde/qml/StatementPage.qml
+#, kde-format
+msgctxt "%1 is a transaction, %2 its date"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: crates/kabacus-kde/qml/StatementPage.qml
+#, kde-format
+msgid "Can't load the statement"
+msgstr "Иқтибосро бор кардан ғайриимкон аст"
+
+#: crates/kabacus-kde/qml/StatementPage.qml
+#, kde-format
+msgid "Nothing this year"
+msgstr "Имсол ҳеҷ чиз нест"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Set money aside"
+msgstr "Ҷудо гузоштани пул"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Edit transaction"
+msgstr "Таҳрири амалиёт"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Fix reserve lines"
+msgstr "Ислоҳи сатрҳои захира"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "the payee a transfer is given"
+msgid "Transfer"
+msgstr "Интиқол"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Review"
+msgstr "Санҷидан"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
+msgid "This would break a balance check: %1 should be %2 but would be %3. Check the date and amount."
+msgstr "Ин санҷиши бақияро вайрон мекунад: %1 бояд %2 бошад, вале %3 мешавад. Сана ва маблағро санҷед."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Edit in place"
+msgstr "Таҳрир дар ҷояш"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Changes it where it is. History keeps the old version."
+msgstr "Онро дар ҷояш тағйир медиҳад. Таърих версияи кӯҳнаро нигоҳ медорад."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@option cancel a transaction with a reversal"
+msgid "Void"
+msgstr "Бекор кардан"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Only the reversal: it didn't happen."
+msgstr "Танҳо сабти баръакс: гӯё рӯй надодааст."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Real account"
+msgstr "Ҳисоби воқеӣ"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Synthetic account"
+msgstr "Ҳисоби маҷозӣ"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "a credit card"
+msgid "Card"
+msgstr "Корт"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label what a shared cost was for"
+msgid "What:"
+msgstr "Чӣ:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Payee:"
+msgstr "Гиранда:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Payee"
+msgstr "Гиранда"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is a payee, %2 the category it usually has, %3 the amount it had last"
+msgid "%1 — usually %2, last %3"
+msgstr "%1 — одатан %2, бори охир %3"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Paid with"
+msgstr "Пардохт бо"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "the account money comes from"
+msgid "From"
+msgstr "Аз"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "That's a card: record a card purchase so its reserve stays covered."
+msgstr "Ин корт аст: харидро бо корт сабт кунед, то захираи он пӯшонида монад."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Category"
+msgstr "Категория"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "the account money goes to"
+msgid "To"
+msgstr "Ба"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is a new reserve's name, %2 the account it goes in"
+msgid "%1 isn't a reserve yet. Saving creates it in %2."
+msgstr "%1 ҳоло захира нест. Нигоҳ доштан онро дар %2 эҷод мекунад."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Paid from:"
+msgstr "Пардохт аз:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Free money"
+msgstr "Пули озод"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "A reserve"
+msgstr "Захира"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "money set aside"
+msgid "Reserve"
+msgstr "Захира"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "the person a cost is split with"
+msgid "With"
+msgstr "Бо"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Total:"
+msgstr "Ҳамагӣ:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Amount:"
+msgstr "Маблағ:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Amount"
+msgstr "Маблағ"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Their share:"
+msgstr "Ҳиссаи онҳо:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Their share"
+msgstr "Ҳиссаи онҳо"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "their share is half the total"
+msgid "Half"
+msgstr "Нисф"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "their share is the whole total"
+msgid "All of it"
+msgstr "Ҳама"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Date:"
+msgstr "Сана:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Date"
+msgstr "Сана"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Description:"
+msgstr "Тавсиф:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Memo:"
+msgstr "Эзоҳ:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Memo"
+msgstr "Эзоҳ"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Transactions:"
+msgstr "Амалиётҳо:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is how many of the chosen transactions"
+msgid "%1 missing its reserve lines"
+msgid_plural "%1 missing their reserve lines"
+msgstr[0] "%1 бе сатрҳои захира"
+msgstr[1] "%1 бе сатрҳои захира"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Also moves the amount from free money into the card's reserve, so the card stays covered."
+msgstr "Маблағро инчунин аз пули озод ба захираи корт мегузаронад, то корт пӯшонида монад."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Also moves the amount from the reserve into the card's reserve, so the card stays covered."
+msgstr "Маблағро аз захира ба захираи корт низ мегузаронад, то корт пӯшонида монад."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Preview"
+msgstr "Пешнамоиш"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Updates as you type. Nothing is written until you save."
+msgstr "Ҳангоми навиштан нав мешавад. То нигоҳ доштан ҳеҷ чиз навишта намешавад."
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgid "The server uses OAuth but didn't say which provider"
+msgstr "Сервер OAuth-ро истифода мебарад, вале нагуфт, ки кадом провайдер"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgid "The server uses OAuth but has no client id for the app"
+msgstr "Сервер OAuth-ро истифода мебарад, вале барои барнома ID-и мизоҷ надорад"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Can't read the secret store: %1"
+msgstr "Анбори асрорро хондан ғайриимкон аст: %1"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgid "This server doesn't use sign-in (authentication is off)"
+msgstr "Ин сервер воридшавиро истифода намебарад (тасдиқи ҳаққоният хомӯш аст)"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Signed out, but couldn't clear the secret store: %1"
+msgstr "Баромадед, вале анбори асрорро тоза кардан нашуд: %1"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Signed out, but the provider couldn't revoke the session: %1"
+msgstr "Баромадед, вале провайдер ҷаласаро бекор карда натавонист: %1"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Signed in, but the secret store couldn't keep it (%1); you'll be asked again next time"
+msgstr "Ворид шудед, вале анбори асрор онро нигоҳ дошта натавонист (%1); дафъаи оянда аз нав пурсида мешавад"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Couldn't save the settings: %1"
+msgstr "Танзимотро нигоҳ доштан нашуд: %1"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgid "Can't reach the server to find out how to sign in"
+msgstr "Барои донистани тарзи воридшавӣ ба сервер пайваст шудан ғайриимкон аст"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Can't reach kabacus-server. Is it running?"
+msgstr "Ба kabacus-server пайваст шудан ғайриимкон аст. Оё он кор мекунад?"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgctxt "%1 is the server's address"
+msgid "Can't reach kabacus-server at %1. Is it running?"
+msgstr "Ба kabacus-server дар %1 пайваст шудан ғайриимкон аст. Оё он кор мекунад?"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "The server is taking too long to answer."
+msgstr "Сервер хеле дер ҷавоб медиҳад."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Your session ended. Sign in again."
+msgstr "Ҷаласаи шумо анҷом ёфт. Аз нав ворид шавед."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Signing in didn't work. Try again."
+msgstr "Ворид шудан муяссар нашуд. Аз нав кӯшиш кунед."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "You can view these books but not change them."
+msgstr "Шумо ин баҳисобгириро дида метавонед, вале тағйир дода наметавонед."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "That isn't in the books any more."
+msgstr "Ин дигар дар баҳисобгирӣ нест."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "The books changed while you were editing. Review again."
+msgstr "Ҳангоми таҳрири шумо баҳисобгирӣ тағйир ёфт. Аз нав санҷед."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "The server had a problem."
+msgstr "Дар сервер мушкилот пайдо шуд."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgctxt "between the items of a list, such as amounts or account names"
+msgid ", "
+msgstr ", "
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "All transactions"
+msgstr "Ҳамаи амалиётҳо"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgctxt "%1 is the account money came from, %2 the account it went to"
+msgid "%1 → %2"
+msgstr "%1 → %2"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Date must be YYYY-MM-DD"
+msgstr "Сана бояд СССС-ММ-РР бошад"
+
+#: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a form field"
+msgid "%1 is required"
+msgstr "%1 ҳатмӣ аст"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Choose both accounts"
+msgstr "Ҳар ду ҳисобро интихоб кунед"
+
+#: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "From and To must differ"
+msgstr "«Аз» ва «Ба» бояд гуногун бошанд"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Amount must be more than zero"
+msgstr "Маблағ бояд аз сифр зиёд бошад"
+
+#: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "The books have no commits yet"
+msgstr "Дар баҳисобгирӣ ҳоло commit нест"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Split transactions can't be edited here yet"
+msgstr "Амалиётҳои тақсимшударо ҳоло дар ин ҷо таҳрир кардан мумкин нест"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Multi-currency transactions can't be edited here yet"
+msgstr "Амалиётҳои бисёрасъориро ҳоло дар ин ҷо таҳрир кардан мумкин нест"
+
+#: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a transaction id"
+msgid "Transaction %1 wasn't found"
+msgstr "Амалиёти %1 ёфт нашуд"
+
+#: crates/kabacus-kde/src/secrets.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "can't reach the secret store: %1"
+msgstr "ба анбори асрор дастрасӣ нест: %1"
+
+#: crates/kabacus-kde/src/secrets.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "the secret store has no wallet or keyring to keep it in (%1)"
+msgstr "дар анбори асрор ҳамён ё дастаи калид барои нигоҳ доштан нест (%1)"
+
+#: crates/kabacus-kde/src/secrets.rs
+#, kde-format
+msgctxt "%1 is the server's address"
+msgid "Kabacus sign-in for %1"
+msgstr "Воридшавии Kabacus барои %1"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgid "Enter the server's address"
+msgstr "Суроғаи серверро ворид кунед"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is a file, %2 why it can't be read"
+msgid "Can't read the private CA %1: %2"
+msgstr "CA-и хусусии %1-ро хондан ғайриимкон аст: %2"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgid "The server address must start with https://"
+msgstr "Суроғаи сервер бояд бо https:// оғоз шавад"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgid "Can't reach the server: no answer within 10 seconds"
+msgstr "Ба сервер пайваст шудан ғайриимкон аст: дар 10 сония ҷавоб нест"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%2 is the server's version"
+msgid "Connected to kabacus-server %2: %1 account"
+msgid_plural "Connected to kabacus-server %2: %1 accounts"
+msgstr[0] "Ба kabacus-server %2 пайваст шуд: %1 ҳисоб"
+msgstr[1] "Ба kabacus-server %2 пайваст шуд: %1 ҳисоб"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is the server's version, %2 the sign-in provider's address"
+msgid "Reached kabacus-server %1. It needs you to sign in with %2."
+msgstr "kabacus-server %1 дастрас аст. Шумо бояд бо %2 ворид шавед."
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is the server's version"
+msgid "Reached kabacus-server %1. It needs you to sign in with its OAuth provider."
+msgstr "kabacus-server %1 дастрас аст. Шумо бояд тавассути провайдери OAuth-и он ворид шавед."
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is a role's name"
+msgid "Reached the server, but you lack the %1 role"
+msgstr "Сервер дастрас аст, вале шумо нақши %1-ро надоред"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "The server's certificate isn't trusted. If it comes from a private CA, choose that CA's file. (%1)"
+msgstr "Ба сертификати сервер боварӣ нест. Агар он аз CA-и хусусӣ бошад, файли ҳамон CA-ро интихоб кунед. (%1)"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Can't reach the server: %1"
+msgstr "Ба сервер пайваст шудан ғайриимкон аст: %1"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "@action fix a card"
+msgid "Fix"
+msgstr "Ислоҳ кардан"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Categorize"
+msgstr "Категориябандӣ"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Move money"
+msgstr "Интиқоли пул"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Money"
+msgstr "Пул"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Cards"
+msgstr "Кортҳо"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Loans"
+msgstr "Қарзҳо"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Investments"
+msgstr "Сармоягузориҳо"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "People"
+msgstr "Одамон"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Spending"
+msgstr "Хароҷот"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Income"
+msgstr "Даромад"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Other"
+msgstr "Дигар"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "%1 is the free money, %2 how many reserves (“2 reserves”), %3 how many card reserves (“1 card reserve”)"
+msgid "Free %1 · %2 · %3"
+msgstr "Озод %1 · %2 · %3"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "%1 reserve"
+msgid_plural "%1 reserves"
+msgstr[0] "%1 захира"
+msgstr[1] "%1 захира"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "%1 card reserve"
+msgid_plural "%1 card reserves"
+msgstr[0] "%1 захираи корт"
+msgstr[1] "%1 захираи корт"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "%1 is the card's reserve"
+msgid "Reserve %1"
+msgstr "Захира %1"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Owes you"
+msgstr "Аз шумо қарздор аст"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "You owe"
+msgstr "Шумо қарздоред"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "nobody owes anything"
+msgid "Settled"
+msgstr "Ҳисоб баробар шуд"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "Cash on Hand at the start"
+msgid "Opening"
+msgstr "Оғоз"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "Cash on Hand at the end"
+msgid "Closing"
+msgstr "Анҷом"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Set aside in reserves"
+msgstr "Дар захираҳо ҷудо гузошташуда"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Loan principal"
+msgstr "Асли қарз"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Fronted for others"
+msgstr "Барои дигарон пардохт шуд"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Owed to others"
+msgstr "Қарз ба дигарон"
+
+#: crates/kabacus-kde/src/views.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "MCP"
+msgstr "MCP"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "This app"
+msgstr "Ин барнома"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "External edit"
+msgstr "Таҳрири берунӣ"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "Unknown"
+msgstr "Номаълум"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an account"
+msgid "This would break a balance check on %1"
+msgstr "Ин санҷиши бақияро дар %1 вайрон мекунад"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is the change made meanwhile"
+msgid "The books changed: %1"
+msgstr "Баҳисобгирӣ тағйир ёфт: %1"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Use a date like 2026-10-03"
+msgstr "Санаеро мисли 2026-10-03 истифода баред"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Must be more than zero"
+msgstr "Бояд аз сифр зиёд бошад"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Enter an amount"
+msgstr "Маблағро ворид кунед"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Not an amount: use digits and a decimal point, like 12.34"
+msgstr "Ин маблағ нест: рақамҳо ва нуқтаи даҳӣ истифода баред, масалан 12.34"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is the amount as it should be typed"
+msgid "Use a decimal point: %1"
+msgstr "Нуқтаи даҳӣ истифода баред: %1"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Use a whole number, without decimal places"
+msgstr "Адади бутунро бе каср истифода баред"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Use at most %1 decimal place"
+msgid_plural "Use at most %1 decimal places"
+msgstr[0] "На бештар аз %1 рақами даҳӣ истифода баред"
+msgstr[1] "На бештар аз %1 рақами даҳӣ истифода баред"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Name the new reserve"
+msgstr "Ба захираи нав ном диҳед"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is what was typed"
+msgid "“%1” can't name a reserve: no “:” or “;”"
+msgstr "«%1» номи захира шуда наметавонад: бе «:» ё «;»"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is what was typed"
+msgid "There's no account called %1"
+msgstr "Ҳисобе бо номи %1 нест"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee, %2 an amount, %3 and %4 accounts, %5 a date"
+msgid "%1: %2 from %3 to %4, %5."
+msgstr "%1: %2 аз %3 ба %4, %5."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee, %2 an amount, %3 a card, %4 a date"
+msgid "%1: %2 on %3, paid from free money, %4."
+msgstr "%1: %2 бо %3, аз пули озод пардохт шуд, %4."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee, %2 an amount, %3 a card, %4 a reserve, %5 a date"
+msgid "%1: %2 on %3, paid from the %4 reserve, %5."
+msgstr "%1: %2 бо %3, аз захираи %4 пардохт шуд, %5."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 an account, %3 the new reserve's name"
+msgid "Set aside %1 from %2 into a new reserve, %3."
+msgstr "%1-ро аз %2 ба захираи нави %3 ҷудо гузоштан."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 and %3 accounts"
+msgid "Move %1 from %2 to %3."
+msgstr "Интиқоли %1 аз %2 ба %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a card"
+msgid "Pay %1 to %2 from its reserve."
+msgstr "Пардохти %1 ба %2 аз захираи он."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee, %2 the total, %3 an account, %4 a person, %5 their share"
+msgid "%1: %2 paid with %3; %4 owes %5 of it."
+msgstr "%1: %2 бо %3 пардохт шуд; %4 аз он %5 қарздор аст."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee"
+msgid "Edit %1 in place. History keeps the old version."
+msgstr "Таҳрири %1 дар ҷояш. Таърих версияи кӯҳнаро нигоҳ медорад."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Void it: add a reversal, dated today."
+msgstr "Бекор кардан: илова кардани сабти баръакс бо санаи имрӯза."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an account, %2 a date, %3 a balance"
+msgid "Record that %1 matched the statement on %2: %3."
+msgstr "Сабт кардан, ки %1 дар %2 ба иқтибос мувофиқ буд: %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%2 is a card"
+msgid "Add the missing reserve lines to %1 transaction on %2, as one change."
+msgid_plural "Add the missing reserve lines to %1 transactions on %2, as one change."
+msgstr[0] "Илова кардани сатрҳои захираи намерасида ба %1 амалиёти %2 ҳамчун як тағйирот."
+msgstr[1] "Илова кардани сатрҳои захираи намерасида ба %1 амалиёти %2 ҳамчун як тағйирот."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "the person a cost is split with"
+msgid "Who"
+msgstr "Кӣ"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Their share can't be more than the total"
+msgstr "Ҳиссаи онҳо аз маблағи умумӣ зиёд буда наметавонад"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "The transaction"
+msgstr "Амалиёт"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Choose at least one transaction"
+msgstr "Ақаллан як амалиётро интихоб кунед"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a card"
+msgid "%1 has no reserve account"
+msgstr "%1 ҳисоби захира надорад"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a transaction's payee"
+msgid "%1 isn't missing reserve lines"
+msgstr "Дар %1 сатрҳои захира кам нестанд"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is the new reserve's name"
+msgid "kabacus-server didn't make the new reserve %1: it's older than this app. Update kabacus-server, or pick a reserve that exists."
+msgstr "kabacus-server захираи нави %1-ро эҷод накард: он аз ин барнома кӯҳнатар аст. kabacus-server-ро навсозӣ кунед ё захираи мавҷударо интихоб кунед."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "This app, on another device"
+msgstr "Ин барнома, дар дастгоҳи дигар"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "An external edit"
+msgstr "Таҳрири берунӣ"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "Someone"
+msgstr "Касе"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Nothing to save: the books already say this."
+msgstr "Чизе барои нигоҳ доштан нест: баҳисобгирӣ аллакай ҳамин тавр аст."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "The books still check out with this change"
+msgstr "Бо ин тағйирот китобҳо ҳанӯз дурустанд"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a card"
+msgid "%1 stays covered by its reserve"
+msgstr "%1 бо захираи худ пӯшонида мемонад"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "A card is missing its reserve lines; it will be flagged"
+msgstr "Ба корт сатрҳои захира намерасад; он қайд карда мешавад"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Missing reserve %1 · a corrected original"
+#~ msgstr "Захира намерасад %1 · асли ислоҳшуда"
+
+#, kde-format
+#~ msgid "Correct…"
+#~ msgstr "Ислоҳ кардан…"
+
+#, kde-format
+#~ msgctxt "a transaction that was corrected"
+#~ msgid "correction"
+#~ msgstr "ислоҳ"
+
+#, kde-format
+#~ msgid "Changes it where it is. Git keeps the old version."
+#~ msgstr "Онро дар ҷояш тағйир медиҳад. Git версияи кӯҳнаро нигоҳ медорад."
+
+#, kde-format
+#~ msgid "Add a correction"
+#~ msgstr "Илова кардани ислоҳ"
+
+#, kde-format
+#~ msgid "A reversal and a replacement, dated today. For books that mustn't change after the fact (reconciled or shared)."
+#~ msgstr "Сабти баръакс ва ивазкунанда бо санаи имрӯза. Барои баҳисобгирие, ки баъдтар набояд тағйир ёбад (мутобиқшуда ё муштарак)."
+
+#, kde-format
+#~ msgid "A correction is dated today."
+#~ msgstr "Ислоҳ бо санаи имрӯза сабт мешавад."
+
+#, kde-format
+#~ msgctxt "%1 is a payee"
+#~ msgid "Edit %1 in place. Git keeps the old version."
+#~ msgstr "Таҳрири %1 дар ҷояш. Git версияи кӯҳнаро нигоҳ медорад."
+
+#, kde-format
+#~ msgctxt "%1 is a payee"
+#~ msgid "Correct %1: a reversal and a replacement, dated today."
+#~ msgstr "Ислоҳи %1: сабти баръакс ва ивазкунанда бо санаи имрӯза."
+
+#, kde-format
+#~ msgid "hledger check passed on a scratch copy"
+#~ msgstr "Санҷиши hledger дар нусхаи корӣ гузашт"
+
+#, kde-format
+#~ msgctxt "%1 is a file, %2–%3 lines in it"
+#~ msgid "%1 · lines %2–%3"
+#~ msgstr "%1 · сатрҳои %2–%3"
+
+#, kde-format
+#~ msgid "Amount is too large"
+#~ msgstr "Маблағ хеле калон аст"
+
+#, kde-format
+#~ msgctxt "@label"
+#~ msgid "Account:"
+#~ msgstr "Ҳисоб:"
+
+#, kde-format
+#~ msgid "Account"
+#~ msgstr "Ҳисоб"
+
+#, kde-format
+#~ msgid "Accounts"
+#~ msgstr "Ҳисобҳо"
+
+#, kde-format
+#~ msgid "Into a fund, out, or between funds"
+#~ msgstr "Ба фонд, аз фонд ё байни фондҳо"
+
+#, kde-format
+#~ msgid "Cards"
+#~ msgstr "Кортҳо"
+
+#, kde-format
+#~ msgid "Funds"
+#~ msgstr "Фондҳо"
+
+#, kde-format
+#~ msgid "Can't load funds"
+#~ msgstr "Фондҳоро бор кардан ғайриимкон аст"
+
+#, kde-format
+#~ msgid "No bank accounts with funds yet"
+#~ msgstr "Ҳоло ҳисоби бонкии дорои фонд нест"
+
+#, kde-format
+#~ msgctxt "card reserves"
+#~ msgid "Reserves"
+#~ msgstr "Захираҳо"
+
+#, kde-format
+#~ msgid "Free money you can spend right now, after funds and card reserves."
+#~ msgstr "Пули озоде, ки ҳозир харҷ карда метавонед, баъд аз фондҳо ва захираҳои кортҳо."
+
+#, kde-format
+#~ msgid "− Future allocations (funds and card reserves)"
+#~ msgstr "− Тақсимоти оянда (фондҳо ва захираҳои кортҳо)"
+
+#, kde-format
+#~ msgctxt "%1 is a new fund's name, %2 the account it goes in"
+#~ msgid "%1 isn't a fund yet. Saving creates it in %2."
+#~ msgstr "%1 ҳоло фонд нест. Нигоҳдорӣ онро дар %2 месозад."
+
+#, kde-format
+#~ msgid "A fund"
+#~ msgstr "Фонд"
+
+#, kde-format
+#~ msgid "Fund"
+#~ msgstr "Фонд"
+
+#, kde-format
+#~ msgid "Also moves the amount from the fund into the card's reserve, so the card stays covered."
+#~ msgstr "Маблағро инчунин аз фонд ба захираи корт мегузаронад, то корт пӯшонида монад."
+
+#, kde-format
+#~ msgctxt "%1 is the free money, %2 how many funds (“2 funds”), %3 how many card reserves (“1 reserve”)"
+#~ msgid "Free %1 · %2 · %3"
+#~ msgstr "Озод %1 · %2 · %3"
+
+#, kde-format
+#~ msgid "%1 fund"
+#~ msgid_plural "%1 funds"
+#~ msgstr[0] "%1 фонд"
+#~ msgstr[1] "%1 фонд"
+
+#, kde-format
+#~ msgid "Set aside in funds"
+#~ msgstr "Ба фондҳо ҷудо гузошта шуд"
+
+#, kde-format
+#~ msgid "Name the new fund"
+#~ msgstr "Ба фонди нав ном диҳед"
+
+#, kde-format
+#~ msgctxt "%1 is what was typed"
+#~ msgid "“%1” can't name a fund: no “:” or “;”"
+#~ msgstr "«%1» номи фонд шуда наметавонад: бе «:» ё «;»"
+
+#, kde-format
+#~ msgctxt "%1 is a payee, %2 an amount, %3 a card, %4 a fund, %5 a date"
+#~ msgid "%1: %2 on %3, paid from the %4 fund, %5."
+#~ msgstr "%1: %2 бо %3, аз фонди %4 пардохт шуд, %5."
+
+#, kde-format
+#~ msgctxt "%1 is an amount, %2 an account, %3 the new fund's name"
+#~ msgid "Set aside %1 from %2 into a new fund, %3."
+#~ msgstr "Ҷудо гузоштани %1 аз %2 ба фонди нави %3."
+
+#, kde-format
+#~ msgctxt "%1 is the new fund's name"
+#~ msgid "kabacus-server didn't make the new fund %1: it's older than this app. Update kabacus-server, or pick a fund that exists."
+#~ msgstr "kabacus-server фонди нави %1-ро насохт: он аз ин барнома кӯҳнатар аст. kabacus-server-ро навсозӣ кунед ё фонди мавҷударо интихоб кунед."

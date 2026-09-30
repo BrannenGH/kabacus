@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# gdb with Rust pretty-printers where the toolchain has them (rust-gdb),
+# plain gdb otherwise. Runs wherever it is invoked: the VS Code debug
+# configs start it inside the gui or dev container (scripts/dev), so the
+# debugger sees the same libraries as the program.
+#   scripts/dev --gui --wayland scripts/gdb --args target/dev/debug/kabacus
+gdb=$(command -v rust-gdb || command -v gdb) || { echo "scripts/gdb: no gdb here" >&2; exit 127; }
+exec "$gdb" "$@"

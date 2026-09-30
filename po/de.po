@@ -1,0 +1,2226 @@
+# German translation of Kabacus.
+# This file is distributed under the same license as the kabacus package.
+msgid ""
+msgstr ""
+"Project-Id-Version: kabacus\n"
+"Report-Msgid-Bugs-To: https://github.com/BrannenGH/kabacus/issues\n"
+"Language-Team: German\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml
+#, kde-format
+msgctxt "@label a form field's name"
+msgid "%1:"
+msgstr "%1:"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is the field, %2 what's wrong with it"
+msgid "%1 problem: %2"
+msgstr "Problem bei %1: %2"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml
+#, kde-format
+msgctxt "%1 is the closest account to what was typed"
+msgid "Use %1"
+msgstr "%1 verwenden"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Not signed in"
+msgstr "Nicht angemeldet"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml
+#, kde-format
+msgid "Can't reach kabacus-server"
+msgstr "kabacus-server ist nicht erreichbar"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml
+#, kde-format
+msgid "No accounts"
+msgstr "Keine Konten"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Activity"
+msgstr "Aktivität"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "changes made by"
+msgid "All"
+msgstr "Alle"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "changes made by"
+msgid "MCP"
+msgstr "MCP"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "changes made by"
+msgid "This app"
+msgstr "Diese App"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "changes made by"
+msgid "External"
+msgstr "Extern"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgctxt "%1 is who made a change, %2 its commit"
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgid "Can't load the history"
+msgstr "Der Verlauf kann nicht geladen werden"
+
+#: crates/kabacus-kde/qml/ActivityPage.qml
+#, kde-format
+msgid "No changes"
+msgstr "Keine Änderungen"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action what happened"
+msgid "Spent"
+msgstr "Ausgegeben"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money left an account"
+msgstr "Geld hat ein Konto verlassen"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action what happened"
+msgid "Received"
+msgstr "Erhalten"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Income or a refund"
+msgstr "Einnahme oder Erstattung"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Card purchase"
+msgstr "Kartenkauf"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "Fügt die Reservezeilen für Sie hinzu"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Transfer"
+msgstr "Umbuchung"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Between two bank accounts"
+msgstr "Zwischen zwei Bankkonten"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Set aside"
+msgstr "Zurücklegen"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Into a reserve, out, or between reserves"
+msgstr "In eine Reserve, heraus oder zwischen Reserven"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Pay a card"
+msgstr "Karte bezahlen"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "From its reserve"
+msgstr "Aus ihrer Reserve"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Split with someone"
+msgstr "Mit jemandem teilen"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "They owe you, or you owe them"
+msgstr "Jemand schuldet Ihnen etwas, oder Sie schulden jemandem etwas"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Postings"
+msgstr "Buchungen"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Any two accounts"
+msgstr "Zwei beliebige Konten"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Can't load cards"
+msgstr "Karten können nicht geladen werden"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "No credit cards"
+msgstr "Keine Kreditkarten"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Record purchase"
+msgstr "Kauf erfassen"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Pay card"
+msgstr "Karte bezahlen"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgctxt "what a card owes"
+msgid "Owes"
+msgstr "Schuldet"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgctxt "a card's reserve"
+msgid "Reserve"
+msgstr "Reserve"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Still to reserve"
+msgstr "Noch zu reservieren"
+
+#: crates/kabacus-kde/qml/CardsPage.qml crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "%1 is a label, %2 an amount"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "%1 transaction moves the card without moving its reserve."
+msgid_plural "%1 transactions move the card without moving its reserve."
+msgstr[0] "%1 Buchung bewegt die Karte, ohne ihre Reserve zu bewegen."
+msgstr[1] "%1 Buchungen bewegen die Karte, ohne ihre Reserve zu bewegen."
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Add all reserve lines"
+msgstr "Alle Reservezeilen hinzufügen"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgctxt "%1 is a transaction"
+msgid "%1 unreserved"
+msgstr "%1 ohne Reserve"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgctxt "%1 is an amount"
+msgid "Missing reserve %1"
+msgstr "Fehlende Reserve %1"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "Add reserve lines"
+msgstr "Reservezeilen hinzufügen"
+
+#: crates/kabacus-kde/qml/CardsPage.qml
+#, kde-format
+msgid "What the reserve holds"
+msgstr "Woraus die Reserve besteht"
+
+#: crates/kabacus-kde/qml/CommitPage.qml
+#, kde-format
+msgid "Open transaction"
+msgstr "Buchung öffnen"
+
+#: crates/kabacus-kde/qml/CommitPage.qml
+#, kde-format
+msgid "Void…"
+msgstr "Stornieren …"
+
+#: crates/kabacus-kde/qml/CommitPage.qml
+#, kde-format
+msgctxt "%1 is who made a change, %2 when"
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: crates/kabacus-kde/qml/Fetch.qml
+#, kde-format
+msgctxt "%1 is a screen, %2 the problem"
+msgid "Couldn't update %1: %2"
+msgstr "%1 konnte nicht aktualisiert werden: %2"
+
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action money out of a fund"
+msgid "Release"
+msgstr "Freigeben"
+
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action money between funds"
+msgid "Move"
+msgstr "Verschieben"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgid "Can't load reserves"
+msgstr "Reserven können nicht geladen werden"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgid "No bank accounts with reserves yet"
+msgstr "Noch keine Bankkonten mit Reserven"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgid "in the bank"
+msgstr "auf der Bank"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgctxt "free money"
+msgid "Free"
+msgstr "Frei"
+
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Card reserves"
+msgstr "Kartenreserven"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgctxt "%1 is a fund"
+msgid "Set aside for %1"
+msgstr "Für %1 zurücklegen"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgctxt "%1 is a card"
+msgid "%1 reserve"
+msgstr "Reserve für %1"
+
+#: crates/kabacus-kde/qml/FundsPage.qml
+#, kde-format
+msgid "Covers the card"
+msgstr "Deckt die Karte"
+
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 is an amount"
+msgid "%1 still to reserve"
+msgstr "Noch %1 zu reservieren"
+
+#: crates/kabacus-kde/qml/LoansPage.qml
+#, kde-format
+msgid "No loans"
+msgstr "Keine Kredite"
+
+#: crates/kabacus-kde/qml/LoansPage.qml
+#, kde-format
+msgid "A loan or mortgage shows here once it's in the books."
+msgstr "Ein Kredit oder eine Hypothek erscheint hier, sobald er in den Büchern steht."
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/src/translation.rs
+#, kde-format
+msgctxt "Which way this language is written: translate as RTL if right to left, LTR otherwise"
+msgid "LTR"
+msgstr "LTR"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Signed out"
+msgstr "Abgemeldet"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Overview"
+msgstr "Übersicht"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "destination: the accounts and their transactions"
+msgid "Transactions"
+msgstr "Buchungen"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "destination: money set aside for later"
+msgid "Reserves"
+msgstr "Reserven"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "destination: loans and mortgages"
+msgid "Loans"
+msgstr "Kredite"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "destination: credit cards"
+msgid "Credit"
+msgstr "Kredit"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/PeoplePage.qml
+#, kde-format
+msgid "People"
+msgstr "Personen"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Reports"
+msgstr "Berichte"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is the commit's short hash"
+msgid "Saved as commit %1"
+msgstr "Als Commit %1 gespeichert"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "@title:menu"
+msgid "File"
+msgstr "Datei"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Add transaction"
+msgstr "Buchung hinzufügen"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Refresh"
+msgstr "Aktualisieren"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Quit"
+msgstr "Beenden"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "@title:menu"
+msgid "Go"
+msgstr "Gehe zu"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Configure Kabacus…"
+msgstr "Kabacus einrichten …"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml
+#, kde-format
+msgctxt "the other destinations"
+msgid "More"
+msgstr "Mehr"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Authentication off (local mode)"
+msgstr "Authentifizierung aus (lokaler Modus)"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is why sign-in failed"
+msgid "Sign-in didn't finish: %1"
+msgstr "Die Anmeldung wurde nicht abgeschlossen: %1"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Your session has ended. Sign in again to see and change your books."
+msgstr "Ihre Sitzung ist abgelaufen. Melden Sie sich erneut an, um Ihre Bücher zu sehen und zu ändern."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is the sign-in provider's address"
+msgid "Sign in with %1 to see your books."
+msgstr "Melden Sie sich mit %1 an, um Ihre Bücher zu sehen."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Sign in again"
+msgstr "Erneut anmelden"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Sign in"
+msgstr "Anmelden"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Finish signing in in your browser…"
+msgstr "Schließen Sie die Anmeldung in Ihrem Browser ab …"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is why the server can't be reached, as one sentence"
+msgid "%1 Showing what was loaded; changes are off until it's back."
+msgstr "%1 Angezeigt wird, was geladen wurde; Änderungen sind aus, bis die Verbindung zurück ist."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Retry"
+msgstr "Erneut versuchen"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Details"
+msgstr "Details"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Connection settings"
+msgstr "Verbindungseinstellungen"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Error details"
+msgstr "Fehlerdetails"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Discard this change?"
+msgstr "Diese Änderung verwerfen?"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "What you typed hasn't been saved."
+msgstr "Ihre Eingabe wurde nicht gespeichert."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Keep editing"
+msgstr "Weiter bearbeiten"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Discard"
+msgstr "Verwerfen"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "The books changed"
+msgstr "Die Bücher haben sich geändert"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is who, %2 what they changed"
+msgid "%1 saved a change while you were reviewing: %2. Yours hasn't been written."
+msgstr "%1 hat während Ihrer Prüfung eine Änderung gespeichert: %2. Ihre wurde nicht geschrieben."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgctxt "%1 is who"
+msgid "%1 saved a change while you were reviewing. Yours hasn't been written."
+msgstr "%1 hat während Ihrer Prüfung eine Änderung gespeichert. Ihre wurde nicht geschrieben."
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Discard mine"
+msgstr "Meine verwerfen"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
+msgid "Review again"
+msgstr "Erneut prüfen"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Can't load Cash on Hand"
+msgstr "Verfügbares Geld kann nicht geladen werden"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Loading…"
+msgstr "Wird geladen …"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Verfügbares Geld"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "About Cash on Hand"
+msgstr "Über verfügbares Geld"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Free money you can spend right now, after reserves and card reserves."
+msgstr "Freies Geld, das Sie jetzt ausgeben können, nach Reserven und Kartenreserven."
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%1 seit %2"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 is an amount"
+msgid "Cash on Hand %1"
+msgstr "Verfügbares Geld %1"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Money on Hand"
+msgstr "Vorhandenes Geld"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "About Money on Hand"
+msgstr "Über vorhandenes Geld"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Everything in your bank accounts, reserves and card reserves included, plus what people owe you. Cash on Hand is what's left once reserves, card reserves and what you're owed are set apart."
+msgstr "Alles auf Ihren Bankkonten, Reserven und Kartenreserven eingeschlossen, dazu was andere Ihnen schulden. Verfügbares Geld ist, was übrig bleibt, wenn Reserven, Kartenreserven und Ihre Forderungen abgezogen sind."
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "− Future allocations (reserves and card reserves)"
+msgstr "− Künftige Zuweisungen (Reserven und Kartenreserven)"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "− Receivables (owed to you)"
+msgstr "− Forderungen (was man Ihnen schuldet)"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Free money by account"
+msgstr "Freies Geld nach Konto"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 is an account, %2 its free money"
+msgid "%1 free %2"
+msgstr "%1 frei %2"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "No account has free money right now."
+msgstr "Gerade hat kein Konto freies Geld."
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Nothing is set aside in a reserve."
+msgstr "In keiner Reserve ist etwas zurückgelegt."
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "a card's reserve covers what it owes"
+msgid "covered"
+msgstr "gedeckt"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Each card's reserve should equal what it owes."
+msgstr "Die Reserve jeder Karte sollte dem entsprechen, was sie schuldet."
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgid "Cash on Hand over time"
+msgstr "Verfügbares Geld im Zeitverlauf"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "%1 and %3 are amounts on dates %2 and %4; %5 and %6 the lowest and highest amounts"
+msgid "From %1 on %2 to %3 on %4; lowest %5, highest %6"
+msgstr "Von %1 am %2 bis %3 am %4; niedrigster Wert %5, höchster %6"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "the chart's first point: %1 is its date, %2 its amount"
+msgid "%1  %2"
+msgstr "%1  %2"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
+msgctxt "the chart's last point, at its far end: %1 is its amount, %2 its date"
+msgid "%1  %2"
+msgstr "%1  %2"
+
+#: crates/kabacus-kde/qml/PeoplePage.qml
+#, kde-format
+msgctxt "@action split a cost with someone"
+msgid "Split"
+msgstr "Teilen"
+
+#: crates/kabacus-kde/qml/PeoplePage.qml
+#, kde-format
+msgid "Can't load people"
+msgstr "Personen können nicht geladen werden"
+
+#: crates/kabacus-kde/qml/PeoplePage.qml
+#, kde-format
+msgid "Nobody owes or is owed anything"
+msgstr "Niemand schuldet etwas, und niemandem wird etwas geschuldet"
+
+#: crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgid "What changes"
+msgstr "Was sich ändert"
+
+#: crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgctxt "%1 is an account, %2 and %3 its balance before and after"
+msgid "%1 %2 to %3"
+msgstr "%1 %2 auf %3"
+
+#: crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgctxt "%1 and %2 are amounts"
+msgid "Cash on Hand %1 to %2"
+msgstr "Verfügbares Geld %1 auf %2"
+
+#: crates/kabacus-kde/qml/PreviewPane.qml
+#, kde-format
+msgctxt "%1 is the warning's text"
+msgid "Warning: %1"
+msgstr "Warnung: %1"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "%1 is an account"
+msgid "Reconcile %1"
+msgstr "%1 abgleichen"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Statement date:"
+msgstr "Datum des Auszugs:"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgid "Statement date"
+msgstr "Datum des Auszugs"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "the date format to type; dates are always typed this way"
+msgid "YYYY-MM-DD"
+msgstr "JJJJ-MM-TT"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Statement balance:"
+msgstr "Saldo des Auszugs:"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgid "Statement balance"
+msgstr "Saldo des Auszugs"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "@action:button compare with the statement"
+msgid "Check"
+msgstr "Prüfen"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "%1 is a balance, %2 a date"
+msgid "Matched: %1 on %2, the same as the statement."
+msgstr "Stimmt überein: %1 am %2, wie im Auszug."
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgctxt "%1 is the books' balance, %2 the statement's, %3 the difference"
+msgid "Doesn't match yet: the books say %1, the statement %2 (difference %3). Nothing has been written."
+msgstr "Stimmt noch nicht überein: Die Bücher sagen %1, der Auszug %2 (Differenz %3). Es wurde nichts geschrieben."
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Reconcile"
+msgstr "Abgleichen"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgid "Likely explanations"
+msgstr "Mögliche Erklärungen"
+
+#: crates/kabacus-kde/qml/ReconcilePage.qml
+#, kde-format
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "a card transaction without its reserve lines"
+msgid "unreserved"
+msgstr "ohne Reserve"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "money moved between an account and its funds"
+msgid "within account"
+msgstr "innerhalb des Kontos"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Account type"
+msgstr "Kontotyp"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "@action compare an account with its statement"
+msgid "Reconcile…"
+msgstr "Abgleichen…"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Search"
+msgstr "Suchen"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Search payee, memo, account"
+msgstr "Empfänger, Notiz, Konto suchen"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Unreserved only"
+msgstr "Nur ohne Reserve"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is a payee, %2 a date"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is an account, %2 a memo"
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is an amount"
+msgid "%1 moved"
+msgstr "%1 verschoben"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is a date, %2 an account"
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Can't load this register"
+msgstr "Dieses Kontoblatt kann nicht geladen werden"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgctxt "%1 is what was searched for"
+msgid "No transactions match “%1”"
+msgstr "Keine Buchungen passen zu „%1“"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "No unreserved transactions"
+msgstr "Keine Buchungen ohne Reserve"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "No transactions"
+msgstr "Keine Buchungen"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Clear search"
+msgstr "Suche leeren"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "%1 is a month's name, %2 its year"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Previous month"
+msgstr "Vorheriger Monat"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Next month"
+msgstr "Nächster Monat"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Cash flow"
+msgstr "Geldfluss"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Income statement"
+msgstr "Gewinn- und Verlustrechnung"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Categories"
+msgstr "Kategorien"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "%1 is a month and year"
+msgid "Why Cash on Hand changed in %1"
+msgstr "Warum sich das verfügbare Geld im %1 geändert hat"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "column: money moved in cash"
+msgid "Cash"
+msgstr "Bar"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "column: changes that aren't cash"
+msgid "Not cash"
+msgstr "Nicht bar"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Income:"
+msgstr "Einnahmen:"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Expenses:"
+msgstr "Ausgaben:"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Loan principal:"
+msgstr "Tilgung:"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "@label income less expenses"
+msgid "Net:"
+msgstr "Netto:"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgid "Count loan principal as money spent"
+msgstr "Tilgung als ausgegebenes Geld zählen"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "column: money spent"
+msgid "Spent"
+msgstr "Ausgegeben"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "column: compared with %1, the month before"
+msgid "vs %1"
+msgstr "ggü. %1"
+
+#: crates/kabacus-kde/qml/ReportsPage.qml
+#, kde-format
+msgctxt "%1 is a month and year"
+msgid "No spending in %1"
+msgstr "Keine Ausgaben im %1"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml
+#, kde-format
+msgid "Review before saving"
+msgstr "Vor dem Speichern prüfen"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml
+#, kde-format
+msgid "Back to edit"
+msgstr "Zurück zum Bearbeiten"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Saving…"
+msgstr "Wird gespeichert …"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Save"
+msgstr "Speichern"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Checking with the server…"
+msgstr "Wird mit dem Server geprüft …"
+
+#: crates/kabacus-kde/qml/ReviewPage.qml
+#, kde-format
+msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
+msgid "This would break a balance check: %1 should be %2 but would be %3. Check the date and amount; never move the date just to get past it."
+msgstr "Das würde eine Saldoprüfung verletzen: %1 sollte %2 sein, wäre aber %3. Prüfen Sie Datum und Betrag; verschieben Sie das Datum nie nur, um daran vorbeizukommen."
+
+#: crates/kabacus-kde/qml/ReviewPage.qml
+#, kde-format
+msgid "Change the transaction"
+msgstr "Buchung ändern"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Test connection"
+msgstr "Verbindung testen"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Connection settings saved"
+msgstr "Verbindungseinstellungen gespeichert"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Server:"
+msgstr "Server:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "On this computer"
+msgstr "Auf diesem Computer"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "On another computer (HTTPS)"
+msgstr "Auf einem anderen Computer (HTTPS)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "the server's unix socket"
+msgid "Socket"
+msgstr "Socket"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label the server's unix socket"
+msgid "Socket:"
+msgstr "Socket:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Server address"
+msgstr "Serveradresse"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Server address:"
+msgstr "Serveradresse:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label a private certificate authority"
+msgid "Private CA:"
+msgstr "Private CA:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "a private certificate authority"
+msgid "Private CA"
+msgstr "Private CA"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "System certificates only"
+msgstr "Nur Systemzertifikate"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Choose…"
+msgstr "Auswählen …"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Only needed when the server's certificate comes from your own CA."
+msgstr "Nur nötig, wenn das Zertifikat des Servers von Ihrer eigenen CA stammt."
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@title the signed-in user"
+msgid "Account"
+msgstr "Konto"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Signed in:"
+msgstr "Angemeldet:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Not needed: authentication is off (local mode)"
+msgstr "Nicht nötig: Authentifizierung ist aus (lokaler Modus)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "%1 is the user, %2 the sign-in provider"
+msgid "%1 (%2)"
+msgstr "%1 (%2)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "signed in; %1 is the sign-in provider"
+msgid "Yes (%1)"
+msgstr "Ja (%1)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Session ended; sign in again"
+msgstr "Sitzung abgelaufen; erneut anmelden"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "not signed in"
+msgid "No"
+msgstr "Nein"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Unknown: can't reach the server"
+msgstr "Unbekannt: Server nicht erreichbar"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Waiting for the browser…"
+msgstr "Warten auf den Browser …"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Sign out"
+msgstr "Abmelden"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@title about the server"
+msgid "About"
+msgstr "Über"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Can't reach the server to read its version"
+msgstr "Der Server ist nicht erreichbar, seine Version kann nicht gelesen werden"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label the server's version"
+msgid "Server version:"
+msgstr "Serverversion:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label the commit the server was built from"
+msgid "Commit:"
+msgstr "Commit:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgctxt "@label where the server's source code is"
+msgid "Source code:"
+msgstr "Quellcode:"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Open the source code"
+msgstr "Quellcode öffnen"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Choose the private CA"
+msgstr "Private CA auswählen"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Certificates (*.pem *.crt)"
+msgstr "Zertifikate (*.pem *.crt)"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "All files (*)"
+msgstr "Alle Dateien (*)"
+
+#: crates/kabacus-kde/qml/StatementPage.qml
+#, kde-format
+msgid "Open items only"
+msgstr "Nur offene Posten"
+
+#: crates/kabacus-kde/qml/StatementPage.qml
+#, kde-format
+msgctxt "%1 is a transaction, %2 its date"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: crates/kabacus-kde/qml/StatementPage.qml
+#, kde-format
+msgid "Can't load the statement"
+msgstr "Die Abrechnung kann nicht geladen werden"
+
+#: crates/kabacus-kde/qml/StatementPage.qml
+#, kde-format
+msgid "Nothing this year"
+msgstr "Nichts in diesem Jahr"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Set money aside"
+msgstr "Geld zurücklegen"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Edit transaction"
+msgstr "Buchung bearbeiten"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Fix reserve lines"
+msgstr "Reservezeilen reparieren"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "the payee a transfer is given"
+msgid "Transfer"
+msgstr "Umbuchung"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Review"
+msgstr "Prüfen"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
+msgid "This would break a balance check: %1 should be %2 but would be %3. Check the date and amount."
+msgstr "Das würde eine Saldoprüfung verletzen: %1 sollte %2 sein, wäre aber %3. Prüfen Sie Datum und Betrag."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Edit in place"
+msgstr "Direkt bearbeiten"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Changes it where it is. History keeps the old version."
+msgstr "Ändert sie an Ort und Stelle. Der Verlauf behält die alte Version."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@option cancel a transaction with a reversal"
+msgid "Void"
+msgstr "Stornieren"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Only the reversal: it didn't happen."
+msgstr "Nur die Stornierung: Es ist nicht passiert."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Real account"
+msgstr "Reales Konto"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Synthetic account"
+msgstr "Virtuelles Konto"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "a credit card"
+msgid "Card"
+msgstr "Karte"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label what a shared cost was for"
+msgid "What:"
+msgstr "Wofür:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Payee:"
+msgstr "Empfänger:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Payee"
+msgstr "Empfänger"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is a payee, %2 the category it usually has, %3 the amount it had last"
+msgid "%1 — usually %2, last %3"
+msgstr "%1 — meist %2, zuletzt %3"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Paid with"
+msgstr "Bezahlt mit"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "the account money comes from"
+msgid "From"
+msgstr "Von"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "That's a card: record a card purchase so its reserve stays covered."
+msgstr "Das ist eine Karte: Erfassen Sie einen Kartenkauf, damit ihre Reserve gedeckt bleibt."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Category"
+msgstr "Kategorie"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "the account money goes to"
+msgid "To"
+msgstr "Nach"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is a new reserve's name, %2 the account it goes in"
+msgid "%1 isn't a reserve yet. Saving creates it in %2."
+msgstr "%1 ist noch keine Reserve. Beim Speichern wird sie in %2 angelegt."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Paid from:"
+msgstr "Bezahlt aus:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Free money"
+msgstr "Freies Geld"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "A reserve"
+msgstr "Eine Reserve"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "money set aside"
+msgid "Reserve"
+msgstr "Reserve"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "the person a cost is split with"
+msgid "With"
+msgstr "Mit"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Total:"
+msgstr "Gesamt:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Amount:"
+msgstr "Betrag:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Amount"
+msgstr "Betrag"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Their share:"
+msgstr "Deren Anteil:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Their share"
+msgstr "Deren Anteil"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "their share is half the total"
+msgid "Half"
+msgstr "Hälfte"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "their share is the whole total"
+msgid "All of it"
+msgstr "Alles"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Date:"
+msgstr "Datum:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Date"
+msgstr "Datum"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Description:"
+msgstr "Beschreibung:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Memo:"
+msgstr "Notiz:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Memo"
+msgstr "Notiz"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Transactions:"
+msgstr "Buchungen:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "%1 is how many of the chosen transactions"
+msgid "%1 missing its reserve lines"
+msgid_plural "%1 missing their reserve lines"
+msgstr[0] "%1 ohne ihre Reservezeilen"
+msgstr[1] "%1 ohne ihre Reservezeilen"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Also moves the amount from free money into the card's reserve, so the card stays covered."
+msgstr "Verschiebt den Betrag außerdem aus freiem Geld in die Reserve der Karte, damit die Karte gedeckt bleibt."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Also moves the amount from the reserve into the card's reserve, so the card stays covered."
+msgstr "Verschiebt den Betrag auch aus der Reserve in die Reserve der Karte, damit die Karte gedeckt bleibt."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Preview"
+msgstr "Vorschau"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgid "Updates as you type. Nothing is written until you save."
+msgstr "Wird beim Tippen aktualisiert. Nichts wird geschrieben, bis Sie speichern."
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgid "The server uses OAuth but didn't say which provider"
+msgstr "Der Server verwendet OAuth, hat aber nicht gesagt, welchen Anbieter"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgid "The server uses OAuth but has no client id for the app"
+msgstr "Der Server verwendet OAuth, hat aber keine Client-ID für die App"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Can't read the secret store: %1"
+msgstr "Der Geheimnisspeicher kann nicht gelesen werden: %1"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgid "This server doesn't use sign-in (authentication is off)"
+msgstr "Dieser Server verwendet keine Anmeldung (Authentifizierung ist aus)"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Signed out, but couldn't clear the secret store: %1"
+msgstr "Abgemeldet, aber der Geheimnisspeicher konnte nicht geleert werden: %1"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Signed out, but the provider couldn't revoke the session: %1"
+msgstr "Abgemeldet, aber der Anbieter konnte die Sitzung nicht widerrufen: %1"
+
+#: crates/kabacus-kde/src/auth.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Signed in, but the secret store couldn't keep it (%1); you'll be asked again next time"
+msgstr "Angemeldet, aber der Geheimnisspeicher konnte sie nicht behalten (%1); beim nächsten Mal werden Sie erneut gefragt"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Couldn't save the settings: %1"
+msgstr "Die Einstellungen konnten nicht gespeichert werden: %1"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgid "Can't reach the server to find out how to sign in"
+msgstr "Der Server ist nicht erreichbar, um die Anmeldeart zu erfahren"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Can't reach kabacus-server. Is it running?"
+msgstr "kabacus-server ist nicht erreichbar. Läuft er?"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgctxt "%1 is the server's address"
+msgid "Can't reach kabacus-server at %1. Is it running?"
+msgstr "kabacus-server ist unter %1 nicht erreichbar. Läuft er?"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "The server is taking too long to answer."
+msgstr "Der Server braucht zu lange für eine Antwort."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Your session ended. Sign in again."
+msgstr "Ihre Sitzung ist abgelaufen. Melden Sie sich erneut an."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Signing in didn't work. Try again."
+msgstr "Die Anmeldung hat nicht geklappt. Versuchen Sie es erneut."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "You can view these books but not change them."
+msgstr "Sie können diese Bücher ansehen, aber nicht ändern."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "That isn't in the books any more."
+msgstr "Das ist nicht mehr in den Büchern."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "The books changed while you were editing. Review again."
+msgstr "Die Bücher haben sich während Ihrer Bearbeitung geändert. Prüfen Sie erneut."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "The server had a problem."
+msgstr "Der Server hatte ein Problem."
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgctxt "between the items of a list, such as amounts or account names"
+msgid ", "
+msgstr ", "
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "All transactions"
+msgstr "Alle Buchungen"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgctxt "%1 is the account money came from, %2 the account it went to"
+msgid "%1 → %2"
+msgstr "%1 → %2"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Date must be YYYY-MM-DD"
+msgstr "Das Datum muss JJJJ-MM-TT sein"
+
+#: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a form field"
+msgid "%1 is required"
+msgstr "%1 ist erforderlich"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Choose both accounts"
+msgstr "Wählen Sie beide Konten"
+
+#: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "From and To must differ"
+msgstr "Von und Nach müssen sich unterscheiden"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Amount must be more than zero"
+msgstr "Der Betrag muss größer als null sein"
+
+#: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "The books have no commits yet"
+msgstr "Die Bücher haben noch keine Commits"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Split transactions can't be edited here yet"
+msgstr "Aufgeteilte Buchungen können hier noch nicht bearbeitet werden"
+
+#: crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "Multi-currency transactions can't be edited here yet"
+msgstr "Buchungen in mehreren Währungen können hier noch nicht bearbeitet werden"
+
+#: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a transaction id"
+msgid "Transaction %1 wasn't found"
+msgstr "Buchung %1 wurde nicht gefunden"
+
+#: crates/kabacus-kde/src/secrets.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "can't reach the secret store: %1"
+msgstr "der Geheimnisspeicher ist nicht erreichbar: %1"
+
+#: crates/kabacus-kde/src/secrets.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "the secret store has no wallet or keyring to keep it in (%1)"
+msgstr "der Geheimnisspeicher hat keine Brieftasche und keinen Schlüsselbund, um sie aufzubewahren (%1)"
+
+#: crates/kabacus-kde/src/secrets.rs
+#, kde-format
+msgctxt "%1 is the server's address"
+msgid "Kabacus sign-in for %1"
+msgstr "Kabacus-Anmeldung für %1"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgid "Enter the server's address"
+msgstr "Geben Sie die Adresse des Servers ein"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is a file, %2 why it can't be read"
+msgid "Can't read the private CA %1: %2"
+msgstr "Die private CA %1 kann nicht gelesen werden: %2"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgid "The server address must start with https://"
+msgstr "Die Serveradresse muss mit https:// beginnen"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgid "Can't reach the server: no answer within 10 seconds"
+msgstr "Der Server ist nicht erreichbar: keine Antwort innerhalb von 10 Sekunden"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%2 is the server's version"
+msgid "Connected to kabacus-server %2: %1 account"
+msgid_plural "Connected to kabacus-server %2: %1 accounts"
+msgstr[0] "Mit kabacus-server %2 verbunden: %1 Konto"
+msgstr[1] "Mit kabacus-server %2 verbunden: %1 Konten"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is the server's version, %2 the sign-in provider's address"
+msgid "Reached kabacus-server %1. It needs you to sign in with %2."
+msgstr "kabacus-server %1 erreicht. Sie müssen sich mit %2 anmelden."
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is the server's version"
+msgid "Reached kabacus-server %1. It needs you to sign in with its OAuth provider."
+msgstr "kabacus-server %1 erreicht. Sie müssen sich bei seinem OAuth-Anbieter anmelden."
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is a role's name"
+msgid "Reached the server, but you lack the %1 role"
+msgstr "Server erreicht, aber Ihnen fehlt die Rolle %1"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "The server's certificate isn't trusted. If it comes from a private CA, choose that CA's file. (%1)"
+msgstr "Dem Zertifikat des Servers wird nicht vertraut. Stammt es von einer privaten CA, wählen Sie die Datei dieser CA. (%1)"
+
+#: crates/kabacus-kde/src/settings.rs
+#, kde-format
+msgctxt "%1 is the error"
+msgid "Can't reach the server: %1"
+msgstr "Der Server ist nicht erreichbar: %1"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "@action fix a card"
+msgid "Fix"
+msgstr "Beheben"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Categorize"
+msgstr "Kategorisieren"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Move money"
+msgstr "Geld verschieben"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Money"
+msgstr "Geld"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Cards"
+msgstr "Karten"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Loans"
+msgstr "Kredite"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Investments"
+msgstr "Anlagen"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "People"
+msgstr "Personen"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Spending"
+msgstr "Ausgaben"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Income"
+msgstr "Einnahmen"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "accounts group"
+msgid "Other"
+msgstr "Sonstiges"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "%1 is the free money, %2 how many reserves (“2 reserves”), %3 how many card reserves (“1 card reserve”)"
+msgid "Free %1 · %2 · %3"
+msgstr "Frei %1 · %2 · %3"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "%1 reserve"
+msgid_plural "%1 reserves"
+msgstr[0] "%1 Reserve"
+msgstr[1] "%1 Reserven"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "%1 card reserve"
+msgid_plural "%1 card reserves"
+msgstr[0] "%1 Kartenreserve"
+msgstr[1] "%1 Kartenreserven"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "%1 is the card's reserve"
+msgid "Reserve %1"
+msgstr "Reserve %1"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Owes you"
+msgstr "Schuldet Ihnen"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "You owe"
+msgstr "Sie schulden"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "nobody owes anything"
+msgid "Settled"
+msgstr "Ausgeglichen"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "Cash on Hand at the start"
+msgid "Opening"
+msgstr "Anfang"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "Cash on Hand at the end"
+msgid "Closing"
+msgstr "Ende"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Set aside in reserves"
+msgstr "In Reserven zurückgelegt"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Loan principal"
+msgstr "Tilgung"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Fronted for others"
+msgstr "Für andere ausgelegt"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Owed to others"
+msgstr "Anderen geschuldet"
+
+#: crates/kabacus-kde/src/views.rs crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "MCP"
+msgstr "MCP"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "This app"
+msgstr "Diese App"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "External edit"
+msgstr "Externe Bearbeitung"
+
+#: crates/kabacus-kde/src/views.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "Unknown"
+msgstr "Unbekannt"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an account"
+msgid "This would break a balance check on %1"
+msgstr "Das würde eine Saldoprüfung bei %1 verletzen"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is the change made meanwhile"
+msgid "The books changed: %1"
+msgstr "Die Bücher haben sich geändert: %1"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Use a date like 2026-10-03"
+msgstr "Verwenden Sie ein Datum wie 2026-10-03"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Must be more than zero"
+msgstr "Muss größer als null sein"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Enter an amount"
+msgstr "Geben Sie einen Betrag ein"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Not an amount: use digits and a decimal point, like 12.34"
+msgstr "Kein Betrag: Verwenden Sie Ziffern und einen Dezimalpunkt, etwa 12.34"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is the amount as it should be typed"
+msgid "Use a decimal point: %1"
+msgstr "Verwenden Sie einen Dezimalpunkt: %1"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Use a whole number, without decimal places"
+msgstr "Verwenden Sie eine ganze Zahl ohne Nachkommastellen"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Use at most %1 decimal place"
+msgid_plural "Use at most %1 decimal places"
+msgstr[0] "Verwenden Sie höchstens %1 Nachkommastelle"
+msgstr[1] "Verwenden Sie höchstens %1 Nachkommastellen"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Name the new reserve"
+msgstr "Neue Reserve benennen"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is what was typed"
+msgid "“%1” can't name a reserve: no “:” or “;”"
+msgstr "„%1“ kann keine Reserve benennen: kein „:“ oder „;“"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is what was typed"
+msgid "There's no account called %1"
+msgstr "Es gibt kein Konto namens %1"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee, %2 an amount, %3 and %4 accounts, %5 a date"
+msgid "%1: %2 from %3 to %4, %5."
+msgstr "%1: %2 von %3 nach %4, %5."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee, %2 an amount, %3 a card, %4 a date"
+msgid "%1: %2 on %3, paid from free money, %4."
+msgstr "%1: %2 mit %3, bezahlt aus freiem Geld, %4."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee, %2 an amount, %3 a card, %4 a reserve, %5 a date"
+msgid "%1: %2 on %3, paid from the %4 reserve, %5."
+msgstr "%1: %2 mit %3, bezahlt aus der Reserve %4, %5."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 an account, %3 the new reserve's name"
+msgid "Set aside %1 from %2 into a new reserve, %3."
+msgstr "%1 aus %2 in eine neue Reserve zurücklegen, %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 and %3 accounts"
+msgid "Move %1 from %2 to %3."
+msgstr "%1 von %2 nach %3 verschieben."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a card"
+msgid "Pay %1 to %2 from its reserve."
+msgstr "%1 an %2 aus ihrer Reserve zahlen."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee, %2 the total, %3 an account, %4 a person, %5 their share"
+msgid "%1: %2 paid with %3; %4 owes %5 of it."
+msgstr "%1: %2 bezahlt mit %3; %4 schuldet %5 davon."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a payee"
+msgid "Edit %1 in place. History keeps the old version."
+msgstr "%1 direkt bearbeiten. Der Verlauf behält die alte Version."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Void it: add a reversal, dated today."
+msgstr "Stornieren: eine Gegenbuchung mit heutigem Datum hinzufügen."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an account, %2 a date, %3 a balance"
+msgid "Record that %1 matched the statement on %2: %3."
+msgstr "Festhalten, dass %1 am %2 mit dem Auszug übereinstimmte: %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%2 is a card"
+msgid "Add the missing reserve lines to %1 transaction on %2, as one change."
+msgid_plural "Add the missing reserve lines to %1 transactions on %2, as one change."
+msgstr[0] "Die fehlenden Reservezeilen zu %1 Buchung auf %2 hinzufügen, als eine Änderung."
+msgstr[1] "Die fehlenden Reservezeilen zu %1 Buchungen auf %2 hinzufügen, als eine Änderung."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "the person a cost is split with"
+msgid "Who"
+msgstr "Wer"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Their share can't be more than the total"
+msgstr "Deren Anteil kann nicht größer sein als der Gesamtbetrag"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "The transaction"
+msgstr "Die Buchung"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Choose at least one transaction"
+msgstr "Wählen Sie mindestens eine Buchung"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a card"
+msgid "%1 has no reserve account"
+msgstr "%1 hat kein Reservekonto"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a transaction's payee"
+msgid "%1 isn't missing reserve lines"
+msgstr "Bei %1 fehlen keine Reservezeilen"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is the new reserve's name"
+msgid "kabacus-server didn't make the new reserve %1: it's older than this app. Update kabacus-server, or pick a reserve that exists."
+msgstr "kabacus-server hat die neue Reserve %1 nicht angelegt: Er ist älter als diese App. Aktualisieren Sie kabacus-server oder wählen Sie eine bestehende Reserve."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "This app, on another device"
+msgstr "Diese App, auf einem anderen Gerät"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "An external edit"
+msgstr "Eine externe Bearbeitung"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "who made a change"
+msgid "Someone"
+msgstr "Jemand"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "Nothing to save: the books already say this."
+msgstr "Nichts zu speichern: Die Bücher sagen das bereits."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "The books still check out with this change"
+msgstr "Die Bücher stimmen auch mit dieser Änderung"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is a card"
+msgid "%1 stays covered by its reserve"
+msgstr "%1 bleibt durch seine Reserve gedeckt"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgid "A card is missing its reserve lines; it will be flagged"
+msgstr "Einer Karte fehlen ihre Reservezeilen; sie wird markiert"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Missing reserve %1 · a corrected original"
+#~ msgstr "Fehlende Reserve %1 · ein korrigiertes Original"
+
+#, kde-format
+#~ msgid "Correct…"
+#~ msgstr "Korrigieren …"
+
+#, kde-format
+#~ msgctxt "a transaction that was corrected"
+#~ msgid "correction"
+#~ msgstr "Korrektur"
+
+#, kde-format
+#~ msgid "Changes it where it is. Git keeps the old version."
+#~ msgstr "Ändert sie an Ort und Stelle. Git behält die alte Version."
+
+#, kde-format
+#~ msgid "Add a correction"
+#~ msgstr "Korrektur hinzufügen"
+
+#, kde-format
+#~ msgid "A reversal and a replacement, dated today. For books that mustn't change after the fact (reconciled or shared)."
+#~ msgstr "Eine Stornierung und ein Ersatz, mit heutigem Datum. Für Bücher, die sich im Nachhinein nicht ändern dürfen (abgeglichen oder geteilt)."
+
+#, kde-format
+#~ msgid "A correction is dated today."
+#~ msgstr "Eine Korrektur trägt das heutige Datum."
+
+#, kde-format
+#~ msgctxt "%1 is a payee"
+#~ msgid "Edit %1 in place. Git keeps the old version."
+#~ msgstr "%1 direkt bearbeiten. Git behält die alte Version."
+
+#, kde-format
+#~ msgctxt "%1 is a payee"
+#~ msgid "Correct %1: a reversal and a replacement, dated today."
+#~ msgstr "%1 korrigieren: eine Stornierung und ein Ersatz, mit heutigem Datum."
+
+#, kde-format
+#~ msgid "hledger check passed on a scratch copy"
+#~ msgstr "hledger-Prüfung auf einer Arbeitskopie bestanden"
+
+#, kde-format
+#~ msgctxt "%1 is a file, %2–%3 lines in it"
+#~ msgid "%1 · lines %2–%3"
+#~ msgstr "%1 · Zeilen %2–%3"
+
+#, kde-format
+#~ msgid "Amount is too large"
+#~ msgstr "Der Betrag ist zu groß"
+
+#, kde-format
+#~ msgctxt "@label"
+#~ msgid "Account:"
+#~ msgstr "Konto:"
+
+#, kde-format
+#~ msgid "Account"
+#~ msgstr "Konto"
+
+#, kde-format
+#~ msgid "Accounts"
+#~ msgstr "Konten"
+
+#, kde-format
+#~ msgid "Into a fund, out, or between funds"
+#~ msgstr "In eine Rücklage, heraus oder zwischen Rücklagen"
+
+#, kde-format
+#~ msgid "Cards"
+#~ msgstr "Karten"
+
+#, kde-format
+#~ msgid "Funds"
+#~ msgstr "Rücklagen"
+
+#, kde-format
+#~ msgid "Can't load funds"
+#~ msgstr "Rücklagen können nicht geladen werden"
+
+#, kde-format
+#~ msgid "No bank accounts with funds yet"
+#~ msgstr "Noch keine Bankkonten mit Rücklagen"
+
+#, kde-format
+#~ msgctxt "card reserves"
+#~ msgid "Reserves"
+#~ msgstr "Reserven"
+
+#, kde-format
+#~ msgid "Free money you can spend right now, after funds and card reserves."
+#~ msgstr "Freies Geld, das Sie jetzt ausgeben können, nach Rücklagen und Kartenreserven."
+
+#, kde-format
+#~ msgid "− Future allocations (funds and card reserves)"
+#~ msgstr "− Künftige Zuweisungen (Rücklagen und Kartenreserven)"
+
+#, kde-format
+#~ msgctxt "%1 is a new fund's name, %2 the account it goes in"
+#~ msgid "%1 isn't a fund yet. Saving creates it in %2."
+#~ msgstr "%1 ist noch keine Rücklage. Beim Speichern wird sie in %2 angelegt."
+
+#, kde-format
+#~ msgid "A fund"
+#~ msgstr "Eine Rücklage"
+
+#, kde-format
+#~ msgid "Fund"
+#~ msgstr "Rücklage"
+
+#, kde-format
+#~ msgid "Also moves the amount from the fund into the card's reserve, so the card stays covered."
+#~ msgstr "Verschiebt den Betrag außerdem aus der Rücklage in die Reserve der Karte, damit die Karte gedeckt bleibt."
+
+#, kde-format
+#~ msgctxt "%1 is the free money, %2 how many funds (“2 funds”), %3 how many card reserves (“1 reserve”)"
+#~ msgid "Free %1 · %2 · %3"
+#~ msgstr "Frei %1 · %2 · %3"
+
+#, kde-format
+#~ msgid "%1 fund"
+#~ msgid_plural "%1 funds"
+#~ msgstr[0] "%1 Rücklage"
+#~ msgstr[1] "%1 Rücklagen"
+
+#, kde-format
+#~ msgid "Set aside in funds"
+#~ msgstr "In Rücklagen zurückgelegt"
+
+#, kde-format
+#~ msgid "Name the new fund"
+#~ msgstr "Benennen Sie die neue Rücklage"
+
+#, kde-format
+#~ msgctxt "%1 is what was typed"
+#~ msgid "“%1” can't name a fund: no “:” or “;”"
+#~ msgstr "„%1“ kann keine Rücklage benennen: kein „:“ oder „;“"
+
+#, kde-format
+#~ msgctxt "%1 is a payee, %2 an amount, %3 a card, %4 a fund, %5 a date"
+#~ msgid "%1: %2 on %3, paid from the %4 fund, %5."
+#~ msgstr "%1: %2 mit %3, bezahlt aus der Rücklage %4, %5."
+
+#, kde-format
+#~ msgctxt "%1 is an amount, %2 an account, %3 the new fund's name"
+#~ msgid "Set aside %1 from %2 into a new fund, %3."
+#~ msgstr "%1 aus %2 in eine neue Rücklage zurücklegen, %3."
+
+#, kde-format
+#~ msgctxt "%1 is the new fund's name"
+#~ msgid "kabacus-server didn't make the new fund %1: it's older than this app. Update kabacus-server, or pick a fund that exists."
+#~ msgstr "kabacus-server hat die neue Rücklage %1 nicht angelegt: Er ist älter als diese App. Aktualisieren Sie kabacus-server oder wählen Sie eine vorhandene Rücklage."

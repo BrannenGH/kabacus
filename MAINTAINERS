@@ -1,0 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+# Commit author emails exempt from the sign-off check
+# (scripts/check-signoff), one per line.
+brannen@hallb.me

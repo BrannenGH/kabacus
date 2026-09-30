@@ -1,0 +1,67 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+[package]
+name = "kabacus-server"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+# The server alone is AGPL: anyone who runs a modified copy for others over
+# the network has to offer them its source. The app and its libraries
+# stay GPL.
+license = "AGPL-3.0-or-later"
+
+[[bin]]
+name = "kabacus-server"
+path = "src/main.rs"
+
+[lib]
+name = "kabacus_server"
+path = "src/lib.rs"
+
+[dependencies]
+kabacus-core = { path = "../kabacus-core" }
+kabacus-ledger = { path = "../kabacus-ledger" }
+kabacus-store = { path = "../kabacus-store" }
+num-bigint = { workspace = true }
+num-traits = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+tokio = { workspace = true }
+chrono = { workspace = true }
+uuid = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+tracing-journald = { workspace = true }
+axum = "0.8"
+hyper-util = { version = "0.1", features = ["tokio", "server", "server-auto", "service"] }
+# The remote HTTPS listener. ring, not aws-lc-rs, to match
+# reqwest's rustls and avoid a C toolchain dependency.
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12", "logging"] }
+tokio-rustls = { version = "0.26", default-features = false, features = ["ring", "tls12", "logging"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+jsonwebtoken = "9"
+toml = "0.8"
+clap = { version = "4", features = ["derive"] }
+tempfile = "3"
+base64 = "0.22"
+# `/regex/` payee and memo filters.
+regex = "1"
+# The MCP endpoint at /mcp (streamable HTTP).
+rmcp = { version = "3", default-features = false, features = ["server", "macros", "transport-streamable-http-server"] }
+
+[dev-dependencies]
+kabacus-testkit = { path = "../kabacus-testkit" }
+kabacus-store = { path = "../kabacus-store", features = ["testing"] }
+# Drive /mcp the way an MCP client does.
+rmcp = { version = "3", default-features = false, features = ["client", "transport-streamable-http-client-unix-socket"] }
+# The tests talk to the server over its unix socket.
+hyper = "1"
+hyperlocal = "0.9"
+http-body-util = "0.1"
+bytes = "1"
+http = "1"
+tower = "0.5"

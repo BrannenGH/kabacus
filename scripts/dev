@@ -1,0 +1,80 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Run a command in Kabacus's openSUSE Tumbleweed test container: Rust plus
+# the pinned hledger and git (Containerfile, stage dev), so none
+# of them are needed on the host.
+#   scripts/dev cargo test --workspace
+#   scripts/dev --gui ...   the gui stage: also Qt 6, Kirigami, Xvfb, AT-SPI
+#   scripts/dev --gui --wayland ...
+#                           also shows windows on your Wayland desktop
+#                           (running or debugging the app)
+#   scripts/dev --deb ...   the deb stage: Debian with Qt 6 and Kirigami. It
+#                           builds into target/deb: its Rust and Qt differ.
+# KABACUS_CACHE=DIR keeps the crates and build output in DIR/dev (DIR/deb)
+# instead of the checkout's target/, for CI, whose checkout is cleaned on
+# every run (incremental builds are off there: they only grow the cache).
+# The image is rebuilt when the Containerfile changes. Memory is capped only
+# if systemd delegates the memory controller to your user; without that,
+# podman (and systemd-run -p MemoryMax) can't enforce it. To enable it once, as root:
+#   mkdir -p /etc/systemd/system/user@.service.d
+#   printf '[Service]\nDelegate=cpu cpuset io memory pids\n' \
+#     > /etc/systemd/system/user@.service.d/delegate.conf
+#   systemctl daemon-reload   (then log out and back in)
+set -e
+cd "$(dirname "$0")/.."
+stage=dev
+case "$1" in
+  --gui|--deb) stage="${1#--}"; shift ;;
+esac
+display=""
+if [ "$1" = "--wayland" ]; then
+  shift
+  case "$WAYLAND_DISPLAY" in
+    /*) sock="$WAYLAND_DISPLAY" ;;
+    *) sock="$XDG_RUNTIME_DIR/${WAYLAND_DISPLAY:-wayland-0}" ;;
+  esac
+  [ -S "$sock" ] || { echo "scripts/dev: no Wayland socket at $sock" >&2; exit 1; }
+  # keep-groups keeps the render group, so the GPU is usable.
+  display="-v $sock:/tmp/wayland -e WAYLAND_DISPLAY=/tmp/wayland -e QT_QPA_PLATFORM=wayland --group-add keep-groups"
+  [ -e /dev/dri ] && display="$display --device /dev/dri"
+fi
+out=target/dev
+[ "$stage" = deb ] && out=target/deb
+cargo_home="$PWD/$out/cargo-home"
+target_dir="$PWD/$out"
+cache=""
+if [ -n "${KABACUS_CACHE:-}" ]; then
+  cache="-v $KABACUS_CACHE:$KABACUS_CACHE -e CARGO_INCREMENTAL=0"
+  cargo_home="$KABACUS_CACHE/$(basename "$out")/cargo-home"
+  target_dir="$KABACUS_CACHE/$(basename "$out")/target"
+  mkdir -p "$cargo_home" "$target_dir"
+fi
+image="localhost/kabacus-$stage:$(sha256sum Containerfile | cut -c1-12)"
+mkdir -p "$out/home"
+if ! podman image exists "$image"; then
+  podman build --target "$stage" -t "$image" -f Containerfile . >&2
+  # Each Containerfile change makes a new multi-GB image; drop the old ones.
+  podman images --format '{{.Repository}}:{{.Tag}}' \
+    | grep "^localhost/kabacus-$stage:" | grep -vx "$image" \
+    | xargs -r podman rmi >/dev/null 2>&1 || true
+fi
+limits="--pids-limit 4096"
+if grep -qw memory "/sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.controllers" 2>/dev/null; then
+  limits="$limits --memory ${KABACUS_DEV_MEMORY:-6g} --memory-swap ${KABACUS_DEV_MEMORY:-6g}"
+else
+  echo "scripts/dev: memory isn't capped (memory controller not delegated; see this script)" >&2
+fi
+tty=""
+[ -t 0 ] && [ -t 1 ] && tty="-t"
+# The repo is mounted at the same path, so paths in errors match the host.
+# XDG_RUNTIME_DIR is private to the container (the tests' sockets go there).
+exec podman run --rm -i $tty --init --userns=keep-id --security-opt label=disable \
+  $limits $display $cache \
+  -v "$PWD:$PWD" -w "$PWD" \
+  -e HOME="$PWD/$out/home" -e XDG_RUNTIME_DIR=/tmp/runtime \
+  -e CARGO_HOME="$cargo_home" -e CARGO_TARGET_DIR="$target_dir" \
+  "$image" sh -c 'mkdir -p -m 700 "$XDG_RUNTIME_DIR" && exec "$@"' sh "$@"

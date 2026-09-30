@@ -1,0 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# For qmllint/qmlls only (the app is built from the qmldir cxx-qt
+# generates; see build.rs). Mirrors its singleton declaration.
+singleton Theme 1.0 Theme.qml

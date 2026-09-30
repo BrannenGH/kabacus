@@ -1,0 +1,26 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+# SPDX-License-Identifier: CC0-1.0
+[package]
+name = "kabacus-desktop"
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0-or-later"
+
+# Kept separate so server builds do not require platform WebView libraries.
+[workspace]
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+url = "2"
+kabacus-client = { path = "../../../crates/kabacus-client" }
+open = "5"
+serde_json = "1"
+tokio = { version = "1", features = ["time"] }
+kabacus-kde = { path = "../../../crates/kabacus-kde", default-features = false }

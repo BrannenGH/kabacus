@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Run kabacus-server (the podman image) on throwaway synthetic books
+# (never real books), in --auth=none mode, on
+# $XDG_RUNTIME_DIR/kabacus/scratch.sock, for an installed app. Then:
+#   KABACUS_SOCKET=$XDG_RUNTIME_DIR/kabacus/scratch.sock kabacus
+# (To run a build from this checkout, use scripts/dev-server.)
+set -e
+cd "$(dirname "$0")/.."
+books=$(mktemp -d "${TMPDIR:-/tmp}/kabacus-scratch.XXXXXX")
+socket="${XDG_RUNTIME_DIR:-/tmp}/kabacus/scratch.sock"
+scripts/scratch-books "$books/journals"
+echo "scratch books: $books/books.kabacus"
+echo "socket: $socket"
+mkdir -p "$(dirname "$socket")"
+podman image exists localhost/kabacus-server:latest || scripts/build-image
+# The image's volumes: the database at /data, the socket directory at
+# /run/kabacus (see container/README.md).
+podman run --rm --userns=keep-id --security-opt label=disable --network none \
+  -v "$books:/data" localhost/kabacus-server:latest import /data/journals/main.journal
+exec podman run --rm --init --userns=keep-id --security-opt label=disable --network none \
+  -e RUST_LOG="${RUST_LOG:-info}" \
+  --read-only --tmpfs /tmp \
+  -v "$books:/data" -v "$(dirname "$socket"):/run/kabacus" \
+  localhost/kabacus-server:latest --auth=none --socket "/run/kabacus/$(basename "$socket")"

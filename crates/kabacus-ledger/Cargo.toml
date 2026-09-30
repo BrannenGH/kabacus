@@ -1,0 +1,25 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+[package]
+name = "kabacus-ledger"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+# Written from the specification only; see src/lib.rs.
+[dependencies]
+kabacus-core = { path = "../kabacus-core" }
+chrono = { workspace = true }
+num-bigint = { workspace = true }
+num-traits = { workspace = true }
+thiserror = { workspace = true }
+glob = "0.3"
+
+[dev-dependencies]
+num-bigint = { workspace = true }
+proptest = { workspace = true }
+tempfile = "3"
+serde_json = { workspace = true }

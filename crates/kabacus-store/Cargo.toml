@@ -1,0 +1,38 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+[package]
+name = "kabacus-store"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+# Server-side, like kabacus-server: AGPL.
+license = "AGPL-3.0-or-later"
+
+[dependencies]
+kabacus-core = { path = "../kabacus-core" }
+kabacus-ledger = { path = "../kabacus-ledger" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+chrono = { workspace = true }
+tokio = { workspace = true }
+num-bigint = { workspace = true }
+tracing = { workspace = true }
+# The local and self-hosted store, and the .kabacus file (bundled, so no
+# system SQLite is needed).
+rusqlite = { version = "0.32", features = ["bundled", "backup"] }
+# The hosted service's store, through a connection pool.
+tokio-postgres = "0.7"
+deadpool-postgres = "0.14"
+tempfile = "3"
+
+[features]
+# Throwaway PostgreSQL databases for tests.
+testing = []
+
+[dev-dependencies]
+kabacus-store = { path = ".", features = ["testing"] }
+proptest = { workspace = true }
+serde_json = { workspace = true }

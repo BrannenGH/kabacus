@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Print the version the app's packages carry (scripts/build-packages,
+# packaging/rpm/build-rpm): Cargo.toml's at its tag (v<version>), and
+# <version>~git<commits>.g<commit> anywhere else. It grows with every
+# commit, and both rpm and dpkg sort it before <version> itself, so a
+# tagged release upgrades the builds of master that led up to it.
+# Needs the full history (fetch-depth: 0) to count commits.
+set -e
+cd "$(dirname "$0")/.."
+version="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -n1)"
+if ! git tag --points-at HEAD | grep -qx "v$version"; then
+  version="$version~git$(git rev-list --count HEAD).g$(git rev-parse --short=7 HEAD)"
+fi
+# A pre-release (0.2.0-rc.1) sorts before its release with ~, not -.
+echo "$version" | tr - '~'

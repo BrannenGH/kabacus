@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Build kabacus-server from this checkout and run it in the dev container
+# (scripts/dev) on fresh synthetic books, imported from target/scratch/books
+# into target/scratch/books.kabacus (never real books), in --auth=none mode, on target/scratch/server.sock. The socket is
+# inside the checkout because that is all the containers mount:
+#   scripts/dev --gui --wayland env KABACUS_SOCKET=$PWD/target/scratch/server.sock \
+#     target/dev/debug/kabacus
+#   scripts/dev-server --prepare   only build and make the books (the VS Code
+#                                  debug config then runs the server in gdb)
+set -e
+cd "$(dirname "$0")/.."
+scratch="$PWD/target/scratch"
+rm -rf "$scratch/books" "$scratch/books.kabacus" "$scratch/server.sock"
+scripts/scratch-books "$scratch/books"
+scripts/dev cargo build -p kabacus-server
+scripts/dev target/dev/debug/kabacus-server --database "$scratch/books.kabacus" \
+  import "$scratch/books/main.journal"
+[ "$1" = "--prepare" ] && exit 0
+echo "scratch books: $scratch/books.kabacus"
+echo "socket: $scratch/server.sock"
+exec scripts/dev env RUST_LOG="${RUST_LOG:-info}" \
+  target/dev/debug/kabacus-server --database "$scratch/books.kabacus" --auth=none --socket "$scratch/server.sock"

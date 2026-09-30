@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# kdebugsettings: lets the user switch the app's debug output on and off.
+me.hallb.kabacus kabacus (app) DEFAULT_SEVERITY [INFO] IDENTIFIER [KABACUS_LOG]

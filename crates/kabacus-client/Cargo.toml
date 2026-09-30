@@ -1,0 +1,38 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+[package]
+name = "kabacus-client"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+# Typed async client for the kabacus-server API, used by the
+# app. It never opens a `.journal` file itself.
+[dependencies]
+kabacus-core = { path = "../kabacus-core" }
+num-bigint = { workspace = true }
+num-traits = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+# Each request at debug, failures at warn; the app shows them through Qt's
+# logging categories.
+log = "0.4"
+tokio = { workspace = true }
+# The server's unix socket and remote HTTPS
+# listener, and the OAuth provider. HTTPS trusts the system store plus an
+# optional private CA; no pinning.
+reqwest = { version = "0.12", default-features = false, features = ["json", "http2", "rustls-tls-native-roots"] }
+# PKCE's SHA-256 and random verifier (ring, as rustls already uses).
+ring = "0.17"
+base64 = "0.22"
+
+[dev-dependencies]
+chrono = { workspace = true }
+kabacus-server = { path = "../kabacus-server" }
+kabacus-testkit = { path = "../kabacus-testkit" }
+tempfile = "3"
+uuid = { workspace = true }
+axum = "0.8"

@@ -1,0 +1,60 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Build the app's RPM from packaging/rpm/kabacus.spec in a container of
+# the distribution it's for, so it links that distribution's glibc and Qt,
+# then install it there and smoke-test it (packaging/rpm/smoke-test).
+# Only podman is needed on the host.
+#   packaging/rpm/build-rpm <image> <out-dir>
+#   packaging/rpm/build-rpm registry.fedoraproject.org/fedora:44 target/rpm/fedora-44
+# <out-dir> gets the binary RPM(s) and packages.txt (name=version-release
+# of each). Environment:
+#   RPM_VERSION         default scripts/package-version
+#   RPM_RELEASE         default 1 (CI: 1.<run number> on master)
+#   SOURCE_URL          the repository URL the package names as its source,
+#                       default scripts/package-source
+#   RUST_VERSION        the rustup toolchain, default below
+#   KABACUS_RPM_CACHE   crates downloaded once for every distribution,
+#                       default target/rpm/cache
+set -e
+cd "$(dirname "$0")/../.."
+[ $# -eq 2 ] || { echo "usage: packaging/rpm/build-rpm <image> <out-dir>" >&2; exit 2; }
+image="$1"
+out="$2"
+version="${RPM_VERSION:-$(scripts/package-version)}"
+release="${RPM_RELEASE:-1}"
+# The container has no git history: the package's source is named here.
+source_url="$(scripts/package-source url)"
+source_commit="$(scripts/package-source commit)"
+# The same Rust on every distribution: EL's and SLE's own is too old for
+# Cargo.lock (rust-version 1.89 at the most), and one version keeps the
+# builds alike. Bump it with the toolchain the CI containers use.
+rust="${RUST_VERSION:-1.97.0}"
+cache="${KABACUS_RPM_CACHE:-$PWD/target/rpm/cache}"
+
+# Under the checkout, not /tmp: on the self-hosted runners podman runs
+# outside the runner's container and sees only the work directory.
+mkdir -p target/rpm
+work="$(mktemp -d "$PWD/target/rpm/work.XXXXXX")"
+trap 'rm -rf "$work"' EXIT
+mkdir -p "$work/rpmbuild/SOURCES" "$work/out" "$cache/registry" "$out"
+# The tracked files as they are, uncommitted changes included, so a local
+# build packages what's being worked on; CI's checkout is clean anyway.
+tree="$(git stash create)"
+git archive --format=tar.gz --prefix="kabacus-$version/" \
+  -o "$work/rpmbuild/SOURCES/kabacus-$version.tar.gz" "${tree:-HEAD}"
+
+echo "building kabacus $version-$release in $image"
+podman pull -q "$image" >/dev/null
+podman run --rm --security-opt label=disable \
+  -v "$PWD/packaging/rpm:/packaging:ro" \
+  -v "$work:/work" \
+  -v "$cache/registry:/root/.cargo/registry" \
+  -e RPM_VERSION="$version" -e RPM_RELEASE="$release" -e RUST_VERSION="$rust" \
+  -e SOURCE_URL="$source_url" -e SOURCE_COMMIT="$source_commit" \
+  "$image" sh /packaging/build-in-container
+cp "$work"/out/* "$out/"
+ls -l "$out"

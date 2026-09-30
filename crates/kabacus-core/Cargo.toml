@@ -1,0 +1,22 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+[package]
+name = "kabacus-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+# No I/O, no UI. See crate-level docs in src/lib.rs.
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+chrono = { workspace = true }
+uuid = { workspace = true }
+num-bigint = { workspace = true }
+num-traits = { workspace = true }
+
+[dev-dependencies]
+proptest = { workspace = true }

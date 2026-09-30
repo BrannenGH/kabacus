@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+
+SPDX-License-Identifier: CC0-1.0
+-->
+<!-- A .kabacus file is SQLite with application_id "KBCS" (0x4B424353). -->
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-kabacus">
+    <comment>Kabacus books</comment>
+    <sub-class-of type="application/vnd.sqlite3"/>
+    <glob pattern="*.kabacus"/>
+    <magic priority="60">
+      <match type="string" offset="0" value="SQLite format 3">
+        <match type="big32" offset="68" value="0x4B424353"/>
+      </match>
+    </magic>
+  </mime-type>
+</mime-info>

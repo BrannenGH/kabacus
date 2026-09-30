@@ -1,0 +1,60 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# qmllint over the app's QML, against the me.hallb.kabacus module (the
+# bridge's plugin.qmltypes) that the gui build generates. Run it where Qt 6
+# and Kirigami are:
+#   scripts/dev --gui scripts/qmllint
+# Fails on any warning but one: KI18n's i18n(), i18nc(), i18np() and
+# i18ncp() come from the QML context (src/translation.h), which qmllint
+# can't see, so it calls them unqualified access; those calls, and only
+# those, are let through. It also writes crates/kabacus-kde/.qmlls.ini
+# (gitignored) so qmlls in your editor finds the same module: qmlls only
+# takes absolute import paths.
+set -e
+cd "$(dirname "$0")/.."
+cargo build -p kabacus-kde --features gui
+modules=$(realpath "${CARGO_TARGET_DIR:-target}/cxxqt/qml_modules")
+printf '[General]\nimportPaths="%s"\nno-cmake-calls=true\n' "$modules" \
+  > crates/kabacus-kde/.qmlls.ini
+lint=$(command -v qmllint6 || command -v qmllint)
+report=$(mktemp)
+theme_report=$(mktemp)
+trap 'rm -f "$report" "$theme_report"' EXIT
+# qml/Theme.qml is a link to the generated file. qmllint 6.12 can't match a
+# linked singleton to a qmldir, so the link isn't linted: the file it names
+# is, on its own and with no module path, against the qmldir beside it.
+files=$(find crates/kabacus-kde/qml -maxdepth 1 -name '*.qml' ! -type l)
+# shellcheck disable=SC2086
+"$lint" -I "$modules" --json "$report" $files || true
+"$lint" --json "$theme_report" "$PWD/design/generated/Theme.qml" || true
+python3 - "$report" "$theme_report" <<'PY'
+import json, re, sys
+KI18N = {"i18n", "i18nc", "i18np", "i18ncp"}
+files = []
+for path in sys.argv[1:]:
+    try:
+        files += json.load(open(path)).get("files", [])
+    except ValueError:
+        sys.exit("qmllint wrote no report")
+failed = False
+for f in files:
+    lines = open(f["filename"], encoding="utf-8").read().split("\n")
+    for w in f.get("warnings", []):
+        if w.get("type") in ("debug", "info"):
+            continue
+        line, column = w.get("line", 0), w.get("column", 0)
+        source = lines[line - 1] if 0 < line <= len(lines) else ""
+        name = re.match(r"[A-Za-z_]\w*", source[max(column - 1, 0):])
+        if w.get("id") == "unqualified" and name and name.group(0) in KI18N:
+            continue
+        failed = True
+        print(f"{f['filename']}:{line}:{column}: {w.get('message')} [{w.get('id')}]\n    {source.strip()}")
+    if not f.get("success", True) and not f.get("warnings"):
+        failed = True
+        print(f"{f['filename']}: qmllint failed")
+sys.exit(1 if failed else 0)
+PY

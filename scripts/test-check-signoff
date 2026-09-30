@@ -1,0 +1,72 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Tests scripts/check-signoff on commits in a throwaway repository.
+#
+#   scripts/test-check-signoff
+
+set -eu
+
+check="$(cd "$(dirname "$0")" && pwd)/check-signoff"
+repo="$(mktemp -d)"
+trap 'rm -rf "$repo"' EXIT
+cd "$repo"
+
+maintainer='Mariana Okafor <mariana.okafor@fastmail.com>'
+contributor='Priya Raman <priya.raman@posteo.net>'
+printf '# maintainers\nmariana.okafor@fastmail.com\n' >"$repo/.maintainers"
+export MAINTAINERS_FILE="$repo/.maintainers"
+
+commit() {
+    # commit <author> <message>
+    GIT_AUTHOR_NAME="${1% <*}" GIT_AUTHOR_EMAIL="$(echo "$1" | sed 's/.*<\(.*\)>/\1/')" \
+    GIT_COMMITTER_NAME="${1% <*}" GIT_COMMITTER_EMAIL="$(echo "$1" | sed 's/.*<\(.*\)>/\1/')" \
+        git -c commit.gpgsign=false commit -q --allow-empty -m "$2"
+}
+
+git init -q
+commit "$maintainer" "Record the March rent for the Elm Street flat"
+git tag base
+
+failures=0
+run() {
+    # run pass|fail <name> <author> <message>
+    git checkout -q --detach base
+    commit "$3" "$4"
+    if "$check" base HEAD 2>/dev/null; then got=pass; else got=fail; fi
+    if [ "$got" != "$1" ]; then
+        echo "FAIL: $2: expected $1, got $got" >&2
+        failures=$((failures + 1))
+    fi
+}
+
+run pass "maintainer without sign-off" "$maintainer" "Pay the Visa card from savings"
+run pass "contributor signed off" "$contributor" "Split the grocery run
+
+Signed-off-by: $contributor"
+run pass "sign-off email in other case" "$contributor" "Split the grocery run
+
+Signed-off-by: Priya Raman <Priya.Raman@Posteo.net>"
+run fail "contributor without sign-off" "$contributor" "Split the grocery run"
+run fail "sign-off by someone else" "$contributor" "Split the grocery run
+
+Signed-off-by: $maintainer"
+run fail "sign-off without email" "$contributor" "Split the grocery run
+
+Signed-off-by: Priya Raman"
+
+git checkout -q --detach base
+commit "$contributor" "Add the October payroll deposit
+
+Signed-off-by: $contributor"
+commit "$contributor" "Net the dinner bill"
+if "$check" base HEAD 2>/dev/null; then
+    echo "FAIL: unsigned second commit in a series passed" >&2
+    failures=$((failures + 1))
+fi
+
+[ "$failures" -eq 0 ] && echo "check-signoff: all cases pass"
+exit "$failures"

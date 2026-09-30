@@ -1,0 +1,74 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+[package]
+name = "kabacus-kde"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+# The app is split in two so the workspace builds and tests without Qt:
+# - `model` (always built): everything the UI does, as plain async Rust
+#   over kabacus-client. Tested against a real scratch server.
+# - the Kirigami UI (feature `gui`): a thin cxx-qt bridge plus QML. Build
+#   it in the gui container, scripts/dev --gui (see README.md).
+[features]
+gui = ["dep:cxx", "dep:cxx-qt", "dep:cxx-qt-lib", "dep:cxx-qt-build"]
+
+[[bin]]
+name = "kabacus"
+path = "src/main.rs"
+required-features = ["gui"]
+
+[dependencies]
+kabacus-client = { path = "../kabacus-client" }
+kabacus-core = { path = "../kabacus-core" }
+num-traits = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+chrono = { workspace = true }
+thiserror = { workspace = true }
+# Logs go through Qt's logging category me.hallb.kabacus (src/logging.rs).
+log = "0.4"
+# The refresh token lives in the platform secret store (KWallet
+# through the Secret Service API), never in KConfig.
+secret-service = { version = "5", features = ["rt-tokio-crypto-rust"] }
+cxx = { version = "1", optional = true }
+cxx-qt = { version = "0.10", optional = true }
+cxx-qt-lib = { version = "0.10", features = ["qt_full"], optional = true }
+
+[build-dependencies]
+cxx-qt-build = { version = "0.10", optional = true }
+
+[dev-dependencies]
+reqwest = { version = "0.12", default-features = false }
+kabacus-store = { path = "../kabacus-store" }
+kabacus-testkit = { path = "../kabacus-testkit" }
+tempfile = "3"
+
+# The DEB (scripts/build-packages deb), built on Debian (scripts/dev
+# --deb). Libraries are found automatically; the QML modules the app
+# imports are listed by hand. The RPMs come from packaging/rpm/kabacus.spec.
+[package.metadata.deb]
+name = "kabacus"
+maintainer = "Brannen Hall <brannen@hallb.me>"
+extended-description = "A Kirigami app for hledger books. It reads and writes only through kabacus-server, which validates and versions every change."
+section = "misc"
+features = ["gui"]
+depends = "$auto, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-dialogs, qml6-module-qtquick-layouts, qml6-module-qtquick-templates, qml6-module-qtquick-window, qml6-module-qtqml-workerscript, qml6-module-org-kde-kirigami, qml6-module-org-kde-kirigamiaddons-components"
+recommends = "qml6-module-org-kde-desktop"
+assets = [
+    ["target/release/kabacus", "usr/bin/", "755"],
+    ["../../packaging/desktop/me.hallb.kabacus.desktop", "usr/share/applications/", "644"],
+    ["../../packaging/desktop/me.hallb.kabacus.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
+    ["../../packaging/desktop/me.hallb.kabacus.metainfo.xml", "usr/share/metainfo/", "644"],
+    ["kabacus.categories", "usr/share/qlogging-categories6/", "644"],
+    # Where the package's source is, which scripts/build-packages writes
+    # (scripts/package-source text).
+    ["../../target/package-source/SOURCE", "usr/share/doc/kabacus/", "644"],
+    # The translations, which scripts/build-packages compiles there first
+    # (`xtask i18n-build`): usr/share/locale/<lang>/LC_MESSAGES/kabacus.mo.
+    ["target/release/locale/*/LC_MESSAGES/kabacus.mo", "usr/share/locale/", "644"],
+]

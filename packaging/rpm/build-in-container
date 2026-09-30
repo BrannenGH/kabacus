@@ -1,0 +1,58 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Runs as root inside the distribution's container (packaging/rpm/build-rpm
+# starts it): installs the spec's build dependencies and the pinned Rust,
+# builds the binary RPM, then installs it, which proves its Requires
+# resolve on this distribution, and smoke-tests it. The source tarball is
+# in /work/rpmbuild/SOURCES; the RPMs and packages.txt go to /work/out.
+set -eu
+. /packaging/lib.sh
+# What this root writes in the mounts goes back to whoever owns them, so
+# the runner can clean up even where podman runs rootful.
+trap 'chown -R "$(stat -c %u:%g /work)" /work /root/.cargo/registry' EXIT
+
+enable_el_repos
+pkg_install rpm-build gcc-c++ tar gzip findutils
+# Only if there's no curl at all: EL 9's images ship curl-minimal, which
+# conflicts with the full curl package.
+command -v curl >/dev/null || pkg_install curl
+spec=/packaging/kabacus.spec
+# _with_rustup is what rpmbuild's --with rustup defines, and rpmspec
+# takes it the same way.
+set -- -D "_with_rustup 1" -D "pkg_version $RPM_VERSION" -D "pkg_release $RPM_RELEASE" \
+  -D "pkg_source_url $SOURCE_URL" -D "pkg_commit $SOURCE_COMMIT"
+# One requirement per line ("qt6-base-devel", or "cargo >= 1.89" without
+# rustup): the spaces go, so each is one argument to dnf or zypper.
+deps="$(rpmspec -q --buildrequires "$@" "$spec" | tr -d ' ')"
+# shellcheck disable=SC2086 # one argument per requirement
+pkg_install $deps
+
+# rustup-init checked against its published hash.
+url=https://static.rust-lang.org/rustup/dist/x86_64-unknown-linux-gnu/rustup-init
+curl -fsSLo /tmp/rustup-init "$url"
+echo "$(curl -fsSL "$url.sha256" | cut -d' ' -f1)  /tmp/rustup-init" | sha256sum -c -
+chmod +x /tmp/rustup-init
+/tmp/rustup-init -y --no-modify-path --profile minimal --default-toolchain "$RUST_VERSION"
+export PATH="/root/.cargo/bin:$PATH"
+rustc --version
+
+rpmbuild -bb "$@" -D "_topdir /work/rpmbuild" "$spec"
+cp /work/rpmbuild/RPMS/*/*.rpm /work/out/
+rpm -qp --qf '%{NAME}=%{VERSION}-%{RELEASE}\n' /work/out/*.rpm > /work/out/packages.txt
+cat /work/out/packages.txt
+
+# Installed as a user would, from the files, then started.
+case "$family" in
+  suse) zypper --non-interactive install --no-recommends --allow-unsigned-rpm /work/out/*.rpm ;;
+  *) dnf install -y --setopt=install_weak_deps=False /work/out/*.rpm ;;
+esac
+# The Fedora and openSUSE images install without docs, which a user's
+# system doesn't, and the smoke test reads the package's SOURCE doc.
+# The packages aren't signed (the repository's metadata is), which rpm 6
+# refuses by default.
+rpm --reinstall --define "_excludedocs 0" --define "_pkgverify_level digest" /work/out/*.rpm
+sh /packaging/smoke-test

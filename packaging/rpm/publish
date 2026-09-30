@@ -1,0 +1,61 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Upload built RPMs to repo.hallb.me, one at a time: the server rebuilds
+# and signs a directory's metadata on every upload. Each <dir> is one
+# target's build (the RPM workflow's artifacts): its *.rpm and target.env
+# with REPO (<distro>/<version>) and ALIASES (more <distro>/<version>s
+# served the same files, e.g. MicroOS from Tumbleweed's).
+#   RPM_UPLOAD_TOKEN=... packaging/rpm/publish <dir>...
+# Writes a summary of what each target gained to $GITHUB_STEP_SUMMARY when
+# it's set.
+# Never `set -x`: the token mustn't reach the log. It isn't on curl's
+# command line either (other users of the runner can read that): it's
+# in a header file only this user can read.
+set -eu
+[ -n "${RPM_UPLOAD_TOKEN:-}" ] || { echo "publish: RPM_UPLOAD_TOKEN isn't set" >&2; exit 1; }
+arch=x86_64
+private="$(mktemp -d)"
+trap 'rm -rf "$private"' EXIT
+chmod 700 "$private"
+printf 'Authorization: Bearer %s\n' "$RPM_UPLOAD_TOKEN" > "$private/auth"
+summary="${GITHUB_STEP_SUMMARY:-/dev/null}"
+
+upload() { # <repo> <rpm>
+  name="$(basename "$2")"
+  url="https://repo.hallb.me/upload/$1/$arch/$name"
+  echo "uploading $name to $1/$arch"
+  code="$(curl -sS --retry 3 --retry-delay 5 -X PUT -H "@$private/auth" \
+    --upload-file "$2" -o "$private/response" -w '%{http_code}' "$url")" || code="${code:-000}"
+  if [ "$code" != 201 ]; then
+    # The response never contains the token.
+    echo "publish: $url answered $code:" >&2
+    cat "$private/response" >&2 || true
+    exit 1
+  fi
+}
+
+any=""
+{
+  echo "| Repository | Files added |"
+  echo "|---|---|"
+} >> "$summary"
+for dir in "$@"; do
+  # A target that didn't build has no artifact; the others still go up.
+  [ -f "$dir/target.env" ] || continue
+  REPO="" ALIASES=""
+  . "$dir/target.env"
+  for repo in $REPO $ALIASES; do
+    count=0
+    for rpm in "$dir"/*.rpm; do
+      upload "$repo" "$rpm"
+      count=$((count + 1))
+    done
+    echo "| \`$repo/$arch\` | $count |" >> "$summary"
+    any=1
+  done
+done
+[ -n "$any" ] || echo "publish: no target built, nothing to publish" >&2

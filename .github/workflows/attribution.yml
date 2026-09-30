@@ -1,0 +1,40 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: Attribution
+
+# Commits and pull requests credit no AI coding agent
+# (scripts/check-attribution). Separate from CI so that editing the title
+# or description re-runs only this. It needs only git and a shell, so it
+# runs on the host rather than in the test containers; like CI, never for
+# a fork's pull request.
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: attribution-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  attribution:
+    name: no AI attribution
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, podman]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: scripts/test-check-attribution
+        run: scripts/test-check-attribution
+      - name: scripts/check-attribution
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: scripts/check-attribution "$BASE" "$HEAD"

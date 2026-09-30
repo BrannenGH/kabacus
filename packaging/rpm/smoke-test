@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Start the installed app headless and check that it comes up: its Qt
+# libraries load and every QML module it imports (Kirigami,
+# kirigami-addons, QtQuick's) is installed, which the RPM's Requires are
+# meant to guarantee. The app has no --version and runs until it's closed,
+# so still running after 20 seconds, with no load errors, is a pass. It
+# needs no server: one it can't reach is shown in the window, not fatal.
+set -u
+command -v kabacus >/dev/null || { echo "smoke test: kabacus isn't installed" >&2; exit 1; }
+rpm -q kabacus
+# The package leads to its exact source (GPLv3 section 6).
+vcs="$(rpm -q --qf '%{VCS}' kabacus)"
+case "$vcs" in
+  git+https://*.git#????????????????????????????????????????) ;;
+  *) echo "smoke test: the VCS tag isn't a repository and commit: $vcs" >&2; exit 1 ;;
+esac
+commit="${vcs#*#}"
+# Wherever this distribution keeps docs (openSUSE: /usr/share/doc/packages).
+source_file="$(rpm -ql kabacus | grep '/kabacus/SOURCE$')"
+grep -q "$commit" "$source_file" || {
+  echo "smoke test: $source_file doesn't name commit $commit" >&2
+  exit 1
+}
+log="$(mktemp)"
+QT_QPA_PLATFORM=offscreen QT_FORCE_STDERR_LOGGING=1 XDG_RUNTIME_DIR="$(mktemp -d)" \
+  timeout 20 kabacus >"$log" 2>&1
+status=$?
+cat "$log"
+if [ "$status" -ne 124 ]; then
+  echo "smoke test: kabacus exited with $status instead of running" >&2
+  exit 1
+fi
+if grep -Eq 'failed to load component|is not installed|Cannot load library|could not be loaded|Could not find the Qt platform plugin' "$log"; then
+  echo "smoke test: kabacus started without all it needs (above)" >&2
+  exit 1
+fi
+echo "smoke test: kabacus started"

@@ -1,0 +1,44 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Build the redistributable kabacus-server image (Containerfile, stage
+# server): openSUSE Tumbleweed with kabacus-server and the pinned hledger.
+# It holds no paths, users or settings from this machine;
+# see container/README.md for how to run it.
+#
+#   scripts/build-image                   localhost/kabacus-server:<version> and :latest
+#   IMAGE=ghcr.io/me/kabacus-server scripts/build-image
+#   scripts/build-image --save FILE       also write an OCI archive to FILE
+#                                         (load it elsewhere with podman load -i FILE)
+#   ENGINE=docker scripts/build-image     build with docker instead of podman
+set -e
+cd "$(dirname "$0")/.."
+engine="${ENGINE:-podman}"
+image="${IMAGE:-localhost/kabacus-server}"
+version="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -n1)"
+# The build context has no git history: the commit goes in as a file
+# (kabacus-server's build.rs reads it), which get_version reports.
+git rev-parse HEAD > KABACUS_COMMIT 2>/dev/null || rm -f KABACUS_COMMIT
+trap 'rm -f KABACUS_COMMIT' EXIT
+save=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --save) save="$2"; shift 2 ;;
+    *) echo "usage: scripts/build-image [--save FILE]" >&2; exit 2 ;;
+  esac
+done
+"$engine" build --target server --build-arg VERSION="$version" \
+  -t "$image:$version" -t "$image:latest" -f Containerfile .
+if [ -n "$save" ]; then
+  rm -f "$save"
+  if [ "$engine" = podman ]; then
+    podman save --format oci-archive -o "$save" "$image:$version"
+  else
+    docker save -o "$save" "$image:$version"
+  fi
+  echo "Saved $image:$version to $save"
+fi
+echo "Built $image:$version (also tagged latest)."

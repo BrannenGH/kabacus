@@ -1,0 +1,204 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: Release
+
+# Builds and publishes the app and the server. Tests don't gate this: they
+# run on pull requests, in the CI workflow. The RPMs for the repository at
+# repo.hallb.me are the RPM repository workflow's; the RPM and DEB here are
+# the ones attached to the GitHub release.
+#
+# - Every push to master publishes "latest":
+#   - the app's RPM (openSUSE Tumbleweed) and DEB (Debian) on the rolling
+#     `latest` pre-release, replaced on each push;
+#   - ghcr.io/<owner>/kabacus-server:latest (and :sha-<commit>).
+# - A version tag (v0.1.0; v0.2.0-rc.1 is a pre-release) publishes that
+#   version: a GitHub release with the RPM and DEB, and
+#   ghcr.io/<owner>/kabacus-server:<version>. The tag must match the
+#   workspace version in Cargo.toml.
+# - Run it by hand (workflow_dispatch) to build both without publishing.
+on:
+  push:
+    branches: [master]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A newer push to master supersedes a build of an older one.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref_type == 'branch' }}
+
+jobs:
+  version:
+    name: version
+    runs-on: [self-hosted, podman]
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      # latest (push to master), release (version tag) or none (by hand).
+      channel: ${{ steps.version.outputs.channel }}
+      prerelease: ${{ steps.version.outputs.prerelease }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: version
+        run: |
+          version="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -n1)"
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
+            channel=none
+          elif [ "$GITHUB_REF_TYPE" = tag ]; then
+            if [ "$GITHUB_REF_NAME" != "v$version" ]; then
+              echo "::error::tag $GITHUB_REF_NAME doesn't match Cargo.toml's version $version (expected v$version)"
+              exit 1
+            fi
+            channel=release
+          else
+            channel=latest
+            version="$version-g${GITHUB_SHA::7}"
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "channel=$channel" >> "$GITHUB_OUTPUT"
+          case "$version" in
+            *-*) echo "prerelease=true" >> "$GITHUB_OUTPUT" ;;
+            *) echo "prerelease=false" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+  image:
+    name: server image
+    needs: version
+    runs-on: [self-hosted, podman]
+    permissions:
+      contents: read
+      packages: write
+    env:
+      PUBLISH: ${{ needs.version.outputs.channel != 'none' }}
+    steps:
+      - uses: actions/checkout@v4
+      # The Containerfile's server stage, as scripts/build-image builds it,
+      # with podman (the self-hosted runners use the host's). :latest follows master;
+      # version tags get only their versions; every build gets :sha-<commit>.
+      - name: Build
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+          CHANNEL: ${{ needs.version.outputs.channel }}
+          PRERELEASE: ${{ needs.version.outputs.prerelease }}
+        run: |
+          image="ghcr.io/$(echo "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')/kabacus-server"
+          tags="sha-${GITHUB_SHA::7}"
+          case "$CHANNEL" in
+            latest) tags="$tags latest" ;;
+            release)
+              tags="$tags $VERSION"
+              [ "$PRERELEASE" = true ] || tags="$tags ${VERSION%.*}" ;;
+          esac
+          args=""
+          for t in $tags; do args="$args -t $image:$t"; done
+          podman build --target server --iidfile "$RUNNER_TEMP/iid" --platform linux/amd64 \
+            --build-arg VERSION="$VERSION" \
+            --label org.opencontainers.image.title=kabacus-server \
+            --label "org.opencontainers.image.description=Gateway to double-entry books in SQLite or PostgreSQL: validated writes, one revision per change" \
+            --label org.opencontainers.image.licenses=AGPL-3.0-or-later \
+            --label "org.opencontainers.image.source=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
+            --label "org.opencontainers.image.revision=$GITHUB_SHA" \
+            $args -f Containerfile .
+          echo "IID=$(cat "$RUNNER_TEMP/iid")" >> "$GITHUB_ENV"
+          echo "IMAGE=$image" >> "$GITHUB_ENV"
+          echo "TAGS=$tags" >> "$GITHUB_ENV"
+      - name: Push
+        if: env.PUBLISH == 'true'
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # The runner is shared: the token goes in this job's own authfile,
+        # removed afterwards, and the push is of the image ID this job
+        # built, not a tag another job could have moved.
+        run: |
+          auth="$RUNNER_TEMP/auth.json"
+          echo "$TOKEN" | podman login --authfile "$auth" ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          for t in $TAGS; do podman push --authfile "$auth" "$IID" "docker://$IMAGE:$t"; done
+      - name: Forget the registry token
+        if: always()
+        run: rm -f "$RUNNER_TEMP/auth.json"
+
+  packages:
+    name: packages
+    needs: version
+    uses: ./.github/workflows/packages.yml
+    with:
+      bundle: ${{ needs.version.outputs.channel == 'latest' && 'latest' || needs.version.outputs.version }}
+
+  release:
+    name: GitHub release
+    if: needs.version.outputs.channel != 'none'
+    needs: [version, image, packages]
+    runs-on: [self-hosted, podman]
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+      CHANNEL: ${{ needs.version.outputs.channel }}
+      VERSION: ${{ needs.version.outputs.version }}
+      PRERELEASE: ${{ needs.version.outputs.prerelease }}
+    steps:
+      # No checkout here, so nothing cleans the self-hosted runner's
+      # workspace: it still holds what the last job on it left, such as an
+      # RPM workflow build's dist/<target>/, which would break SHA256SUMS
+      # and be uploaded with the release.
+      - name: Start from an empty dist
+        run: rm -rf dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: rpm
+          path: dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: deb
+          path: dist
+      - name: Write the notes
+        run: |
+          owner="$(echo "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')"
+          image_tag="$VERSION"
+          [ "$CHANNEL" = latest ] && image_tag=latest
+          (cd dist && sha256sum -- * > SHA256SUMS)
+          {
+            if [ "$CHANNEL" = latest ]; then
+              echo "The latest build of master ($GITHUB_SHA), $VERSION. Replaced on every push."
+              echo
+            fi
+            cat <<EOF
+          ## Install
+
+          The app, as a native package (it uses your distribution's Qt and
+          Kirigami):
+
+              sudo zypper install ./$(cd dist && ls -- *.rpm)    # openSUSE Tumbleweed
+              sudo apt install ./$(cd dist && ls -- *.deb)       # Debian
+
+          Fedora, CentOS Stream, RHEL-compatible and openSUSE also get it from
+          the repository at repo.hallb.me: see "Installing from repo.hallb.me"
+          in the README.
+
+          The server (podman; see container/README.md for the volumes and settings):
+
+              podman pull ghcr.io/$owner/kabacus-server:$image_tag
+          EOF
+          } > notes.md
+      # The rolling release is recreated so its tag moves to this commit.
+      - name: Publish latest
+        if: env.CHANNEL == 'latest'
+        run: |
+          gh release delete latest --cleanup-tag --yes || true
+          gh release create latest dist/* \
+            --target "$GITHUB_SHA" \
+            --title "Kabacus latest (master)" \
+            --notes-file notes.md --prerelease --latest=false
+      - name: Publish the version
+        if: env.CHANNEL == 'release'
+        run: |
+          flags=""
+          [ "$PRERELEASE" = true ] && flags="--prerelease"
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --title "Kabacus $VERSION" \
+            --notes-file notes.md --generate-notes $flags

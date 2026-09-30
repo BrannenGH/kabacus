@@ -1,0 +1,77 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+# kabacus-server's configuration in the container image. Mount your own
+# file over /etc/kabacus/server.toml to change it.
+#
+# The books are the database in KABACUS_DATABASE, which the image sets to
+# /data/books.kabacus; it's made on first start. For PostgreSQL instead,
+# set database_url (the role it connects as must not bypass row-level
+# security).
+#
+# database_url = "postgresql://kabacus@db.example.org/kabacus"
+
+socket_path = "/run/kabacus/server.sock"
+
+# Rewrites (delete, rewrite, declare an account) are allowed
+# for callers with the ledger-rewrite role, and each needs a confirm token.
+# Set this, or start the server with --no-rewrite, to refuse them for
+# everyone.
+#
+# allow_rewrite = false
+
+# Authentication. With no [auth] section the server
+# expects OAuth and needs an issuer. For a single user on one computer,
+# start it with `--auth=none` instead: unix socket only.
+#
+# [auth]
+# mode     = "oauth"
+# issuer   = "https://id.example.org/realms/home"
+# audience = "kabacus-server"
+
+# Phones and tablets: also serve HTTPS. Publish the port and
+# mount the certificate and key. Refused together with --auth=none.
+#
+# [remote]
+# bind_addr = "0.0.0.0:8443"
+# cert_path = "/etc/kabacus/tls/cert.pem"
+# key_path  = "/etc/kabacus/tls/key.pem"
+
+# MCP is served at /mcp on the socket and the HTTPS listener, with the
+# same OAuth as the API: MCP clients find the issuer through
+# /.well-known/oauth-protected-resource/mcp and sign in themselves. Set these
+# only if clients reach it at another URL (a reverse proxy), or need to be
+# told which scopes put the roles claim in their tokens.
+#
+# [mcp]
+# resource_url = "https://books.example.org/mcp"
+# scopes       = ["openid", "kabacus"]
+
+# Account kinds: every account's kind (money, fund, card reserve, card, ...)
+# comes from its path, by the first matching rule here; `*` is one segment
+# (or part of one, as in `card-*`) and `**` one or more. Kept outside the
+# books; `kill -HUP` the server to reload them. Leave them out for the
+# defaults (`account_kinds` over MCP lists the rules in use). Setting any
+# replaces all of them. Each card's reserve is named by
+# card_reserve_account, `{card}` being the card account's last segment.
+#
+# card_reserve_account = "assets:bank:checking:card-{card}"
+#
+# [[account_kinds]]
+# pattern = "assets:bank:*:card-*"
+# kind    = "debt-reserve"
+#
+# [[account_kinds]]
+# pattern = "assets:bank:*:*"
+# kind    = "pre-allocation"
+#
+# [[account_kinds]]
+# pattern = "assets:bank:*"
+# kind    = "money"
+#
+# ...and so on: money, pre-allocation, debt-reserve, receivable,
+# non-liquid, revolving-debt, term-liability, payable, income, expense.
+
+# React interface on the same HTTPS listener as the API.
+web_dir = "/usr/share/kabacus/web"

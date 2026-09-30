@@ -1,0 +1,97 @@
+{
+  // Everything builds and runs in the openSUSE containers (scripts/dev,
+  // target/dev): the app in the gui stage, shown on your Wayland desktop,
+  // the server in the dev stage. Both see the checkout at its host path, so
+  // compiler errors link back here.
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build: app",
+      "type": "shell",
+      "command": "scripts/dev --gui cargo build -p kabacus-kde --features gui",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": "$rustc"
+    },
+    {
+      "label": "build: server",
+      "type": "shell",
+      "command": "scripts/dev cargo build -p kabacus-server",
+      "group": "build",
+      "problemMatcher": "$rustc"
+    },
+    {
+      // Fresh synthetic books in target/scratch/books plus a server build;
+      // the server debug config runs it.
+      "label": "prepare: scratch server",
+      "type": "shell",
+      "command": "scripts/dev-server --prepare",
+      "problemMatcher": "$rustc"
+    },
+    {
+      "label": "run: scratch server",
+      "type": "shell",
+      "command": "scripts/dev-server",
+      "isBackground": true,
+      "problemMatcher": {
+        "base": "$rustc",
+        "background": { "beginsPattern": "^\\s*(Compiling|Finished)", "endsPattern": "^socket: " }
+      }
+    },
+    {
+      "label": "run: app",
+      "type": "shell",
+      "command": "scripts/dev --gui --wayland env KABACUS_SOCKET=${workspaceFolder}/target/scratch/server.sock target/dev/debug/kabacus",
+      "dependsOn": "build: app",
+      "problemMatcher": []
+    },
+    {
+      // For "Debug server + app": the app starts once the server listens.
+      // prepare: scratch server removes any old socket first.
+      "label": "wait: scratch server",
+      "type": "shell",
+      "command": "timeout 900 sh -c 'until [ -S target/scratch/server.sock ]; do sleep 0.5; done'",
+      "problemMatcher": []
+    },
+    {
+      "label": "build: app, wait for server",
+      "dependsOn": ["build: app", "wait: scratch server"],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "run: server + app",
+      "dependsOn": ["run: scratch server", "run: app"],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "test: package",
+      "type": "shell",
+      "command": "scripts/dev cargo test -p ${input:package}",
+      "group": "test",
+      "problemMatcher": "$rustc"
+    },
+    {
+      "label": "qmllint",
+      "type": "shell",
+      "command": "scripts/dev --gui scripts/qmllint",
+      "group": "test",
+      "problemMatcher": {
+        "owner": "qmllint",
+        "fileLocation": "absolute",
+        "pattern": {
+          "regexp": "^(Warning|Error|Info): (.+?):(\\d+):(\\d+): (.*)$",
+          "severity": 1, "file": 2, "line": 3, "column": 4, "message": 5
+        }
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "package",
+      "type": "pickString",
+      "description": "Package to test (the full suite runs in CI)",
+      "options": ["kabacus-core", "kabacus-client", "kabacus-server", "kabacus-kde", "kabacus-testkit", "xtask"]
+    }
+  ]
+}

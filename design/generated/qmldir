@@ -1,0 +1,8 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+# For qmllint only: qml/Theme.qml is a link to Theme.qml here, which Qt
+# 6.12's qmllint follows, then looks for the singleton declaration beside
+# the file it found. The app's own module is generated (see build.rs).
+singleton Theme 1.0 Theme.qml

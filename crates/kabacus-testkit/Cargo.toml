@@ -1,0 +1,28 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+[package]
+name = "kabacus-testkit"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+# Test-only helpers shared by the workspace's integration and e2e suites:
+# a stand-in OIDC provider, a private CA, and a scratch-books server.
+# Synthetic data only.
+[dependencies]
+kabacus-server = { path = "../kabacus-server" }
+kabacus-ledger = { path = "../kabacus-ledger" }
+kabacus-store = { path = "../kabacus-store" }
+axum = "0.8"
+base64 = "0.22"
+chrono = { workspace = true }
+jsonwebtoken = "9"
+ring = "0.17"
+rcgen = { version = "0.13", default-features = false, features = ["ring", "pem"] }
+serde_json = { workspace = true }
+tempfile = "3"
+tokio = { workspace = true }
+uuid = { workspace = true }

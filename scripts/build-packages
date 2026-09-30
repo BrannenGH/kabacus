@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Build the app's native packages into target/packages, each against its
+# distribution's Qt and Kirigami (so each is for that distribution and ones
+# close to it).
+#   scripts/build-packages        both
+#   scripts/build-packages rpm    openSUSE Tumbleweed, from packaging/rpm/kabacus.spec
+#                                 (packaging/rpm/build-rpm builds it for the
+#                                 other distributions too)
+#   scripts/build-packages deb    Debian (scripts/dev --deb); package
+#                                 metadata in crates/kabacus-kde/Cargo.toml
+# The version is scripts/package-version's; the source the packages name
+# (their SOURCE file, the RPM's VCS tag), scripts/package-source's.
+set -e
+cd "$(dirname "$0")/.."
+version="$(scripts/package-version)"
+echo "package version: $version"
+mkdir -p target/packages target/package-source
+scripts/package-source text > target/package-source/SOURCE
+for kind in ${*:-rpm deb}; do
+  case "$kind" in
+    rpm)
+      packaging/rpm/build-rpm registry.opensuse.org/opensuse/tumbleweed:latest target/rpm/tumbleweed
+      cp target/rpm/tumbleweed/*.rpm target/packages/ ;;
+    deb) scripts/dev --deb sh -c 'set -e
+      cargo run --release --locked -p xtask -- i18n-build "$CARGO_TARGET_DIR/release/locale"
+      cargo deb --locked -p kabacus-kde -o target/packages/ --deb-version "$1"' sh "$version" ;;
+    *) echo "usage: scripts/build-packages [rpm] [deb]" >&2; exit 2 ;;
+  esac
+done
+ls -l target/packages

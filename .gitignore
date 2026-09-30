@@ -1,0 +1,28 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+target/
+**/*.rs.bk
+.env
+*.pdb
+
+# Never accidentally commit a copy of the real books.
+/tests/real-books-copy/
+
+
+# Personal notes for Claude Code.
+/CLAUDE.local.md
+
+# Written by scripts/qmllint with this checkout's absolute paths.
+.qmlls.ini
+lint.out
+
+# Written by scripts/build-image for the image build.
+/KABACUS_COMMIT
+
+
+node_modules/
+apps/kabacus-ui/dist/
+apps/kabacus-ui/test-results/
+apps/kabacus-ui/playwright-report/

@@ -1,0 +1,967 @@
+// SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+// SPDX-License-Identifier: GPL-3.0-or-later
+import { expect, test } from "@playwright/test";
+const amount = (exact) => ({
+  commodity: "USD",
+  exact,
+  formatted: `${exact.startsWith("-") ? "-" : ""}$${exact.replace("-", "")}`,
+});
+const version = {
+  server_version: "0.1.0",
+  commit: "7a9fce322640ecba4268aa2edf2c8013e8f33329",
+  source_url: "https://github.com/BrannenGH/khledger",
+  head: "42",
+  books: "42",
+  auth: { mode: "none" },
+};
+const accounts = [
+  { account: "assets:bank:checking", display_name: "Checking", kind: "money", synthetic: false },
+  {
+    account: "assets:bank:checking:travel",
+    display_name: "Travel",
+    kind: "pre-allocation",
+    synthetic: true,
+    home: "assets:bank:checking",
+  },
+  { account: "expenses:groceries", display_name: "Groceries", kind: "expense" },
+];
+accounts.push(
+  { account: "income:salary", display_name: "Salary", kind: "income" },
+  {
+    account: "assets:receivable:jordan",
+    display_name: "Jordan Rivera",
+    kind: "receivable",
+  },
+  {
+    account: "assets:bank:checking:card-everyday",
+    display_name: "Everyday card reserve",
+    kind: "debt-reserve",
+    home: "assets:bank:checking",
+  },
+);
+const transaction = {
+  id: 12,
+  date: "2026-10-23",
+  payee: "Maple Market",
+  memo: "Weekly groceries",
+  status: "*",
+  postings: [
+    { account: "expenses:groceries", amount: amount("84.25") },
+    { account: "assets:bank:checking", amount: amount("-84.25") },
+  ],
+};
+const cash = {
+  cash_on_hand: amount("4520.75"),
+  money_on_hand: amount("6200.75"),
+  future_allocations: amount("1800.00"),
+  receivables: amount("120.00"),
+  homes: [
+    {
+      account: accounts[0].account,
+      display_name: "Checking",
+      inclusive: amount("6200.75"),
+      free: amount("3900.75"),
+      funds: amount("1800.00"),
+      reserves: amount("500.00"),
+    },
+  ],
+  funds: [
+    {
+      account: accounts[1].account,
+      display_name: "Travel",
+      home: accounts[0].account,
+      balance: amount("1800.00"),
+    },
+  ],
+  cards: [
+    {
+      card: "liabilities:card:everyday",
+      display_name: "Everyday card",
+      owed: amount("500.00"),
+      reserve_balance: amount("500.00"),
+      difference: amount("0.00"),
+      unreserved_count: 0,
+    },
+  ],
+  unreserved_count: 0,
+  warnings: [],
+};
+async function setup(page, conflict = false) {
+  const writes = [];
+  const currentAccounts = structuredClone(accounts);
+  const currentVersion = { ...version };
+  await page.route("**/*", async (route) => {
+    const path = new URL(route.request().url()).pathname;
+    if (
+      path.startsWith("/app/") ||
+      path.startsWith("/node_modules/") ||
+      path.startsWith("/@") ||
+      path.startsWith("/src/")
+    )
+      return route.continue();
+    if (["POST", "PATCH", "PUT"].includes(route.request().method())) {
+      const body = route.request().postDataJSON();
+      writes.push({ body, headers: route.request().headers(), path });
+      if (path === "/reconcile" && body.mode === "check")
+        return route.fulfill({
+          json: {
+            status: "matched",
+            ledger_balance: "6200.75",
+            date: "2026-10-25",
+          },
+        });
+      if (conflict && !body.dry_run)
+        return route.fulfill({ status: 409, json: { message: "Stale head" } });
+      if (path.endsWith("/type")) {
+        const account = decodeURIComponent(path.slice("/accounts/".length, -"/type".length));
+        if (!body.dry_run) {
+          currentAccounts.find((a) => a.account === account).synthetic = body.synthetic;
+          currentVersion.head = currentVersion.books = String(BigInt(currentVersion.head) + 1n);
+        }
+        return route.fulfill({ json: {
+          head: currentVersion.head,
+          details: { account, synthetic: body.synthetic },
+          warnings: [], balances: [],
+        } });
+      }
+      return route.fulfill({
+        json: {
+          head: body.dry_run ? "42" : "43",
+          preview:
+            "2026-10-25 Maple Market\n    expenses:groceries  $84.25\n    assets:bank:checking  -$84.25",
+          warnings: [],
+          balances: [],
+        },
+      });
+    }
+    const fixtures = {
+      "/version": currentVersion,
+      "/commodity": { symbol: "USD", places: 2 },
+      "/cash-on-hand": cash,
+      "/reports/cash-on-hand-history": {
+        commodity: "USD",
+        points: [
+          { date: "2026-09-30", cash_on_hand: "4423.17" },
+          { date: "2026-10-25", cash_on_hand: "4520.75" },
+        ],
+      },
+      "/accounts": currentAccounts,
+      "/transactions": [transaction],
+      "/counterparties": [
+        { name: "jordan", net: amount("42.08"), label: "Owes you" },
+      ],
+      "/counterparties/jordan/statement": {
+        name: "Jordan Rivera",
+        opening_balance: amount("0.00"),
+        closing_balance: amount("42.08"),
+        lines: [
+          {
+            date: "2026-10-25",
+            description: "Maple Market shared groceries",
+            net_amount: amount("42.08"),
+            running_balance: amount("42.08"),
+            open: true,
+          },
+        ],
+      },
+      "/payees": [{ payee: transaction.payee, count: 1, last: transaction }],
+      "/history": [
+        {
+          hash: "42",
+          revision: 42,
+          summary: "Recorded Maple Market",
+          user: "Morgan Reed",
+          date: "2026-10-23T12:00:00Z",
+          kind: "add",
+        },
+      ],
+      "/register/assets%3Abank%3Achecking": [
+        {
+          id: 12,
+          date: transaction.date,
+          payee: transaction.payee,
+          memo: transaction.memo,
+          other_account: "expenses:groceries",
+          amount: amount("-84.25"),
+          balance: amount("6200.75"),
+        },
+      ],
+      "/register/assets%3Abank%3Achecking%3Atravel": [],
+    };
+    if (fixtures[path]) return route.fulfill({ json: fixtures[path] });
+    return route.continue();
+  });
+  await page.goto("/app/");
+  await expect(page.locator(".metrics")).toBeVisible();
+  return writes;
+}
+async function fillTransaction(page) {
+  await page
+    .getByRole("button", { name: "Add transaction", exact: false })
+    .click();
+  await page.getByLabel("Payee").fill("Maple Market");
+  await page.getByLabel("From").selectOption(accounts[0].account);
+  await page.getByLabel("To").fill("expenses:groceries");
+  await page.getByLabel("Amount (USD)").fill("84.25");
+  await page.getByRole("button", { name: "Preview" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Preview", exact: true }),
+  ).toBeVisible();
+}
+for (const target of [accounts[0], accounts[1]]) {
+  test(`account register converts ${target.display_name} after preview`, async ({ page }) => {
+    const writes = await setup(page);
+    await page.getByRole("navigation").getByRole("button", { name: "Transactions", exact: true }).click();
+    await page.getByRole("combobox", { name: "Account", exact: true }).selectOption(target.account);
+    for (const synthetic of [!target.synthetic, target.synthetic]) {
+      const value = String(synthetic);
+      const label = synthetic ? "Synthetic account" : "Real account";
+      await page.getByRole("button", { name: "Account type", exact: true }).click();
+      const dialog = page.getByRole("dialog");
+      await dialog.getByRole("combobox", { name: "Account type", exact: true }).selectOption(value);
+      await expect(dialog.getByText("Review before saving", { exact: true })).toBeVisible();
+      expect(writes.at(-1).body).toEqual({ synthetic: value === "true", dry_run: true });
+      const previewHead = writes.at(-1).headers["if-match"];
+      await dialog.getByRole("button", { name: "Save", exact: true }).click();
+      await expect(dialog).not.toBeVisible();
+      await expect(page.getByText(label, { exact: true })).toBeVisible();
+      expect(writes.at(-1).path).toBe(`/accounts/${encodeURIComponent(target.account)}/type`);
+      expect(writes.at(-1).body.dry_run).toBe(false);
+      expect(writes.at(-1).headers["if-match"]).toBe(previewHead);
+    }
+  });
+}
+
+test("account type conflicts keep the edit open without changing the displayed type", async ({ page }) => {
+  const writes = await setup(page, true);
+  await page.getByRole("navigation").getByRole("button", { name: "Transactions", exact: true }).click();
+  await page.getByRole("combobox", { name: "Account", exact: true }).selectOption(accounts[0].account);
+  await page.getByRole("button", { name: "Account type", exact: true }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByRole("combobox", { name: "Account type", exact: true }).selectOption("true");
+  await expect(dialog.getByText("Review before saving", { exact: true })).toBeVisible();
+  await dialog.getByRole("button", { name: "Save", exact: true }).click();
+  await expect(dialog.getByRole("alert")).toBeVisible();
+  await expect(dialog.getByRole("button", { name: "Preview", exact: true })).toBeDisabled();
+  await expect(page.locator(".filters").getByText("Real account", { exact: true })).toBeVisible();
+  expect(writes.at(-1).body.dry_run).toBe(false);
+});
+
+test("desktop navigation and account register", async ({ page }) => {
+  await setup(page);
+  await page.screenshot({ path: "test-results/overview.png", fullPage: true });
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Transactions", exact: true })
+    .click();
+  await page.getByLabel("Search", { exact: true }).fill("Maple");
+  await expect(page.getByText("Maple Market", { exact: true })).toBeVisible();
+  await page
+    .getByRole("combobox", { name: "Account", exact: true })
+    .selectOption(accounts[0].account);
+  await expect(
+    page.getByRole("cell", { name: "$6200.75", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Reserves", exact: true })
+    .click();
+  await expect(page.getByRole("heading", { name: "Travel" })).toBeVisible();
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Cards", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Everyday card" }),
+  ).toBeVisible();
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Activity", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Recorded Maple Market" }),
+  ).toBeVisible();
+});
+test("requires a preview before saving exact balanced postings", async ({
+  page,
+}) => {
+  const writes = await setup(page);
+  await fillTransaction(page);
+  expect(writes).toHaveLength(1);
+  expect(writes[0].body.dry_run).toBe(true);
+  expect(writes[0].body.postings.map((p) => p.amount.mantissa)).toEqual([
+    "8425",
+    "-8425",
+  ]);
+  await page.getByRole("button", { name: "Save" }).click();
+  await expect(page.getByRole("dialog")).not.toBeVisible();
+  expect(writes).toHaveLength(2);
+  expect(writes[1].headers["if-match"]).toBe('"42"');
+  expect(writes[1].body.dry_run).toBe(false);
+});
+test("stale save requires refreshing and a new preview", async ({ page }) => {
+  const writes = await setup(page, true);
+  await fillTransaction(page);
+  await page.getByRole("button", { name: "Save" }).click();
+  await expect(page.getByRole("alert")).toContainText("books changed");
+  await expect(page.getByRole("button", { name: "Preview" })).toBeDisabled();
+  expect(writes).toHaveLength(2);
+});
+test("allocation creates a fund only after confirmation", async ({ page }) => {
+  const writes = await setup(page);
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Reserves", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Set money aside", exact: true })
+    .click();
+  await page.getByLabel("From").selectOption(accounts[0].account);
+  await page.getByLabel("To").fill("assets:bank:checking:repairs");
+  await page.getByLabel("Amount (USD)").fill("100.00");
+  await page.getByLabel("Name the new reserve").check();
+  await page.getByRole("button", { name: "Preview" }).click();
+  await page.getByRole("button", { name: "Save" }).click();
+  await expect(page.getByRole("dialog")).not.toBeVisible();
+  expect(writes[1]).toMatchObject({
+    path: "/allocations",
+    body: { amount: "100.00", new_fund: true, dry_run: false },
+  });
+});
+
+for (const [locale, direction] of [
+  ["de-DE", "ltr"],
+  ["ar", "rtl"],
+]) {
+  test(`loads the existing ${locale} catalog and ${direction} layout`, async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      locale,
+      viewport: { width: 1440, height: 1000 },
+    });
+    const page = await context.newPage();
+    await setup(page);
+    const language = locale.split("-")[0];
+    const response = await page.request.get(
+      `/app/assets/i18n/${language}.json`,
+    );
+    const catalog = await response.json();
+    expect(catalog.Overview).not.toBe("Overview");
+    await expect(
+      page.getByRole("heading", { name: catalog.Overview, exact: true }),
+    ).toBeVisible();
+    await expect(page.locator("html")).toHaveAttribute("dir", direction);
+    await page.screenshot({
+      path: `test-results/overview-${language}.png`,
+      fullPage: true,
+    });
+    await context.close();
+  });
+}
+
+test("reports preserve exact strings and switch periods and loan-principal options", async ({
+  page,
+}) => {
+  await setup(page);
+  const requests = [];
+  await page.route("**/reports/**", (route) => {
+    const url = new URL(route.request().url());
+    requests.push(url);
+    const fixture = url.pathname.endsWith("cash-flow")
+      ? {
+          commodity: "USD",
+          opening_cash: "9007199254740993.27",
+          closing_cash: "9007199254741003.27",
+          lines: [
+            {
+              group: "income",
+              display_name: "Salary",
+              cash: "10.00",
+              non_cash: "0.00",
+            },
+          ],
+        }
+      : url.pathname.endsWith("categories")
+        ? {
+            commodity: "USD",
+            rows: [
+              {
+                account: "expenses:groceries",
+                display_name: "Groceries",
+                amount: "84.25",
+                change: "-5.00",
+              },
+            ],
+            previous_period: { label: "2026-09" },
+          }
+        : {
+            commodity: "USD",
+            income: [
+              {
+                account: "income:salary",
+                display_name: "Salary",
+                total: "5000.00",
+              },
+            ],
+            expenses: [],
+            totals: { income: ["5000.00"], expenses: ["0.00"] },
+            net: ["5000.00"],
+          };
+    return route.fulfill({ json: fixture });
+  });
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Reports", exact: true })
+    .click();
+  await expect(
+    page.getByText("USD 9007199254740993.27", { exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("combobox", { name: "Reports", exact: true })
+    .selectOption("categories");
+  await expect(
+    page.getByRole("cell", { name: "USD 84.25", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("combobox", { name: "Reports", exact: true })
+    .selectOption("income-statement");
+  await page.getByLabel("Count loan principal as money spent").uncheck();
+  await page.getByLabel("Date", { exact: true }).fill("2026-02");
+  await expect
+    .poll(() => requests.at(-1)?.searchParams.get("to"))
+    .toBe("2026-02-28");
+  expect(requests.at(-1).searchParams.get("equity_conversion")).toBe("false");
+  await expect(page.getByRole("cell", { name: "Salary" })).toBeVisible();
+});
+
+for (const action of ["edit", "void", "purchase", "payment"]) {
+  test(`desktop ${action} previews then writes against the same head`, async ({
+    page,
+  }) => {
+    const writes = await setup(page);
+    if (["edit", "void"].includes(action)) {
+      await page
+        .getByRole("navigation")
+        .getByRole("button", { name: "Transactions", exact: true })
+        .click();
+      await page
+        .getByRole("button", {
+          name: action === "edit" ? "Edit" : "Void",
+          exact: true,
+        })
+        .click();
+      if (action === "edit")
+        await page
+          .getByRole("dialog")
+          .getByLabel("Amount", { exact: true })
+          .fill("85.19");
+    } else {
+      await page
+        .getByRole("navigation")
+        .getByRole("button", { name: "Cards", exact: true })
+        .click();
+      await page
+        .getByRole("button", {
+          name: action === "purchase" ? "Record purchase" : "Pay card",
+          exact: true,
+        })
+        .click();
+      const dialog = page.getByRole("dialog");
+      await dialog
+        .getByRole("combobox", { name: "Card", exact: true })
+        .selectOption("liabilities:card:everyday");
+      await dialog.getByLabel("Amount", { exact: true }).fill("84.17");
+      if (action === "purchase")
+        await dialog.getByLabel("Payee", { exact: true }).fill("Maple Market");
+    }
+    await page
+      .getByRole("dialog")
+      .getByRole("button", { name: "Preview", exact: true })
+      .click();
+    await expect(
+      page
+        .getByRole("dialog")
+        .getByRole("heading", { name: "Review before saving" }),
+    ).toBeVisible();
+    expect(writes).toHaveLength(1);
+    expect(writes[0].body.dry_run).toBe(true);
+    await page
+      .getByRole("dialog")
+      .getByRole("button", { name: "Save", exact: true })
+      .click();
+    await expect(page.getByRole("dialog")).not.toBeVisible();
+    expect(writes).toHaveLength(2);
+    expect(writes[1].headers["if-match"]).toBe('"42"');
+    expect(writes[1].body.dry_run).toBe(false);
+    if (action === "void") expect(writes[1].body.void).toBe(true);
+    if (action === "edit")
+      expect(writes[1].body.postings[0].amount.mantissa).toBe("8519");
+  });
+}
+
+test("reconciliation is opened from a register and freezes the reviewed head", async ({
+  page,
+}) => {
+  const writes = await setup(page);
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Transactions", exact: true })
+    .click();
+  await page
+    .getByRole("combobox", { name: "Account", exact: true })
+    .selectOption(accounts[0].account);
+  await page.getByRole("button", { name: "Reconcile…", exact: true }).click();
+  await page
+    .getByRole("dialog")
+    .getByLabel("Amount", { exact: true })
+    .fill("6200.75");
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Preview", exact: true })
+    .click();
+  await expect(
+    page
+      .getByRole("dialog")
+      .getByRole("heading", { name: "Review before saving" }),
+  ).toBeVisible();
+  expect(writes[1]).toMatchObject({
+    path: "/reconcile",
+    body: { head: "42", balance: "6200.75", mode: "assert", dry_run: true },
+  });
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Save", exact: true })
+    .click();
+  await expect(page.getByRole("dialog")).not.toBeVisible();
+  expect(writes.at(-1).body.head).toBe("42");
+  expect(writes.at(-1).body.dry_run).toBe(false);
+});
+test("a lost connection keeps balances readable and prevents writes", async ({
+  page,
+}) => {
+  await setup(page);
+  await page.route("**/version", (route) =>
+    route.fulfill({ status: 503, json: { message: "Server unavailable" } }),
+  );
+  await page.getByRole("button", { name: "Refresh", exact: true }).click();
+  await expect(page.getByRole("alert")).toBeVisible();
+  await expect(page.locator(".metrics")).toContainText("$4520.75");
+  await expect(
+    page.getByRole("button", { name: "Add transaction", exact: true }),
+  ).toBeDisabled();
+});
+
+test("people statements use dates and open-item filters and export authenticated files", async ({
+  page,
+}) => {
+  await setup(page);
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "People", exact: true })
+    .click();
+  await page.getByRole("button", { name: "jordan", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Jordan Rivera" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("cell", { name: "Maple Market shared groceries" }),
+  ).toBeVisible();
+  await page.getByLabel("Open items only").check();
+  await page.route("**/counterparties/jordan/statement?**", (route) => {
+    const url = new URL(route.request().url());
+    if (url.searchParams.get("format") === "csv")
+      return route.fulfill({
+        contentType: "text/csv",
+        body: "Date,Description,Amount\n2026-10-25,Maple Market shared groceries,42.08\n",
+      });
+    return route.fallback();
+  });
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "CSV", exact: true }).click();
+  expect((await download).suggestedFilename()).toBe("statement.csv");
+});
+test("shared-expense form delegates exact total and share to the server", async ({
+  page,
+}) => {
+  const writes = await setup(page);
+  await page
+    .getByRole("combobox", { name: "Add", exact: true })
+    .selectOption("split");
+  const dialog = page.getByRole("dialog");
+  await dialog.getByLabel("Payee", { exact: true }).fill("Maple Market");
+  await dialog.getByLabel("Amount", { exact: true }).fill("84.17");
+  await dialog.getByLabel("Their share", { exact: true }).fill("42.08");
+  await dialog.getByRole("button", { name: "Preview", exact: true }).click();
+  await expect(
+    dialog.getByRole("heading", { name: "Review before saving" }),
+  ).toBeVisible();
+  expect(writes[0]).toMatchObject({
+    path: "/splits",
+    body: {
+      total: "84.17",
+      their_share: "42.08",
+      person: "jordan",
+      dry_run: true,
+    },
+  });
+});
+
+test("returning from preview keeps a changed transaction draft", async ({
+  page,
+}) => {
+  await setup(page);
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Transactions", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Edit", exact: true }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByLabel("Amount", { exact: true }).fill("85.19");
+  await dialog.getByRole("button", { name: "Preview", exact: true }).click();
+  await expect(
+    dialog.getByRole("heading", { name: "Review before saving" }),
+  ).toBeVisible();
+  await dialog
+    .getByRole("button", { name: "Back to edit", exact: true })
+    .click();
+  await expect(dialog.getByLabel("Amount", { exact: true })).toHaveValue(
+    "85.19",
+  );
+});
+
+test("known payees recall account choices, exact amount, and memo", async ({
+  page,
+}) => {
+  await setup(page);
+  const memory = page.waitForResponse("**/payees");
+  await page
+    .getByRole("button", { name: "Add transaction", exact: true })
+    .click();
+  await memory;
+  const dialog = page.getByRole("dialog");
+  await dialog.getByLabel("Payee", { exact: true }).fill("Maple Market");
+  await expect(
+    dialog.getByRole("combobox", { name: "From", exact: true }),
+  ).toHaveValue("assets:bank:checking");
+  await expect(
+    dialog.getByRole("combobox", { name: "To", exact: true }),
+  ).toHaveValue("expenses:groceries");
+  await expect(dialog.getByLabel("Amount (USD)", { exact: true })).toHaveValue(
+    "84.25",
+  );
+  await expect(dialog.getByLabel("Memo", { exact: true })).toHaveValue(
+    "Weekly groceries",
+  );
+});
+
+test("a reconciliation mismatch only checks and never offers an assertion save", async ({
+  page,
+}) => {
+  await setup(page);
+  const checks = [];
+  await page.route("**/reconcile", (route) => {
+    checks.push(route.request().postDataJSON());
+    return route.fulfill({
+      json: {
+        status: "mismatch",
+        ledger_balance: "6200.75",
+        statement_balance: "6190.62",
+        difference: "10.13",
+        date: "2026-10-25",
+        suggestions: [],
+        later_transactions: [],
+      },
+    });
+  });
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Transactions", exact: true })
+    .click();
+  await page
+    .getByRole("combobox", { name: "Account", exact: true })
+    .selectOption(accounts[0].account);
+  await page.getByRole("button", { name: "Reconcile…", exact: true }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByLabel("Amount", { exact: true }).fill("6190.62");
+  await dialog.getByRole("button", { name: "Preview", exact: true }).click();
+  await expect(dialog.getByRole("status")).toContainText("10.13");
+  await expect(
+    dialog.getByRole("button", { name: "Save", exact: true }),
+  ).toHaveCount(0);
+  expect(checks.every((body) => body.mode === "check" && body.dry_run)).toBe(
+    true,
+  );
+});
+
+test("desktop live previews preserve typing and discard an older response", async ({
+  page,
+}) => {
+  await setup(page);
+  const previews = [];
+  await page.route("**/transactions", async (route) => {
+    if (route.request().method() !== "POST") return route.fallback();
+    const body = route.request().postDataJSON();
+    previews.push(body);
+    if (previews.length === 1)
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+    return route.fulfill({
+      json: {
+        head: "42",
+        preview: body.postings[0].amount.mantissa,
+        balances: [],
+        warnings: [],
+      },
+    });
+  });
+  await page
+    .getByRole("button", { name: "Add transaction", exact: true })
+    .click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByLabel("Payee", { exact: true }).fill("Cedar Hardware");
+  await dialog.getByLabel("From").selectOption(accounts[0].account);
+  await dialog.getByLabel("To").fill("expenses:groceries");
+  await dialog.getByLabel("Amount (USD)").fill("84.17");
+  await expect.poll(() => previews.length).toBe(1);
+  await expect(dialog.getByLabel("Amount (USD)")).toBeEnabled();
+  await dialog.getByLabel("Amount (USD)").fill("85.19");
+  await expect(dialog.locator(".preview pre")).toHaveText("8519");
+  expect(previews.every((body) => body.dry_run)).toBe(true);
+  await expect(dialog.getByLabel("Amount (USD)")).toHaveValue("85.19");
+});
+
+test("native connection settings stay usable after a connection failure", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    window.__KABACUS_LAUNCHER__ = true;
+    window.__TAURI_INTERNALS__ = {
+      invoke: async () => {
+        throw new Error("Synthetic server unavailable");
+      },
+    };
+  });
+  await page.goto("/app/");
+  await page.getByLabel("Server address").fill("https://books.example.org");
+  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await expect(page.getByRole("alert")).toContainText(
+    "Can't reach kabacus-server",
+  );
+  await expect(page.getByLabel("Server address")).toBeEnabled();
+  await expect(
+    page.getByRole("button", { name: "Sign in", exact: true }),
+  ).toBeEnabled();
+});
+
+test("posting review status is previewed before writing", async ({ page }) => {
+  const writes = await setup(page);
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Transactions", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Review", exact: true }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog
+    .getByRole("combobox", { name: "Account", exact: true })
+    .selectOption(accounts[0].account);
+  await dialog
+    .getByRole("combobox", { name: "Review", exact: true })
+    .selectOption("cleared");
+  await dialog.getByRole("button", { name: "Preview", exact: true }).click();
+  await expect(dialog.locator(".preview")).toBeVisible();
+  expect(writes.at(-1)).toMatchObject({
+    path: "/transactions/12/status",
+    body: { account: accounts[0].account, status: "cleared", dry_run: true },
+  });
+  await dialog.getByRole("button", { name: "Save", exact: true }).click();
+  await expect(dialog).not.toBeVisible();
+  expect(writes.at(-1).body.dry_run).toBe(false);
+});
+
+test("custom postings can preview an exact multi-line transaction", async ({
+  page,
+}) => {
+  const writes = await setup(page);
+  await page
+    .getByRole("combobox", { name: "Add", exact: true })
+    .selectOption("postings");
+  const dialog = page.getByRole("dialog");
+  await dialog.getByLabel("Payee", { exact: true }).fill("Cedar Hardware");
+  await dialog.getByRole("button", { name: "Add", exact: true }).click();
+  const accounts = dialog.getByRole("combobox", {
+    name: "Account",
+    exact: true,
+  });
+  const amounts = dialog.getByRole("textbox", { name: "Amount", exact: true });
+  await accounts.nth(0).fill("expenses:groceries");
+  await amounts.nth(0).fill("42.09");
+  await accounts.nth(1).fill("expenses:household");
+  await amounts.nth(1).fill("42.08");
+  await accounts.nth(2).fill("assets:bank:checking");
+  await amounts.nth(2).fill("-84.17");
+  await dialog.getByRole("button", { name: "Preview", exact: true }).click();
+  await expect(dialog.locator(".preview")).toBeVisible();
+  expect(writes.at(-1).body.postings.map((p) => p.amount.mantissa)).toEqual([
+    "4209",
+    "4208",
+    "-8417",
+  ]);
+  expect(writes.at(-1).body.dry_run).toBe(true);
+});
+
+async function largeBalances(page) {
+  const balance = {
+    commodity: "USD",
+    exact: "1234567890.25",
+    formatted: "$1,234,567,890.25",
+  };
+  await page.route("**/cash-on-hand?**", (route) =>
+    route.fulfill({
+      json: {
+        ...cash,
+        cash_on_hand: balance,
+        money_on_hand: balance,
+        future_allocations: balance,
+        receivables: balance,
+      },
+    }),
+  );
+  await page.locator("header button").click();
+  await expect(page.locator(".metric .amount").first()).toHaveText(
+    balance.formatted,
+  );
+}
+async function expectContained(locator) {
+  const sizes = await locator.evaluate((node) => ({
+    content: node.scrollWidth,
+    available: node.clientWidth,
+  }));
+  expect(sizes.content).toBeLessThanOrEqual(sizes.available);
+}
+
+for (const locale of ["en-US", "de-DE", "ar"]) {
+  test.describe(`phone reflow ${locale}`, () => {
+    test.use({ locale, viewport: { width: 320, height: 740 } });
+
+    test("posting accounts stay readable in a scrollable table", async ({
+      page,
+    }) => {
+      await setup(page);
+      const posting = page.locator(".posting > span:first-child").first();
+      expect(
+        await posting.evaluate((node) => node.clientWidth),
+      ).toBeGreaterThanOrEqual(120);
+      const wrap = page.locator(".table-wrap").first();
+      expect(await wrap.evaluate((node) => node.scrollWidth)).toBeGreaterThan(
+        await wrap.evaluate((node) => node.clientWidth),
+      );
+      await expectContained(page.locator("html"));
+    });
+
+    test("large exact balances do not widen the page", async ({ page }) => {
+      await setup(page);
+      await largeBalances(page);
+      await expectContained(page.locator("html"));
+      for (const metric of await page.locator(".metric").all())
+        await expectContained(metric);
+    });
+
+    test("heading actions keep the Add choice readable", async ({ page }) => {
+      await setup(page);
+      await page.locator("nav button").last().click();
+      expect(
+        await page.locator(".page-heading select").evaluate(
+          (node) => node.clientWidth,
+        ),
+      ).toBeGreaterThanOrEqual(120);
+      await expectContained(page.locator("html"));
+    });
+
+    test("settings show the full commit and source link", async ({ page }) => {
+      await setup(page);
+      await page.locator("nav button").last().click();
+      const details = page.locator("dl.home");
+      await expectContained(details);
+      const bounds = await details.locator("a").boundingBox();
+      expect(bounds.x).toBeGreaterThanOrEqual(0);
+      expect(bounds.x + bounds.width).toBeLessThanOrEqual(320);
+      await expect(details).toContainText(version.commit);
+    });
+  });
+}
+
+test("desktop balances and connection details remain contained", async ({
+  page,
+}) => {
+  await setup(page);
+  await largeBalances(page);
+  await expectContained(page.locator("html"));
+  for (const metric of await page.locator(".metric").all())
+    await expectContained(metric);
+  await page.locator("nav button").last().click();
+  await expectContained(page.locator("dl.home"));
+  await expect(page.locator("dl.home a")).toBeVisible();
+});
+
+for (const width of [390, 1440]) {
+  test(`received money uses named income and money accounts at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    const writes = await setup(page);
+    await page.getByRole("combobox", { name: "Add", exact: true }).selectOption({ label: "Received" });
+    const dialog = page.getByRole("dialog");
+    await expect(dialog.getByRole("heading", { name: "Received", exact: true })).toBeVisible();
+    await dialog.getByLabel("Payee", { exact: true }).fill("Cedar Cafe payroll");
+    await dialog.locator('select[name="from"]').selectOption({ label: "Salary" });
+    await dialog.locator('select[name="to"]').selectOption({ label: "Checking" });
+    await dialog.getByLabel("Amount (USD)").fill("650.25");
+    await dialog.getByRole("button", { name: "Preview", exact: true }).click();
+    await expect(dialog.locator(".preview")).toBeVisible();
+    expect(writes.at(-1).body).toMatchObject({ dry_run: true, postings: [
+      { account: accounts[0].account, amount: { mantissa: "65025", places: 2 } },
+      { account: "income:salary", amount: { mantissa: "-65025", places: 2 } },
+    ] });
+    await dialog.getByRole("button", { name: "Back to edit" }).click();
+    await expect(dialog.locator('select[name="to"]')).toHaveValue(accounts[0].account);
+    await expect(dialog.getByLabel("Amount (USD)")).toHaveValue("650.25");
+  });
+  test(`reserve display names resolve to the account at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    const writes = await setup(page);
+    await page.getByRole("combobox", { name: "Add", exact: true }).selectOption("allocation");
+    const dialog = page.getByRole("dialog");
+    await dialog.getByLabel("From").selectOption(accounts[0].account);
+    await dialog.locator('input[name="to"]').fill("Travel");
+    await dialog.getByLabel("Amount (USD)").fill("100.00");
+    await dialog.getByRole("button", { name: "Preview", exact: true }).click();
+    await expect(dialog.locator(".preview")).toBeVisible();
+    expect(writes.at(-1).body).toMatchObject({ to: accounts[1].account, new_fund: false, dry_run: true });
+  });
+}
+
+test("phone controls have readable input text and comfortable tap targets", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await setup(page);
+  for (const button of await page.locator("nav button").all())
+    expect((await button.boundingBox()).height).toBeGreaterThanOrEqual(44);
+  await page.getByRole("combobox", { name: "Add", exact: true }).selectOption("allocation");
+  for (const field of await page.locator('dialog input:not([type="checkbox"]), dialog select').all()) {
+    expect(await field.evaluate(e => parseFloat(getComputedStyle(e).fontSize))).toBeGreaterThanOrEqual(16);
+    expect((await field.boundingBox()).height).toBeGreaterThanOrEqual(44);
+  }
+});
+
+for (const width of [320, 1440]) {
+  test(`card actions remain inside their panel at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await setup(page);
+    await page.getByRole("navigation").getByRole("button", { name: "Cards", exact: true }).click();
+    const heading = page.locator(".panel-heading").first();
+    await expectContained(heading);
+    const panel = await heading.boundingBox();
+    for (const button of await heading.getByRole("button").all()) {
+      const bounds = await button.boundingBox();
+      expect(bounds.x).toBeGreaterThanOrEqual(panel.x);
+      expect(bounds.x + bounds.width).toBeLessThanOrEqual(panel.x + panel.width);
+    }
+  });
+}

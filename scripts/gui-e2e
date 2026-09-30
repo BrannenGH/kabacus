@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# The AT-SPI GUI e2e tests, in the openSUSE gui container (Qt 6,
+# Kirigami, Xvfb, AT-SPI; see Containerfile). The app is built against the
+# container's Qt and driven on a private Xvfb display and D-Bus session,
+# never the user's desktop. One test at a time: the driver finds the app by
+# name on the shared bus. Extra arguments go to the test binary, e.g. a
+# test name filter.
+#
+# The app keeps its sign-in in the Secret Service, which KWallet provides, as
+# on Plasma.
+#
+# The translated test reads the app's catalogs from target/gui-e2e/share,
+# built here first (cargo holds the build directory while tests run).
+set -e
+cd "$(dirname "$0")/.."
+rm -rf target/gui-e2e/share
+scripts/dev --gui cargo run --quiet -p xtask -- i18n-build target/gui-e2e/share/locale
+exec scripts/dev --gui xvfb-run -a -s "-screen 0 1400x900x24" dbus-run-session -- \
+  python3 crates/kabacus-kde/tests/gui/secret-service.py \
+  env QT_QPA_PLATFORM=xcb QT_QPA_PLATFORMTHEME=kde \
+  cargo test -p kabacus-kde --features gui --test gui_e2e -- --ignored --test-threads=1 "$@"

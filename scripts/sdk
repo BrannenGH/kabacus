@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Run a command inside the KDE 6 flatpak SDK, which provides Qt 6 and
+# Kirigami for building and running kabacus-kde's `gui` feature.
+#   scripts/sdk cargo build -p kabacus-kde --features gui
+# Needs: flatpak install --user flathub org.kde.Sdk//6.10 \
+#          org.freedesktop.Sdk.Extension.rust-stable//25.08
+set -e
+cd "$(dirname "$0")/.."
+exec flatpak run --user --die-with-parent --filesystem=home --filesystem=xdg-run/kabacus \
+  --share=network --share=ipc --socket=wayland --socket=fallback-x11 \
+  --device=dri --env=CARGO_TARGET_DIR="$PWD/target/sdk" \
+  --command=sh org.kde.Sdk//6.10 \
+  -c '. /usr/lib/sdk/rust-stable/enable.sh && "$@"' sh "$@"

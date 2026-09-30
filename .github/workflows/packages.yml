@@ -1,0 +1,62 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: packages
+
+# Builds the app's native packages (scripts/build-packages) and uploads them
+# as the `rpm` (openSUSE Tumbleweed, from packaging/rpm/kabacus.spec) and
+# `deb` (Debian) artifacts, kabacus-<bundle>-x86_64.rpm and
+# kabacus-<bundle>-x86_64.deb. Called from CI (the DEB only) and Release
+# (both, for the GitHub release). The RPMs for every distribution,
+# published to repo.hallb.me, come from rpm.yml.
+on:
+  workflow_call:
+    inputs:
+      bundle:
+        description: >-
+          The name in the file name. Defaults to <Cargo.toml version>-g<commit>,
+          the commit being the PR's head on a pull request.
+        type: string
+        default: ""
+      kinds:
+        description: Which packages to build, as a JSON list.
+        type: string
+        default: '["rpm", "deb"]'
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: ${{ matrix.kind }}
+    runs-on: [self-hosted, podman]
+    strategy:
+      matrix:
+        kind: ${{ fromJSON(inputs.kinds) }}
+    steps:
+      # All history and tags: scripts/build-packages counts commits for the
+      # package version.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build the package
+        run: scripts/build-packages ${{ matrix.kind }}
+      - name: Name the package
+        env:
+          BUNDLE: ${{ inputs.bundle }}
+          COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+          KIND: ${{ matrix.kind }}
+        run: |
+          name="$BUNDLE"
+          if [ -z "$name" ]; then
+            version="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -n1)"
+            name="$version-g${COMMIT::7}"
+          fi
+          mkdir dist
+          mv target/packages/*."$KIND" "dist/kabacus-$name-x86_64.$KIND"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.kind }}
+          path: dist/
+          if-no-files-found: error

@@ -1,0 +1,80 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Fails if a commit or the pull request credits an AI coding agent (Claude,
+# Codex/ChatGPT, Copilot, Cursor, Aider, Devin, Gemini/Jules, Windsurf,
+# Amp, OpenHands and the like): as author or committer, in a co-author or
+# session trailer, a "generated with" line or a link to an agent's session.
+# Squash merges turn commit authors into co-authors, so the authors are
+# checked as well as the text. scripts/test-check-attribution tests it.
+#
+#   scripts/check-attribution [<base> [<head>]]   # default origin/master HEAD
+#
+# PR_TITLE and PR_BODY, when set, are checked as well.
+
+set -eu
+
+base="${1:-origin/master}"
+head="${2:-HEAD}"
+
+# An agent's identity, matched against "Name <email>". Names that people
+# also have (Devin, Jules, Amp) only match on their own or as bot accounts.
+names='claude( code)?|chatgpt|codex|openai( codex)?|(github )?copilot|cursor( agent)?|devin( ai)?|gemini( code assist)?|jules|windsurf|cascade|amp|openhands|aider|tabnine|amazon q( developer)?'
+bots='claude|openai|chatgpt|codex|copilot|cursor|devin|jules|gemini|amazon-q|openhands'
+domains='anthropic\.com|openai\.com|cursor\.com|cursor\.sh|aider\.chat|cognition\.ai|cognition-labs\.com|codeium\.com|windsurf\.com|ampcode\.com|all-hands\.dev|tabnine\.com'
+identity="^($names) <|^[^<]*($bots)[^<]*\[bot\] <|\(aider\) <|@($domains)>\$|\+[^@]*($bots)[^@]*@users\.noreply\.github\.com>\$"
+
+# Agent names that never belong to a person, for co-author trailers.
+coauthors='claude|anthropic|openai|chatgpt|codex|copilot|gemini'
+
+agents='claude|chatgpt|codex|openai|copilot|github copilot|cursor|aider|devin|gemini|jules|windsurf|codeium|amp|openhands|tabnine|amazon q'
+links='claude\.ai/code|chatgpt\.com/codex|app\.devin\.ai|cursor\.com/(agents|background-agent)|jules\.google\.com|ampcode\.com/threads'
+text="^[[:space:]]*(claude-session|amp-thread(-id)?):|(generated|created|made|written|authored) (with|by|using|via|in) \[?($agents)([^[:alnum:]]|\$)|$links"
+
+failed=0
+fail() {
+    echo "$1" >&2
+    failed=1
+}
+
+scan() {
+    # scan <label> <text>
+    matches="$(printf '%s\n' "$2" | grep -iE "$text" || true)"
+    if [ -n "$matches" ]; then
+        fail "$(printf '%s\n' "$matches" | sed "s/^/$1: /")"
+    fi
+    printf '%s\n' "$2" | grep -iE '^[[:space:]]*co-authored-by:' | sed -E 's/^[^:]*:[[:space:]]*//' |
+        while IFS= read -r who; do
+            if printf '%s\n' "$who" | grep -qiE "$identity|$coauthors"; then
+                echo "$1: co-author is $who"
+            fi
+        done >"$tmp"
+    if [ -s "$tmp" ]; then
+        fail "$(cat "$tmp")"
+    fi
+}
+
+tmp="$(mktemp)"
+trap 'rm -f "$tmp"' EXIT
+
+for commit in $(git rev-list "$base..$head"); do
+    short="$(git log -1 --format=%h "$commit")"
+    for role in author:%an%x20\<%ae\> committer:%cn%x20\<%ce\>; do
+        who="$(git log -1 --format="${role#*:}" "$commit")"
+        if printf '%s\n' "$who" | grep -qiE "$identity"; then
+            fail "$short: ${role%%:*} is $who"
+        fi
+    done
+    scan "$short" "$(git log -1 --format=%B "$commit")"
+done
+
+scan "pull request title" "${PR_TITLE:-}"
+scan "pull request body" "${PR_BODY:-}"
+
+if [ "$failed" -ne 0 ]; then
+    echo "Commits and pull requests credit their human authors only (CLAUDE.md)." >&2
+    exit 1
+fi

@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: Sign-off
+
+# Every commit carries a Signed-off-by line (scripts/check-signoff,
+# CONTRIBUTING.md); maintainers in MAINTAINERS are exempt. It needs only
+# git and a shell, so it runs on the host rather than in the test
+# containers. Fork pull requests run on GitHub's own runners, never the
+# self-hosted one.
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: signoff-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  signoff:
+    name: signed off
+    runs-on: ${{ github.event.pull_request.head.repo.full_name == github.repository && fromJSON('["self-hosted","podman"]') || 'ubuntu-latest' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: scripts/test-check-signoff
+        run: scripts/test-check-signoff
+      - name: scripts/check-signoff
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: scripts/check-signoff "$BASE" "$HEAD"
