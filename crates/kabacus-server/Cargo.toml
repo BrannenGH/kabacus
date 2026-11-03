@@ -16,6 +16,10 @@ license = "AGPL-3.0-or-later"
 name = "kabacus-server"
 path = "src/main.rs"
 
+[[bin]]
+name = "kabacus-cli"
+path = "src/cli.rs"
+
 [lib]
 name = "kabacus_server"
 path = "src/lib.rs"
@@ -37,6 +41,7 @@ tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 tracing-journald = { workspace = true }
 axum = "0.8"
+tower = { version = "0.5", features = ["util"] }
 hyper-util = { version = "0.1", features = ["tokio", "server", "server-auto", "service"] }
 # The remote HTTPS listener. ring, not aws-lc-rs, to match
 # reqwest's rustls and avoid a C toolchain dependency.

@@ -6,8 +6,8 @@
 # own Qt 6 and Kirigami: one spec for Fedora, EL (CentOS Stream, AlmaLinux)
 # and openSUSE. packaging/rpm/build-rpm builds it in a container of each
 # distribution; the specification's supported platforms say where it
-# builds and why not elsewhere. kabacus-server isn't packaged: it ships as a container image,
-# with the hledger it was tested against.
+# builds and why not elsewhere. The local gateway and automation CLI ship
+# with the app; the gateway is also available as a container image.
 #
 # Defines:
 #   pkg_version  scripts/package-version (0.1.0, or 0.1.0~git<n>.g<commit>)
@@ -33,7 +33,7 @@ Name:           kabacus
 Version:        %{pkg_version}
 Release:        %{pkg_release}%{?dist}
 Summary:        Manage hledger books
-License:        GPL-3.0-or-later
+License:        GPL-3.0-or-later AND AGPL-3.0-or-later
 URL:            https://github.com/BrannenGH/kabacus
 VCS:            git+%{pkg_source_url}.git#%{pkg_commit}
 Source0:        kabacus-%{version}.tar.gz
@@ -96,11 +96,14 @@ Source: %{pkg_source_url}/tree/%{pkg_commit}
 qmake="$(command -v qmake6 || command -v qmake-qt6 || true)"
 [ -n "$qmake" ] && export QMAKE="$qmake"
 cargo build --release --locked -p kabacus-kde --features gui
+cargo build --release --locked -p kabacus-server --bins
 # The translations (po/), compiled for KI18n.
 cargo run --release --locked -p xtask -- i18n-build target/locale
 
 %install
 install -Dm755 target/release/kabacus %{buildroot}%{_bindir}/kabacus
+install -Dm755 target/release/kabacus-server %{buildroot}%{_bindir}/kabacus-server
+install -Dm755 target/release/kabacus-cli %{buildroot}%{_bindir}/kabacus-cli
 install -Dm644 packaging/desktop/me.hallb.kabacus.desktop %{buildroot}%{_datadir}/applications/me.hallb.kabacus.desktop
 install -Dm644 packaging/desktop/me.hallb.kabacus.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/me.hallb.kabacus.svg
 install -Dm644 packaging/desktop/me.hallb.kabacus.metainfo.xml %{buildroot}%{_datadir}/metainfo/me.hallb.kabacus.metainfo.xml
@@ -114,9 +117,11 @@ SOURCE_URL=%{pkg_source_url} SOURCE_COMMIT=%{pkg_commit} scripts/package-source 
 %find_lang kabacus
 
 %files -f kabacus.lang
-%license LICENSES/GPL-3.0-or-later.txt
+%license LICENSES/GPL-3.0-or-later.txt LICENSES/AGPL-3.0-or-later.txt
 %doc %{_docdir}/kabacus/SOURCE
 %{_bindir}/kabacus
+%{_bindir}/kabacus-server
+%{_bindir}/kabacus-cli
 %{_datadir}/applications/me.hallb.kabacus.desktop
 %{_datadir}/icons/hicolor/scalable/apps/me.hallb.kabacus.svg
 %{_datadir}/metainfo/me.hallb.kabacus.metainfo.xml

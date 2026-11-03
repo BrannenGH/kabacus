@@ -30,6 +30,7 @@ serde_json = { workspace = true }
 tokio = { workspace = true }
 chrono = { workspace = true }
 thiserror = { workspace = true }
+tempfile = "3"
 # Logs go through Qt's logging category me.hallb.kabacus (src/logging.rs).
 log = "0.4"
 # The refresh token lives in the platform secret store (KWallet
@@ -61,7 +62,10 @@ depends = "$auto, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module
 recommends = "qml6-module-org-kde-desktop"
 assets = [
     ["target/release/kabacus", "usr/bin/", "755"],
+    ["target/release/kabacus-server", "usr/bin/", "755"],
+    ["target/release/kabacus-cli", "usr/bin/", "755"],
     ["../../packaging/desktop/me.hallb.kabacus.desktop", "usr/share/applications/", "644"],
+    ["../../packaging/desktop/me.hallb.kabacus.mime.xml", "usr/share/mime/packages/", "644"],
     ["../../packaging/desktop/me.hallb.kabacus.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
     ["../../packaging/desktop/me.hallb.kabacus.metainfo.xml", "usr/share/metainfo/", "644"],
     ["kabacus.categories", "usr/share/qlogging-categories6/", "644"],

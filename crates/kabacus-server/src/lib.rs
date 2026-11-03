@@ -8,12 +8,14 @@
 
 pub mod account_edit;
 pub mod api;
+pub mod automation;
 pub mod auth;
 pub mod batch;
 pub mod books;
 pub mod cache;
 pub mod config;
 pub mod diff;
+pub mod document;
 pub mod import;
 pub mod mcp;
 pub mod ops;

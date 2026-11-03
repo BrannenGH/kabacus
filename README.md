@@ -23,6 +23,8 @@ Everything runs in containers, so you only need podman:
 
 Tests use synthetic books. Never point a development build at real ones.
 
+Document sessions and bundled CLI/MCP: [implementation and commands](crates/kabacus-server/README.md).
+
 ## More
 
 - Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)

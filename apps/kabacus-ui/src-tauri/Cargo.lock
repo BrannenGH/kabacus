@@ -1975,7 +1975,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-client"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "base64 0.22.1",
  "kabacus-core",
@@ -1992,7 +1992,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-core"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "chrono",
  "num-bigint",
@@ -2005,7 +2005,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-desktop"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "kabacus-client",
  "kabacus-kde",
@@ -2019,7 +2019,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-kde"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "chrono",
  "kabacus-client",

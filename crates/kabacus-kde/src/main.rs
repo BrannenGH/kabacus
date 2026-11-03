@@ -10,7 +10,18 @@ use cxx_qt_lib::{QGuiApplication, QQmlApplicationEngine, QString, QUrl};
 // wouldn't link it (and its Qt initializers) into the binary.
 extern crate kabacus_kde;
 
+mod document;
+
 fn main() {
+    let file = std::env::args_os().skip(1).find(|arg| {
+        std::path::Path::new(arg).extension().is_some_and(|extension| extension == "kabacus")
+    });
+    let _document = file.map(|file| {
+        document::DocumentProcess::open(std::path::Path::new(&file)).unwrap_or_else(|error| {
+            eprintln!("Unable to open the document: {error}");
+            std::process::exit(1);
+        })
+    });
     cxx_qt::init_crate!(kabacus_kde);
     kabacus_kde::logging::init();
     let mut app = QGuiApplication::new();

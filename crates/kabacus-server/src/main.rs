@@ -5,6 +5,7 @@
 use clap::Parser;
 use kabacus_server::config::{AuthMode, Config};
 use kabacus_server::state::AppState;
+use kabacus_server::document::{host::Host, Session};
 use std::sync::Arc;
 use tokio::signal::unix::{signal, SignalKind};
 
@@ -38,12 +39,26 @@ struct Args {
     #[arg(long)]
     database: Option<std::path::PathBuf>,
 
+    /// Open a portable file in an isolated, recoverable document session.
+    #[arg(long, conflicts_with = "document_url")]
+    document: Option<std::path::PathBuf>,
+
+    /// Open an existing WebDAV file (for example on Nextcloud).
+    #[arg(long)]
+    document_url: Option<String>,
+
+    /// Private working copies, outside any synchronized folder.
+    #[arg(long)]
+    recovery_dir: Option<std::path::PathBuf>,
+
     #[command(subcommand)]
     command: Option<Command>,
 }
 
 #[derive(clap::Subcommand, Debug)]
 enum Command {
+    /// Export the configured ledger to a portable file, including its history.
+    Export { file: std::path::PathBuf },
     /// Read hledger journals (the main journal and what it includes) into
     /// an empty ledger, then exit.
     Import {
@@ -88,6 +103,27 @@ async fn main() -> anyhow::Result<()> {
     }
     config.resolve_store()?;
 
+    if let Some(Command::Export { file }) = &args.command {
+        use kabacus_store::BookStore;
+        if file.exists() {
+            anyhow::bail!("the export destination already exists");
+        }
+        let store = kabacus_server::state::open_store(&config).await?;
+        let ledgers = store.ledgers().await?;
+        let ledger = match config.ledger.as_deref() {
+            Some(name) => ledgers.iter().find(|l| l.name == name),
+            None => ledgers.first(),
+        }.ok_or_else(|| anyhow::anyhow!("no ledger to export"))?;
+        let scratch = tempfile::NamedTempFile::new_in(file.parent().filter(|p| !p.as_os_str().is_empty()).unwrap_or(std::path::Path::new(".")))?;
+        store.export_file(&[ledger.id], scratch.path()).await?;
+        scratch.persist_noclobber(file).map_err(|e| e.error)?;
+        return Ok(());
+    }
+
+    if args.command.is_some() && (args.document.is_some() || args.document_url.is_some()) {
+        anyhow::bail!("import and export use --database or the configured database, not a document session");
+    }
+
     // Importing needs only the store, not the listeners' auth settings.
     if let Some(Command::Import { journal, ledger }) = args.command {
         let store = kabacus_server::state::open_store(&config).await?;
@@ -106,7 +142,21 @@ async fn main() -> anyhow::Result<()> {
 
     config.validate()?;
 
-    let state = Arc::new(AppState::new(config.clone()).await?);
+    let session = match (&args.document, &args.document_url) {
+        (Some(path), None) => Some(Host::local(path.clone())?),
+        (None, Some(url)) => Some(Host::webdav(url, std::env::var("KABACUS_DOCUMENT_TOKEN").ok())?),
+        _ => None,
+    };
+    let (app, reloading) = if let Some(host) = session {
+        let root = args.recovery_dir.unwrap_or_else(kabacus_server::document::recovery_root);
+        let session = Session::open(config.clone(), host, &root).await?;
+        tracing::info!("document recovery: {}", session.recovery_path().display());
+        let state = session.state.clone();
+        (kabacus_server::document::router(session), state)
+    } else {
+        let state = Arc::new(AppState::new(config.clone()).await?);
+        (kabacus_server::api::router(state.clone()), state)
+    };
 
     if let Some(parent) = config.socket_path.parent() {
         std::fs::create_dir_all(parent)?;
@@ -124,7 +174,6 @@ async fn main() -> anyhow::Result<()> {
         config.socket_path.display()
     );
     // SIGHUP re-reads the account kind rules from the config.
-    let reloading = state.clone();
     tokio::spawn(async move {
         while sighup.recv().await.is_some() {
             match reloading.reload_kinds() {
@@ -133,7 +182,6 @@ async fn main() -> anyhow::Result<()> {
             }
         }
     });
-    let app = kabacus_server::api::router(state);
 
     // Off by default; when configured, the same API is also
     // served over HTTPS for phones and tablets.
