@@ -753,6 +753,33 @@ test("native connection settings stay usable after a connection failure", async 
   ).toBeEnabled();
 });
 
+test("the signed-out screen is centered on a phone", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.route("**/version", (route) =>
+    route.fulfill({
+      json: {
+        ...version,
+        auth: {
+          mode: "oidc",
+          issuer: "https://login.example.org/realms/household",
+          app_client_id: "kabacus-app-7f3a",
+        },
+      },
+    }),
+  );
+  await page.goto("/app/");
+  const button = page.getByRole("button", { name: "Sign in", exact: true });
+  await expect(button).toBeVisible();
+  const heading = await page.getByRole("heading", { name: "Overview" }).boundingBox();
+  const action = await button.boundingBox();
+  const middle = (box) => box.x + box.width / 2;
+  expect(Math.abs(middle(heading) - 195)).toBeLessThan(2);
+  expect(Math.abs(middle(action) - 195)).toBeLessThan(2);
+  const top = heading.y;
+  const bottom = action.y + action.height;
+  expect(Math.abs((top + bottom) / 2 - 422)).toBeLessThan(80);
+});
+
 test("posting review status is previewed before writing", async ({ page }) => {
   const writes = await setup(page);
   await page
