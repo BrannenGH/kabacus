@@ -35,7 +35,7 @@ concurrency:
 jobs:
   version:
     name: version
-    runs-on: [self-hosted, podman]
+    runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
       # latest (push to master), release (version tag) or none (by hand).
@@ -68,7 +68,7 @@ jobs:
   image:
     name: server image
     needs: version
-    runs-on: [self-hosted, podman]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -76,8 +76,9 @@ jobs:
       PUBLISH: ${{ needs.version.outputs.channel != 'none' }}
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/free-disk-space
       # The Containerfile's server stage, as scripts/build-image builds it,
-      # with podman (the self-hosted runners use the host's). :latest follows master;
+      # with podman. :latest follows master;
       # version tags get only their versions; every build gets :sha-<commit>.
       - name: Build
         env:
@@ -110,9 +111,8 @@ jobs:
         if: env.PUBLISH == 'true'
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # The runner is shared: the token goes in this job's own authfile,
-        # removed afterwards, and the push is of the image ID this job
-        # built, not a tag another job could have moved.
+        # The token goes in this job's own authfile, removed afterwards,
+        # and the push is of the image ID this job built.
         run: |
           auth="$RUNNER_TEMP/auth.json"
           echo "$TOKEN" | podman login --authfile "$auth" ghcr.io -u "$GITHUB_ACTOR" --password-stdin
@@ -132,7 +132,7 @@ jobs:
     name: GitHub release
     if: needs.version.outputs.channel != 'none'
     needs: [version, image, packages]
-    runs-on: [self-hosted, podman]
+    runs-on: ubuntu-latest
     permissions:
       contents: write
     env:
@@ -142,12 +142,6 @@ jobs:
       VERSION: ${{ needs.version.outputs.version }}
       PRERELEASE: ${{ needs.version.outputs.prerelease }}
     steps:
-      # No checkout here, so nothing cleans the self-hosted runner's
-      # workspace: it still holds what the last job on it left, such as an
-      # RPM workflow build's dist/<target>/, which would break SHA256SUMS
-      # and be uploaded with the release.
-      - name: Start from an empty dist
-        run: rm -rf dist
       - uses: actions/download-artifact@v4
         with:
           name: rpm

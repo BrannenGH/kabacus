@@ -1,0 +1,143 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: App builds
+
+# The Tauri shell (apps/kabacus-ui) for Windows, macOS, Linux (Flatpak),
+# iOS and Android, each uploaded as an artifact to download and try.
+# Unsigned: the iOS build is for the simulator (iPhone and iPad), the
+# Android APK is debug-signed. The mobile projects are generated on each
+# run (`tauri ios|android init`), as are the platform icons.
+on:
+  pull_request:
+    paths:
+      - apps/kabacus-ui/**
+      - crates/kabacus-client/**
+      - crates/kabacus-core/**
+      - crates/kabacus-kde/**
+      - .github/workflows/apps.yml
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: apps-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: apps/kabacus-ui
+
+jobs:
+  desktop:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: windows, os: windows-latest, bundles: nsis, out: bundle/nsis/*.exe }
+          - { name: macos, os: macos-latest, bundles: dmg, out: bundle/dmg/*.dmg }
+          - { name: linux, os: ubuntu-24.04, bundles: "", out: kabacus-desktop }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/kabacus-ui/package-lock.json
+      - name: Install WebKitGTK
+        if: runner.os == 'Linux'
+        working-directory: .
+        run: sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev librsvg2-dev
+      - run: npm ci
+      - run: npx tauri icon src-tauri/icons/icon.png
+        if: runner.os != 'Linux'
+      - name: Build
+        shell: bash
+        env:
+          BUNDLES: ${{ matrix.bundles }}
+        run: |
+          if [ -n "$BUNDLES" ]; then flags="--bundles $BUNDLES"; else flags="--no-bundle"; fi
+          npx tauri build $flags -- --locked
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kabacus-desktop-${{ matrix.name }}
+          path: apps/kabacus-ui/src-tauri/target/release/${{ matrix.out }}
+          if-no-files-found: error
+
+  flatpak:
+    name: flatpak
+    needs: desktop
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-48
+      options: --privileged
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: kabacus-desktop-linux
+          path: apps/kabacus-ui/src-tauri/target/release
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: kabacus-desktop.flatpak
+          manifest-path: apps/kabacus-ui/flatpak/me.hallb.kabacus.web.yml
+          cache-key: flatpak-${{ github.sha }}
+
+  ios:
+    name: ios (simulator)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/kabacus-ui/package-lock.json
+      - run: rustup target add aarch64-apple-ios-sim
+      - run: brew install xcodegen
+      - run: npm ci
+      - run: npx tauri ios init --ci
+      - run: npx tauri icon src-tauri/icons/icon.png
+      - run: npx tauri ios build --ci --debug --target aarch64-sim
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kabacus-desktop-ios-simulator
+          path: apps/kabacus-ui/src-tauri/gen/apple/build/**/*.app
+          if-no-files-found: error
+
+  android:
+    name: android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/kabacus-ui/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - run: rustup target add aarch64-linux-android
+      - run: npm ci
+      - name: Generate the Android project
+        run: |
+          echo "NDK_HOME=$ANDROID_NDK_LATEST_HOME" >> "$GITHUB_ENV"
+          NDK_HOME="$ANDROID_NDK_LATEST_HOME" npx tauri android init --ci
+      - run: npx tauri icon src-tauri/icons/icon.png
+      - run: npx tauri android build --ci --debug --apk --target aarch64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kabacus-desktop-android
+          path: apps/kabacus-ui/src-tauri/gen/android/app/build/outputs/apk/**/*.apk
+          if-no-files-found: error

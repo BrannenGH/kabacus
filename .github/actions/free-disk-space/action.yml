@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: Free disk space
+description: >-
+  Removes toolchains this project doesn't use from a GitHub-hosted Ubuntu
+  runner, so the test images and Rust builds fit on its disk.
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+          /usr/local/.ghcup /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+        df -h /

@@ -10,6 +10,7 @@ pub mod oauth;
 pub mod types;
 
 use reqwest::Method;
+#[cfg(unix)]
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::Duration;
@@ -80,6 +81,7 @@ pub(crate) fn builder() -> reqwest::ClientBuilder {
 }
 
 impl KabacusClient {
+    #[cfg(unix)]
     pub fn connect_unix(socket_path: impl Into<PathBuf>) -> Self {
         KabacusClient {
             // The host is ignored: every request goes down the socket.

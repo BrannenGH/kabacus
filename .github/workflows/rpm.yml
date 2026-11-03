@@ -32,7 +32,7 @@ concurrency:
 jobs:
   version:
     name: version
-    runs-on: [self-hosted, podman]
+    runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
       release: ${{ steps.version.outputs.release }}
@@ -68,11 +68,9 @@ jobs:
   build:
     name: ${{ matrix.target }}
     needs: version
-    runs-on: [self-hosted, podman]
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      # One shared podman host: parallel Qt builds starve it.
-      max-parallel: 2
       matrix:
         # repo: the <distro>/<version> on repo.hallb.me. aliases: more
         # repositories served the same files. Only x86_64. Left out (the
@@ -91,16 +89,13 @@ jobs:
           - { target: opensuse-tumbleweed, image: "registry.opensuse.org/opensuse/tumbleweed:latest", repo: opensuse-tumbleweed/rolling, aliases: opensuse-microos/rolling }
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/free-disk-space
       - name: Build, install and smoke-test
         env:
           RPM_VERSION: ${{ needs.version.outputs.version }}
           RPM_RELEASE: ${{ needs.version.outputs.release }}
           IMAGE: ${{ matrix.image }}
           TARGET: ${{ matrix.target }}
-          # Crates are downloaded once for every target and run: beside
-          # the checkout (whose target/ each checkout cleans), where podman,
-          # outside the runner's container, can see it.
-          KABACUS_RPM_CACHE: ${{ github.workspace }}/../rpm-cache
         run: packaging/rpm/build-rpm "$IMAGE" "dist/$TARGET"
       - name: Describe the target
         env:
@@ -126,7 +121,7 @@ jobs:
     # Whatever built is published: one broken target doesn't hold back the
     # others.
     if: ${{ !cancelled() && needs.version.outputs.publish == 'true' }}
-    runs-on: [self-hosted, podman]
+    runs-on: ubuntu-latest
     # One upload at a time across runs: each rebuilds its directory's
     # metadata. Never cancelled midway.
     concurrency:

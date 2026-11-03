@@ -35,8 +35,8 @@ source_commit="$(scripts/package-source commit)"
 rust="${RUST_VERSION:-1.97.0}"
 cache="${KABACUS_RPM_CACHE:-$PWD/target/rpm/cache}"
 
-# Under the checkout, not /tmp: on the self-hosted runners podman runs
-# outside the runner's container and sees only the work directory.
+# Under the checkout, not /tmp: a podman outside a containerised runner
+# sees only the work directory.
 mkdir -p target/rpm
 work="$(mktemp -d "$PWD/target/rpm/work.XXXXXX")"
 trap 'rm -rf "$work"' EXIT

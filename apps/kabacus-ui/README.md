@@ -53,15 +53,27 @@ as for the KDE app (`http://127.0.0.1:<port>/callback`).
 
 The shell then opens the server's `/app/` in an ephemeral webview, so UI
 updates deploy with the server. Only short-lived access tokens are passed
-to the configured origin. The native shell reuses the KDE Secret Service
-implementation to persist refresh tokens in KWallet or another freedesktop
-keyring, and renews access tokens through `kabacus-client`. Tokens are never
+to the configured origin. On Linux the native shell reuses the KDE Secret
+Service implementation to persist refresh tokens in KWallet or another
+freedesktop keyring; on other platforms the refresh token lasts only for the
+session. It renews access tokens through `kabacus-client`. Tokens are never
 written to a settings file.
 Sign out ends the native session and closes the window. If the provider
 ends a session, use the connection window to sign in again. Only the bundled connection window may invoke the native connection command.
 The shell exposes no filesystem or shell capabilities to remote pages, and
-navigation is restricted to the configured server origin. Native installer
-bundles are not enabled; `--no-bundle` builds the executable.
+navigation is restricted to the configured server origin. `--no-bundle`
+builds only the executable.
+
+The App builds workflow (`.github/workflows/apps.yml`) builds unsigned
+packages to try: a Windows installer, a macOS disk image, a Flatpak
+(`flatpak/`), an iOS simulator app and a debug-signed Android APK. It
+generates the platform icons and the mobile projects on each run:
+
+```sh
+npx tauri icon src-tauri/icons/icon.png
+npx tauri android init --ci && npx tauri android build --debug --apk
+npx tauri ios init --ci && npx tauri ios build --debug --target aarch64-sim
+```
 
 `catalogs.js` compiles the interface's selected messages from the existing
 66 `po/*.po` catalogs. `src/messages.js` lists existing whole
