@@ -738,7 +738,8 @@ mod tests {
                 "retry_write": false,
             }
         });
-        let error = super::KabacusClient::error_from_status(409, &serde_json::to_vec(&body).unwrap());
+        let payload = serde_json::to_vec(&body).unwrap();
+        let error = super::KabacusClient::error_from_status(409, &payload);
         assert!(matches!(error, super::ClientError::Server(_)));
         assert!(error.to_string().contains("saved locally"));
         assert!(error.to_string().contains("/tmp/household-recovery"));
