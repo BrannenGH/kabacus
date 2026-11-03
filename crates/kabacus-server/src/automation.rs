@@ -42,6 +42,7 @@ impl Gateway {
         let (status, bytes) = match self {
             Self::Embedded(router) => {
                 let request = Request::post("/mcp")
+                    .header("host", "localhost")
                     .header("content-type", "application/json")
                     .header("accept", "application/json, text/event-stream")
                     .header("mcp-protocol-version", protocol)
@@ -69,7 +70,7 @@ impl Gateway {
         let Some(id) = id else { return Ok(None) };
         let value: Value = serde_json::from_slice(&bytes).unwrap_or_else(|_| {
             json!({
-                "message": format!("the server returned HTTP {status}")
+                "message": format!("the server returned HTTP {status}: {}", String::from_utf8_lossy(&bytes))
             })
         });
         if value.get("jsonrpc").is_some() {
@@ -88,7 +89,7 @@ impl Gateway {
                 "clientInfo": { "name": "kabacus-cli", "version": env!("CARGO_PKG_VERSION") } }
         }), "2025-03-26").await?.context("initialize returned no response")?;
         if initialized.get("error").is_some() {
-            bail!("{}", initialized["error"]);
+            return Ok(initialized);
         }
         let protocol = initialized["result"]["protocolVersion"]
             .as_str()
