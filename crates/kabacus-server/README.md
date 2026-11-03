@@ -75,7 +75,9 @@ No Office protocol compatibility is implied.
 
 `document::Session` validates the source through the existing untrusted-file
 reader, then opens a private working SQLite database. The source is never
-a live WAL database. The HTTP router and MCP router share that working copy;
+a live WAL database. Local sources with WAL, shared-memory or rollback-journal
+sidecars are refused; close the legacy database gateway and export a consistent
+snapshot before opening them in document mode. The HTTP router and MCP router share that working copy;
 each write still goes through the existing service and accounting checks.
 
 A checkpoint wraps each request, serializes document requests, and exports

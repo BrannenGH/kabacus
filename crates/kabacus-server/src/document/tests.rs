@@ -267,3 +267,15 @@ async fn a_late_host_conflict_reports_local_commit_and_never_retries_on_a_read()
     assert_eq!(uploads.load(Ordering::SeqCst), 1);
     server.abort();
 }
+
+#[tokio::test]
+async fn a_live_legacy_database_is_never_read_as_a_portable_snapshot() {
+    let dir = tempfile::tempdir().unwrap();
+    let file = dir.path().join("household.kabacus");
+    seed(&file).await;
+    let host = Host::local(file.clone()).unwrap();
+    let mut wal = file.as_os_str().to_os_string();
+    wal.push("-wal");
+    std::fs::write(PathBuf::from(wal), b"uncheckpointed database writes").unwrap();
+    assert!(host.read(1024 * 1024).await.is_err());
+}

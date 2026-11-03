@@ -81,6 +81,15 @@ impl Host {
     pub async fn read(&self, max: usize) -> anyhow::Result<Snapshot> {
         match self {
             Self::Local { path, .. } => {
+                for suffix in ["-wal", "-shm", "-journal"] {
+                    let mut sidecar = path.as_os_str().to_os_string();
+                    sidecar.push(suffix);
+                    if PathBuf::from(sidecar).try_exists()? {
+                        bail!(
+                            "the document has live database sidecars; close its database server and export a snapshot first"
+                        );
+                    }
+                }
                 if std::fs::metadata(path)?.len() > max as u64 {
                     bail!("the document exceeds the size limit");
                 }
