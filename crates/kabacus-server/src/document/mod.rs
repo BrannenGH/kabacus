@@ -177,6 +177,13 @@ async fn checkpoint(
 }
 
 fn refused(session: &Session, committed_locally: bool, message: &str) -> Response {
+    let message = if committed_locally {
+        format!(
+            "Your changes are saved in the recovery copy, but the file host could not be updated. {message}"
+        )
+    } else {
+        message.to_string()
+    };
     (
         axum::http::StatusCode::CONFLICT,
         Json(serde_json::json!({

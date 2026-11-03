@@ -70,3 +70,19 @@ test('a conflicting save names the current revision actor without retrying the w
   await expect(new Api().request('/transactions/12',{method:'PATCH',head:'42',body:{dry_run:false}})).rejects.toThrow('Morgan Reed saved a change');
   expect(fetch.mock.calls.filter(([,options])=>options.method==='PATCH')).toHaveLength(1);
 });
+
+test("document checkpoint failures preserve the host message and never retry", async () => {
+  const body = {
+    code: "document_conflict",
+    message: "Your changes are saved locally; the file host could not be updated.",
+    details: { committed_locally: true, retry_write: false },
+  };
+  const fetch = vi.fn().mockResolvedValue(
+    new Response(JSON.stringify(body), { status: 409 }),
+  );
+  vi.stubGlobal("fetch", fetch);
+  await expect(
+    new Api().write("/transactions", {}, "42", false),
+  ).rejects.toThrow(body.message);
+  expect(fetch).toHaveBeenCalledTimes(1);
+});

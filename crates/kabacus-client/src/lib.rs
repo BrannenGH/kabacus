@@ -244,6 +244,10 @@ impl KabacusClient {
                     id
                 }
             }),
+            409 if code == "document_conflict" => ClientError::Server(format!(
+                "{message} Recovery directory: {}",
+                field("recovery_directory")
+            )),
             409 => ClientError::Conflict {
                 expected: field("expected"),
                 current: {
@@ -721,5 +725,22 @@ mod tests {
         assert_eq!(e.to_string(), "server error: HTTP 504");
         let e = super::KabacusClient::error_from_status(500, b"boom");
         assert_eq!(e.to_string(), "server error: HTTP 500: boom");
+    }
+
+    #[test]
+    fn a_document_checkpoint_failure_is_not_a_stale_ledger_head() {
+        let body = serde_json::json!({
+            "code": "document_conflict",
+            "message": "Changes are saved locally but could not be uploaded.",
+            "details": {
+                "committed_locally": true,
+                "recovery_directory": "/tmp/household-recovery",
+                "retry_write": false,
+            }
+        });
+        let error = super::KabacusClient::error_from_status(409, &serde_json::to_vec(&body).unwrap());
+        assert!(matches!(error, super::ClientError::Server(_)));
+        assert!(error.to_string().contains("saved locally"));
+        assert!(error.to_string().contains("/tmp/household-recovery"));
     }
 }

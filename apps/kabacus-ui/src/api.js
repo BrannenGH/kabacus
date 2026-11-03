@@ -4,7 +4,7 @@ import { t } from "./i18n";
 export class ApiError extends Error {
   constructor(status, body) {
     super(
-      status === 409
+      status === 409 && body.code !== "document_conflict"
         ? t("The books changed while you were editing. Review again.")
         : body.message || t("The server had a problem."),
     );

@@ -65,6 +65,8 @@ fn headless_file_cli_and_stdio_mcp_share_the_gateway() {
     assert_eq!(messages[1]["id"], 11);
     let tools = messages[1]["result"]["tools"].as_array().unwrap();
     assert!(tools.iter().any(|tool| tool["name"] == "get_version"));
-    assert!(!tools.iter().any(|tool| tool["name"] == "delete_transaction"));
+    assert!(!tools
+        .iter()
+        .any(|tool| tool["name"] == "delete_transaction"));
     assert_eq!(std::fs::read(file).unwrap(), original);
 }
