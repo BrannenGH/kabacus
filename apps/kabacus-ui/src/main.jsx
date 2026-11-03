@@ -14,6 +14,7 @@ import { Settings } from "./settings";
 import { OverviewDetails } from "./overview-details";
 import { Activity } from "./activity";
 import { CardDetails } from "./card-details";
+import icon from "./icon.svg";
 const pageLabels = {
   Settings: "Settings",
   Accounts: "Money",
@@ -103,7 +104,7 @@ function App({ auth }) {
   if (!auth.signedIn)
     return (
       <main className="signin">
-        <div className="brand-icon">{"k"}</div>
+        <img className="brand-icon" src={icon} alt="" />
         <h1>{t("Overview")}</h1>
         <p>{t("Not signed in")}</p>
         <button onClick={() => auth.signIn().catch((e) => setError(e.message))}>
@@ -125,7 +126,7 @@ function App({ auth }) {
     <div className="shell">
       <aside>
         <a className="brand" href="/app/">
-          <span className="brand-icon">{"k"}</span>
+          <img className="brand-icon" src={icon} alt="" />
           {"Kabacus"}
         </a>
         <div className="nav-spacer" />
