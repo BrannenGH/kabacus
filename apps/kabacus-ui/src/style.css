@@ -517,11 +517,23 @@ select {
   flex: 1;
 }
 .signin {
+  box-sizing: border-box;
   max-width: 580px;
-  padding-top: 15vh;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 .signin .brand-icon {
   margin-bottom: 30px;
+}
+.signin form,
+.signin .banner {
+  align-self: stretch;
+  text-align: start;
 }
 .signin p {
   color: var(--muted);
