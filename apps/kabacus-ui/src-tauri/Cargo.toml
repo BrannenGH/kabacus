@@ -9,6 +9,11 @@ license = "GPL-3.0-or-later"
 # Kept separate so server builds do not require platform WebView libraries.
 [workspace]
 
+# The mobile builds load the shell as a library.
+[lib]
+name = "kabacus_desktop_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
 [features]
 default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]
@@ -23,4 +28,7 @@ kabacus-client = { path = "../../../crates/kabacus-client" }
 open = "5"
 serde_json = "1"
 tokio = { version = "1", features = ["time"] }
+
+# The Secret Service keyring, which only Linux has.
+[target.'cfg(target_os = "linux")'.dependencies]
 kabacus-kde = { path = "../../../crates/kabacus-kde", default-features = false }

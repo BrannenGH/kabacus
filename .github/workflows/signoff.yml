@@ -7,8 +7,7 @@ name: Sign-off
 # Every commit carries a Signed-off-by line (scripts/check-signoff,
 # CONTRIBUTING.md); maintainers in MAINTAINERS are exempt. It needs only
 # git and a shell, so it runs on the host rather than in the test
-# containers. Fork pull requests run on GitHub's own runners, never the
-# self-hosted one.
+# containers.
 on:
   pull_request:
     types: [opened, reopened, synchronize]
@@ -23,7 +22,7 @@ concurrency:
 jobs:
   signoff:
     name: signed off
-    runs-on: ${{ github.event.pull_request.head.repo.full_name == github.repository && fromJSON('["self-hosted","podman"]') || 'ubuntu-latest' }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:

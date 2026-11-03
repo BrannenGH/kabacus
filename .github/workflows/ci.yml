@@ -8,8 +8,9 @@ name: CI
 # aren't tested again: the Release and RPM repository workflows build and
 # publish them (tests don't gate publishing).
 # Everything runs in the openSUSE Tumbleweed test containers from the
-# Containerfile (scripts/dev), the same ones used locally. They carry the
-# pinned hledger (for the comparison tests) and the test tools.
+# Containerfile (scripts/dev), the same ones used locally, with the
+# runner's podman. They carry the pinned hledger (for the comparison tests)
+# and the test tools.
 on:
   pull_request:
   workflow_dispatch:
@@ -22,21 +23,12 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  # Crates and build output kept beside the checkout, which each run
-  # cleans, so a run starts from the last one's build (scripts/dev).
-  KABACUS_CACHE: ${{ github.workspace }}/../kabacus-cache
-
-# The self-hosted runners use the host's podman: code from a fork's pull
-# request never runs on them. Every job below checks this (`if`).
-
 jobs:
   # What the pull request touches, so the server image and the DEB (the
   # slow builds) only run when it could change them. By hand: everything.
   changes:
     name: what changed
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, podman]
+    runs-on: ubuntu-latest
     outputs:
       app: ${{ steps.diff.outputs.app }}
       server: ${{ steps.diff.outputs.server }}
@@ -58,8 +50,7 @@ jobs:
   # the version the repository was checked with.
   reuse:
     name: licensing (reuse lint)
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, podman]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: reuse lint
@@ -70,10 +61,10 @@ jobs:
   # into the cached cargo home of the test container.
   licenses:
     name: dependency licences (cargo deny)
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, podman]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/free-disk-space
       - name: cargo deny check licenses
         run: >-
           scripts/dev sh -c 'cargo install --locked --version 0.18.4 cargo-deny
@@ -81,10 +72,10 @@ jobs:
 
   rust:
     name: fmt, clippy, tests, design check
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, podman]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/free-disk-space
 
       - name: Build the openSUSE test image
         run: scripts/dev hledger --version
@@ -123,10 +114,10 @@ jobs:
   # driven through AT-SPI on Xvfb.
   gui-e2e:
     name: qmllint, GUI e2e
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, podman]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/free-disk-space
       # The QML against the bridge's types and the container's Qt and
       # Kirigami; fails on any warning.
       - name: qmllint
@@ -140,9 +131,10 @@ jobs:
     name: server image
     needs: changes
     if: needs.changes.outputs.server == 'true'
-    runs-on: [self-hosted, podman]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/free-disk-space
       - run: scripts/build-image
 
   # The app's DEB builds, uploaded as the run's `deb` artifact to download
@@ -159,8 +151,7 @@ jobs:
 
   web:
     name: React build and desktop browser tests
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, podman]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Build and test the React interface
@@ -172,10 +163,10 @@ jobs:
 
   tauri:
     name: Tauri build, URL validation and window smoke test
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, podman]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/free-disk-space
       - name: Build the native test image
         run: podman build --target tauri-test -t localhost/kabacus-tauri-test -f Containerfile .
       - name: Compile and test the native shell

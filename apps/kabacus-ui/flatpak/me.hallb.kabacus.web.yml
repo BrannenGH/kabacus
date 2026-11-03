@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+# Packages the shell built by `npm run tauri build -- --no-bundle`
+# (.github/workflows/apps.yml). The GNOME runtime provides WebKitGTK 4.1.
+id: me.hallb.kabacus.web
+runtime: org.gnome.Platform
+runtime-version: "48"
+sdk: org.gnome.Sdk
+command: kabacus-desktop
+finish-args:
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --share=ipc
+  - --device=dri
+  - --share=network
+  # The refresh token's keyring.
+  - --talk-name=org.freedesktop.secrets
+modules:
+  - name: kabacus-desktop
+    buildsystem: simple
+    sources:
+      - type: file
+        path: ../src-tauri/target/release/kabacus-desktop
+      - type: file
+        path: ../src-tauri/icons/icon.png
+    build-commands:
+      - install -Dm755 kabacus-desktop /app/bin/kabacus-desktop
+      - install -Dm644 icon.png /app/share/icons/hicolor/128x128/apps/me.hallb.kabacus.web.png
+      - >-
+        printf '[Desktop Entry]\nType=Application\nName=Kabacus\nExec=kabacus-desktop\nIcon=me.hallb.kabacus.web\nCategories=Office;Finance;\n'
+        | install -Dm644 /dev/stdin /app/share/applications/me.hallb.kabacus.web.desktop

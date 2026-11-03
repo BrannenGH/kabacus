@@ -30,7 +30,7 @@ permissions:
 jobs:
   package:
     name: ${{ matrix.kind }}
-    runs-on: [self-hosted, podman]
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         kind: ${{ fromJSON(inputs.kinds) }}
@@ -40,6 +40,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - uses: ./.github/actions/free-disk-space
       - name: Build the package
         run: scripts/build-packages ${{ matrix.kind }}
       - name: Name the package
