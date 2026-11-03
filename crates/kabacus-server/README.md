@@ -53,7 +53,10 @@ is not a bearer token.
 `kabacus-cli --url URL mcp` runs the same host adapter headlessly.
 The host credential and the gateway's API/MCP OAuth configuration are
 separate. A remotely exposed gateway must retain OAuth and HTTPS; local
-no-auth mode cannot enable the remote listener.
+no-auth mode cannot enable the remote listener. The existing gateway's
+role claims do not enforce Nextcloud's per-file ACLs: the adapter is not
+a permission bridge. Keep hosted sessions private until a file-scoped
+authorization and revocation integration is in place.
 
 This is a WebDAV adapter, not an installed Nextcloud app or a WOPI
 implementation. The Nextcloud file-action registration, permission-aware

@@ -56,15 +56,7 @@ impl Session {
         let dumps = kabacus_store::file::read(&base_path)?;
         let working = recovery.join("working.kabacus");
         kabacus_store::file::write(&dumps, &working)?;
-        std::fs::write(
-            recovery.join("session.json"),
-            serde_json::to_vec_pretty(&serde_json::json!({
-                "source": host.location(),
-                "storage_version": base.version,
-                "working_file": "working.kabacus",
-                "base_file": "base.kabacus",
-            }))?,
-        )?;
+        write_metadata(&host, &base, &recovery)?;
         config.database = Some(working.clone());
         config.database_url = None;
         config.store = Database::Sqlite(working);
@@ -101,8 +93,22 @@ impl Session {
             .await?;
         self.saved = current;
         std::fs::write(self.recovery.join("base.kabacus"), &self.base.bytes)?;
+        write_metadata(&self.host, &self.base, &self.recovery)?;
         Ok(())
     }
+}
+
+fn write_metadata(host: &Host, base: &Snapshot, recovery: &Path) -> anyhow::Result<()> {
+    std::fs::write(
+        recovery.join("session.json"),
+        serde_json::to_vec_pretty(&serde_json::json!({
+            "source": host.location(),
+            "storage_version": base.version,
+            "working_file": "working.kabacus",
+            "base_file": "base.kabacus",
+        }))?,
+    )?;
+    Ok(())
 }
 
 async fn revisions(state: &AppState) -> anyhow::Result<Vec<(LedgerId, Revision)>> {

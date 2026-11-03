@@ -35,10 +35,14 @@ impl Host {
             .unwrap_or(std::path::Path::new("."));
         let parent = parent.canonicalize()?;
         let path = parent.join(path.file_name().context("a document needs a file name")?);
-        let lock_path = path.with_file_name(format!(
-            "{}.lock",
-            path.file_name().unwrap().to_string_lossy()
-        ));
+        let path = if path.try_exists()? {
+            path.canonicalize()?
+        } else {
+            path
+        };
+        let mut lock_name = path.file_name().unwrap().to_os_string();
+        lock_name.push(".lock");
+        let lock_path = path.with_file_name(lock_name);
         let lock = OpenOptions::new()
             .read(true)
             .write(true)
@@ -146,7 +150,7 @@ impl Host {
                 let mut request = http
                     .put(url.clone())
                     .header(reqwest::header::IF_MATCH, &expected.version)
-                    .header(reqwest::header::CONTENT_TYPE, "application/vnd.kabacus")
+                    .header(reqwest::header::CONTENT_TYPE, "application/x-kabacus")
                     .body(bytes.clone());
                 if let Some(token) = token {
                     request = request.bearer_auth(token);

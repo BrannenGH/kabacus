@@ -145,6 +145,10 @@ fn a_file_has_one_local_session_and_host_urls_never_contain_credentials() {
     let file = dir.path().join("household.kabacus");
     let first = Host::local(file.clone()).unwrap();
     assert!(Host::local(file.clone()).is_err());
+    let alias = dir.path().join("linked-household.kabacus");
+    std::fs::write(&file, b"local document").unwrap();
+    std::os::unix::fs::symlink(&file, &alias).unwrap();
+    assert!(Host::local(alias).is_err());
     drop(first);
     assert!(Host::local(file).is_ok());
     for url in [
@@ -244,7 +248,10 @@ async fn a_late_host_conflict_reports_local_commit_and_never_retries_on_a_read()
         )
         .await
         .unwrap();
-    assert_eq!(result["error"]["data"]["details"]["committed_locally"], true);
+    assert_eq!(
+        result["error"]["data"]["details"]["committed_locally"],
+        true
+    );
     assert_eq!(uploads.load(Ordering::SeqCst), 1);
     let pending = kabacus_store::file::read(&recovery.join("pending.kabacus")).unwrap();
     assert_eq!(pending[0].revision, 2);

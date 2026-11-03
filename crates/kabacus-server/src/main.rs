@@ -101,7 +101,10 @@ async fn main() -> anyhow::Result<()> {
         config.database = Some(database);
         config.database_url = None;
     }
-    config.resolve_store()?;
+    let has_document = args.document.is_some() || args.document_url.is_some();
+    if !has_document {
+        config.resolve_store()?;
+    }
 
     if args.command.is_some() && (args.document.is_some() || args.document_url.is_some()) {
         anyhow::bail!(
@@ -147,7 +150,9 @@ async fn main() -> anyhow::Result<()> {
         return Ok(());
     }
 
-    config.validate()?;
+    if !has_document {
+        config.validate()?;
+    }
 
     let session = match (&args.document, &args.document_url) {
         (Some(path), None) => Some(Host::local(path.clone())?),
