@@ -4,8 +4,8 @@
 
 use clap::Parser;
 use kabacus_server::config::{AuthMode, Config};
-use kabacus_server::state::AppState;
 use kabacus_server::document::{host::Host, Session};
+use kabacus_server::state::AppState;
 use std::sync::Arc;
 use tokio::signal::unix::{signal, SignalKind};
 
@@ -103,6 +103,12 @@ async fn main() -> anyhow::Result<()> {
     }
     config.resolve_store()?;
 
+    if args.command.is_some() && (args.document.is_some() || args.document_url.is_some()) {
+        anyhow::bail!(
+            "import and export use --database or the configured database, not a document session"
+        );
+    }
+
     if let Some(Command::Export { file }) = &args.command {
         use kabacus_store::BookStore;
         if file.exists() {
@@ -113,15 +119,16 @@ async fn main() -> anyhow::Result<()> {
         let ledger = match config.ledger.as_deref() {
             Some(name) => ledgers.iter().find(|l| l.name == name),
             None => ledgers.first(),
-        }.ok_or_else(|| anyhow::anyhow!("no ledger to export"))?;
-        let scratch = tempfile::NamedTempFile::new_in(file.parent().filter(|p| !p.as_os_str().is_empty()).unwrap_or(std::path::Path::new(".")))?;
+        }
+        .ok_or_else(|| anyhow::anyhow!("no ledger to export"))?;
+        let scratch = tempfile::NamedTempFile::new_in(
+            file.parent()
+                .filter(|p| !p.as_os_str().is_empty())
+                .unwrap_or(std::path::Path::new(".")),
+        )?;
         store.export_file(&[ledger.id], scratch.path()).await?;
         scratch.persist_noclobber(file).map_err(|e| e.error)?;
         return Ok(());
-    }
-
-    if args.command.is_some() && (args.document.is_some() || args.document_url.is_some()) {
-        anyhow::bail!("import and export use --database or the configured database, not a document session");
     }
 
     // Importing needs only the store, not the listeners' auth settings.
@@ -144,11 +151,16 @@ async fn main() -> anyhow::Result<()> {
 
     let session = match (&args.document, &args.document_url) {
         (Some(path), None) => Some(Host::local(path.clone())?),
-        (None, Some(url)) => Some(Host::webdav(url, std::env::var("KABACUS_DOCUMENT_TOKEN").ok())?),
+        (None, Some(url)) => Some(Host::webdav(
+            url,
+            std::env::var("KABACUS_DOCUMENT_TOKEN").ok(),
+        )?),
         _ => None,
     };
     let (app, reloading) = if let Some(host) = session {
-        let root = args.recovery_dir.unwrap_or_else(kabacus_server::document::recovery_root);
+        let root = args
+            .recovery_dir
+            .unwrap_or_else(kabacus_server::document::recovery_root);
         let session = Session::open(config.clone(), host, &root).await?;
         tracing::info!("document recovery: {}", session.recovery_path().display());
         let state = session.state.clone();

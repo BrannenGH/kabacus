@@ -8,8 +8,8 @@
 
 pub mod account_edit;
 pub mod api;
-pub mod automation;
 pub mod auth;
+pub mod automation;
 pub mod batch;
 pub mod books;
 pub mod cache;

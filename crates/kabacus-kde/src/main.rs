@@ -14,7 +14,9 @@ mod document;
 
 fn main() {
     let file = std::env::args_os().skip(1).find(|arg| {
-        std::path::Path::new(arg).extension().is_some_and(|extension| extension == "kabacus")
+        std::path::Path::new(arg)
+            .extension()
+            .is_some_and(|extension| extension == "kabacus")
     });
     let _document = file.map(|file| {
         document::DocumentProcess::open(std::path::Path::new(&file)).unwrap_or_else(|error| {

@@ -16,19 +16,33 @@ pub struct DocumentProcess {
 impl DocumentProcess {
     pub fn open(file: &Path) -> Result<Self, String> {
         let file = file.canonicalize().map_err(|e| e.to_string())?;
-        let runtime = tempfile::Builder::new().prefix("kabacus-window-").tempdir().map_err(|e| e.to_string())?;
+        let runtime = tempfile::Builder::new()
+            .prefix("kabacus-window-")
+            .tempdir()
+            .map_err(|e| e.to_string())?;
         let socket = runtime.path().join("server.sock");
-        let sibling = std::env::current_exe().map_err(|e| e.to_string())?
+        let sibling = std::env::current_exe()
+            .map_err(|e| e.to_string())?
             .with_file_name("kabacus-server");
-        let executable = if sibling.is_file() { sibling.into_os_string() } else { "kabacus-server".into() };
+        let executable = if sibling.is_file() {
+            sibling.into_os_string()
+        } else {
+            "kabacus-server".into()
+        };
         let child = Command::new(executable)
             .arg("--auth=none")
-            .arg("--document").arg(file)
-            .arg("--socket").arg(&socket)
+            .arg("--document")
+            .arg(file)
+            .arg("--socket")
+            .arg(&socket)
             .stdin(Stdio::null())
             .stdout(Stdio::null())
-            .spawn().map_err(|e| e.to_string())?;
-        let mut process = Self { child, _runtime: runtime };
+            .spawn()
+            .map_err(|e| e.to_string())?;
+        let mut process = Self {
+            child,
+            _runtime: runtime,
+        };
         let started = Instant::now();
         loop {
             if let Some(status) = process.child.try_wait().map_err(|e| e.to_string())? {

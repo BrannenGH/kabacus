@@ -51,7 +51,9 @@ pub fn write(dumps: &[LedgerDump], to: &Path) -> Result<()> {
             crate::sqlite::write_dump(&mut conn, &renumbered)?;
         }
     }
+    scratch.as_file().sync_all()?;
     scratch.persist(to).map_err(|e| e.error)?;
+    std::fs::File::open(dir)?.sync_all()?;
     Ok(())
 }
 

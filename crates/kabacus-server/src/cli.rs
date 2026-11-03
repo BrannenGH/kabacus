@@ -64,7 +64,11 @@ async fn main() -> anyhow::Result<()> {
         let store = kabacus_store::SqliteStore::in_memory()?;
         let user = store.local_user("Kabacus").await?;
         let ledger = store.create_ledger(name, user).await?;
-        let scratch = tempfile::NamedTempFile::new_in(file.parent().filter(|p| !p.as_os_str().is_empty()).unwrap_or(std::path::Path::new(".")))?;
+        let scratch = tempfile::NamedTempFile::new_in(
+            file.parent()
+                .filter(|p| !p.as_os_str().is_empty())
+                .unwrap_or(std::path::Path::new(".")),
+        )?;
         store.export_file(&[ledger], scratch.path()).await?;
         scratch.as_file().sync_all()?;
         scratch.persist_noclobber(file).map_err(|e| e.error)?;
@@ -85,7 +89,10 @@ async fn main() -> anyhow::Result<()> {
         // Explicit headless file mode, without any network listener.
         config.auth.mode = AuthMode::None;
         config.remote = None;
-        let root = args.recovery_dir.clone().unwrap_or_else(kabacus_server::document::recovery_root);
+        let root = args
+            .recovery_dir
+            .clone()
+            .unwrap_or_else(kabacus_server::document::recovery_root);
         let session = Session::open(config, host, &root).await?;
         eprintln!("Recovery: {}", session.recovery_path().display());
         Gateway::Embedded(kabacus_server::document::router(session))
@@ -93,9 +100,16 @@ async fn main() -> anyhow::Result<()> {
     match args.command {
         Command::Mcp => gateway.stdio().await?,
         Command::Call { tool, arguments } => {
-            let result = gateway.call(&tool, serde_json::from_str(&arguments)?).await?;
+            let result = gateway
+                .call(&tool, serde_json::from_str(&arguments)?)
+                .await?;
             println!("{}", serde_json::to_string_pretty(&result)?);
-            if result.get("error").is_some() || result.pointer("/result/isError").and_then(serde_json::Value::as_bool) == Some(true) {
+            if result.get("error").is_some()
+                || result
+                    .pointer("/result/isError")
+                    .and_then(serde_json::Value::as_bool)
+                    == Some(true)
+            {
                 std::process::exit(1);
             }
         }

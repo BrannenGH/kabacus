@@ -15,7 +15,10 @@ const MAX_MESSAGE: usize = crate::batch::MAX_BYTES + 1024 * 1024;
 
 pub enum Gateway {
     Embedded(axum::Router),
-    Socket { http: reqwest::Client, token: Option<String> },
+    Socket {
+        http: reqwest::Client,
+        token: Option<String>,
+    },
 }
 
 impl Gateway {
@@ -24,7 +27,10 @@ impl Gateway {
             .unix_socket(path)
             .connect_timeout(std::time::Duration::from_secs(3))
             .build()?;
-        Ok(Self::Socket { http, token: std::env::var("KABACUS_ACCESS_TOKEN").ok() })
+        Ok(Self::Socket {
+            http,
+            token: std::env::var("KABACUS_ACCESS_TOKEN").ok(),
+        })
     }
 
     pub async fn dispatch(&self, message: Value, protocol: &str) -> anyhow::Result<Option<Value>> {
@@ -46,7 +52,8 @@ impl Gateway {
                 (status, bytes)
             }
             Self::Socket { http, token } => {
-                let mut request = http.post("http://localhost/mcp")
+                let mut request = http
+                    .post("http://localhost/mcp")
                     .header("accept", "application/json, text/event-stream")
                     .header("content-type", "application/json")
                     .header("mcp-protocol-version", protocol)
@@ -60,9 +67,11 @@ impl Gateway {
             }
         };
         let Some(id) = id else { return Ok(None) };
-        let value: Value = serde_json::from_slice(&bytes).unwrap_or_else(|_| json!({
-            "message": format!("the server returned HTTP {status}")
-        }));
+        let value: Value = serde_json::from_slice(&bytes).unwrap_or_else(|_| {
+            json!({
+                "message": format!("the server returned HTTP {status}")
+            })
+        });
         if value.get("jsonrpc").is_some() {
             return Ok(Some(value));
         }
@@ -81,11 +90,18 @@ impl Gateway {
         if initialized.get("error").is_some() {
             bail!("{}", initialized["error"]);
         }
-        let protocol = initialized["result"]["protocolVersion"].as_str().unwrap_or("2025-03-26");
-        self.dispatch(json!({
-            "jsonrpc": "2.0", "id": 2, "method": "tools/call",
-            "params": { "name": name, "arguments": arguments }
-        }), protocol).await?.context("the tool returned no response")
+        let protocol = initialized["result"]["protocolVersion"]
+            .as_str()
+            .unwrap_or("2025-03-26");
+        self.dispatch(
+            json!({
+                "jsonrpc": "2.0", "id": 2, "method": "tools/call",
+                "params": { "name": name, "arguments": arguments }
+            }),
+            protocol,
+        )
+        .await?
+        .context("the tool returned no response")
     }
 
     pub async fn stdio(&self) -> anyhow::Result<()> {
@@ -106,10 +122,12 @@ impl Gateway {
                     let id = message.get("id").cloned();
                     match self.dispatch(message, &protocol).await {
                         Ok(response) => response,
-                        Err(error) => id.map(|id| json!({
-                            "jsonrpc": "2.0", "id": id,
-                            "error": { "code": -32603, "message": error.to_string() }
-                        })),
+                        Err(error) => id.map(|id| {
+                            json!({
+                                "jsonrpc": "2.0", "id": id,
+                                "error": { "code": -32603, "message": error.to_string() }
+                            })
+                        }),
                     }
                 }
                 Err(_) => Some(json!({
@@ -118,7 +136,10 @@ impl Gateway {
                 })),
             };
             if let Some(response) = response {
-                if let Some(version) = response.pointer("/result/protocolVersion").and_then(Value::as_str) {
+                if let Some(version) = response
+                    .pointer("/result/protocolVersion")
+                    .and_then(Value::as_str)
+                {
                     protocol = version.to_string();
                 }
                 output.write_all(&serde_json::to_vec(&response)?).await?;
