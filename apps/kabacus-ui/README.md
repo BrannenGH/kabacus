@@ -30,7 +30,10 @@ Code + PKCE and CORS from that origin on the provider's discovery and
 token endpoints. No client secret belongs in this application. The web
 session and sign-in redirect state use localStorage to survive app restarts.
 The app requests `openid profile offline_access`, clears callback parameters,
-and renews access tokens when the provider supplies a refresh token.
+and renews access tokens when the provider supplies a refresh token, on
+reopening as well as while open. How long a web login lasts is then set by
+the provider's refresh token and SSO session lifetimes (offline or idle
+maximums), not by the app.
 Sign out removes the persisted user; the identity provider session is managed
 separately.
 

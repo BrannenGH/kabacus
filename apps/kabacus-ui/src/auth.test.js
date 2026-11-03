@@ -23,8 +23,10 @@ vi.mock("oidc-client-ts", async (importOriginal) => {
         const stored = await this.store.get(this.key);
         return stored ? actual.User.fromStorageString(stored) : null;
       }
-      signinSilent() {
-        return state.silent();
+      async signinSilent() {
+        const renewed = await state.silent();
+        if (renewed) await this.store.set(this.key, renewed.toStorageString());
+        return renewed;
       }
       signinRedirectCallback() {
         return state.callback();
@@ -162,6 +164,67 @@ test("renews a persisted expired access token using its refresh token", async ()
   state.silent.mockResolvedValue(renewed);
   const auth = await initializeAuth();
   await expect(auth.token()).resolves.toBe(renewed.access_token);
+  expect(state.silent).toHaveBeenCalledOnce();
+});
+
+test("reopening after the access token lapsed stays signed in through the refresh token", async () => {
+  const issuer = "https://login.example.net";
+  fixture(issuer);
+  localStorage.setItem(
+    `oidc.user:${issuer}:household-web`,
+    storedUser(-3600).toStorageString(),
+  );
+  const renewed = storedUser();
+  renewed.access_token = "household-access-b81f40";
+  state.silent.mockResolvedValue(renewed);
+  const auth = await initializeAuth();
+  expect(auth.signedIn).toBe(true);
+  expect(auth.identity).toBe("maya.chen");
+  expect(await auth.token()).toBe(renewed.access_token);
+  expect(state.silent).toHaveBeenCalledOnce();
+});
+
+test("reopening asks to sign in when the provider no longer honours the refresh token", async () => {
+  const issuer = "https://login.example.net";
+  fixture(issuer);
+  localStorage.setItem(
+    `oidc.user:${issuer}:household-web`,
+    storedUser(-3600).toStorageString(),
+  );
+  state.silent.mockRejectedValue(new Error("invalid_grant"));
+  const auth = await initializeAuth();
+  expect(auth.signedIn).toBe(false);
+});
+
+test("an expired session with no refresh token is signed out without calling the provider", async () => {
+  const issuer = "https://login.example.net";
+  fixture(issuer);
+  const expired = storedUser(-3600);
+  expired.refresh_token = undefined;
+  localStorage.setItem(
+    `oidc.user:${issuer}:household-web`,
+    expired.toStorageString(),
+  );
+  const auth = await initializeAuth();
+  expect(auth.signedIn).toBe(false);
+  expect(state.silent).not.toHaveBeenCalled();
+});
+
+test("requests made together share one renewal, so a rotating refresh token is spent once", async () => {
+  const issuer = "https://login.example.net";
+  fixture(issuer);
+  const auth = await initializeAuth();
+  localStorage.setItem(
+    `oidc.user:${issuer}:household-web`,
+    storedUser(-120).toStorageString(),
+  );
+  const renewed = storedUser();
+  renewed.access_token = "household-access-e5d913";
+  state.silent.mockImplementation(
+    () => new Promise((resolve) => setTimeout(() => resolve(renewed), 10)),
+  );
+  const tokens = await Promise.all([auth.token(), auth.token(), auth.token()]);
+  expect(tokens).toEqual(Array(3).fill(renewed.access_token));
   expect(state.silent).toHaveBeenCalledOnce();
 });
 
