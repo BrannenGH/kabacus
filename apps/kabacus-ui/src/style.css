@@ -91,16 +91,8 @@ aside {
   padding: 0 9px;
 }
 .brand-icon {
-  display: grid;
-  place-items: center;
-  background: #21624e;
-  color: white;
-  font-family: Georgia, serif;
-  border-radius: 9px;
   width: 35px;
   height: 35px;
-  font-size: 29px;
-  line-height: 1;
 }
 .edition {
   font-size: 9px;
@@ -775,9 +767,6 @@ dialog .banner {
   }
   aside {
     background: #1b2820;
-  }
-  .brand-icon {
-    background: #387658;
   }
   nav button {
     color: #aec3b4;
