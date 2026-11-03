@@ -27,7 +27,7 @@ modules:
         path: ../src-tauri/icons/icon.png
     build-commands:
       - install -Dm755 kabacus-desktop /app/bin/kabacus-desktop
-      - install -Dm644 icon.png /app/share/icons/hicolor/128x128/apps/me.hallb.kabacus.web.png
+      - install -Dm644 icon.png /app/share/icons/hicolor/512x512/apps/me.hallb.kabacus.web.png
       - >-
         printf '[Desktop Entry]\nType=Application\nName=Kabacus\nExec=kabacus-desktop\nIcon=me.hallb.kabacus.web\nCategories=Office;Finance;\n'
         | install -Dm644 /dev/stdin /app/share/applications/me.hallb.kabacus.web.desktop
