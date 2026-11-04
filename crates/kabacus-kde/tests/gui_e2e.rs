@@ -675,6 +675,35 @@ account liabilities:mortgage:home   ; ynab-account:Home Mortgage
     }
 }
 
+// All transactions lists real transactions across accounts, and fund
+// transfers only with their switch.
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn all_transactions_hides_fund_transfers_until_asked() {
+    let journal = format!(
+        "{BOOKS}
+2026-09-12 Set aside for Insurance
+    assets:bank:checking:insurance  300.00 USD
+    assets:bank:checking  -300.00 USD
+"
+    );
+    for (i, size) in [DESKTOP].into_iter().enumerate() {
+        let name = format!("alltx{i}");
+        let socket = socket_path(&name);
+        let server = kabacus_testkit::spawn_server_with_journal(&journal, |c| {
+            c.socket_path = socket.clone()
+        })
+        .await;
+        let _app = launch_sized(&server.socket_path, &config_dir(&name), size);
+        drive(&[
+            "all-transactions",
+            "Coffee Roasters",
+            "Set aside for Insurance",
+        ])
+        .await;
+    }
+}
+
 // Reconcile is on a bank account's register (not a
 // destination of its own, and not on a spending account's) and checks the
 // account against a statement.

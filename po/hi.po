@@ -29,6 +29,11 @@ msgctxt "%1 is the closest account to what was typed"
 msgid "Use %1"
 msgstr "%1 का उपयोग करें"
 
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "All transactions"
+msgstr "सभी लेन-देन"
+
 #: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgid "Add"
@@ -819,6 +824,11 @@ msgstr "प्राप्तकर्ता, टिप्पणी, खात�
 
 #: crates/kabacus-kde/qml/RegisterPage.qml
 #, kde-format
+msgid "Fund transfers"
+msgstr "आरक्षित राशियों के स्थानांतरण"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
 msgid "Unreserved only"
 msgstr "केवल बिना आरक्षित राशि वाले"
 
@@ -1562,11 +1572,6 @@ msgstr "सर्वर में समस्या आई।"
 msgctxt "between the items of a list, such as amounts or account names"
 msgid ", "
 msgstr ", "
-
-#: crates/kabacus-kde/src/model.rs
-#, kde-format
-msgid "All transactions"
-msgstr "सभी लेन-देन"
 
 #: crates/kabacus-kde/src/model.rs
 #, kde-format

@@ -10,7 +10,9 @@
 use crate::model::ModelError;
 use crate::{i18n, i18nc, i18np};
 use chrono::{Datelike, Months, NaiveDate};
-use kabacus_client::types::{AccountView, AmountView, CashOnHandView};
+use kabacus_client::types::{
+    AccountView, AmountView, CashOnHandView, PostingView, TransactionView,
+};
 use kabacus_client::KabacusClient;
 use kabacus_core::Money;
 use num_traits::ToPrimitive;
@@ -588,14 +590,135 @@ pub struct RegisterFilter {
     /// Matched against payee, memo and the other account.
     pub text: String,
     pub unreserved_only: bool,
+    /// Include money moved between a fund or card reserve and its bank
+    /// account; off, the register lists real transactions only.
+    pub fund_transfers: bool,
 }
 
-/// An account's register, newest first, filtered.
+/// The register of every real account together (no running balance).
+pub const ALL_ACCOUNTS: &str = "";
+
+/// Whether a transaction only shuffles money between funds, card
+/// reserves and the bank accounts holding them.
+fn is_fund_transfer(tx: &TransactionView, accounts: &[AccountView]) -> bool {
+    let kind_of = |name: &str| accounts.iter().find(|a| a.account == name);
+    let is_fund = |a: &AccountView| matches!(a.kind.as_str(), "pre-allocation" | "debt-reserve");
+    let mut any_fund = false;
+    for p in &tx.postings {
+        let Some(a) = kind_of(&p.account) else {
+            return false;
+        };
+        if is_fund(a) {
+            any_fund = true;
+        } else if !accounts.iter().any(|f| is_fund(f) && f.home == a.account) {
+            return false;
+        }
+    }
+    any_fund
+}
+
+/// Every real transaction, newest first: what happened to the
+/// money in bank, card, loan and investment accounts, whichever of them it
+/// touched.
+async fn all_register(
+    client: &KabacusClient,
+    filter: &RegisterFilter,
+) -> Result<Vec<RegisterRow>, ModelError> {
+    let (txs, accounts) = tokio::join!(client.list_transactions(), client.list_accounts(None));
+    let (txs, accounts) = (txs?, accounts?);
+    let name = |account: &str| {
+        accounts
+            .iter()
+            .find(|a| a.account == account)
+            .map(|a| a.display_name.clone())
+            .filter(|n| !n.is_empty())
+            .unwrap_or_else(|| account.to_string())
+    };
+    let holds_money = |account: &str| {
+        accounts.iter().any(|a| {
+            a.account == account
+                && matches!(
+                    a.kind.as_str(),
+                    "money" | "revolving-debt" | "term-liability" | "non-liquid"
+                )
+        })
+    };
+    let needle = filter.text.trim().to_lowercase();
+    let mut rows: Vec<RegisterRow> = txs
+        .iter()
+        .filter(|t| !filter.unreserved_only || t.unreserved)
+        .filter(|t| filter.fund_transfers || !is_fund_transfer(t, &accounts))
+        .map(|t| {
+            let real: Vec<&PostingView> = t
+                .postings
+                .iter()
+                .filter(|p| holds_money(&p.account))
+                .collect();
+            let net = real
+                .iter()
+                .filter_map(|p| p.amount.money())
+                .fold(Money::zero(), |a, m| a.checked_add(&m).unwrap_or(a));
+            let shown = if net.is_zero() {
+                // Between two real accounts: what moved.
+                real.iter()
+                    .filter(|p| !p.amount.exact.starts_with('-'))
+                    .map(|p| Shown::of(&p.amount))
+                    .next()
+            } else {
+                real.iter()
+                    .find(|p| p.amount.exact.starts_with('-') == net.is_negative())
+                    .map(|p| Shown::of(&p.amount))
+            };
+            let amount = shown.unwrap_or_else(|| {
+                t.postings
+                    .iter()
+                    .map(|p| Shown::of(&p.amount))
+                    .find(|s| s.tone == "pos")
+                    .unwrap_or_else(|| Shown::from_exact("0", None))
+            });
+            let account = t
+                .postings
+                .iter()
+                .map(|p| name(&p.account))
+                .collect::<Vec<_>>()
+                .join(&crate::model::list_separator());
+            RegisterRow {
+                id: t.id.to_string(),
+                date: t.date.clone(),
+                payee: t.payee.clone(),
+                account,
+                memo: t.memo.clone(),
+                amount,
+                balance: Shown::from_exact("0", Some("")),
+                kind: if is_fund_transfer(t, &accounts) {
+                    "move".to_string()
+                } else {
+                    String::new()
+                },
+                unreserved: t.unreserved,
+            }
+        })
+        .filter(|r| {
+            needle.is_empty()
+                || r.payee.to_lowercase().contains(&needle)
+                || r.memo.to_lowercase().contains(&needle)
+                || r.account.to_lowercase().contains(&needle)
+        })
+        .collect();
+    rows.sort_by(|a, b| (&b.date, b.id.len(), &b.id).cmp(&(&a.date, a.id.len(), &a.id)));
+    Ok(rows)
+}
+
+/// An account's register, newest first, filtered; `ALL_ACCOUNTS` is every
+/// real account's together.
 pub async fn register(
     client: &KabacusClient,
     account: &str,
     filter: &RegisterFilter,
 ) -> Result<Vec<RegisterRow>, ModelError> {
+    if account == ALL_ACCOUNTS {
+        return all_register(client, filter).await;
+    }
     let (lines, accounts) = tokio::join!(
         client.get_register(account, None, None),
         client.list_accounts(None)
@@ -628,6 +751,7 @@ pub async fn register(
             }
         })
         .filter(|r| !filter.unreserved_only || r.unreserved)
+        .filter(|r| filter.fund_transfers || r.kind != "move")
         .filter(|r| {
             needle.is_empty()
                 || r.payee.to_lowercase().contains(&needle)
@@ -1399,6 +1523,7 @@ pub async fn load(
             let filter = RegisterFilter {
                 text: s("text"),
                 unreserved_only: b("unreservedOnly"),
+                fund_transfers: b("fundTransfers"),
             };
             value(register(client, &s("account"), &filter).await)
         }

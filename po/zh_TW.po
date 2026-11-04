@@ -29,6 +29,11 @@ msgctxt "%1 is the closest account to what was typed"
 msgid "Use %1"
 msgstr "使用 %1"
 
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "All transactions"
+msgstr "所有交易"
+
 #: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgid "Add"
@@ -818,6 +823,11 @@ msgstr "搜尋收款方、備註、帳戶"
 
 #: crates/kabacus-kde/qml/RegisterPage.qml
 #, kde-format
+msgid "Fund transfers"
+msgstr "準備金轉帳"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
 msgid "Unreserved only"
 msgstr "僅顯示無準備金"
 
@@ -1560,11 +1570,6 @@ msgstr "伺服器出現問題。"
 msgctxt "between the items of a list, such as amounts or account names"
 msgid ", "
 msgstr "、"
-
-#: crates/kabacus-kde/src/model.rs
-#, kde-format
-msgid "All transactions"
-msgstr "所有交易"
 
 #: crates/kabacus-kde/src/model.rs
 #, kde-format

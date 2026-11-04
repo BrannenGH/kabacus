@@ -29,6 +29,11 @@ msgctxt "%1 is the closest account to what was typed"
 msgid "Use %1"
 msgstr "Izmantot %1"
 
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/src/model.rs
+#, kde-format
+msgid "All transactions"
+msgstr "Visi darījumi"
+
 #: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgid "Add"
@@ -820,6 +825,11 @@ msgstr "Meklēt saņēmēju, piezīmi, kontu"
 
 #: crates/kabacus-kde/qml/RegisterPage.qml
 #, kde-format
+msgid "Fund transfers"
+msgstr "Rezervju pārskaitījumi"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
 msgid "Unreserved only"
 msgstr "Tikai bez rezerves"
 
@@ -1564,11 +1574,6 @@ msgstr "Serverim radās problēma."
 msgctxt "between the items of a list, such as amounts or account names"
 msgid ", "
 msgstr ", "
-
-#: crates/kabacus-kde/src/model.rs
-#, kde-format
-msgid "All transactions"
-msgstr "Visi darījumi"
 
 #: crates/kabacus-kde/src/model.rs
 #, kde-format
