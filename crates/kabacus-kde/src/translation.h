@@ -65,7 +65,7 @@ inline void kabacus_setup_qml(QQmlApplicationEngine &engine)
     auto *context = new KLocalizedContext(&engine);
 #endif
     engine.rootContext()->setContextObject(context);
-    engine.rootContext()->setContextProperty(QStringLiteral("kabacusGlobalMenu"), kabacus_has_global_menu());
+    engine.setInitialProperties({{QStringLiteral("globalMenuRegistered"), kabacus_has_global_menu()}});
 }
 
 inline QByteArray kabacus_bytes(rust::Str text)

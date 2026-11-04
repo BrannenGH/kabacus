@@ -222,34 +222,36 @@ Kirigami.ApplicationWindow {
     // (Ctrl+N, F5) would be ambiguous if the menu bar had them too.
     // With a global menu (Plasma's applet or panel menu) it is exported
     // there, as a native menu bar; otherwise it's drawn in the window.
+    // Set from translation.h before the window loads.
+    property bool globalMenuRegistered: false
     readonly property bool desktopMenus: !root.narrow && !Kirigami.Settings.isMobile && !Kirigami.Settings.tabletMode
-    readonly property bool globalMenu: desktopMenus && kabacusGlobalMenu
+    readonly property bool globalMenu: desktopMenus && globalMenuRegistered
 
     Labs.MenuBar {
         window: root
         Labs.Menu {
             title: i18nc("@title:menu", "File")
-            Labs.MenuItem { text: i18n("Add transaction"); iconName: "list-add"; enabled: root.canWrite; onTriggered: root.openChooser() }
-            Labs.MenuItem { text: i18n("Set aside"); iconName: "folder-text"; enabled: root.canWrite; onTriggered: root.openForm("set_aside") }
+            Labs.MenuItem { text: i18n("Add transaction"); icon.name: "list-add"; enabled: root.canWrite; onTriggered: root.openChooser() }
+            Labs.MenuItem { text: i18n("Set aside"); icon.name: "folder-text"; enabled: root.canWrite; onTriggered: root.openForm("set_aside") }
             Labs.MenuSeparator {}
-            Labs.MenuItem { text: i18n("Refresh"); iconName: "view-refresh"; onTriggered: root.ledger.refresh() }
+            Labs.MenuItem { text: i18n("Refresh"); icon.name: "view-refresh"; onTriggered: root.ledger.refresh() }
             Labs.MenuSeparator {}
-            Labs.MenuItem { text: i18nc("@action:inmenu", "Quit"); iconName: "application-exit"; shortcut: StandardKey.Quit; onTriggered: root.close() }
+            Labs.MenuItem { text: i18nc("@action:inmenu", "Quit"); icon.name: "application-exit"; shortcut: StandardKey.Quit; onTriggered: root.close() }
         }
         Labs.Menu {
             title: i18nc("@title:menu", "Go")
-            Labs.MenuItem { text: root.labels.Overview; iconName: "go-home"; onTriggered: root.go("Overview") }
-            Labs.MenuItem { text: root.labels.Accounts; iconName: "wallet-open"; onTriggered: root.go("Accounts") }
-            Labs.MenuItem { text: root.labels.Funds; iconName: "folder-text"; onTriggered: root.go("Funds") }
-            Labs.MenuItem { text: root.labels.Loans; iconName: "view-bank"; onTriggered: root.go("Loans") }
-            Labs.MenuItem { text: root.labels.Cards; iconName: "view-credit-card"; onTriggered: root.go("Cards") }
-            Labs.MenuItem { text: root.labels.People; iconName: "system-users"; onTriggered: root.go("People") }
-            Labs.MenuItem { text: root.labels.Reports; iconName: "office-chart-bar"; onTriggered: root.go("Reports") }
-            Labs.MenuItem { text: root.labels.Activity; iconName: "view-history"; onTriggered: root.go("Activity") }
+            Labs.MenuItem { text: root.labels.Overview; icon.name: "go-home"; onTriggered: root.go("Overview") }
+            Labs.MenuItem { text: root.labels.Accounts; icon.name: "wallet-open"; onTriggered: root.go("Accounts") }
+            Labs.MenuItem { text: root.labels.Funds; icon.name: "folder-text"; onTriggered: root.go("Funds") }
+            Labs.MenuItem { text: root.labels.Loans; icon.name: "view-bank"; onTriggered: root.go("Loans") }
+            Labs.MenuItem { text: root.labels.Cards; icon.name: "view-credit-card"; onTriggered: root.go("Cards") }
+            Labs.MenuItem { text: root.labels.People; icon.name: "system-users"; onTriggered: root.go("People") }
+            Labs.MenuItem { text: root.labels.Reports; icon.name: "office-chart-bar"; onTriggered: root.go("Reports") }
+            Labs.MenuItem { text: root.labels.Activity; icon.name: "view-history"; onTriggered: root.go("Activity") }
         }
         Labs.Menu {
             title: i18n("Settings")
-            Labs.MenuItem { text: i18n("Configure Kabacus…"); iconName: "configure"; onTriggered: root.openSettings() }
+            Labs.MenuItem { text: i18n("Configure Kabacus…"); icon.name: "configure"; onTriggered: root.openSettings() }
         }
     }
 
