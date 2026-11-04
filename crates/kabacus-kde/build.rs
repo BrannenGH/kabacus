@@ -95,6 +95,7 @@ fn main() {
                 .qml_file(QmlFile::from("qml/Theme.qml").singleton(true)),
         )
         .qt_module("Quick")
+        .qt_module("DBus")
         .files(["src/bridge.rs", "src/logging.rs", "src/translation.rs"]);
         // SAFETY: only adds include directories and a define.
         let builder = unsafe {

@@ -13,6 +13,8 @@
 
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusConnectionInterface>
 #include <QtGui/QGuiApplication>
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
@@ -44,6 +46,16 @@ inline void kabacus_set_right_to_left(bool right_to_left)
     QGuiApplication::setLayoutDirection(right_to_left ? Qt::RightToLeft : Qt::LeftToRight);
 }
 
+// Whether a global menu (Plasma's) is registered on the session bus: the
+// platform theme then exports the window's native menu bar there, and the
+// in-window one would be a duplicate.
+inline bool kabacus_has_global_menu()
+{
+    auto bus = QDBusConnection::sessionBus();
+    return bus.isConnected() && bus.interface()
+        && bus.interface()->isServiceRegistered(QStringLiteral("com.canonical.AppMenu.Registrar"));
+}
+
 // Gives QML i18n(), i18nc(), i18np() and i18ncp().
 inline void kabacus_setup_qml(QQmlApplicationEngine &engine)
 {
@@ -53,6 +65,7 @@ inline void kabacus_setup_qml(QQmlApplicationEngine &engine)
     auto *context = new KLocalizedContext(&engine);
 #endif
     engine.rootContext()->setContextObject(context);
+    engine.setInitialProperties({{QStringLiteral("globalMenuRegistered"), kabacus_has_global_menu()}});
 }
 
 inline QByteArray kabacus_bytes(rust::Str text)
