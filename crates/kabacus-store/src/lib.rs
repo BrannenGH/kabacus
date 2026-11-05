@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 //
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 //! `kabacus-store`: where the books are kept. The [`BookStore`] trait is
 //! made of bookkeeping operations (load a ledger at a revision, commit a

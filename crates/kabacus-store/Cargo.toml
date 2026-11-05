@@ -7,8 +7,8 @@ name = "kabacus-store"
 version.workspace = true
 edition.workspace = true
 repository.workspace = true
-# Server-side, like kabacus-server: AGPL.
-license = "AGPL-3.0-or-later"
+# A shared library, GPL like the others; only kabacus-server is AGPL.
+license = "GPL-3.0-or-later"
 
 [dependencies]
 kabacus-core = { path = "../kabacus-core" }

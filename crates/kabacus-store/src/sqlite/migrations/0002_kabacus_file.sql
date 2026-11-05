@@ -1,6 +1,6 @@
 -- SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 --
--- SPDX-License-Identifier: AGPL-3.0-or-later
+-- SPDX-License-Identifier: GPL-3.0-or-later
 
 -- The database is a .kabacus file: application id 'KBCS'.
 PRAGMA application_id = 1262633811;

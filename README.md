@@ -30,6 +30,7 @@ Tests use synthetic books. Never point a development build at real ones.
 
 ## Licence
 
-kabacus-server is AGPL-3.0-or-later; everything else is GPL-3.0-or-later.
+kabacus-server is AGPL-3.0-or-later; everything else, the libraries the
+apps link included, is GPL-3.0-or-later.
 Each file's licence is in its SPDX header or `REUSE.toml`; full texts are in
 `LICENSES/`.

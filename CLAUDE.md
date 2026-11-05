@@ -7,10 +7,13 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 # CLAUDE.md
 
 Kabacus is a Rust app for double-entry books kept in a database (SQLite
-`.kabacus` files or PostgreSQL): a KDE app
-(cxx-qt + Kirigami) and `kabacus-server`, the gateway that serves both the
-app's HTTP API and an MCP endpoint (`rmcp`, streamable HTTP at `/mcp`). 
-The app is one convergent Kirigami UI for phone, tablet and desktop.
+`.kabacus` files or PostgreSQL): a KDE app (cxx-qt + Kirigami), a web app
+(React, as a Tauri desktop shell and a PWA), `kabacus-cli`, and
+`kabacus-server`, which serves books to several people and devices
+through an HTTP API and an MCP endpoint (`rmcp`, streamable HTTP at
+`/mcp`). All of them call the same shared libraries; books in a local
+`.kabacus` file need no server. The KDE app is one convergent Kirigami UI
+for phone, tablet and desktop.
 `README.md` covers building and testing; read it first.
 
 Where things are documented:
@@ -33,13 +36,20 @@ Hard rules:
   the full write pipeline. Delete and other rewrites stay hidden and gated, on
   the API and MCP alike: MCP's rewrite tools are listed only when they're
   usable.
-- **Only kabacus-server touches the books.** The app uses its API through
-  `kabacus-client`; MCP clients use the `/mcp` endpoint it serves. Both
-  surfaces call the same `service` functions, and every API route has its
-  MCP tool(s) (`api::ENDPOINTS`): add a route, add its tool.
-- **The server owns versioning.** One store revision per write, recorded
-  with who made it; `ETag`/`If-Match` on the head revision, and a stale
-  head is a conflict.
+- **Only the shared libraries touch the books.** `kabacus-service` (until
+  it's extracted, kabacus-server's `service` module), with `kabacus-core`,
+  `kabacus-ledger` and `kabacus-store`, is the one place books are read
+  and written. The apps and `kabacus-cli` link it and call it directly for
+  a local `.kabacus` file (the browser through its WebAssembly build); they
+  reach a server only through `kabacus-client`, after the person connects
+  to one. kabacus-server wraps the same functions in its HTTP API and
+  `/mcp`; no app links the server's HTTP, MCP or sign-in code. Every API
+  route has its MCP tool(s) (`api::ENDPOINTS`), and local MCP
+  (`kabacus-cli mcp`) offers the same tools: add a route, add its tool.
+- **The store owns versioning.** One store revision per write, recorded
+  with who made it. The caller passes the head it previewed on (`If-Match`
+  over HTTP, `head` over MCP and in a library call), and a stale head is a
+  conflict. Revisions are numbered; there are no commits.
 - **Validate before writing.** Every write is checked by `kabacus-ledger`
   against the books it would produce before it is stored.
 - **The backends behave identically.** SQLite and PostgreSQL implement the
@@ -49,7 +59,9 @@ Hard rules:
 - **Money is exact integers** (`decimalMantissa` / `decimalPlaces`). Never use
   `floatingPoint`.
 - Domain logic (validation, netting, side selection, corrections) lives in
-  `kabacus-core` so the app and the server behave identically.
+  `kabacus-core`, and the operations built on it in `kabacus-service`, so
+  the apps, `kabacus-cli` and the server behave identically. Local and
+  remote books are proven equal by one suite run against both.
 
 - **Ledger-engine code is written from the specification only.** Never
   fetch or read hledger's source or tests (including `hledger-lib`) while
@@ -105,9 +117,10 @@ Hard rules:
   wording where it still fits. `i18n-extract --check` fails on any
   untranslated or fuzzy message, so no language falls back to English.
 
-- **Every file is licensed (REUSE).** kabacus-server's code is
-  AGPL-3.0-or-later; all other code (the app, core, client) is
-  GPL-3.0-or-later. Docs are CC-BY-SA-4.0, metadata and config CC0-1.0.
+- **Every file is licensed (REUSE).** kabacus-server's code (its HTTP
+  API, MCP endpoint and sign-in) is AGPL-3.0-or-later; all other code (the
+  apps, `kabacus-cli`, and the shared libraries the apps link: core,
+  ledger, store, service, client) is GPL-3.0-or-later. Docs are CC-BY-SA-4.0, metadata and config CC0-1.0.
   A new file starts with its SPDX header (`reuse annotate`); files that
   can't carry one go in `REUSE.toml`. `reuse lint` runs in CI.
 
