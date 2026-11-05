@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 //
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 //! The shared storage suite: every test runs against each store, which
 //! must behave identically. PostgreSQL tests use a throwaway database

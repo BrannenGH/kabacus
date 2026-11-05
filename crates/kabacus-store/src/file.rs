@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 //
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 //! The `.kabacus` file: a SQLite database in the SQLite store's schema,
 //! marked with the application id `KBCS`. Writing one makes a single
