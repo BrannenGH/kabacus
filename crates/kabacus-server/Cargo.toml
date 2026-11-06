@@ -21,11 +21,11 @@ name = "kabacus_server"
 path = "src/lib.rs"
 
 [dependencies]
+kabacus-mcp = { path = "../kabacus-mcp" }
+kabacus-service = { path = "../kabacus-service" }
 kabacus-core = { path = "../kabacus-core" }
 kabacus-ledger = { path = "../kabacus-ledger" }
 kabacus-store = { path = "../kabacus-store" }
-num-bigint = { workspace = true }
-num-traits = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 thiserror = { workspace = true }
@@ -48,8 +48,6 @@ toml = "0.8"
 clap = { version = "4", features = ["derive"] }
 tempfile = "3"
 base64 = "0.22"
-# `/regex/` payee and memo filters.
-regex = "1"
 # The MCP endpoint at /mcp (streamable HTTP).
 rmcp = { version = "3", default-features = false, features = ["server", "macros", "transport-streamable-http-server"] }
 

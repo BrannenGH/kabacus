@@ -17,22 +17,30 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 thiserror = { workspace = true }
 chrono = { workspace = true }
-tokio = { workspace = true }
 num-bigint = { workspace = true }
 tracing = { workspace = true }
 # The local and self-hosted store, and the .kabacus file (bundled, so no
 # system SQLite is needed).
-rusqlite = { version = "0.32", features = ["bundled", "backup"] }
-# The hosted service's store, through a connection pool.
+rusqlite = { version = "0.40.1", features = ["backup", "serialize", "fallible_uint"] }
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tokio.workspace = true
+rusqlite = { version = "0.40.1", features = ["bundled", "backup", "serialize", "fallible_uint"] }
+tempfile = "3"
+
+# PostgreSQL belongs to the hosted service. Mobile clients use SQLite or
+# connect through HTTPS; its desktop host-identity APIs are unavailable on iOS.
+[target.'cfg(not(any(target_arch = "wasm32", target_os = "ios", target_os = "android")))'.dependencies]
 tokio-postgres = "0.7"
 deadpool-postgres = "0.14"
-tempfile = "3"
 
 [features]
 # Throwaway PostgreSQL databases for tests.
 testing = []
 
-[dev-dependencies]
+[target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 kabacus-store = { path = ".", features = ["testing"] }
 proptest = { workspace = true }
 serde_json = { workspace = true }
+
+[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
+wasm-bindgen-test = "0.3"

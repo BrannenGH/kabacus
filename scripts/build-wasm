@@ -1,0 +1,8 @@
+#!/bin/sh
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+set -eu
+cd "$(dirname "$0")/.."
+cargo build --locked --release --target wasm32-unknown-unknown -p kabacus-wasm
+wasm-bindgen --target web --out-dir apps/kabacus-ui/public/wasm target/wasm32-unknown-unknown/release/kabacus_wasm.wasm

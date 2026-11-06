@@ -275,7 +275,7 @@ pub async fn add_simple(client: &KabacusClient, draft: &SimpleDraft) -> Result<S
         .version()
         .await?
         .head
-        .ok_or_else(|| ModelError::Invalid(i18n!("The books have no commits yet")))?;
+        .ok_or_else(|| ModelError::Invalid(i18n!("The books have no revisions yet")))?;
     Ok(client
         .add_transaction(&head, body)
         .await?
@@ -346,7 +346,7 @@ pub async fn save_edit(
         .version()
         .await?
         .head
-        .ok_or_else(|| ModelError::Invalid(i18n!("The books have no commits yet")))?;
+        .ok_or_else(|| ModelError::Invalid(i18n!("The books have no revisions yet")))?;
     client
         .edit_transaction(transaction_id(id)?, &head, body)
         .await?;

@@ -18,7 +18,10 @@ test("all static React messages reuse the translated catalog vocabulary", () => 
     "overview-details.jsx",
     "activity.jsx",
     "card-details.jsx",
-    "native-launcher.jsx",
+    "workspace.jsx",
+    "local-books.js",
+    "navigation.jsx",
+    "overview.jsx",
   ]) {
     const source = readFileSync(new URL(file, import.meta.url), "utf8");
     for (const match of source.matchAll(/\bt\((['"])(.*?)\1/g)) {

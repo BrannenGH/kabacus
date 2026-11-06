@@ -46,13 +46,25 @@ SPDX-License-Identifier = "GPL-3.0-or-later"
 
 
 [[annotations]]
-path = ["apps/kabacus-ui/package.json", "apps/kabacus-ui/package-lock.json", "apps/kabacus-ui/src-tauri/tauri.conf.json", "apps/kabacus-ui/src-tauri/Cargo.lock"]
+path = ["apps/kabacus-ui/package.json", "apps/kabacus-ui/package-lock.json", "apps/kabacus-ui/src-tauri/tauri.conf.json", "apps/kabacus-ui/src-tauri/tauri.*.conf.json", "apps/kabacus-ui/src-tauri/Cargo.lock"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 Brannen Hall <brannen@hallb.me>"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
-path = ["apps/kabacus-ui/src-tauri/icons/icon.png", "packaging/desktop/me.hallb.kabacus.svg", "apps/kabacus-ui/src/icon.svg", "apps/kabacus-ui/public/apple-touch-icon.png"]
+path = ["apps/kabacus-ui/src-tauri/icons/icon.png", "packaging/desktop/me.hallb.kabacus.svg", "apps/kabacus-ui/src/icon.svg", "apps/kabacus-ui/public/icon.svg", "apps/kabacus-ui/public/apple-touch-icon.png"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 Brannen Hall <brannen@hallb.me>"
 SPDX-License-Identifier = "CC-BY-SA-4.0"
+
+[[annotations]]
+path = "crates/kabacus-mcp/skills/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Brannen Hall <brannen@hallb.me>"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+[[annotations]]
+path = "apps/kabacus-ui/public/manifest.webmanifest"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Brannen Hall <brannen@hallb.me>"
+SPDX-License-Identifier = "CC0-1.0"

@@ -10,12 +10,15 @@
 // friends in QML, and lookups for the Rust side's i18n! macros.
 
 #include <cstdint>
+#include <vector>
+#include <memory>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtGui/QGuiApplication>
+#include <QtWidgets/QApplication>
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
 
@@ -98,4 +101,16 @@ inline rust::String kabacus_translate(rust::Str context, rust::Str singular, rus
     }
     const QByteArray out = text.toString().toUtf8();
     return rust::String(out.constData(), std::size_t(out.size()));
+}
+
+// Qt Labs Platform uses widgets for native menus outside Plasma.
+inline std::unique_ptr<QGuiApplication> kabacus_application(const rust::Slice<const rust::String> args)
+{
+    static std::vector<QByteArray> storage;
+    static std::vector<char*> argv;
+    for (const auto &arg : args) storage.emplace_back(arg.data(), static_cast<int>(arg.size()));
+    for (auto &arg : storage) argv.push_back(arg.data());
+    static int argc = static_cast<int>(argv.size());
+    argv.push_back(nullptr);
+    return std::make_unique<QApplication>(argc, argv.data());
 }

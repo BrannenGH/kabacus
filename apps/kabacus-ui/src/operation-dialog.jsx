@@ -39,6 +39,9 @@ export function OperationDialog({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [stale, setStale] = useState(false);
+  const [conflictDiff,setConflictDiff]=useState("");
+  async function previewAgain(){head.current=(await api.request("/version")).head;setStale(false);setError("");setPreview(null);}
+  async function theirChange(){const history=await api.request("/history");if(history[0])setConflictDiff(await api.text(`/history/${history[0].hash}`));}
   const [dirty, setDirty] = useState(false);
   const [checked, setChecked] = useState(null);
   const [repairCard, setRepairCard] = useState(card || "");
@@ -47,7 +50,7 @@ export function OperationDialog({
   const snapshot = useRef(data);
   const head = useRef(data.version.head);
   useEffect(() => {
-    dialog.current.showModal();
+    dialog.current.show();
   }, []);
   useEffect(() => {
     if (preview) return;
@@ -94,6 +97,7 @@ export function OperationDialog({
   }
   function changed(event) {
     setDirty(true);
+    event.currentTarget.dataset.dirty = "true";
     setChecked(null);
     const form = new FormData(event.currentTarget);
     draft.current = Object.fromEntries(form);
@@ -141,7 +145,7 @@ export function OperationDialog({
         },
       });
       if (preview) {
-        onSaved();
+        onSaved(result);
         return;
       }
       if (currentGeneration !== generation.current) return;
@@ -192,6 +196,7 @@ export function OperationDialog({
             {t("Cancel")}
           </button>
         </div>
+        {stale && <section className="conflict-panel"><h3>{t("Someone saved first")}</h3><button type="button" onClick={()=>theirChange().catch(e=>setError(e.message))}>{t("See their change")}</button><button type="button" onClick={()=>setStale(false)}>{t("Keep editing")}</button><button type="button" onClick={()=>previewAgain().catch(e=>setError(e.message))}>{t("Preview again")}</button>{conflictDiff&&<pre>{conflictDiff}</pre>}</section>}
         {error && (
           <p role="alert" className="banner error">
             {error}

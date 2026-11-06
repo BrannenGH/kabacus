@@ -36,8 +36,7 @@ Hard rules:
   the full write pipeline. Delete and other rewrites stay hidden and gated, on
   the API and MCP alike: MCP's rewrite tools are listed only when they're
   usable.
-- **Only the shared libraries touch the books.** `kabacus-service` (until
-  it's extracted, kabacus-server's `service` module), with `kabacus-core`,
+- **Only the shared libraries touch the books.** `kabacus-service`, with `kabacus-core`,
   `kabacus-ledger` and `kabacus-store`, is the one place books are read
   and written. The apps and `kabacus-cli` link it and call it directly for
   a local `.kabacus` file (the browser through its WebAssembly build); they

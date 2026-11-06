@@ -83,8 +83,7 @@ Requires:       hicolor-icon-theme
 
 %description
 A Kirigami app for hledger books: one convergent UI for phone, tablet
-and desktop. It reads and writes only through kabacus-server, which
-validates and versions every change.
+and desktop. The shared engine validates and versions every change in local or remote books.
 
 Source: %{pkg_source_url}/tree/%{pkg_commit}
 
@@ -95,12 +94,18 @@ Source: %{pkg_source_url}/tree/%{pkg_commit}
 # cxx-qt-build asks qmake which Qt to build against.
 qmake="$(command -v qmake6 || command -v qmake-qt6 || true)"
 [ -n "$qmake" ] && export QMAKE="$qmake"
-cargo build --release --locked -p kabacus-kde --features gui
+cargo build --release --locked -p kabacus-kde -p kabacus-cli --features kabacus-kde/gui
 # The translations (po/), compiled for KI18n.
 cargo run --release --locked -p xtask -- i18n-build target/locale
 
 %install
 install -Dm755 target/release/kabacus %{buildroot}%{_bindir}/kabacus
+install -Dm755 target/release/kabacus-cli %{buildroot}%{_bindir}/kabacus-cli
+mkdir -p %{buildroot}%{_mandir}/man1 %{buildroot}%{_datadir}/bash-completion/completions %{buildroot}%{_datadir}/zsh/site-functions %{buildroot}%{_datadir}/fish/vendor_completions.d
+target/release/kabacus-cli man > %{buildroot}%{_mandir}/man1/kabacus-cli.1
+target/release/kabacus-cli completions bash > %{buildroot}%{_datadir}/bash-completion/completions/kabacus-cli
+target/release/kabacus-cli completions zsh > %{buildroot}%{_datadir}/zsh/site-functions/_kabacus-cli
+target/release/kabacus-cli completions fish > %{buildroot}%{_datadir}/fish/vendor_completions.d/kabacus-cli.fish
 install -Dm644 packaging/desktop/me.hallb.kabacus.desktop %{buildroot}%{_datadir}/applications/me.hallb.kabacus.desktop
 install -Dm644 packaging/desktop/me.hallb.kabacus.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/me.hallb.kabacus.svg
 install -Dm644 packaging/desktop/me.hallb.kabacus.metainfo.xml %{buildroot}%{_datadir}/metainfo/me.hallb.kabacus.metainfo.xml
@@ -114,6 +119,11 @@ SOURCE_URL=%{pkg_source_url} SOURCE_COMMIT=%{pkg_commit} scripts/package-source 
 %find_lang kabacus
 
 %files -f kabacus.lang
+%{_bindir}/kabacus-cli
+%{_mandir}/man1/kabacus-cli.1*
+%{_datadir}/bash-completion/completions/kabacus-cli
+%{_datadir}/zsh/site-functions/_kabacus-cli
+%{_datadir}/fish/vendor_completions.d/kabacus-cli.fish
 %license LICENSES/GPL-3.0-or-later.txt
 %doc %{_docdir}/kabacus/SOURCE
 %{_bindir}/kabacus

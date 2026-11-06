@@ -116,6 +116,10 @@ Kirigami.ScrollablePage {
             Accessible.name: i18nc("%1 is a payee, %2 a date", "%1 %2", modelData.payee, modelData.date)
             background: Rectangle {
                 color: transactionDelegate.modelData.unreserved ? page.tokens.rowUnreserved : "transparent"
+                border.width: (page.app.agent.changed || []).indexOf(Number(transactionDelegate.modelData.id)) >= 0 ? 2 : 0
+                border.color: Kirigami.Theme.highlightColor
+                Controls.ToolTip.visible: transactionDelegate.hovered && border.width > 0
+                Controls.ToolTip.text: page.app.agent.changed_by || ""
                 Rectangle {
                     anchors.fill: parent
                     visible: transactionDelegate.down || transactionDelegate.hovered
@@ -123,7 +127,8 @@ Kirigami.ScrollablePage {
                     opacity: 0.2
                 }
             }
-            onClicked: if (modelData.id !== "" && page.app.canWrite) page.app.openEdit(modelData.id)
+            highlighted: page.app.selectedRow === String(modelData.id)
+            onClicked: if (modelData.id !== "" && page.app.canWrite) { page.app.selectedRow = String(modelData.id); page.app.openEdit(modelData.id) }
             Keys.onReturnPressed: clicked()
             Keys.onEnterPressed: clicked()
             contentItem: ColumnLayout {

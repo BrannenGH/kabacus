@@ -3,8 +3,16 @@
   "productName": "Kabacus",
   "version": "0.1.0",
   "identifier": "me.hallb.kabacus.web",
-  "build": { "frontendDist": "../dist", "beforeBuildCommand": "npm run build" },
-  "app": { "windows": [], "security": { "capabilities": [] } },
+  "build": {
+    "frontendDist": "../dist",
+    "beforeBuildCommand": "node build-desktop-cli.mjs && npm run build"
+  },
+  "app": {
+    "windows": [],
+    "security": {
+      "capabilities": []
+    }
+  },
   "bundle": {
     "active": true,
     "targets": "all",
@@ -15,6 +23,16 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
+    ],
+    "fileAssociations": [
+      {
+        "ext": [
+          "kabacus"
+        ],
+        "mimeType": "application/x-kabacus",
+        "name": "Kabacus books",
+        "role": "Editor"
+      }
     ]
   }
 }

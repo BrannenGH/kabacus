@@ -121,20 +121,24 @@ export class Api {
     link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
+  async saveCopy() {
+    const version=await this.request("/version");
+    await this.download(`/ledgers/${version.ledger}/export`, "Books.kabacus");
+  }
   async snapshot(signal) {
     // A changing revision must never lend a newer head to an older screen.
     for (let attempt = 0; attempt < 3; attempt++) {
       const start = await this.request("/version", {
         signal,
       });
-      const [cash, accounts, transactions, history, commodity] =
+      const [cash, accounts, transactions, history, commodity, commands] =
         await Promise.all(
           [
             `/cash-on-hand?compare_to=${previousMonthDate()}`,
             "/accounts",
             "/transactions",
             "/history",
-            "/commodity",
+            "/commodity", "/commands",
           ].map((path) =>
             this.request(path, {
               signal,
@@ -151,7 +155,7 @@ export class Api {
           accounts,
           transactions,
           history,
-          commodity,
+          commodity, commands,
         };
     }
     throw new Error(

@@ -53,38 +53,6 @@ export function OverviewDetails({ api, data }) {
       <div className="panel-heading">
         <h2>{t("Cash on Hand over time")}</h2>
       </div>
-      <div className="home">
-        <details>
-          <summary
-            title={t(
-              "Free money you can spend right now, after reserves and card reserves.",
-            )}
-          >
-            {t("About Cash on Hand")}
-          </summary>
-          <p>
-            {t(
-              "Free money you can spend right now, after reserves and card reserves.",
-            )}
-          </p>
-        </details>
-        <details>
-          <summary>{t("About Money on Hand")}</summary>
-          <p>
-            {t(
-              "Everything in your bank accounts, reserves and card reserves included, plus what people owe you. Cash on Hand is what's left once reserves, card reserves and what you're owed are set apart.",
-            )}
-          </p>
-          <div className="list-row">
-            <span>{t("Set aside in reserves")}</span>
-            {data.cash.future_allocations.formatted}
-          </div>
-          <div className="list-row">
-            <span>{t("Owes you")}</span>
-            {data.cash.receivables.formatted}
-          </div>
-        </details>
-      </div>
       {error && <p className="banner error">{error}</p>}
       {history && (
         <>

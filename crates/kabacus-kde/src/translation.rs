@@ -13,6 +13,8 @@ mod ffi {
         include!("kabacus-kde/src/translation.h");
         include!("cxx-qt-lib/qqmlapplicationengine.h");
         type QQmlApplicationEngine = cxx_qt_lib::QQmlApplicationEngine;
+        type QGuiApplication = cxx_qt_lib::QGuiApplication;
+        fn kabacus_application(args: &[String]) -> UniquePtr<QGuiApplication>;
 
         fn kabacus_set_domain();
         fn kabacus_set_right_to_left(right_to_left: bool);
@@ -68,4 +70,9 @@ pub fn init() {
 /// Before `engine` loads any QML.
 pub fn setup_qml(engine: std::pin::Pin<&mut QQmlApplicationEngine>) {
     ffi::kabacus_setup_qml(engine);
+}
+
+/// Application with platform menu support.
+pub fn application() -> cxx::UniquePtr<cxx_qt_lib::QGuiApplication> {
+    ffi::kabacus_application(&std::env::args().collect::<Vec<_>>())
 }

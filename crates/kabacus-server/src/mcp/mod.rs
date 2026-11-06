@@ -63,7 +63,7 @@ pub fn routes(state: Arc<AppState>) -> Router<Arc<AppState>> {
         // A batch may be 10 MB; leave room for the envelope.
         .with_max_request_body_bytes(crate::batch::MAX_BYTES + 1024 * 1024);
     let service = StreamableHttpService::new(
-        move || Ok(KabacusMcp::new(tool_state.clone())),
+        move || Ok(tools::for_server(tool_state.clone())),
         Arc::new(NeverSessionManager::default()),
         config,
     );
@@ -134,6 +134,8 @@ async fn authenticate(
     match state.auth.authenticate(authz, Some(hint)).await {
         Ok(mut principal) => {
             principal.channel = Channel::Mcp;
+            req.extensions_mut()
+                .insert(kabacus_mcp::CallerHandle(Arc::new(principal.clone())));
             req.extensions_mut().insert(principal);
             next.run(req).await
         }
@@ -174,55 +176,7 @@ async fn protected_resource_metadata(State(state): State<Arc<AppState>>, req: Re
     Json(metadata).into_response()
 }
 
-/// The tool list each client (user and client id) last listed, kept in
-/// memory, so a client that comes back after the tools changed is told at
-/// once; and a signal to every open `subscriptions/listen` when they
-/// change.
-#[derive(Default)]
-pub struct ToolLists {
-    seen: std::sync::Mutex<std::collections::BTreeMap<String, String>>,
-    changed: std::sync::OnceLock<tokio::sync::watch::Sender<u64>>,
-}
-
-impl ToolLists {
-    pub fn new() -> ToolLists {
-        ToolLists::default()
-    }
-
-    fn changed(&self) -> &tokio::sync::watch::Sender<u64> {
-        self.changed
-            .get_or_init(|| tokio::sync::watch::channel(0).0)
-    }
-
-    fn key(principal: &crate::auth::roles::Principal) -> String {
-        format!("{}\u{1f}{}", principal.username, principal.client)
-    }
-
-    /// The hash of the tool list `principal`'s client last listed.
-    pub fn seen(&self, principal: &crate::auth::roles::Principal) -> Option<String> {
-        self.seen
-            .lock()
-            .unwrap_or_else(|p| p.into_inner())
-            .get(&Self::key(principal))
-            .cloned()
-    }
-
-    pub fn set_seen(&self, principal: &crate::auth::roles::Principal, hash: &str) {
-        self.seen
-            .lock()
-            .unwrap_or_else(|p| p.into_inner())
-            .insert(Self::key(principal), hash.to_string());
-    }
-
-    /// Tell every open subscription the tools changed.
-    pub fn notify_all(&self) {
-        self.changed().send_modify(|n| *n += 1);
-    }
-
-    pub fn subscribe(&self) -> tokio::sync::watch::Receiver<u64> {
-        self.changed().subscribe()
-    }
-}
+pub use kabacus_mcp::ToolLists;
 
 #[cfg(test)]
 mod tests {

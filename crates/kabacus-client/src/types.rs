@@ -194,6 +194,8 @@ pub struct CommitView {
     /// Who made it.
     #[serde(default)]
     pub user: String,
+    #[serde(default)]
+    pub agent: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -231,6 +233,8 @@ pub struct AuthInfoView {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VersionView {
+    #[serde(default)]
+    pub ledger: i64,
     pub server_version: String,
     /// The exact commit the server was built from, and where its source is.
     #[serde(default)]

@@ -1,0 +1,41 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+# SPDX-License-Identifier: GPL-3.0-or-later
+name: Report failed job output
+description: Put the relevant tail of failed job logs in check annotations.
+inputs:
+  run-id:
+    description: Workflow run to inspect; defaults to this run.
+    required: false
+runs:
+  using: composite
+  steps:
+    - uses: actions/github-script@v7
+      env:
+        DIAGNOSTIC_RUN_ID: ${{ inputs.run-id }}
+      with:
+        script: |
+          const jobs = await github.paginate(github.rest.actions.listJobsForWorkflowRun, {
+            ...context.repo, run_id: process.env.DIAGNOSTIC_RUN_ID || context.runId, filter: 'latest'
+          });
+          for (const job of jobs.filter(job => job.conclusion === 'failure')) {
+            try {
+              const response = await github.rest.actions.downloadJobLogsForWorkflowRun({
+                ...context.repo, job_id: job.id
+              });
+              const log = typeof response.data === 'string' ? response.data : Buffer.from(response.data).toString();
+              const lines = log.split('\n').filter(line => !line.includes('Post job cleanup'));
+              const relevant = new Set();
+              for (let i = 0; i < lines.length; i++) {
+                if (!lines[i].includes("Preloading:") && /\.qml:\d+:\d+|error:|error\[|FAILED|FAIL:|panicked|Caused by|Exception|not found|could not|fatal|assertion|Traceback|timed out/i.test(lines[i])) {
+                  for (let j = Math.max(0, i - 3); j < Math.min(lines.length, i + 12); j++) relevant.add(j);
+                }
+              }
+              for (let i = Math.max(0, lines.length - 20); i < lines.length; i++) relevant.add(i);
+              const excerpt = [...relevant].sort((a, b) => a - b).map(i => lines[i]).join('\n').slice(-30000);
+              for (let i = 0; i < excerpt.length; i += 3000) {
+                core.error(excerpt.slice(i, i + 3000), {title: `${job.name} (${1 + i / 3000})`});
+              }
+            } catch (error) {
+              core.warning(`Could not annotate ${job.name}: ${error.message}`);
+            }
+          }

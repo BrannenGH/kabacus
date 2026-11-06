@@ -423,7 +423,7 @@ async fn head(client: &KabacusClient) -> Result<String, WriteError> {
         .await?
         .head
         .ok_or_else(|| WriteError::Other {
-            message: i18n!("The books have no commits yet"),
+            message: i18n!("The books have no revisions yet"),
         })
 }
 
@@ -1354,7 +1354,7 @@ pub async fn commit(
     validate(draft, &books)?;
     match send(client, &books, draft, head, false).await {
         Ok(r) => Ok(Saved {
-            short: r.head.chars().take(7).collect(),
+            short: r.head.clone(),
             id: r.id.map(|i| i.to_string()).unwrap_or_default(),
             head: r.head,
         }),

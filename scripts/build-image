@@ -30,7 +30,7 @@ while [ $# -gt 0 ]; do
     *) echo "usage: scripts/build-image [--save FILE]" >&2; exit 2 ;;
   esac
 done
-"$engine" build --target server --build-arg VERSION="$version" \
+"$engine" build --target server --build-arg VERSION="$version" --build-arg SOURCE_COMMIT="$(git rev-parse HEAD)" \
   -t "$image:$version" -t "$image:latest" -f Containerfile .
 if [ -n "$save" ]; then
   rm -f "$save"

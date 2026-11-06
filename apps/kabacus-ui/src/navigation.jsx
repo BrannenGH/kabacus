@@ -1,0 +1,50 @@
+// SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+// SPDX-License-Identifier: GPL-3.0-or-later
+import React, { useEffect, useRef } from "react";
+import { t } from "./i18n";
+
+export const destinations = ["Overview", "Register", "Funds", "Cards", "Loans", "People", "Reports", "Activity"];
+export const pageLabels = { Overview: "Overview", Register: "Transactions", Funds: "Reserves", Cards: "Credit", Loans: "Loans", People: "People", Reports: "Reports", Activity: "Activity", Settings: "Settings" };
+const paths = {
+  Overview: "M3 10l9-7 9 7M5 9v12h14V9M9 21v-8h6v8",
+  Register: "M4 4h16v16H4zM8 8h8M8 12h8M8 16h5",
+  Funds: "M3 7h7l2 2h9v11H3zM3 7V4h7l2 3",
+  Cards: "M3 5h18v14H3zM3 10h18M7 15h3",
+  Loans: "M3 9l9-6 9 6M4 10h16M6 11v7M12 11v7M18 11v7M3 21h18",
+  People: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M15 4a4 4 0 0 1 0 8M22 21v-2a4 4 0 0 0-3-4M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0",
+  Reports: "M4 3v18h17M8 16v-5M13 16V7M18 16V4",
+  Activity: "M3 12a9 9 0 1 0 3-7M3 3v5h5M12 7v5l3 2",
+  Settings: "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8M8 3l1 2h6l1-2 4 4-2 1v8l2 1-4 4-1-2H9l-1 2-4-4 2-1V8L4 7z",
+  Add: "M12 4v16M4 12h16", Refresh: "M20 7v5h-5M4 17v-5h5M5 8a8 8 0 0 1 13-3l2 2M4 17l2 2a8 8 0 0 0 13-3",
+};
+export function Icon({ name }) { return <svg className="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name] || paths.Register} /></svg>; }
+export function Key({ children }) { return <kbd>{children}</kbd>; }
+export function AddChooser({ commands, onChoose, onClose }) {
+  const ref = useRef();
+  useEffect(() => { ref.current.showModal(); ref.current.querySelector("button[data-choice]")?.focus(); }, []);
+  return <dialog ref={ref} className="add-chooser" aria-labelledby="add-title" onCancel={(e) => { e.preventDefault(); onClose(); }} onKeyDown={(e) => {
+    if (/^[1-8]$/.test(e.key)) { e.preventDefault(); onChoose(commands[Number(e.key) - 1]); }
+  }}>
+    <div className="dialog-heading"><h2 id="add-title">{t("Add — what happened?")}</h2><button className="quiet" onClick={onClose}>{t("Cancel")} <Key>Esc</Key></button></div>
+    <p>{t("Choose what happened. The form fills in the lines; you see what changes before you save.")}</p>
+    <div className="choice-grid">{commands.map((command, i) => <button data-choice key={command.id} onClick={() => onChoose(command)}>
+      <Icon name={i === 2 || i === 5 ? "Cards" : i === 4 ? "Funds" : "Register"} /><span><strong>{t(command.label)}</strong><small>{t(["Money left an account", "Income or a refund", "Adds the reserve lines for you", "Between two bank accounts", "Into a reserve, out, or between reserves", "From its reserve", "They owe you, or you owe them", "Any two accounts"][i])}</small></span><Key>{i + 1}</Key>
+    </button>)}</div>
+  </dialog>;
+}
+
+export function AccountList({ data, selected, onSelect }) {
+  const groups = [["money", "Bank & cash"], ["revolving-debt", "Credit"], ["term-liability", "Loans"], ["receivable", "People"], ["payable", "People"], ["expense", "Spending"], ["income", "Income"], ["non-liquid", "Investments"], ["unclassified", "Other"]];
+  const amount = (account) => (account.balance_inclusive || account.balances || []).map((b) => b.formatted).join(" / ");
+  return <div className="account-list panel" aria-label={t("Accounts")}>
+    <button className={!selected ? "selected quiet" : "quiet"} onClick={() => onSelect("")}>{t("All transactions")}</button>
+    {groups.map(([kind, label]) => {
+      const accounts = data.accounts.filter((a) => a.kind === kind);
+      if (!accounts.length) return null;
+      return <section key={kind}><h3>{t(label)}</h3>{accounts.map((a) => <React.Fragment key={a.account}>
+        <button className={selected === a.account ? "selected" : ""} onClick={() => onSelect(a.account)}><span>{a.display_name || a.account}</span><span className={(a.balance_inclusive || []).some((b) => b.exact.startsWith("-")) ? "amount negative" : "amount"}>{amount(a)}</span></button>
+        {data.accounts.filter((c) => c.home === a.account && c.account !== a.account).map((c) => <button key={c.account} className={`account-child ${selected === c.account ? "selected" : ""}`} onClick={() => onSelect(c.account)}><span>{c.display_name || c.account}</span><span className="amount">{amount(c)}</span></button>)}
+      </React.Fragment>)}</section>;
+    })}
+  </div>;
+}

@@ -8,16 +8,72 @@
 // tabs and a floating Add button; dialogs become pages.
 pragma ComponentBehavior: Bound
 import QtQuick
+import QtQml.Models
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
 import Qt.labs.platform as Labs
+import QtQuick.Dialogs as Dialogs
 import org.kde.kirigami as Kirigami
 import me.hallb.kabacus
 
 Kirigami.ApplicationWindow {
     id: root
     // The name people see; the binary and the application are "kabacus".
-    title: "Kabacus"
+    title: bookSource ? bookSource.name + " — Kabacus" : "Kabacus"
+    property var initialState: null
+    property string windowId: initialState ? initialState.id : "window-" + Date.now() + "-" + Math.floor(Math.random() * 100000)
+    property var bookSource: null
+    property string selectedAccount: initialState ? initialState.account || "" : ""
+    property string selectedRow: initialState ? initialState.selected || "" : ""
+    property bool ready: false
+    property bool allowClose: false
+    property bool explicitClose: false
+    property var recentBooks: []
+    property var agent: ({})
+    readonly property var connection: JSON.parse(ledger.settingsJson())
+    readonly property bool hasBooks: bookSource !== null || connection.socket_path !== ""
+    function remember() {
+        if (!ready || !bookSource) return
+        ledger.rememberWindow(JSON.stringify({ id: windowId, source: bookSource, page: current, account: selectedAccount, selected: selectedRow, width: Math.round(width), height: Math.round(height) }))
+        recentBooks = JSON.parse(ledger.workspaceJson()).recent || []
+    }
+    function newWindow(source) {
+        if (source && WindowManager.focus(source, root)) return
+        WindowManager.create({ id: "window-" + Date.now(), source: source || null, page: "Overview", account: "", selected: "", width: 1280, height: 800 })
+    }
+    function openSource(source) {
+        source = Object.assign({}, source)
+        if (source.kind === "local") source.path = ledger.canonicalBooksPath(source.path)
+        if (WindowManager.focus(source, root)) return
+        let error = ""
+        if (source.kind === "local") error = ledger.openBooks(source.path)
+        else error = ledger.saveSettings("remote", "", source.url, source.private_ca || "")
+        if (error !== "") { showPassiveNotification(error, "long"); return }
+        if (source.kind === "local") { const info = JSON.parse(ledger.localBooksInfo()); if (info && info.name) source.name = info.name }
+        bookSource = source
+        current = "Overview"
+        pageStack.clear(); pageStack.push(overviewPage)
+        remember()
+    }
+    function newBooks() { saveDialog.mode = "new"; saveDialog.open() }
+    function openBooks() { openDialog.open() }
+    function saveCopy() { saveDialog.mode = "copy"; saveDialog.open() }
+    function connectServer() { connectDialog.open() }
+    function closeWindow() { runFileAction(function() { explicitClose = true; ledger.forgetWindow(windowId); root.close() }) }
+    function runFileAction(action) {
+        if (unsavedForm() !== null) { discardDialog.pendingAction = action; discardDialog.open() }
+        else action()
+    }
+    function localPath(url) { return decodeURIComponent(url.toString().replace(/^file:\/\//, "")) }
+    onCurrentChanged: remember()
+    onSelectedAccountChanged: remember()
+    onSelectedRowChanged: remember()
+    onClosing: function(close) {
+        if (!allowClose && unsavedForm() !== null) { close.accepted = false; runFileAction(function() { allowClose = true; root.close() }); return }
+        remember()
+        if (explicitClose || WindowManager.windows.length > 1) ledger.forgetWindow(windowId)
+        WindowManager.remove(root)
+    }
     // A language written right to left mirrors everything: layouts,
     // alignment, the drawers. The catalog says which way its language is
     // written, the same message translation.rs sets Qt's layout direction
@@ -48,8 +104,9 @@ Kirigami.ApplicationWindow {
     readonly property bool needsSignIn: auth.status === "signed_out" || auth.status === "expired"
     // Can't reach the server. Pages keep what they last loaded,
     // dimmed, and every write is off until it's back.
-    readonly property bool offline: ledger.error !== "" && !needsSignIn
-    readonly property bool canWrite: !offline && !needsSignIn
+    readonly property bool serverBooks: hasBooks && (!bookSource || bookSource.kind === "remote")
+    readonly property bool offline: serverBooks && ledger.error !== "" && !needsSignIn
+    readonly property bool canWrite: hasBooks && ledger.error === "" && !needsSignIn
     // The current destination: a key of `pages`, never the label shown
     // for it, which is translated.
     property string current: "Overview"
@@ -57,7 +114,38 @@ Kirigami.ApplicationWindow {
     // in the sidebar then.
     readonly property bool settingsOpen: pageStack.layers.currentItem !== null && pageStack.layers.currentItem.objectName === "settings"
 
-    Component.onCompleted: ledger.refresh()
+    Component.onCompleted: Qt.callLater(initialize)
+    function initialize() {
+        WindowManager.add(root)
+        const workspace = JSON.parse(ledger.workspaceJson())
+        recentBooks = workspace.recent || []
+        let state = initialState
+        if (!WindowManager.restored && !initialState) {
+            WindowManager.restored = true
+            const args = Qt.application.arguments
+            const chosen = args.find(a => a.endsWith(".kabacus"))
+            if (chosen) state = { id: windowId, source: { kind: "local", path: chosen, name: chosen.split("/").pop().replace(/\.kabacus$/, "") }, page: "Overview" }
+            else if (workspace.reopen && workspace.windows.length) {
+                state = workspace.windows[0]
+                for (let i = 1; i < workspace.windows.length; i++) WindowManager.create(workspace.windows[i])
+            }
+        }
+        if (state && state.source) {
+            windowId = state.id
+            width = state.width || width; height = state.height || height
+            openSource(state.source)
+            selectedAccount = state.account || ""; selectedRow = state.selected || ""
+            if (state.page && state.page !== "Overview" && pages[state.page]) { leaveFor(state.page, state.page === "Accounts" ? { open: selectedAccount } : {}) }
+            showPassiveNotification(i18n("Reopened where you left off"))
+        } else if (hasBooks) { pageStack.clear(); pageStack.push(overviewPage) }
+        ready = true; remember()
+        const control = Qt.application.arguments.findIndex(a => a === "--control")
+        if (hasBooks && ((state && state.automation) || control >= 0)) {
+            const error = ledger.savePreferences(workspace.reopen, true, control >= 0 ? Number(Qt.application.arguments[control + 1]) : (state ? state.control_port : 7979))
+            if (error) showPassiveNotification(error)
+        }
+        if (hasBooks) ledger.refresh()
+    }
 
     // Sign in through the system browser.
     function signIn() {
@@ -105,6 +193,7 @@ Kirigami.ApplicationWindow {
     // form, so one with something typed into it asks first.
     function go(name, props) {
         if (unsavedForm() !== null) {
+            discardDialog.pendingAction = null
             discardDialog.destination = name
             discardDialog.destinationProps = props || {}
             discardDialog.open()
@@ -123,6 +212,7 @@ Kirigami.ApplicationWindow {
 
     // An account's register beside the list (wide) or over it.
     function showRegister(account, name) {
+        selectedAccount = account
         ledger.check()
         while (pageStack.depth > 1) pageStack.pop()
         pageStack.push(registerPage, { account: account, accountName: name })
@@ -182,7 +272,7 @@ Kirigami.ApplicationWindow {
             root.saveFailed = null
             if (r.ok) {
                 while (root.pageStack.layers.depth > 1) root.pageStack.layers.pop()
-                root.showPassiveNotification(i18nc("%1 is the commit's short hash", "Saved as commit %1", r.ok.short), "long")
+                root.showPassiveNotification(i18nc("%1 is the revision number", "Saved as revision %1", r.ok.head), "long", i18n("View"), function() { root.go("Activity", {selected: r.ok.head}) })
                 return
             }
             if (r.error.kind === "conflict") {
@@ -196,19 +286,29 @@ Kirigami.ApplicationWindow {
 
     globalDrawer: Kirigami.GlobalDrawer {
         id: drawer
-        title: "Kabacus"
+        title: ""
+        topContent: Controls.ToolButton { text: root.bookSource ? root.bookSource.name : "Kabacus"; icon.name: "me.hallb.kabacus"; onClicked: filePopup.open() }
+        visible: root.hasBooks
         modal: root.narrow
         drawerOpen: !root.narrow
         handleVisible: false
         collapsible: true
         collapsed: !root.wide
         showHeaderWhenCollapsed: true
+        footer: ColumnLayout {
+            width: parent.width
+            Controls.ToolButton { text: i18n("Settings"); icon.name: "configure"; Layout.fillWidth: true; onClicked: root.openSettings() }
+            Controls.Label { text: root.bookSource && root.bookSource.kind === "remote" ? root.bookSource.url : i18n("On this computer"); font.bold: true; wrapMode: Text.Wrap; Layout.fillWidth: true }
+            Controls.Label { text: root.bookSource && root.bookSource.kind === "local" ? root.bookSource.path.substring(0, root.bookSource.path.lastIndexOf("/")) : root.auth.username || ""; wrapMode: Text.WrapAnywhere; Layout.fillWidth: true; font: Kirigami.Theme.smallFont }
+            Controls.Label { text: i18n("All changes saved"); font: Kirigami.Theme.smallFont }
+            Controls.Label { text: root.agent.agent ? i18n("%1 is working in these books", root.agent.agent) : ""; visible: text !== ""; wrapMode: Text.Wrap; Layout.fillWidth: true }
+        }
         actions: [
             Kirigami.Action { text: root.labels.Overview; icon.name: "go-home"; checked: !root.settingsOpen && root.current === "Overview"; onTriggered: root.go("Overview") },
             Kirigami.Action { text: root.labels.Accounts; icon.name: "wallet-open"; checked: !root.settingsOpen && root.current === "Accounts"; onTriggered: root.go("Accounts") },
             Kirigami.Action { text: root.labels.Funds; icon.name: "folder-text"; checked: !root.settingsOpen && root.current === "Funds"; onTriggered: root.go("Funds") },
-            Kirigami.Action { text: root.labels.Loans; icon.name: "view-bank"; checked: !root.settingsOpen && root.current === "Loans"; onTriggered: root.go("Loans") },
             Kirigami.Action { text: root.labels.Cards; icon.name: "view-credit-card"; checked: !root.settingsOpen && root.current === "Cards"; onTriggered: root.go("Cards") },
+            Kirigami.Action { text: root.labels.Loans; icon.name: "view-bank"; checked: !root.settingsOpen && root.current === "Loans"; onTriggered: root.go("Loans") },
             Kirigami.Action { text: root.labels.People; icon.name: "system-users"; checked: !root.settingsOpen && root.current === "People"; onTriggered: root.go("People") },
             Kirigami.Action { text: root.labels.Reports; icon.name: "office-chart-bar"; checked: !root.settingsOpen && root.current === "Reports"; onTriggered: root.go("Reports") },
             Kirigami.Action { text: root.labels.Activity; icon.name: "view-history"; checked: !root.settingsOpen && root.current === "Activity"; onTriggered: root.go("Activity") },
@@ -231,20 +331,33 @@ Kirigami.ApplicationWindow {
         window: root
         Labs.Menu {
             title: i18nc("@title:menu", "File")
-            Labs.MenuItem { text: i18n("Add transaction"); icon.name: "list-add"; enabled: root.canWrite; onTriggered: root.openChooser() }
-            Labs.MenuItem { text: i18n("Set aside"); icon.name: "folder-text"; enabled: root.canWrite; onTriggered: root.openForm("set_aside") }
+            Labs.MenuItem { text: i18n("New Window"); shortcut: root.globalMenu ? "Ctrl+Shift+N" : ""; onTriggered: root.newWindow() }
+            Labs.MenuItem { text: i18n("New Books…"); onTriggered: root.runFileAction(root.newBooks) }
+            Labs.MenuItem { text: i18n("Open Books…"); shortcut: root.globalMenu ? "Ctrl+O" : ""; onTriggered: root.runFileAction(root.openBooks) }
+            Labs.Menu {
+                id: nativeRecentMenu
+                title: i18n("Open Recent")
+                Instantiator {
+                    model: root.recentBooks
+                    delegate: Labs.MenuItem { required property var modelData; text: modelData.name; onTriggered: root.openSource(modelData) }
+                    onObjectAdded: function(index, object) { nativeRecentMenu.insertItem(index, object) }
+                    onObjectRemoved: function(index, object) { nativeRecentMenu.removeItem(object) }
+                }
+            }
+            Labs.MenuItem { text: i18n("Save a Copy As…"); shortcut: root.globalMenu ? "Ctrl+Shift+S" : ""; onTriggered: root.saveCopy() }
+            Labs.MenuItem { text: i18n("Close Window"); shortcut: root.globalMenu ? "Ctrl+Shift+W" : ""; onTriggered: root.closeWindow() }
             Labs.MenuSeparator {}
-            Labs.MenuItem { text: i18n("Refresh"); icon.name: "view-refresh"; onTriggered: root.ledger.refresh() }
-            Labs.MenuSeparator {}
-            Labs.MenuItem { text: i18nc("@action:inmenu", "Quit"); icon.name: "application-exit"; shortcut: StandardKey.Quit; onTriggered: root.close() }
+            Labs.MenuItem { text: i18n("Connect to a Server…"); onTriggered: root.runFileAction(root.connectServer) }
+            Labs.MenuItem { text: i18n("Quit"); shortcut: root.globalMenu ? "Ctrl+Q" : ""; onTriggered: WindowManager.quit() }
         }
         Labs.Menu {
             title: i18nc("@title:menu", "Go")
+            enabled: root.hasBooks
             Labs.MenuItem { text: root.labels.Overview; icon.name: "go-home"; onTriggered: root.go("Overview") }
             Labs.MenuItem { text: root.labels.Accounts; icon.name: "wallet-open"; onTriggered: root.go("Accounts") }
             Labs.MenuItem { text: root.labels.Funds; icon.name: "folder-text"; onTriggered: root.go("Funds") }
-            Labs.MenuItem { text: root.labels.Loans; icon.name: "view-bank"; onTriggered: root.go("Loans") }
             Labs.MenuItem { text: root.labels.Cards; icon.name: "view-credit-card"; onTriggered: root.go("Cards") }
+            Labs.MenuItem { text: root.labels.Loans; icon.name: "view-bank"; onTriggered: root.go("Loans") }
             Labs.MenuItem { text: root.labels.People; icon.name: "system-users"; onTriggered: root.go("People") }
             Labs.MenuItem { text: root.labels.Reports; icon.name: "office-chart-bar"; onTriggered: root.go("Reports") }
             Labs.MenuItem { text: root.labels.Activity; icon.name: "view-history"; onTriggered: root.go("Activity") }
@@ -261,27 +374,33 @@ Kirigami.ApplicationWindow {
         sourceComponent: Controls.MenuBar {
             Controls.Menu {
                 title: i18nc("@title:menu", "File")
-                Controls.MenuItem { text: i18n("Add transaction"); icon.name: "list-add"; enabled: root.canWrite; onTriggered: root.openChooser() }
-                Controls.MenuItem { text: i18n("Set aside"); icon.name: "folder-text"; enabled: root.canWrite; onTriggered: root.openForm("set_aside") }
-                Controls.MenuSeparator {}
-                Controls.MenuItem { text: i18n("Refresh"); icon.name: "view-refresh"; onTriggered: root.ledger.refresh() }
-                Controls.MenuSeparator {}
-                Controls.MenuItem {
-                    action: Controls.Action {
-                        text: i18nc("@action:inmenu", "Quit")
-                        icon.name: "application-exit"
-                        shortcut: StandardKey.Quit
-                        onTriggered: root.close()
+                    Controls.MenuItem { text: i18n("New Window"); onTriggered: root.newWindow() }
+                Controls.MenuItem { text: i18n("New Books…"); onTriggered: root.runFileAction(root.newBooks) }
+                Controls.MenuItem { text: i18n("Open Books…"); onTriggered: root.runFileAction(root.openBooks) }
+                Controls.Menu {
+                    id: recentMenu
+                    title: i18n("Open Recent")
+                    Instantiator {
+                        model: root.recentBooks
+                        delegate: Controls.MenuItem { required property var modelData; text: modelData.name; onTriggered: root.openSource(modelData) }
+                        onObjectAdded: function(index, object) { recentMenu.insertItem(index, object) }
+                        onObjectRemoved: function(index, object) { recentMenu.removeItem(object) }
                     }
                 }
+                Controls.MenuItem { text: i18n("Save a Copy As…"); onTriggered: root.saveCopy() }
+                Controls.MenuItem { text: i18n("Close Window"); onTriggered: root.closeWindow() }
+                Controls.MenuSeparator {}
+                Controls.MenuItem { text: i18n("Connect to a Server…"); onTriggered: root.runFileAction(root.connectServer) }
+                Controls.MenuItem { text: i18n("Quit"); onTriggered: WindowManager.quit() }
             }
             Controls.Menu {
                 title: i18nc("@title:menu", "Go")
+            enabled: root.hasBooks
                 Controls.MenuItem { text: root.labels.Overview; icon.name: "go-home"; onTriggered: root.go("Overview") }
                 Controls.MenuItem { text: root.labels.Accounts; icon.name: "wallet-open"; onTriggered: root.go("Accounts") }
                 Controls.MenuItem { text: root.labels.Funds; icon.name: "folder-text"; onTriggered: root.go("Funds") }
-                Controls.MenuItem { text: root.labels.Loans; icon.name: "view-bank"; onTriggered: root.go("Loans") }
                 Controls.MenuItem { text: root.labels.Cards; icon.name: "view-credit-card"; onTriggered: root.go("Cards") }
+                Controls.MenuItem { text: root.labels.Loans; icon.name: "view-bank"; onTriggered: root.go("Loans") }
                 Controls.MenuItem { text: root.labels.People; icon.name: "system-users"; onTriggered: root.go("People") }
                 Controls.MenuItem { text: root.labels.Reports; icon.name: "office-chart-bar"; onTriggered: root.go("Reports") }
                 Controls.MenuItem { text: root.labels.Activity; icon.name: "view-history"; onTriggered: root.go("Activity") }
@@ -327,7 +446,7 @@ Kirigami.ApplicationWindow {
         StatusBanner {
             id: authOff
             objectName: "authOff"
-            visible: root.auth.status === "off"
+            visible: root.serverBooks && root.auth.status === "off"
             text: i18n("Authentication off (local mode)")
         }
         StatusBanner {
@@ -417,10 +536,10 @@ Kirigami.ApplicationWindow {
 
     // Pick up changes made elsewhere (a hand edit, MCP, another
     // device) on return to the window and every minute while it's active.
-    onActiveChanged: if (active) ledger.check()
+    onActiveChanged: if (active && hasBooks) ledger.check()
     Timer {
         interval: 60000
-        running: root.active && !root.offline
+        running: root.active && root.hasBooks && !root.offline
         repeat: true
         onTriggered: root.ledger.check()
     }
@@ -450,11 +569,13 @@ Kirigami.ApplicationWindow {
         }
     }
 
-    pageStack.initialPage: overviewPage
+    pageStack.initialPage: welcomePage
     pageStack.anchors.topMargin: banners.height
     pageStack.defaultColumnWidth: Kirigami.Units.gridUnit * 20
     pageStack.globalToolBar.style: Kirigami.ApplicationHeaderStyle.ToolBar
 
+    Component { id: welcomePage; WelcomePage { app: root } }
+    Component { id: revisionPage; CommitPage { app: root } }
     Component { id: overviewPage; OverviewPage { app: root } }
     Component { id: accountsPage; AccountsPage { app: root } }
     Component { id: registerPage; RegisterPage { app: root } }
@@ -478,6 +599,7 @@ Kirigami.ApplicationWindow {
     Kirigami.PromptDialog {
         id: discardDialog
         objectName: "discardDialog"
+        property var pendingAction: null
         property string destination: ""
         property var destinationProps: ({})
         title: i18n("Discard this change?")
@@ -501,7 +623,8 @@ Kirigami.ApplicationWindow {
                 icon.name: "edit-delete"
                 onTriggered: {
                     discardDialog.close()
-                    root.leaveFor(discardDialog.destination, discardDialog.destinationProps)
+                    if (discardDialog.pendingAction) { const action = discardDialog.pendingAction; discardDialog.pendingAction = null; action() }
+                    else root.leaveFor(discardDialog.destination, discardDialog.destinationProps)
                 }
             }
         ]
@@ -512,22 +635,26 @@ Kirigami.ApplicationWindow {
         id: conflict
         property string who: ""
         property string what: ""
-        title: i18n("The books changed")
+        property Fetch latest: Fetch { ledger: root.ledger; view: conflict.visible ? "activity" : "" }
+        title: i18n("Someone saved first")
         subtitle: what !== ""
             ? i18nc("%1 is who, %2 what they changed", "%1 saved a change while you were reviewing: %2. Yours hasn't been written.", who, what)
             : i18nc("%1 is who", "%1 saved a change while you were reviewing. Yours hasn't been written.", who)
         standardButtons: Kirigami.Dialog.NoButton
         customFooterActions: [
             Kirigami.Action {
-                text: i18n("Discard mine")
-                icon.name: "edit-delete"
-                onTriggered: {
-                    conflict.close()
-                    while (root.pageStack.layers.depth > 1) root.pageStack.layers.pop()
-                }
+                text: i18n("See their change")
+                icon.name: "view-history"
+                enabled: conflict.latest.value !== null && conflict.latest.value.length > 0
+                onTriggered: { conflict.close(); root.pageStack.layers.push(revisionPage, {commit:conflict.latest.value[0]}) }
             },
             Kirigami.Action {
-                text: i18n("Review again")
+                text: i18n("Keep editing")
+                icon.name: "document-edit"
+                onTriggered: conflict.close()
+            },
+            Kirigami.Action {
+                text: i18n("Preview again")
                 icon.name: "view-refresh"
                 onTriggered: {
                     conflict.close()
@@ -539,5 +666,90 @@ Kirigami.ApplicationWindow {
                 }
             }
         ]
+    }
+
+    Shortcut { sequence: "Ctrl+Shift+N"; enabled: !root.globalMenu; onActivated: root.newWindow() }
+    Shortcut { sequence: "Ctrl+O"; enabled: !root.globalMenu; onActivated: root.runFileAction(root.openBooks) }
+    Shortcut { sequence: "Ctrl+Shift+S"; enabled: root.hasBooks && !root.globalMenu; onActivated: root.saveCopy() }
+    Shortcut { sequence: "Ctrl+Shift+W"; enabled: !root.globalMenu; onActivated: root.closeWindow() }
+    Shortcut { sequence: "Ctrl+Q"; enabled: !root.globalMenu; onActivated: WindowManager.quit() }
+    Instantiator {
+        model: ["Overview", "Accounts", "Funds", "Cards", "Loans", "People", "Reports", "Activity"]
+        delegate: Shortcut { required property int index; required property string modelData; sequence: "Ctrl+" + (index + 1); enabled: root.hasBooks; onActivated: root.go(modelData) }
+    }
+    Controls.Menu {
+        id: filePopup
+        Controls.MenuItem { text: i18n("New Window"); onTriggered: root.newWindow() }
+        Controls.MenuItem { text: i18n("New Books…"); onTriggered: root.runFileAction(root.newBooks) }
+        Controls.MenuItem { text: i18n("Open Books…"); onTriggered: root.runFileAction(root.openBooks) }
+        Controls.Menu { id: popupRecent; title: i18n("Open Recent")
+            Instantiator { model: root.recentBooks
+                delegate: Controls.MenuItem { required property var modelData; text: modelData.name; onTriggered: root.runFileAction(function() { root.openSource(modelData) }) }
+                onObjectAdded: function(index, object) { popupRecent.insertItem(index, object) }
+                onObjectRemoved: function(index, object) { popupRecent.removeItem(object) }
+            }
+        }
+        Controls.MenuItem { text: i18n("Save a Copy As…"); enabled: root.hasBooks; onTriggered: root.saveCopy() }
+        Controls.MenuItem { text: i18n("Close Window"); onTriggered: root.closeWindow() }
+        Controls.MenuItem { text: i18n("Connect to a Server…"); onTriggered: root.runFileAction(root.connectServer) }
+        Controls.MenuItem { text: i18n("Quit"); onTriggered: WindowManager.quit() }
+    }
+    Dialogs.FileDialog {
+        id: openDialog
+        title: i18n("Open Books…")
+        nameFilters: ["Kabacus (*.kabacus)"]
+        onAccepted: { const path = root.localPath(selectedFile); root.openSource({ kind: "local", path: path, name: path.split("/").pop().replace(/\.kabacus$/, "") }) }
+    }
+    Dialogs.FileDialog {
+        id: saveDialog
+        property string mode: "new"
+        title: mode === "new" ? i18n("New Books…") : i18n("Save a Copy As…")
+        fileMode: Dialogs.FileDialog.SaveFile
+        defaultSuffix: "kabacus"
+        nameFilters: ["Kabacus (*.kabacus)"]
+        onAccepted: {
+            if (mode === "copy") { const error = root.ledger.saveCopy(root.localPath(selectedFile)); if (error) root.showPassiveNotification(error) }
+            else { setupDialog.path = root.localPath(selectedFile); setupDialog.open() }
+        }
+    }
+    Kirigami.Dialog {
+        id: setupDialog
+        property string problem: ""
+        property string path: ""
+        title: i18n("New Books…")
+        standardButtons: Kirigami.Dialog.NoButton
+        preferredWidth: Kirigami.Units.gridUnit * 28
+        ColumnLayout {
+            Controls.Label { text: setupDialog.path; wrapMode: Text.WrapAnywhere; Layout.fillWidth: true }
+            Controls.Label { text: setupDialog.problem; visible: text !== ""; wrapMode: Text.Wrap; Layout.fillWidth: true }
+            Kirigami.FormLayout {
+                Controls.TextField { id: booksName; Accessible.name: i18n("Name"); Kirigami.FormData.label: i18n("Name"); text: "Household"; Layout.fillWidth: true }
+                Controls.TextField { id: currency; Accessible.name: i18n("Currency"); Kirigami.FormData.label: i18n("Currency"); text: "USD"; Layout.fillWidth: true }
+                Controls.TextField { id: firstAccount; Accessible.name: i18n("First account"); Kirigami.FormData.label: i18n("First account"); text: "assets:bank:checking"; Layout.fillWidth: true }
+            }
+            Controls.Button { text: i18n("Create books"); enabled: booksName.text !== "" && currency.text !== "" && firstAccount.text !== ""; onClicked: {
+                const error = root.ledger.newBooks(setupDialog.path, booksName.text, currency.text, firstAccount.text)
+                if (error) { setupDialog.problem = error; return }
+                setupDialog.problem = ""; setupDialog.close(); root.bookSource = { kind: "local", path: setupDialog.path, name: booksName.text }; root.current = "Overview"; root.pageStack.clear(); root.pageStack.push(overviewPage); root.remember()
+            } }
+        }
+    }
+    Kirigami.Dialog {
+        id: connectDialog
+        title: i18n("Connect to a Server…")
+        standardButtons: Kirigami.Dialog.NoButton
+        preferredWidth: Kirigami.Units.gridUnit * 30
+        ColumnLayout {
+            Kirigami.FormLayout {
+                Controls.TextField { id: serverAddress; Accessible.name: i18n("Server address"); Kirigami.FormData.label: i18n("Server address"); placeholderText: "https://books.example.org"; Layout.fillWidth: true }
+                Controls.TextField { id: privateCa; Accessible.name: i18n("Private CA"); Kirigami.FormData.label: i18n("Private CA"); Layout.fillWidth: true }
+            }
+            Controls.Button { text: i18n("Test connection"); onClicked: { const result = JSON.parse(root.ledger.testConnection("remote", "", serverAddress.text, privateCa.text)); root.showPassiveNotification(result.error || result.message) } }
+            Controls.Button { text: i18n("Connect"); enabled: serverAddress.text.startsWith("https://"); onClicked: { root.openSource({ kind: "remote", url: serverAddress.text, name: serverAddress.text.replace("https://", ""), private_ca: privateCa.text }); connectDialog.close() } }
+        }
+    }
+    Timer {
+        interval: 500; repeat: true; running: root.hasBooks
+        onTriggered: { const next = JSON.parse(root.ledger.agentActivity()) || {}; if (next.expires_at !== root.agent.expires_at) root.ledger.check(); root.agent = next }
     }
 }

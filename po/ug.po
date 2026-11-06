@@ -29,27 +29,27 @@ msgctxt "%1 is the closest account to what was typed"
 msgid "Use %1"
 msgstr "%1 نى ئىشلىتىش"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add"
 msgstr "قوشۇش"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Not signed in"
 msgstr "كىرمىدىڭىز"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Can't reach kabacus-server"
 msgstr "kabacus-server غا ئۇلانغىلى بولمىدى"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml
+#: crates/kabacus-kde/qml/AccountsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No accounts"
 msgstr "ھېسابات يوق"
 
-#: crates/kabacus-kde/qml/ActivityPage.qml crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/ActivityPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Activity"
 msgstr "پائالىيەت"
@@ -78,9 +78,14 @@ msgctxt "changes made by"
 msgid "External"
 msgstr "سىرتقى"
 
+#: crates/kabacus-kde/qml/ActivityPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Agent"
+msgstr "ۋاكالەتچى"
+
 #: crates/kabacus-kde/qml/ActivityPage.qml
 #, kde-format
-msgctxt "%1 is who made a change, %2 its commit"
+msgctxt "%1 is who made a change, %2 its revision"
 msgid "%1 · %2"
 msgstr "%1 · %2"
 
@@ -89,7 +94,7 @@ msgstr "%1 · %2"
 msgid "Can't load the history"
 msgstr "تارىخنى يۈكلىگىلى بولمىدى"
 
-#: crates/kabacus-kde/qml/ActivityPage.qml
+#: crates/kabacus-kde/qml/ActivityPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No changes"
 msgstr "ئۆزگىرىش يوق"
@@ -100,7 +105,7 @@ msgctxt "@action what happened"
 msgid "Spent"
 msgstr "خەجلەندى"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money left an account"
 msgstr "پۇل بىر ھېساباتتىن چىقتى"
@@ -111,67 +116,67 @@ msgctxt "@action what happened"
 msgid "Received"
 msgstr "تاپشۇرۇۋېلىندى"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Income or a refund"
 msgstr "كىرىم ياكى قايتۇرۇلغان پۇل"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Card purchase"
 msgstr "كارتا بىلەن سېتىۋېلىش"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Adds the reserve lines for you"
 msgstr "زاپاس قۇرلىرىنى سىز ئۈچۈن قوشىدۇ"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Transfer"
 msgstr "يۆتكەش"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Between two bank accounts"
 msgstr "ئىككى بانكا ھېساباتى ئارىسىدا"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Set aside"
 msgstr "ئايرىپ قويۇش"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Into a reserve, out, or between reserves"
 msgstr "زاپاسقا، ئۇنىڭدىن ياكى زاپاسلار ئارىسىدا"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Pay a card"
 msgstr "كارتا قەرزىنى تۆلەش"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "From its reserve"
 msgstr "ئۇنىڭ زاپىسىدىن"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Split with someone"
 msgstr "بىرسى بىلەن بۆلۈشۈش"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "They owe you, or you owe them"
 msgstr "ئۇلار سىزگە قەرزدار ياكى سىز ئۇلارغا قەرزدار"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Postings"
 msgstr "خاتىرىلەر"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Any two accounts"
 msgstr "خالىغان ئىككى ھېسابات"
@@ -181,17 +186,17 @@ msgstr "خالىغان ئىككى ھېسابات"
 msgid "Can't load cards"
 msgstr "كارتىلارنى يۈكلىگىلى بولمىدى"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No credit cards"
 msgstr "كرېدىت كارتىسى يوق"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Record purchase"
 msgstr "سېتىۋېلىشنى خاتىرىلەش"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Pay card"
 msgstr "كارتا قەرزىنى تۆلەش"
@@ -208,7 +213,7 @@ msgctxt "a card's reserve"
 msgid "Reserve"
 msgstr "زاپاس"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Still to reserve"
 msgstr "تېخى زاپاس قىلىش كېرەك"
@@ -225,7 +230,7 @@ msgid "%1 transaction moves the card without moving its reserve."
 msgid_plural "%1 transactions move the card without moving its reserve."
 msgstr[0] "%1 سودا كارتىنى زاپىسىنى ئۆزگەرتمەي ئۆزگەرتىدۇ."
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add all reserve lines"
 msgstr "ھەممە زاپاس قۇرلىرىنى قوشۇش"
@@ -242,17 +247,17 @@ msgctxt "%1 is an amount"
 msgid "Missing reserve %1"
 msgstr "زاپاس كەم %1"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add reserve lines"
 msgstr "زاپاس قۇرلىرىنى قوشۇش"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "What the reserve holds"
 msgstr "زاپاس نېمىلەردىن تەركىب تاپقان"
 
-#: crates/kabacus-kde/qml/CommitPage.qml
+#: crates/kabacus-kde/qml/CommitPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Open transaction"
 msgstr "سودىنى ئېچىش"
@@ -296,7 +301,7 @@ msgstr "زاپاسلارنى يۈكلىگىلى بولمىدى"
 msgid "No bank accounts with reserves yet"
 msgstr "ھازىرچە زاپاسى بار بانكا ھېساباتى يوق"
 
-#: crates/kabacus-kde/qml/FundsPage.qml
+#: crates/kabacus-kde/qml/FundsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "in the bank"
 msgstr "بانكىدا"
@@ -307,7 +312,7 @@ msgctxt "free money"
 msgid "Free"
 msgstr "بوش"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Card reserves"
 msgstr "كارتا زاپاسلىرى"
@@ -353,10 +358,15 @@ msgstr "RTL"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
+msgid "Reopened where you left off"
+msgstr "توختىغان جايدىن قايتا ئېچىلدى"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
 msgid "Signed out"
 msgstr "چېكىندىڭىز"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Overview"
 msgstr "ئومۇمىي كۆرۈنۈش"
@@ -385,26 +395,46 @@ msgctxt "destination: credit cards"
 msgid "Credit"
 msgstr "كرېدىت"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/PeoplePage.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/PeoplePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "People"
 msgstr "كىشىلەر"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/ReportsPage.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/ReportsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Reports"
 msgstr "دوكلاتلار"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
-msgctxt "%1 is the commit's short hash"
-msgid "Saved as commit %1"
-msgstr "%1 commit سۈپىتىدە ساقلاندى"
+msgctxt "%1 is the revision number"
+msgid "Saved as revision %1"
+msgstr "%1 تۈزىتىشى سۈپىتىدە ساقلاندى"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "View"
+msgstr "كۆر"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
 msgstr "تەڭشەكلەر"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "On this computer"
+msgstr "بۇ كومپيۇتېردا"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "All changes saved"
+msgstr "ھەممە ئۆزگەرتىش ساقلاندى"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 is working in these books"
+msgstr "%1 بۇ دەپتەرلەردە ئىشلەۋاتىدۇ"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
@@ -412,19 +442,43 @@ msgctxt "@title:menu"
 msgid "File"
 msgstr "ھۆججەت"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Add transaction"
-msgstr "سودا قوشۇش"
+msgid "New Window"
+msgstr "يېڭى كۆزنەك"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Refresh"
-msgstr "يېڭىلاش"
+msgid "New Books…"
+msgstr "يېڭى دەپتەرلەر…"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "@action:inmenu"
+msgid "Open Books…"
+msgstr "دەپتەرلەرنى ئاچ…"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Open Recent"
+msgstr "يېقىنقىنى ئاچ"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Save a Copy As…"
+msgstr "كۆپەيتمىسىنى باشقا ئاتتا ساقلا…"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Close Window"
+msgstr "كۆزنەكنى ياپ"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connect to a Server…"
+msgstr "مۇلازىمېتىرغا ئۇلا…"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Quit"
 msgstr "چېكىن"
 
@@ -445,7 +499,7 @@ msgctxt "the other destinations"
 msgid "More"
 msgstr "تېخىمۇ كۆپ"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Authentication off (local mode)"
 msgstr "دەلىللەش تاقالغان (يەرلىك ھالەت)"
@@ -472,7 +526,7 @@ msgstr "ھېساباتىڭىزنى كۆرۈش ئۈچۈن %1 بىلەن كىرى�
 msgid "Sign in again"
 msgstr "قايتا كىرىش"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr "كىرىش"
@@ -482,7 +536,7 @@ msgstr "كىرىش"
 msgid "Finish signing in in your browser…"
 msgstr "كىرىشنى توركۆرگۈدە تاماملاڭ…"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cancel"
 msgstr "ۋاز كېچىش"
@@ -493,17 +547,17 @@ msgctxt "%1 is why the server can't be reached, as one sentence"
 msgid "%1 Showing what was loaded; changes are off until it's back."
 msgstr "%1 يۈكلەنگەن نەرسە كۆرسىتىلىۋاتىدۇ؛ ئۇلىنىش قايتقۇچە ئۆزگەرتىش تاقالغان."
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Retry"
 msgstr "قايتا سىناش"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/src/views.rs
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Details"
 msgstr "تەپسىلات"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connection settings"
 msgstr "ئۇلىنىش تەڭشەكلىرى"
@@ -513,7 +567,7 @@ msgstr "ئۇلىنىش تەڭشەكلىرى"
 msgid "Error details"
 msgstr "خاتالىق تەپسىلاتى"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Discard this change?"
 msgstr "بۇ ئۆزگىرىش تاشلىۋېتىلسۇنمۇ؟"
@@ -523,7 +577,7 @@ msgstr "بۇ ئۆزگىرىش تاشلىۋېتىلسۇنمۇ؟"
 msgid "What you typed hasn't been saved."
 msgstr "سىز يازغانلار ساقلانمىدى."
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Keep editing"
 msgstr "تەھرىرلەشنى داۋاملاشتۇرۇش"
@@ -533,10 +587,10 @@ msgstr "تەھرىرلەشنى داۋاملاشتۇرۇش"
 msgid "Discard"
 msgstr "تاشلىۋېتىش"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "The books changed"
-msgstr "ھېسابات ئۆزگەردى"
+msgid "Someone saved first"
+msgstr "باشقىلار ئالدىن ساقلىدى"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
@@ -550,37 +604,82 @@ msgctxt "%1 is who"
 msgid "%1 saved a change while you were reviewing. Yours hasn't been written."
 msgstr "سىز تەكشۈرۈۋاتقاندا %1 بىر ئۆزگىرىشنى ساقلىدى. سىزنىڭكى يېزىلمىدى."
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Discard mine"
-msgstr "مېنىڭكىنى تاشلىۋېتىش"
+msgid "See their change"
+msgstr "ئۇلارنىڭ ئۆزگەرتىشىنى كۆر"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Review again"
-msgstr "قايتا تەكشۈرۈش"
+msgid "Preview again"
+msgstr "قايتا ئالدىن كۆزەت"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Name"
+msgstr "ئاتى"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Currency"
+msgstr "پۇل بىرلىكى"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "First account"
+msgstr "تۇنجى ھېساب"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Create books"
+msgstr "دەپتەر قۇر"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Server address"
+msgstr "مۇلازىمېتىر ئادرېسى"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Private CA"
+msgstr "شەخسىي گۇۋاھنامە ئورگىنى"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Test connection"
+msgstr "ئۇلىنىشنى سىناش"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connect"
+msgstr "ئۇلا"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Refresh"
+msgstr "يېڭىلاش"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr "خەجلىگىلى بولىدىغان پۇلنى يۈكلىگىلى بولمىدى"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr "يۈكلىنىۋاتىدۇ…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cash on Hand"
 msgstr "خەجلىگىلى بولىدىغان پۇل"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "خەجلىگىلى بولىدىغان پۇل ھەققىدە"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr "زاپاسلار ۋە كارتا زاپاسلىرىدىن كېيىن ھازىرلا خەجلىگىلى بولىدىغان بوش پۇل."
@@ -597,17 +696,17 @@ msgctxt "%1 is an amount"
 msgid "Cash on Hand %1"
 msgstr "خەجلىگىلى بولىدىغان پۇل %1"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money on Hand"
 msgstr "قولدىكى پۇل"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Money on Hand"
 msgstr "قولدىكى پۇل ھەققىدە"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Everything in your bank accounts, reserves and card reserves included, plus what people owe you. Cash on Hand is what's left once reserves, card reserves and what you're owed are set apart."
 msgstr "بانكا ھېساباتلىرىڭىزدىكى ھەممە نەرسە، زاپاسلار ۋە كارتا زاپاسلىرىنى قوشۇپ، ئۇنىڭ ئۈستىگە باشقىلارنىڭ سىزگە قەرزى. خەجلىگىلى بولىدىغان پۇل زاپاسلار، كارتا زاپاسلىرى ۋە سىزگە تېگىشلىك پۇل ئايرىۋېتىلگەندىن كېيىن قالغىنىدۇر."
@@ -622,7 +721,7 @@ msgstr "− كەلگۈسى تەقسىمات (زاپاسلار ۋە كارتا ز
 msgid "− Receivables (owed to you)"
 msgstr "− ئالىدىغان پۇل (سىزگە قەرزدار بولغانلار)"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Free money by account"
 msgstr "ھېسابات بويىچە بوش پۇل"
@@ -638,7 +737,7 @@ msgstr "%1 بوش %2"
 msgid "No account has free money right now."
 msgstr "ھازىر ھېچقانداق ھېساباتتا بوش پۇل يوق."
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Nothing is set aside in a reserve."
 msgstr "ھېچقانداق زاپاسقا ھېچنېمە ئايرىپ قويۇلمىغان."
@@ -649,12 +748,12 @@ msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "قاپلانغان"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Each card's reserve should equal what it owes."
 msgstr "ھەر بىر كارتىنىڭ زاپىسى ئۇنىڭ قەرزىگە تەڭ بولۇشى كېرەك."
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cash on Hand over time"
 msgstr "ۋاقىت بويىچە خەجلىگىلى بولىدىغان پۇل"
@@ -693,7 +792,7 @@ msgstr "كىشىلەرنى يۈكلىگىلى بولمىدى"
 msgid "Nobody owes or is owed anything"
 msgstr "ھېچكىم ھېچكىمگە قەرزدار ئەمەس"
 
-#: crates/kabacus-kde/qml/PreviewPane.qml
+#: crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "What changes"
 msgstr "نېمە ئۆزگىرىدۇ"
@@ -768,17 +867,17 @@ msgctxt "%1 is the books' balance, %2 the statement's, %3 the difference"
 msgid "Doesn't match yet: the books say %1, the statement %2 (difference %3). Nothing has been written."
 msgstr "تېخى ماس ئەمەس: ھېسابات %1 دەيدۇ، تالون %2 (پەرق %3). ھېچنېمە يېزىلمىدى."
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Reconcile"
 msgstr "سېلىشتۇرۇش"
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Likely explanations"
 msgstr "مۇمكىن بولغان چۈشەندۈرۈشلەر"
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Edit"
 msgstr "تەھرىرلەش"
@@ -795,7 +894,12 @@ msgctxt "money moved between an account and its funds"
 msgid "within account"
 msgstr "ھېسابات ئىچىدە"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Add transaction"
+msgstr "سودا قوشۇش"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account type"
 msgstr "ھېسابات تىپى"
@@ -806,17 +910,17 @@ msgctxt "@action compare an account with its statement"
 msgid "Reconcile…"
 msgstr "سېلىشتۇرۇش…"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Search"
 msgstr "ئىزدەش"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Search payee, memo, account"
 msgstr "تاپشۇرۇۋالغۇچى، ئىزاھات، ھېسابات ئىزدەش"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Unreserved only"
 msgstr "زاپاسسىزلارلا"
@@ -856,12 +960,12 @@ msgctxt "%1 is what was searched for"
 msgid "No transactions match “%1”"
 msgstr "«%1» غا ماس كېلىدىغان سودا يوق"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No unreserved transactions"
 msgstr "زاپاسسىز سودا يوق"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr "سودا يوق"
@@ -887,17 +991,17 @@ msgstr "ئالدىنقى ئاي"
 msgid "Next month"
 msgstr "كېيىنكى ئاي"
 
-#: crates/kabacus-kde/qml/ReportsPage.qml
+#: crates/kabacus-kde/qml/ReportsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cash flow"
 msgstr "نەق پۇل ئېقىمى"
 
-#: crates/kabacus-kde/qml/ReportsPage.qml
+#: crates/kabacus-kde/qml/ReportsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Income statement"
 msgstr "كىرىم دوكلاتى"
 
-#: crates/kabacus-kde/qml/ReportsPage.qml
+#: crates/kabacus-kde/qml/ReportsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Categories"
 msgstr "تۈرلەر"
@@ -944,7 +1048,7 @@ msgctxt "@label income less expenses"
 msgid "Net:"
 msgstr "ساپ:"
 
-#: crates/kabacus-kde/qml/ReportsPage.qml
+#: crates/kabacus-kde/qml/ReportsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Count loan principal as money spent"
 msgstr "قەرز ئەسلى پۇلىنى قايتۇرۇشنى چىقىم دەپ ھېسابلاش"
@@ -967,12 +1071,12 @@ msgctxt "%1 is a month and year"
 msgid "No spending in %1"
 msgstr "%1 دە چىقىم يوق"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml
+#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
 msgstr "ساقلاشتىن ئىلگىرى تەكشۈرۈش"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml
+#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Back to edit"
 msgstr "تەھرىرلەشكە قايتىش"
@@ -982,12 +1086,12 @@ msgstr "تەھرىرلەشكە قايتىش"
 msgid "Saving…"
 msgstr "ساقلاۋاتىدۇ…"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Save"
 msgstr "ساقلاش"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Checking with the server…"
 msgstr "مۇلازىمېتىر بىلەن تەكشۈرۈۋاتىدۇ…"
@@ -1003,187 +1107,57 @@ msgstr "بۇ قالدۇق تەكشۈرۈشىنى بۇزىدۇ: %1 %2 بولۇش�
 msgid "Change the transaction"
 msgstr "سودىنى ئۆزگەرتىش"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Test connection"
-msgstr "ئۇلىنىشنى سىناش"
+msgid "When Kabacus starts"
+msgstr "Kabacus قوزغالغاندا"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Connection settings saved"
-msgstr "ئۇلىنىش تەڭشەكلىرى ساقلاندى"
+msgid "Reopen my windows"
+msgstr "كۆزنەكلىرىمنى قايتا ئاچ"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "@label"
-msgid "Server:"
-msgstr "مۇلازىمېتىر:"
+msgid "Show Welcome when this is off."
+msgstr "بۇ تاقالغاندا قارشى ئېلىش بېتىنى كۆرسەت."
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "On this computer"
-msgstr "بۇ كومپيۇتېردا"
+msgid "Automation"
+msgstr "ئاپتوماتلاشتۇرۇش"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "On another computer (HTTPS)"
-msgstr "باشقا كومپيۇتېردا (HTTPS)"
+msgid "Let agents drive this window"
+msgstr "ۋاكالەتچىلەرنىڭ بۇ كۆزنەكنى باشقۇرۇشىغا يول قوي"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "the server's unix socket"
-msgid "Socket"
-msgstr "سوكېت"
+msgid "Control port"
+msgstr "باشقۇرۇش ئېغىزى"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "@label the server's unix socket"
-msgid "Socket:"
-msgstr "سوكېت:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Server address"
-msgstr "مۇلازىمېتىر ئادرېسى"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label"
-msgid "Server address:"
-msgstr "مۇلازىمېتىر ئادرېسى:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label a private certificate authority"
-msgid "Private CA:"
-msgstr "شەخسىي CA:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "a private certificate authority"
-msgid "Private CA"
-msgstr "شەخسىي CA"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "System certificates only"
-msgstr "سىستېما گۇۋاھنامىلىرىلا"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Choose…"
-msgstr "تاللاش…"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Only needed when the server's certificate comes from your own CA."
-msgstr "مۇلازىمېتىرنىڭ گۇۋاھنامىسى ئۆزىڭىزنىڭ CA سىدىن كەلسىلا لازىم."
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@title the signed-in user"
 msgid "Account"
 msgstr "ھېسابات"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label"
-msgid "Signed in:"
-msgstr "كىرگەن:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Not needed: authentication is off (local mode)"
-msgstr "لازىم ئەمەس: دەلىللەش تاقالغان (يەرلىك ھالەت)"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "%1 is the user, %2 the sign-in provider"
-msgid "%1 (%2)"
-msgstr "%1 (%2)"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "signed in; %1 is the sign-in provider"
-msgid "Yes (%1)"
-msgstr "ھەئە (%1)"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Session ended; sign in again"
-msgstr "ئەڭگىمە ئاخىرلاشتى؛ قايتا كىرىڭ"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "not signed in"
-msgid "No"
-msgstr "ياق"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Unknown: can't reach the server"
-msgstr "نامەلۇم: مۇلازىمېتىرغا ئۇلانغىلى بولمىدى"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Waiting for the browser…"
-msgstr "توركۆرگۈنى ساقلاۋاتىدۇ…"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign out"
 msgstr "چېكىنىش"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "@title about the server"
 msgid "About"
 msgstr "ھەققىدە"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Can't reach the server to read its version"
-msgstr "نەشرىنى ئوقۇش ئۈچۈن مۇلازىمېتىرغا ئۇلانغىلى بولمىدى"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label the server's version"
-msgid "Server version:"
-msgstr "مۇلازىمېتىر نەشرى:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label the commit the server was built from"
-msgid "Commit:"
-msgstr "Commit:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label where the server's source code is"
-msgid "Source code:"
-msgstr "مەنبە كودى:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Open the source code"
 msgstr "مەنبە كودىنى ئېچىش"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Choose the private CA"
-msgstr "شەخسىي CA نى تاللاش"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Certificates (*.pem *.crt)"
-msgstr "گۇۋاھنامىلەر (*.pem *.crt)"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "All files (*)"
-msgstr "ھەممە ھۆججەتلەر (*)"
-
-#: crates/kabacus-kde/qml/StatementPage.qml
+#: crates/kabacus-kde/qml/StatementPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Open items only"
 msgstr "ئوچۇق تۈرلەرلا"
@@ -1204,17 +1178,17 @@ msgstr "تالوننى يۈكلىگىلى بولمىدى"
 msgid "Nothing this year"
 msgstr "بۇ يىل ھېچنېمە يوق"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Set money aside"
 msgstr "پۇلنى ئايرىپ قويۇش"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Edit transaction"
 msgstr "سودىنى تەھرىرلەش"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Fix reserve lines"
 msgstr "زاپاس قۇرلىرىنى ئوڭشاش"
@@ -1253,17 +1227,17 @@ msgctxt "@option cancel a transaction with a reversal"
 msgid "Void"
 msgstr "بىكار قىلىش"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Only the reversal: it didn't happen."
 msgstr "قايتۇرۇشلا: يۈز بەرمىگەن دەپ قارىلىدۇ."
 
-#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Real account"
 msgstr "ھەقىقىي ھېسابات"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Synthetic account"
 msgstr "مەۋھۇم ھېسابات"
@@ -1286,7 +1260,7 @@ msgctxt "@label"
 msgid "Payee:"
 msgstr "تاپشۇرۇۋالغۇچى:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Payee"
 msgstr "تاپشۇرۇۋالغۇچى"
@@ -1297,7 +1271,7 @@ msgctxt "%1 is a payee, %2 the category it usually has, %3 the amount it had las
 msgid "%1 — usually %2, last %3"
 msgstr "%1 — ئادەتتە %2، ئاخىرقى قېتىم %3"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Paid with"
 msgstr "تۆلەش ۋاستىسى"
@@ -1313,7 +1287,7 @@ msgstr "قەيەردىن"
 msgid "That's a card: record a card purchase so its reserve stays covered."
 msgstr "بۇ كارتا: زاپىسى قاپلانغان ھالەتتە تۇرۇشى ئۈچۈن كارتا بىلەن سېتىۋېلىش قىلىپ خاتىرىلەڭ."
 
-#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Category"
 msgstr "تۈر"
@@ -1336,7 +1310,7 @@ msgctxt "@label"
 msgid "Paid from:"
 msgstr "تۆلەنگەن جاي:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Free money"
 msgstr "بوش پۇل"
@@ -1370,7 +1344,7 @@ msgctxt "@label"
 msgid "Amount:"
 msgstr "سومما:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Amount"
 msgstr "سومما"
@@ -1381,7 +1355,7 @@ msgctxt "@label"
 msgid "Their share:"
 msgstr "ئۇلارنىڭ ئۈلۈشى:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Their share"
 msgstr "ئۇلارنىڭ ئۈلۈشى"
@@ -1404,7 +1378,7 @@ msgctxt "@label"
 msgid "Date:"
 msgstr "چېسلا:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Date"
 msgstr "چېسلا"
@@ -1421,7 +1395,7 @@ msgctxt "@label"
 msgid "Memo:"
 msgstr "ئىزاھات:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Memo"
 msgstr "ئىزاھات"
@@ -1449,7 +1423,7 @@ msgstr "كارتا قاپلانغان ھالەتتە تۇرۇشى ئۈچۈن س�
 msgid "Also moves the amount from the reserve into the card's reserve, so the card stays covered."
 msgstr "كارتا قاپلانغان ھالەتتە تۇرسۇن ئۈچۈن سوممىنى زاپاستىن كارتىنىڭ زاپاسىغىمۇ يۆتكەيدۇ."
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Preview"
 msgstr "ئالدىن كۆرۈش"
@@ -1459,12 +1433,22 @@ msgstr "ئالدىن كۆرۈش"
 msgid "Updates as you type. Nothing is written until you save."
 msgstr "يېزىۋاتقاندا يېڭىلىنىدۇ. ساقلىمىغۇچە ھېچنېمە يېزىلمايدۇ."
 
+#: crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Welcome to Kabacus"
+msgstr "Kabacus قا خۇش كەلدىڭىز"
+
+#: crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Your books, on this computer. Every change is saved."
+msgstr "دەپتەرلىرىڭىز بۇ كومپيۇتېردا. ھەر بىر ئۆزگەرتىش ساقلىنىدۇ."
+
 #: crates/kabacus-kde/src/auth.rs
 #, kde-format
 msgid "The server uses OAuth but didn't say which provider"
 msgstr "مۇلازىمېتىر OAuth ئىشلىتىدۇ، ئەمما قايسى تەمىنلىگۈچىنى ئېيتمىدى"
 
-#: crates/kabacus-kde/src/auth.rs
+#: crates/kabacus-kde/src/auth.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The server uses OAuth but has no client id for the app"
 msgstr "مۇلازىمېتىر OAuth ئىشلىتىدۇ، ئەمما ئەپ ئۈچۈن خېرىدار ID سى يوق"
@@ -1520,12 +1504,12 @@ msgctxt "%1 is the server's address"
 msgid "Can't reach kabacus-server at %1. Is it running?"
 msgstr "%1 دىكى kabacus-server غا ئۇلانغىلى بولمىدى. ئۇ ئىجرا بولۇۋاتامدۇ؟"
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The server is taking too long to answer."
 msgstr "مۇلازىمېتىر جاۋاب بېرىشكە بەك ئۇزۇن ۋاقىت كېتىۋاتىدۇ."
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Your session ended. Sign in again."
 msgstr "ئەڭگىمەڭىز ئاخىرلاشتى. قايتا كىرىڭ."
@@ -1545,12 +1529,12 @@ msgstr "بۇ ھېساباتنى كۆرەلەيسىز، ئەمما ئۆزگەرت
 msgid "That isn't in the books any more."
 msgstr "بۇ ئەمدى ھېساباتتا يوق."
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The books changed while you were editing. Review again."
 msgstr "سىز تەھرىرلەۋاتقاندا ھېسابات ئۆزگەردى. قايتا تەكشۈرۈڭ."
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The server had a problem."
 msgstr "مۇلازىمېتىردا مەسىلە كۆرۈلدى."
@@ -1561,7 +1545,7 @@ msgctxt "between the items of a list, such as amounts or account names"
 msgid ", "
 msgstr "، "
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "All transactions"
 msgstr "ھەممە سودىلار"
@@ -1600,10 +1584,10 @@ msgstr "سومما نۆلدىن چوڭ بولۇشى كېرەك"
 
 #: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
 #, kde-format
-msgid "The books have no commits yet"
-msgstr "ھېساباتتا تېخى commit يوق"
+msgid "The books have no revisions yet"
+msgstr "دەپتەرلەردە تېخى تۈزىتىش يوق"
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Split transactions can't be edited here yet"
 msgstr "بۆلۈنگەن سودىلارنى بۇ يەردە تېخى تەھرىرلىگىلى بولمايدۇ"
@@ -1648,7 +1632,7 @@ msgctxt "%1 is a file, %2 why it can't be read"
 msgid "Can't read the private CA %1: %2"
 msgstr "شەخسىي CA %1 نى ئوقۇغىلى بولمىدى: %2"
 
-#: crates/kabacus-kde/src/settings.rs
+#: crates/kabacus-kde/src/settings.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The server address must start with https://"
 msgstr "مۇلازىمېتىر ئادرېسى https:// بىلەن باشلىنىشى كېرەك"
@@ -1783,7 +1767,7 @@ msgctxt "%1 is the card's reserve"
 msgid "Reserve %1"
 msgstr "زاپاس %1"
 
-#: crates/kabacus-kde/src/views.rs
+#: crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Owes you"
 msgstr "سىزگە قەرزدار"
@@ -1811,12 +1795,12 @@ msgctxt "Cash on Hand at the end"
 msgid "Closing"
 msgstr "ئاخىرلىشىش"
 
-#: crates/kabacus-kde/src/views.rs
+#: crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Set aside in reserves"
 msgstr "زاپاسلارغا ئايرىپ قويۇلدى"
 
-#: crates/kabacus-kde/src/views.rs
+#: crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loan principal"
 msgstr "قەرز ئەسلى پۇلى"
@@ -1882,7 +1866,7 @@ msgstr "نۆلدىن چوڭ بولۇشى كېرەك"
 msgid "Enter an amount"
 msgstr "سومما كىرگۈزۈڭ"
 
-#: crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Not an amount: use digits and a decimal point, like 12.34"
 msgstr "بۇ سومما ئەمەس: رەقەم ۋە ئونلۇق نۇقتا ئىشلىتىڭ، مەسىلەن 12.34"
@@ -1904,7 +1888,7 @@ msgid "Use at most %1 decimal place"
 msgid_plural "Use at most %1 decimal places"
 msgstr[0] "ئەڭ كۆپ بولغاندا %1 خانە ئونلۇق ئىشلىتىڭ"
 
-#: crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name the new reserve"
 msgstr "يېڭى زاپاسقا ئات قويۇڭ"
@@ -2003,7 +1987,7 @@ msgstr "ئۇلارنىڭ ئۈلۈشى جەمئىيدىن كۆپ بولالماي
 msgid "The transaction"
 msgstr "سودا"
 
-#: crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Choose at least one transaction"
 msgstr "كەم دېگەندە بىر سودا تاللاڭ"
@@ -2047,7 +2031,7 @@ msgstr "بىرەرسى"
 msgid "Nothing to save: the books already say this."
 msgstr "ساقلايدىغان نەرسە يوق: ھېسابات ئاللىقاچان شۇنداق."
 
-#: crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The books still check out with this change"
 msgstr "بۇ ئۆزگەرتىش بىلەنمۇ دەپتەرلەر توغرا"
@@ -2058,10 +2042,489 @@ msgctxt "%1 is a card"
 msgid "%1 stays covered by its reserve"
 msgstr "%1 ئۇنىڭ زاپىسى بىلەن قاپلانغان پېتى تۇرىدۇ"
 
-#: crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "A card is missing its reserve lines; it will be flagged"
 msgstr "بىر كارتىنىڭ زاپاس قۇرلىرى كەم؛ ئۇ بەلگە قويۇلىدۇ"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Sign in to %1"
+msgstr "%1 غا كىرىش"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Back to my books"
+msgstr "دەپتەرلىرىمگە قايت"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 saved a change while you were reviewing: %2. Yours hasn't been written."
+msgstr "سىز تەكشۈرۈۋاتقاندا %1 بىر ئۆزگىرىشنى ساقلىدى: %2. سىزنىڭكى يېزىلمىدى."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Matched: %1 on %2, the same as the statement."
+msgstr "ماس كېلىدۇ: %2 دە %1، تالونغا ئوخشاش."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Doesn't match yet: the books say %1, the statement %2 (difference %3). Nothing has been written."
+msgstr "تېخى ماس ئەمەس: ھېسابات %1 دەيدۇ، تالون %2 (پەرق %3). ھېچنېمە يېزىلمىدى."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Other"
+msgstr "باشقا"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "MCP"
+msgstr "MCP"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "External edit"
+msgstr "سىرتقى تەھرىرلەش"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Fix"
+msgstr "ئوڭشاش"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connection settings saved"
+msgstr "ئۇلىنىش تەڭشەكلىرى ساقلاندى"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Spent"
+msgstr "خەجلەندى"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Received"
+msgstr "تاپشۇرۇۋېلىندى"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Who"
+msgstr "كىم"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Loans"
+msgstr "قەرزلەر"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Investments"
+msgstr "مەبلەغ سېلىشلار"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Void"
+msgstr "بىكار قىلىش"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Card"
+msgstr "كارتا"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Paid from:"
+msgstr "تۆلەنگەن جاي:"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 → %2"
+msgstr "%1 ← %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reconcile…"
+msgstr "سېلىشتۇرۇش…"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Opening"
+msgstr "باشلىنىش"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Closing"
+msgstr "ئاخىرلىشىش"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash"
+msgstr "نەق پۇل"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Not cash"
+msgstr "نەق ئەمەس"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "vs %1"
+msgstr "%1 بىلەن سېلىشتۇرغاندا"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Income"
+msgstr "كىرىم"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Spending"
+msgstr "چىقىملار"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Net:"
+msgstr "ساپ:"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Money"
+msgstr "پۇل"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Go"
+msgstr "يۆتكەل"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
+msgstr "مۇئامىلىلەر"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reserves"
+msgstr "زاپاسلار"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This app"
+msgstr "بۇ ئەپ"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "قەرز"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reserve"
+msgstr "زاپاس"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "unreserved"
+msgstr "زاپاسسىز"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Check"
+msgstr "تەكشۈرۈش"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Review"
+msgstr "تەكشۈرۈش"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Unknown"
+msgstr "نامەلۇم"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "All"
+msgstr "ھەممىسى"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "From"
+msgstr "قەيەردىن"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "To"
+msgstr "قەيەرگە"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cards"
+msgstr "كارتىلار"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "LTR"
+msgstr "RTL"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 (%2)"
+msgstr "%1 · %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 unreserved"
+msgstr "%1 زاپاسسىز"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Accounts"
+msgstr "ھېساباتلار"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Add — what happened?"
+msgstr "قوش — نېمە بولدى؟"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Allow editing again"
+msgstr "قايتا تەھرىرلەشكە يول قوي"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Balanced · checked against revision %1"
+msgstr "تەڭپۇڭ · %1 تۈزىتىشىگە سېلىشتۇرۇپ تەكشۈرۈلدى"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Bank & cash"
+msgstr "بانكا ۋە نەق پۇل"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Browser storage"
+msgstr "توركۆرگۈ ساقلىغۇچى"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Can't save these books. Check the folder's permissions and available space."
+msgstr "دەپتەرلەرنى ساقلىغىلى بولمايدۇ. قىسقۇچ ئىجازىتى ۋە بوش ئورۇننى تەكشۈرۈڭ."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Choose a new file name; these books already exist."
+msgstr "يېڭى ھۆججەت ئاتىنى تاللاڭ؛ بۇ دەپتەرلەر مەۋجۇت."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Choose what happened. The form fills in the lines; you see what changes before you save."
+msgstr "نېمە بولغانلىقىنى تاللاڭ. جەدۋەل خاتىرە قۇرلىرىنى تولدۇرىدۇ؛ ساقلاشتىن بۇرۇن ئۆزگەرتىشنى كۆرەلەيسىز."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Close"
+msgstr "ياپ"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connected"
+msgstr "ئۇلاندى"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Credit"
+msgstr "كرېدىت"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Nothing is set aside yet"
+msgstr "تېخى ھېچنېمە ئايرىلمىدى"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Pick up where you left off"
+msgstr "توختىغان جايدىن داۋاملاشتۇرۇڭ"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reopen"
+msgstr "قايتا ئاچ"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reserved"
+msgstr "ئايرىلغان"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
+msgstr "زاپاس پۇل ئۆي بېجى ياكى ماشىنا رېمونتىدەك كېيىنكى چىقىم ئۈچۈن ساقلىنىدۇ. پۇل بانكا ھېسابىڭىزدا قالىدۇ."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Saved as revision %1"
+msgstr "%1 تۈزىتىشى سۈپىتىدە ساقلاندى"
+
+#, kde-format
+#~ msgid "The books changed"
+#~ msgstr "ھېسابات ئۆزگەردى"
+
+#, kde-format
+#~ msgid "Discard mine"
+#~ msgstr "مېنىڭكىنى تاشلىۋېتىش"
+
+#, kde-format
+#~ msgid "Review again"
+#~ msgstr "قايتا تەكشۈرۈش"
+
+#, kde-format
+#~ msgid "The books have no commits yet"
+#~ msgstr "ھېساباتتا تېخى commit يوق"
+
+#, kde-format
+#~ msgctxt "%1 is who made a change, %2 its commit"
+#~ msgid "%1 · %2"
+#~ msgstr "%1 · %2"
+
+#, kde-format
+#~ msgctxt "%1 is the commit's short hash"
+#~ msgid "Saved as commit %1"
+#~ msgstr "%1 commit سۈپىتىدە ساقلاندى"
+
+#, kde-format
+#~ msgctxt "@action:inmenu"
+#~ msgid "Quit"
+#~ msgstr "چېكىن"
+
+#, kde-format
+#~ msgctxt "@label"
+#~ msgid "Server:"
+#~ msgstr "مۇلازىمېتىر:"
+
+#, kde-format
+#~ msgid "On another computer (HTTPS)"
+#~ msgstr "باشقا كومپيۇتېردا (HTTPS)"
+
+#, kde-format
+#~ msgctxt "the server's unix socket"
+#~ msgid "Socket"
+#~ msgstr "سوكېت"
+
+#, kde-format
+#~ msgctxt "@label the server's unix socket"
+#~ msgid "Socket:"
+#~ msgstr "سوكېت:"
+
+#, kde-format
+#~ msgctxt "@label"
+#~ msgid "Server address:"
+#~ msgstr "مۇلازىمېتىر ئادرېسى:"
+
+#, kde-format
+#~ msgctxt "@label a private certificate authority"
+#~ msgid "Private CA:"
+#~ msgstr "شەخسىي CA:"
+
+#, kde-format
+#~ msgctxt "a private certificate authority"
+#~ msgid "Private CA"
+#~ msgstr "شەخسىي CA"
+
+#, kde-format
+#~ msgid "System certificates only"
+#~ msgstr "سىستېما گۇۋاھنامىلىرىلا"
+
+#, kde-format
+#~ msgid "Choose…"
+#~ msgstr "تاللاش…"
+
+#, kde-format
+#~ msgid "Only needed when the server's certificate comes from your own CA."
+#~ msgstr "مۇلازىمېتىرنىڭ گۇۋاھنامىسى ئۆزىڭىزنىڭ CA سىدىن كەلسىلا لازىم."
+
+#, kde-format
+#~ msgctxt "@title the signed-in user"
+#~ msgid "Account"
+#~ msgstr "ھېسابات"
+
+#, kde-format
+#~ msgctxt "@label"
+#~ msgid "Signed in:"
+#~ msgstr "كىرگەن:"
+
+#, kde-format
+#~ msgid "Not needed: authentication is off (local mode)"
+#~ msgstr "لازىم ئەمەس: دەلىللەش تاقالغان (يەرلىك ھالەت)"
+
+#, kde-format
+#~ msgctxt "%1 is the user, %2 the sign-in provider"
+#~ msgid "%1 (%2)"
+#~ msgstr "%1 (%2)"
+
+#, kde-format
+#~ msgctxt "signed in; %1 is the sign-in provider"
+#~ msgid "Yes (%1)"
+#~ msgstr "ھەئە (%1)"
+
+#, kde-format
+#~ msgid "Session ended; sign in again"
+#~ msgstr "ئەڭگىمە ئاخىرلاشتى؛ قايتا كىرىڭ"
+
+#, kde-format
+#~ msgctxt "not signed in"
+#~ msgid "No"
+#~ msgstr "ياق"
+
+#, kde-format
+#~ msgid "Unknown: can't reach the server"
+#~ msgstr "نامەلۇم: مۇلازىمېتىرغا ئۇلانغىلى بولمىدى"
+
+#, kde-format
+#~ msgid "Waiting for the browser…"
+#~ msgstr "توركۆرگۈنى ساقلاۋاتىدۇ…"
+
+#, kde-format
+#~ msgctxt "@title about the server"
+#~ msgid "About"
+#~ msgstr "ھەققىدە"
+
+#, kde-format
+#~ msgid "Can't reach the server to read its version"
+#~ msgstr "نەشرىنى ئوقۇش ئۈچۈن مۇلازىمېتىرغا ئۇلانغىلى بولمىدى"
+
+#, kde-format
+#~ msgctxt "@label the server's version"
+#~ msgid "Server version:"
+#~ msgstr "مۇلازىمېتىر نەشرى:"
+
+#, kde-format
+#~ msgctxt "@label the commit the server was built from"
+#~ msgid "Commit:"
+#~ msgstr "Commit:"
+
+#, kde-format
+#~ msgctxt "@label where the server's source code is"
+#~ msgid "Source code:"
+#~ msgstr "مەنبە كودى:"
+
+#, kde-format
+#~ msgid "Choose the private CA"
+#~ msgstr "شەخسىي CA نى تاللاش"
+
+#, kde-format
+#~ msgid "Certificates (*.pem *.crt)"
+#~ msgstr "گۇۋاھنامىلەر (*.pem *.crt)"
+
+#, kde-format
+#~ msgid "All files (*)"
+#~ msgstr "ھەممە ھۆججەتلەر (*)"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"
@@ -2122,20 +2585,8 @@ msgstr "بىر كارتىنىڭ زاپاس قۇرلىرى كەم؛ ئۇ بەلگ
 #~ msgstr "ھېسابات:"
 
 #, kde-format
-#~ msgid "Account"
-#~ msgstr "ھېسابات"
-
-#, kde-format
-#~ msgid "Accounts"
-#~ msgstr "ھېساباتلار"
-
-#, kde-format
 #~ msgid "Into a fund, out, or between funds"
 #~ msgstr "فوندقا، فونددىن ياكى فوندلار ئارىسىدا"
-
-#, kde-format
-#~ msgid "Cards"
-#~ msgstr "كارتىلار"
 
 #, kde-format
 #~ msgid "Funds"

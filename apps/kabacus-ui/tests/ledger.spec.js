@@ -135,6 +135,9 @@ async function setup(page, conflict = false) {
       });
     }
     const fixtures = {
+      "/commands": {add: [
+        ["transaction.spent","Spent"],["transaction.received","Received"],["card.purchase","Card purchase"],["transaction.transfer","Transfer"],["reserve.setAside","Set aside"],["card.pay","Pay a card"],["split.record","Split with someone"],["transaction.postings","Postings"]
+      ].map(([id,label],i)=>({id,label,key:String(i+1)}))},
       "/version": currentVersion,
       "/commodity": { symbol: "USD", places: 2 },
       "/cash-on-hand": cash,
@@ -191,21 +194,20 @@ async function setup(page, conflict = false) {
     if (fixtures[path]) return route.fulfill({ json: fixtures[path] });
     return route.continue();
   });
-  await page.goto("/app/");
-  await expect(page.locator(".metrics")).toBeVisible();
+  await page.goto("/app/?connect=1");
+  await expect(page.locator(".overview-layout")).toBeVisible();
   return writes;
 }
 async function fillTransaction(page) {
-  await page
-    .getByRole("button", { name: "Add transaction", exact: false })
-    .click();
+  await page.getByRole("button", { name: "Add", exact: true }).click();
+  await page.getByRole("button", { name: /^Spent/ }).click();
   await page.getByLabel("Payee").fill("Maple Market");
   await page.getByLabel("From").selectOption(accounts[0].account);
   await page.getByLabel("To").fill("expenses:groceries");
   await page.getByLabel("Amount (USD)").fill("84.25");
   await page.getByRole("button", { name: "Preview" }).click();
   await expect(
-    page.getByRole("heading", { name: "Preview", exact: true }),
+    page.getByRole("heading", { name: "What changes", exact: true }),
   ).toBeVisible();
 }
 for (const target of [accounts[0], accounts[1]]) {
@@ -269,7 +271,7 @@ test("desktop navigation and account register", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Travel" })).toBeVisible();
   await page
     .getByRole("navigation")
-    .getByRole("button", { name: "Cards", exact: true })
+    .getByRole("button", { name: "Credit", exact: true })
     .click();
   await expect(
     page.getByRole("heading", { name: "Everyday card" }),
@@ -303,8 +305,8 @@ test("stale save requires refreshing and a new preview", async ({ page }) => {
   const writes = await setup(page, true);
   await fillTransaction(page);
   await page.getByRole("button", { name: "Save" }).click();
-  await expect(page.getByRole("alert")).toContainText("books changed");
-  await expect(page.getByRole("button", { name: "Preview" })).toBeDisabled();
+  await expect(page.getByRole("dialog").getByRole("alert")).toContainText("books changed");
+  await expect(page.getByRole("button", { name: "Preview", exact:true })).toBeDisabled();
   expect(writes).toHaveLength(2);
 });
 test("allocation creates a fund only after confirmation", async ({ page }) => {
@@ -459,7 +461,7 @@ for (const action of ["edit", "void", "purchase", "payment"]) {
     } else {
       await page
         .getByRole("navigation")
-        .getByRole("button", { name: "Cards", exact: true })
+        .getByRole("button", { name: "Credit", exact: true })
         .click();
       await page
         .getByRole("button", {
@@ -546,9 +548,9 @@ test("a lost connection keeps balances readable and prevents writes", async ({
   );
   await page.getByRole("button", { name: "Refresh", exact: true }).click();
   await expect(page.getByRole("alert")).toBeVisible();
-  await expect(page.locator(".metrics")).toContainText("$4520.75");
+  await expect(page.locator(".overview-layout")).toContainText("$4520.75");
   await expect(
-    page.getByRole("button", { name: "Add transaction", exact: true }),
+    page.getByRole("button", { name: "Add", exact: true }),
   ).toBeDisabled();
 });
 
@@ -585,9 +587,8 @@ test("shared-expense form delegates exact total and share to the server", async 
   page,
 }) => {
   const writes = await setup(page);
-  await page
-    .getByRole("combobox", { name: "Add", exact: true })
-    .selectOption("split");
+  await page.getByRole("button",{name:"Add",exact:true}).click();
+  await page.getByRole("button",{name:/^Split with someone/}).click();
   const dialog = page.getByRole("dialog");
   await dialog.getByLabel("Payee", { exact: true }).fill("Maple Market");
   await dialog.getByLabel("Amount", { exact: true }).fill("84.17");
@@ -636,8 +637,9 @@ test("known payees recall account choices, exact amount, and memo", async ({
   await setup(page);
   const memory = page.waitForResponse("**/payees");
   await page
-    .getByRole("button", { name: "Add transaction", exact: true })
+    .getByRole("button", { name: "Add", exact: true })
     .click();
+  await page.getByRole("button", { name: /^Spent/ }).click();
   await memory;
   const dialog = page.getByRole("dialog");
   await dialog.getByLabel("Payee", { exact: true }).fill("Maple Market");
@@ -715,8 +717,9 @@ test("desktop live previews preserve typing and discard an older response", asyn
     });
   });
   await page
-    .getByRole("button", { name: "Add transaction", exact: true })
+    .getByRole("button", { name: "Add", exact: true })
     .click();
+  await page.getByRole("button", { name: /^Spent/ }).click();
   const dialog = page.getByRole("dialog");
   await dialog.getByLabel("Payee", { exact: true }).fill("Cedar Hardware");
   await dialog.getByLabel("From").selectOption(accounts[0].account);
@@ -741,15 +744,16 @@ test("native connection settings stay usable after a connection failure", async 
       },
     };
   });
-  await page.goto("/app/");
+  await page.goto("/app/?connect=1");
+  await page.getByRole("button", { name: "Connect to a Server…", exact: true }).click();
   await page.getByLabel("Server address").fill("https://books.example.org");
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await page.getByRole("button", { name: "Connect", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText(
-    "Can't reach kabacus-server",
+    "Synthetic server unavailable",
   );
   await expect(page.getByLabel("Server address")).toBeEnabled();
   await expect(
-    page.getByRole("button", { name: "Sign in", exact: true }),
+    page.getByRole("button", { name: "Connect", exact: true }),
   ).toBeEnabled();
 });
 
@@ -767,10 +771,10 @@ test("the signed-out screen is centered on a phone", async ({ page }) => {
       },
     }),
   );
-  await page.goto("/app/");
+  await page.goto("/app/?connect=1");
   const button = page.getByRole("button", { name: "Sign in", exact: true });
   await expect(button).toBeVisible();
-  const heading = await page.getByRole("heading", { name: "Overview" }).boundingBox();
+  const heading = await page.getByRole("heading", { name: /^Sign in to / }).boundingBox();
   const action = await button.boundingBox();
   const middle = (box) => box.x + box.width / 2;
   expect(Math.abs(middle(heading) - 195)).toBeLessThan(2);
@@ -809,9 +813,8 @@ test("custom postings can preview an exact multi-line transaction", async ({
   page,
 }) => {
   const writes = await setup(page);
-  await page
-    .getByRole("combobox", { name: "Add", exact: true })
-    .selectOption("postings");
+  await page.getByRole("button",{name:"Add",exact:true}).click();
+  await page.getByRole("button",{name:/^Postings/}).click();
   const dialog = page.getByRole("dialog");
   await dialog.getByLabel("Payee", { exact: true }).fill("Cedar Hardware");
   await dialog.getByRole("button", { name: "Add", exact: true }).click();
@@ -853,8 +856,8 @@ async function largeBalances(page) {
       },
     }),
   );
-  await page.locator("header button").click();
-  await expect(page.locator(".metric .amount").first()).toHaveText(
+  await page.locator('[data-action="refresh"]').click();
+  await expect(page.locator(".cash-total .amount").first()).toHaveText(
     balance.formatted,
   );
 }
@@ -874,6 +877,7 @@ for (const locale of ["en-US", "de-DE", "ar"]) {
       page,
     }) => {
       await setup(page);
+      await page.locator('[data-destination="Register"]').click();
       const posting = page.locator(".posting > span:first-child").first();
       expect(
         await posting.evaluate((node) => node.clientWidth),
@@ -897,22 +901,19 @@ for (const locale of ["en-US", "de-DE", "ar"]) {
       await setup(page);
       await page.locator("nav button").last().click();
       expect(
-        await page.locator(".page-heading select").evaluate(
+        await page.locator('[data-action="add"]').evaluate(
           (node) => node.clientWidth,
         ),
-      ).toBeGreaterThanOrEqual(120);
+      ).toBeGreaterThanOrEqual(80);
       await expectContained(page.locator("html"));
     });
 
-    test("settings show the full commit and source link", async ({ page }) => {
+    test("settings expose the version and corresponding source", async ({ page }) => {
       await setup(page);
-      await page.locator("nav button").last().click();
-      const details = page.locator("dl.home");
-      await expectContained(details);
-      const bounds = await details.locator("a").boundingBox();
-      expect(bounds.x).toBeGreaterThanOrEqual(0);
-      expect(bounds.x + bounds.width).toBeLessThanOrEqual(320);
-      await expect(details).toContainText(version.commit);
+      await page.locator(".settings-action").click();
+      await expect(page.getByText(`Kabacus ${version.server_version}`, {exact:true})).toBeVisible();
+      await expect(page.locator(`main a[href="${version.source_url}"]`)).toBeVisible();
+      await expect(page.locator("main")).not.toContainText(version.commit);
     });
   });
 }
@@ -925,16 +926,17 @@ test("desktop balances and connection details remain contained", async ({
   await expectContained(page.locator("html"));
   for (const metric of await page.locator(".metric").all())
     await expectContained(metric);
-  await page.locator("nav button").last().click();
-  await expectContained(page.locator("dl.home"));
-  await expect(page.locator("dl.home a")).toBeVisible();
+  await page.getByRole("button",{name:/^Settings/}).click();
+  await expectContained(page.locator("main"));
+  await expect(page.getByRole("link",{name:"Open the source code"})).toBeVisible();
 });
 
 for (const width of [390, 1440]) {
   test(`received money uses named income and money accounts at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     const writes = await setup(page);
-    await page.getByRole("combobox", { name: "Add", exact: true }).selectOption({ label: "Received" });
+    await page.getByRole("button",{name:"Add",exact:true}).click();
+    await page.getByRole("button",{name:/^Received/}).click();
     const dialog = page.getByRole("dialog");
     await expect(dialog.getByRole("heading", { name: "Received", exact: true })).toBeVisible();
     await dialog.getByLabel("Payee", { exact: true }).fill("Cedar Cafe payroll");
@@ -954,7 +956,8 @@ for (const width of [390, 1440]) {
   test(`reserve display names resolve to the account at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     const writes = await setup(page);
-    await page.getByRole("combobox", { name: "Add", exact: true }).selectOption("allocation");
+    await page.getByRole("button",{name:"Add",exact:true}).click();
+  await page.getByRole("button",{name:/^Set aside/}).click();
     const dialog = page.getByRole("dialog");
     await dialog.getByLabel("From").selectOption(accounts[0].account);
     await dialog.locator('input[name="to"]').fill("Travel");
@@ -970,7 +973,8 @@ test("phone controls have readable input text and comfortable tap targets", asyn
   await setup(page);
   for (const button of await page.locator("nav button").all())
     expect((await button.boundingBox()).height).toBeGreaterThanOrEqual(44);
-  await page.getByRole("combobox", { name: "Add", exact: true }).selectOption("allocation");
+  await page.getByRole("button",{name:"Add",exact:true}).click();
+  await page.getByRole("button",{name:/^Set aside/}).click();
   for (const field of await page.locator('dialog input:not([type="checkbox"]), dialog select').all()) {
     expect(await field.evaluate(e => parseFloat(getComputedStyle(e).fontSize))).toBeGreaterThanOrEqual(16);
     expect((await field.boundingBox()).height).toBeGreaterThanOrEqual(44);
@@ -981,7 +985,7 @@ for (const width of [320, 1440]) {
   test(`card actions remain inside their panel at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await setup(page);
-    await page.getByRole("navigation").getByRole("button", { name: "Cards", exact: true }).click();
+    await page.getByRole("navigation").getByRole("button", { name: "Credit", exact: true }).click();
     const heading = page.locator(".panel-heading").first();
     await expectContained(heading);
     const panel = await heading.boundingBox();
