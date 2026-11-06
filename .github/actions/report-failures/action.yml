@@ -24,7 +24,17 @@ runs:
               });
               const log = typeof response.data === 'string' ? response.data : Buffer.from(response.data).toString();
               const lines = log.split('\n').filter(line => !line.includes('Post job cleanup'));
-              core.error(lines.slice(-100).join('\n').slice(-14000), {title: job.name});
+              const relevant = new Set();
+              for (let i = 0; i < lines.length; i++) {
+                if (/error:|error\[|FAILED|FAIL:|panicked|Caused by|Exception|not found|could not|fatal|assertion|Traceback|timed out/i.test(lines[i])) {
+                  for (let j = Math.max(0, i - 3); j < Math.min(lines.length, i + 12); j++) relevant.add(j);
+                }
+              }
+              for (let i = Math.max(0, lines.length - 20); i < lines.length; i++) relevant.add(i);
+              const excerpt = [...relevant].sort((a, b) => a - b).map(i => lines[i]).join('\n').slice(-30000);
+              for (let i = 0; i < excerpt.length; i += 3000) {
+                core.error(excerpt.slice(i, i + 3000), {title: `${job.name} (${1 + i / 3000})`});
+              }
             } catch (error) {
               core.warning(`Could not annotate ${job.name}: ${error.message}`);
             }
