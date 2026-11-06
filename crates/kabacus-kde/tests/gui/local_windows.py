@@ -76,7 +76,7 @@ with tempfile.TemporaryDirectory(prefix='kabacus-local-windows-') as folder:
         driver.click(menu)
         second = create('Cedar Studio', root / 'Studio.kabacus')
         driver.click(driver.find(second, 'Transactions', pyatspi.ROLE_LIST_ITEM))
-        driver.wait_for('Transactions page', lambda: driver.find(second, 'Transactions', pyatspi.ROLE_PAGE_TAB))
+        driver.wait_for('Transactions accounts', lambda: driver.find(second, 'Checking', pyatspi.ROLE_LIST_ITEM))
         state = root / 'config' / 'kabacus-windows.json'
         driver.wait_for('two saved windows', lambda: state.exists() and len(json.loads(state.read_text())['windows']) == 2 and any(w['page'] == 'Accounts' for w in json.loads(state.read_text())['windows']))
     finally:
@@ -86,7 +86,7 @@ with tempfile.TemporaryDirectory(prefix='kabacus-local-windows-') as folder:
     try:
         driver.wait_for('restored household', lambda: frame('Cedar Household — Kabacus'))
         restored = driver.wait_for('restored studio', lambda: frame('Cedar Studio — Kabacus'))
-        driver.wait_for('restored Transactions page', lambda: driver.find(restored, 'Transactions', pyatspi.ROLE_PAGE_TAB))
+        driver.wait_for('restored Transactions accounts', lambda: driver.find(restored, 'Checking', pyatspi.ROLE_LIST_ITEM))
         print('Local Welcome → New Books → Overview and two-window restoration passed')
     finally:
         process.terminate()
