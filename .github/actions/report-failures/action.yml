@@ -26,7 +26,7 @@ runs:
               const lines = log.split('\n').filter(line => !line.includes('Post job cleanup'));
               const relevant = new Set();
               for (let i = 0; i < lines.length; i++) {
-                if (/error:|error\[|FAILED|FAIL:|panicked|Caused by|Exception|not found|could not|fatal|assertion|Traceback|timed out/i.test(lines[i])) {
+                if (!lines[i].includes("Preloading:") && /\.qml:\d+:\d+|error:|error\[|FAILED|FAIL:|panicked|Caused by|Exception|not found|could not|fatal|assertion|Traceback|timed out/i.test(lines[i])) {
                   for (let j = Math.max(0, i - 3); j < Math.min(lines.length, i + 12); j++) relevant.add(j);
                 }
               }

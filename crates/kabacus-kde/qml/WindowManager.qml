@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma Singleton
 import QtQuick
+import QtQuick.Window
 QtObject {
     property var windows: []
     property bool restored: false
@@ -23,7 +24,7 @@ QtObject {
     function create(state) {
         const component = Qt.createComponent("Main.qml")
         if (component.status !== Component.Ready) { console.warn(component.errorString()); return null }
-        const window = component.createObject(null, { initialState: state || null })
+        const window = component.createObject(null, { initialState: state || null }) as Window
         if (window) { add(window); window.show(); window.raise(); window.requestActivate() }
         return window
     }
