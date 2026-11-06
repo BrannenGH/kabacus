@@ -86,7 +86,10 @@ fn main() {
             "qml/TransactionForm.qml",
             "qml/ReviewPage.qml",
         ];
-        for page in pages.iter().chain(["qml/Theme.qml"].iter()) {
+        for page in pages
+            .iter()
+            .chain(["qml/Theme.qml", "qml/WindowManager.qml"].iter())
+        {
             println!("cargo::rerun-if-changed={page}");
         }
         let ki18n = Ki18n::find();

@@ -36,7 +36,7 @@ def require_window(process, expected):
         if process.poll() is not None:
             raise RuntimeError(f"Native window exited: {process.returncode}")
         last = list(walk(pyatspi.Registry.getDesktop(0)))
-        names = {name for name, _ in last}
+        names = {name.strip() for name, _ in last}
         if expected <= names:
             return
         time.sleep(0.25)

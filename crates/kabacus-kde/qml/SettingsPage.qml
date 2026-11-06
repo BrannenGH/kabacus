@@ -11,15 +11,15 @@ Kirigami.ScrollablePage {
     objectName: "settings"
     title: i18n("Settings")
     required property var app
-    readonly property var state: JSON.parse(app.ledger.workspaceJson())
+    readonly property var preferences: JSON.parse(app.ledger.workspaceJson())
     readonly property var about: JSON.parse(app.ledger.aboutJson())
     property string problem: ""
     function save() { problem = app.ledger.savePreferences(reopen.checked, automation.checked, port.value) }
     Kirigami.FormLayout {
-        Controls.CheckBox { id: reopen; Kirigami.FormData.label: i18n("When Kabacus starts"); text: i18n("Reopen my windows"); checked: page.state.reopen; onToggled: page.save() }
+        Controls.CheckBox { id: reopen; Kirigami.FormData.label: i18n("When Kabacus starts"); text: i18n("Reopen my windows"); checked: page.preferences.reopen; onToggled: page.save() }
         Controls.Label { text: i18n("Show Welcome when this is off."); wrapMode: Text.Wrap; Layout.fillWidth: true }
-        Controls.CheckBox { id: automation; Kirigami.FormData.label: i18n("Automation"); text: i18n("Let agents drive this window"); checked: page.state.automation; enabled: page.app.hasBooks; onToggled: page.save() }
-        Controls.SpinBox { id: port; Kirigami.FormData.label: i18n("Control port"); from: 1; to: 65535; value: page.state.control_port || 7979; enabled: automation.checked; onValueModified: page.save() }
+        Controls.CheckBox { id: automation; Kirigami.FormData.label: i18n("Automation"); text: i18n("Let agents drive this window"); checked: page.preferences.automation; enabled: page.app.hasBooks; onToggled: page.save() }
+        Controls.SpinBox { id: port; Kirigami.FormData.label: i18n("Control port"); from: 1; to: 65535; value: page.preferences.control_port || 7979; enabled: automation.checked; onValueModified: page.save() }
         Controls.Label { text: page.problem; visible: text !== ""; wrapMode: Text.Wrap; Layout.fillWidth: true }
         Kirigami.Separator { Kirigami.FormData.isSection: true }
         Controls.Label { Kirigami.FormData.label: i18n("Account"); text: page.app.auth.username || i18n("On this computer"); wrapMode: Text.Wrap; Layout.fillWidth: true }
