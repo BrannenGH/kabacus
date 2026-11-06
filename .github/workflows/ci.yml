@@ -184,3 +184,15 @@ jobs:
           && cargo build --manifest-path src-tauri/Cargo.toml --locked
           && WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS=1 GTK_A11Y=always
           dbus-run-session -- xvfb-run -a python3 tests/native_smoke.py src-tauri/target/debug/kabacus-desktop'
+
+  failure-details:
+    name: Failure details
+    if: always() && contains(needs.*.result, 'failure')
+    needs: [reuse, licenses, rust, gui-e2e, server-image, packages, web, tauri]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/report-failures

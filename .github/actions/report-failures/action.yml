@@ -1,0 +1,31 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+# SPDX-License-Identifier: GPL-3.0-or-later
+name: Report failed job output
+description: Put the relevant tail of failed job logs in check annotations.
+inputs:
+  run-id:
+    description: Workflow run to inspect; defaults to this run.
+    required: false
+runs:
+  using: composite
+  steps:
+    - uses: actions/github-script@v7
+      env:
+        DIAGNOSTIC_RUN_ID: ${{ inputs.run-id }}
+      with:
+        script: |
+          const jobs = await github.paginate(github.rest.actions.listJobsForWorkflowRun, {
+            ...context.repo, run_id: process.env.DIAGNOSTIC_RUN_ID || context.runId, filter: 'latest'
+          });
+          for (const job of jobs.filter(job => job.conclusion === 'failure')) {
+            try {
+              const response = await github.rest.actions.downloadJobLogsForWorkflowRun({
+                ...context.repo, job_id: job.id
+              });
+              const log = typeof response.data === 'string' ? response.data : Buffer.from(response.data).toString();
+              const lines = log.split('\n').filter(line => !line.includes('Post job cleanup'));
+              core.error(lines.slice(-100).join('\n').slice(-14000), {title: job.name});
+            } catch (error) {
+              core.warning(`Could not annotate ${job.name}: ${error.message}`);
+            }
+          }

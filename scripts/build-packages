@@ -30,10 +30,10 @@ for kind in ${*:-rpm deb}; do
       cargo run --release --locked -p xtask -- i18n-build "$CARGO_TARGET_DIR/release/locale"
       cargo build --release --locked -p kabacus-cli
       mkdir -p target/cli-doc
-      target/release/kabacus-cli man > target/cli-doc/kabacus-cli.1
-      target/release/kabacus-cli completions bash > target/cli-doc/kabacus-cli.bash
-      target/release/kabacus-cli completions zsh > target/cli-doc/_kabacus-cli
-      target/release/kabacus-cli completions fish > target/cli-doc/kabacus-cli.fish
+      "$CARGO_TARGET_DIR/release/kabacus-cli" man > target/cli-doc/kabacus-cli.1
+      "$CARGO_TARGET_DIR/release/kabacus-cli" completions bash > target/cli-doc/kabacus-cli.bash
+      "$CARGO_TARGET_DIR/release/kabacus-cli" completions zsh > target/cli-doc/_kabacus-cli
+      "$CARGO_TARGET_DIR/release/kabacus-cli" completions fish > target/cli-doc/kabacus-cli.fish
       cargo deb --locked -p kabacus-kde -o target/packages/ --deb-version "$1"' sh "$version" ;;
     *) echo "usage: scripts/build-packages [rpm] [deb]" >&2; exit 2 ;;
   esac

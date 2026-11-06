@@ -25,7 +25,7 @@ def create(name, path):
         welcome = driver.wait_for('Welcome window', lambda: frame('Kabacus'))
     except SystemExit:
         driver.dump(pyatspi.Registry.getDesktop(0));raise
-    driver.click(driver.wait_for('New Books', lambda: driver.find(welcome, 'New Books…', pyatspi.ROLE_PUSH_BUTTON)))
+    driver.press(driver.wait_for('New Books', lambda: driver.find(welcome, 'New Books…', pyatspi.ROLE_PUSH_BUTTON)))
     dialog = driver.wait_for('file chooser', lambda: frame('New Books…'))
     field = driver.wait_for('file name field', lambda: showing(dialog, pyatspi.ROLE_TEXT))
     driver.click(field)
@@ -58,9 +58,10 @@ with tempfile.TemporaryDirectory(prefix='kabacus-local-windows-') as folder:
         menu=driver.wait_for('New Window', lambda: driver.find(first, 'New Window'))
         driver.click(menu)
         second = create('Cedar Studio', root / 'Studio.kabacus')
-        driver.press(driver.find(second, 'Transactions', pyatspi.ROLE_LIST_ITEM))
+        driver.click(driver.find(second, 'Transactions', pyatspi.ROLE_LIST_ITEM))
+        driver.wait_for('Transactions page', lambda: driver.find(second, 'Transactions', pyatspi.ROLE_PAGE_TAB))
         state = root / 'config' / 'kabacus-windows.json'
-        driver.wait_for('two saved windows', lambda: state.exists() and len(json.loads(state.read_text())['windows']) == 2)
+        driver.wait_for('two saved windows', lambda: state.exists() and len(json.loads(state.read_text())['windows']) == 2 and any(w['page'] == 'Accounts' for w in json.loads(state.read_text())['windows']))
     finally:
         process.terminate()
         process.wait(timeout=10)
