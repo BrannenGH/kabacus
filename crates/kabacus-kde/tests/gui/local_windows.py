@@ -16,8 +16,21 @@ def frame(name):
     return pyatspi.findDescendant(pyatspi.Registry.getDesktop(0), lambda n: n is not None and n.name == name and n.getRole() == pyatspi.ROLE_FRAME and n.getState().contains(pyatspi.STATE_SHOWING))
 
 
+def file_dialog(title):
+    roles = (pyatspi.ROLE_FRAME, pyatspi.ROLE_DIALOG, pyatspi.ROLE_FILE_CHOOSER)
+    return pyatspi.findDescendant(pyatspi.Registry.getDesktop(0), lambda n: n is not None and n.getRole() in roles and (n.name == title or n.name.startswith(title + ' — ')) and n.getState().contains(pyatspi.STATE_SHOWING))
+
+
 def showing(node, role):
     return pyatspi.findDescendant(node, lambda n: n is not None and n.getRole() == role and n.getState().contains(pyatspi.STATE_SHOWING))
+
+
+def file_name_field(dialog):
+    for label in ('File name:', 'File name', 'Name:', 'Name'):
+        field = driver.find(dialog, label, pyatspi.ROLE_TEXT)
+        if field:
+            return field
+    return showing(dialog, pyatspi.ROLE_TEXT)
 
 
 def create(name, path):
@@ -26,8 +39,12 @@ def create(name, path):
     except SystemExit:
         driver.dump(pyatspi.Registry.getDesktop(0));raise
     driver.press(driver.wait_for('New Books', lambda: driver.find(welcome, 'New Books…', pyatspi.ROLE_PUSH_BUTTON)))
-    dialog = driver.wait_for('file chooser', lambda: frame('New Books…'))
-    field = driver.wait_for('file name field', lambda: showing(dialog, pyatspi.ROLE_TEXT))
+    try:
+        dialog = driver.wait_for('file chooser', lambda: file_dialog('New Books…'))
+    except SystemExit:
+        driver.dump(pyatspi.Registry.getDesktop(0)); raise
+    driver.dump(dialog)
+    field = driver.wait_for('file name field', lambda: file_name_field(dialog))
     driver.click(field)
     driver.set_text(field, path.name)
     driver.key(0xFF09)

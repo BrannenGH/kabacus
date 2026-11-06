@@ -104,7 +104,8 @@ Kirigami.ApplicationWindow {
     readonly property bool needsSignIn: auth.status === "signed_out" || auth.status === "expired"
     // Can't reach the server. Pages keep what they last loaded,
     // dimmed, and every write is off until it's back.
-    readonly property bool offline: hasBooks && bookSource && bookSource.kind === "remote" && ledger.error !== "" && !needsSignIn
+    readonly property bool serverBooks: hasBooks && (!bookSource || bookSource.kind === "remote")
+    readonly property bool offline: serverBooks && ledger.error !== "" && !needsSignIn
     readonly property bool canWrite: hasBooks && ledger.error === "" && !needsSignIn
     // The current destination: a key of `pages`, never the label shown
     // for it, which is translated.
@@ -445,7 +446,7 @@ Kirigami.ApplicationWindow {
         StatusBanner {
             id: authOff
             objectName: "authOff"
-            visible: root.hasBooks && root.bookSource && root.bookSource.kind === "remote" && root.auth.status === "off"
+            visible: root.serverBooks && root.auth.status === "off"
             text: i18n("Authentication off (local mode)")
         }
         StatusBanner {
