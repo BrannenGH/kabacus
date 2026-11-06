@@ -7,18 +7,21 @@
 //! change against an expected revision, history, users and memberships,
 //! `.kabacus` export and import), with two implementations that behave
 //! identically: [`SqliteStore`] for local mode and small self-hosted
-//! servers, and [`PostgresStore`] for the hosted service. Implements the
+//! servers, and `PostgresStore` for the hosted service. Implements the
 //! engine implementation specification, sections 1.2 to 1.8 and 2.4.
 
 pub mod file;
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(any(target_arch = "wasm32", target_os = "ios", target_os = "android")))]
 pub mod postgres;
 pub mod rows;
 pub mod sqlite;
-#[cfg(all(feature = "testing", not(target_arch = "wasm32")))]
+#[cfg(all(
+    feature = "testing",
+    not(any(target_arch = "wasm32", target_os = "ios", target_os = "android"))
+))]
 pub mod testing;
 
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(any(target_arch = "wasm32", target_os = "ios", target_os = "android")))]
 pub use postgres::PostgresStore;
 pub use rows::{ChangeSet, Row, RowChange, RowKey};
 pub use sqlite::SqliteStore;
@@ -149,7 +152,7 @@ pub enum StoreError {
     #[error(transparent)]
     Sqlite(#[from] rusqlite::Error),
     #[error(transparent)]
-    #[cfg(not(target_arch = "wasm32"))]
+    #[cfg(not(any(target_arch = "wasm32", target_os = "ios", target_os = "android")))]
     Postgres(#[from] tokio_postgres::Error),
     #[error("the database connection pool: {0}")]
     Pool(String),
@@ -372,7 +375,7 @@ pub trait BookStore: Send + Sync {
 /// Either store, chosen by configuration.
 pub enum AnyStore {
     Sqlite(SqliteStore),
-    #[cfg(not(target_arch = "wasm32"))]
+    #[cfg(not(any(target_arch = "wasm32", target_os = "ios", target_os = "android")))]
     Postgres(PostgresStore),
 }
 
@@ -380,7 +383,7 @@ macro_rules! delegate {
     ($self:ident, $s:ident => $e:expr) => {
         match $self {
             AnyStore::Sqlite($s) => $e.await,
-            #[cfg(not(target_arch = "wasm32"))]
+            #[cfg(not(any(target_arch = "wasm32", target_os = "ios", target_os = "android")))]
             AnyStore::Postgres($s) => $e.await,
         }
     };
