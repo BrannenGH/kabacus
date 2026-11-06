@@ -17,12 +17,14 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 thiserror = { workspace = true }
 chrono = { workspace = true }
-tokio = { workspace = true }
 num-bigint = { workspace = true }
 tracing = { workspace = true }
 # The local and self-hosted store, and the .kabacus file (bundled, so no
 # system SQLite is needed).
-rusqlite = { version = "0.32", features = ["bundled", "backup"] }
+rusqlite = { version = "0.40.1", features = ["backup", "serialize", "fallible_uint"] }
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tokio.workspace = true
+rusqlite = { version = "0.40.1", features = ["bundled", "backup", "serialize", "fallible_uint"] }
 # The hosted service's store, through a connection pool.
 tokio-postgres = "0.7"
 deadpool-postgres = "0.14"
@@ -32,7 +34,10 @@ tempfile = "3"
 # Throwaway PostgreSQL databases for tests.
 testing = []
 
-[dev-dependencies]
+[target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 kabacus-store = { path = ".", features = ["testing"] }
 proptest = { workspace = true }
 serde_json = { workspace = true }
+
+[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
+wasm-bindgen-test = "0.3"

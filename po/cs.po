@@ -29,27 +29,27 @@ msgctxt "%1 is the closest account to what was typed"
 msgid "Use %1"
 msgstr "Použít %1"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add"
 msgstr "Přidat"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Not signed in"
 msgstr "Nepřihlášeno"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Can't reach kabacus-server"
 msgstr "Nelze se spojit s kabacus-server"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml
+#: crates/kabacus-kde/qml/AccountsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No accounts"
 msgstr "Žádné účty"
 
-#: crates/kabacus-kde/qml/ActivityPage.qml crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/ActivityPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Activity"
 msgstr "Aktivita"
@@ -78,9 +78,14 @@ msgctxt "changes made by"
 msgid "External"
 msgstr "Externí"
 
+#: crates/kabacus-kde/qml/ActivityPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Agent"
+msgstr "Agent"
+
 #: crates/kabacus-kde/qml/ActivityPage.qml
 #, kde-format
-msgctxt "%1 is who made a change, %2 its commit"
+msgctxt "%1 is who made a change, %2 its revision"
 msgid "%1 · %2"
 msgstr "%1 · %2"
 
@@ -89,7 +94,7 @@ msgstr "%1 · %2"
 msgid "Can't load the history"
 msgstr "Historii nelze načíst"
 
-#: crates/kabacus-kde/qml/ActivityPage.qml
+#: crates/kabacus-kde/qml/ActivityPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No changes"
 msgstr "Žádné změny"
@@ -100,7 +105,7 @@ msgctxt "@action what happened"
 msgid "Spent"
 msgstr "Utraceno"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money left an account"
 msgstr "Peníze odešly z účtu"
@@ -111,67 +116,67 @@ msgctxt "@action what happened"
 msgid "Received"
 msgstr "Přijato"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Income or a refund"
 msgstr "Příjem nebo vrácení peněz"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Card purchase"
 msgstr "Nákup kartou"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Adds the reserve lines for you"
 msgstr "Přidá řádky rezervy za vás"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Transfer"
 msgstr "Převod"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Between two bank accounts"
 msgstr "Mezi dvěma bankovními účty"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Set aside"
 msgstr "Odložit"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Into a reserve, out, or between reserves"
 msgstr "Do rezervy, z ní nebo mezi rezervami"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Pay a card"
 msgstr "Splatit kartu"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "From its reserve"
 msgstr "Z její rezervy"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Split with someone"
 msgstr "Rozdělit s někým"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "They owe you, or you owe them"
 msgstr "Dluží vám, nebo jim dlužíte vy"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Postings"
 msgstr "Zaúčtování"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Any two accounts"
 msgstr "Libovolné dva účty"
@@ -181,17 +186,17 @@ msgstr "Libovolné dva účty"
 msgid "Can't load cards"
 msgstr "Karty nelze načíst"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No credit cards"
 msgstr "Žádné kreditní karty"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Record purchase"
 msgstr "Zapsat nákup"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Pay card"
 msgstr "Splatit kartu"
@@ -208,7 +213,7 @@ msgctxt "a card's reserve"
 msgid "Reserve"
 msgstr "Rezerva"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Still to reserve"
 msgstr "Zbývá rezervovat"
@@ -227,7 +232,7 @@ msgstr[0] "%1 transakce mění kartu, aniž mění její rezervu."
 msgstr[1] "%1 transakce mění kartu, aniž mění její rezervu."
 msgstr[2] "%1 transakcí mění kartu, aniž mění její rezervu."
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add all reserve lines"
 msgstr "Přidat všechny řádky rezervy"
@@ -244,17 +249,17 @@ msgctxt "%1 is an amount"
 msgid "Missing reserve %1"
 msgstr "Chybí rezerva %1"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add reserve lines"
 msgstr "Přidat řádky rezervy"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "What the reserve holds"
 msgstr "Co rezerva obsahuje"
 
-#: crates/kabacus-kde/qml/CommitPage.qml
+#: crates/kabacus-kde/qml/CommitPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Open transaction"
 msgstr "Otevřít transakci"
@@ -298,7 +303,7 @@ msgstr "Rezervy nelze načíst"
 msgid "No bank accounts with reserves yet"
 msgstr "Zatím nejsou žádné bankovní účty s rezervami"
 
-#: crates/kabacus-kde/qml/FundsPage.qml
+#: crates/kabacus-kde/qml/FundsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "in the bank"
 msgstr "v bance"
@@ -309,7 +314,7 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Volné"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Card reserves"
 msgstr "Rezervy karet"
@@ -355,10 +360,15 @@ msgstr "LTR"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
+msgid "Reopened where you left off"
+msgstr "Pokračujete tam, kde jste skončili"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
 msgid "Signed out"
 msgstr "Odhlášeno"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Overview"
 msgstr "Přehled"
@@ -387,26 +397,46 @@ msgctxt "destination: credit cards"
 msgid "Credit"
 msgstr "Úvěr"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/PeoplePage.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/PeoplePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "People"
 msgstr "Lidé"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/ReportsPage.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/ReportsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Reports"
 msgstr "Výkazy"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
-msgctxt "%1 is the commit's short hash"
-msgid "Saved as commit %1"
-msgstr "Uloženo jako commit %1"
+msgctxt "%1 is the revision number"
+msgid "Saved as revision %1"
+msgstr "Uloženo jako revize %1"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "View"
+msgstr "Zobrazit"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
 msgstr "Nastavení"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "On this computer"
+msgstr "Na tomto počítači"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "All changes saved"
+msgstr "Všechny změny uloženy"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 is working in these books"
+msgstr "%1 pracuje s těmito knihami"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
@@ -414,19 +444,43 @@ msgctxt "@title:menu"
 msgid "File"
 msgstr "Soubor"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Add transaction"
-msgstr "Přidat transakci"
+msgid "New Window"
+msgstr "Nové okno"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Refresh"
-msgstr "Obnovit"
+msgid "New Books…"
+msgstr "Nové knihy…"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "@action:inmenu"
+msgid "Open Books…"
+msgstr "Otevřít knihy…"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Open Recent"
+msgstr "Otevřít nedávné"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Save a Copy As…"
+msgstr "Uložit kopii jako…"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Close Window"
+msgstr "Zavřít okno"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connect to a Server…"
+msgstr "Připojit k serveru…"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Quit"
 msgstr "Ukončit"
 
@@ -447,7 +501,7 @@ msgctxt "the other destinations"
 msgid "More"
 msgstr "Více"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Authentication off (local mode)"
 msgstr "Ověřování vypnuto (místní režim)"
@@ -474,7 +528,7 @@ msgstr "Přihlaste se přes %1, abyste viděli své účetnictví."
 msgid "Sign in again"
 msgstr "Přihlásit znovu"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr "Přihlásit"
@@ -484,7 +538,7 @@ msgstr "Přihlásit"
 msgid "Finish signing in in your browser…"
 msgstr "Dokončete přihlášení v prohlížeči…"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cancel"
 msgstr "Zrušit"
@@ -495,17 +549,17 @@ msgctxt "%1 is why the server can't be reached, as one sentence"
 msgid "%1 Showing what was loaded; changes are off until it's back."
 msgstr "%1 Zobrazeno je to, co bylo načteno; změny jsou vypnuté, dokud se spojení neobnoví."
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Retry"
 msgstr "Zkusit znovu"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/src/views.rs
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Details"
 msgstr "Podrobnosti"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connection settings"
 msgstr "Nastavení spojení"
@@ -515,7 +569,7 @@ msgstr "Nastavení spojení"
 msgid "Error details"
 msgstr "Podrobnosti chyby"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Discard this change?"
 msgstr "Zahodit tuto změnu?"
@@ -525,7 +579,7 @@ msgstr "Zahodit tuto změnu?"
 msgid "What you typed hasn't been saved."
 msgstr "To, co jste napsali, nebylo uloženo."
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Keep editing"
 msgstr "Pokračovat v úpravách"
@@ -535,10 +589,10 @@ msgstr "Pokračovat v úpravách"
 msgid "Discard"
 msgstr "Zahodit"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "The books changed"
-msgstr "Účetnictví se změnilo"
+msgid "Someone saved first"
+msgstr "Někdo uložil dříve"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
@@ -552,37 +606,82 @@ msgctxt "%1 is who"
 msgid "%1 saved a change while you were reviewing. Yours hasn't been written."
 msgstr "%1 uložil změnu, zatímco jste kontrolovali. Vaše nebyla zapsána."
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Discard mine"
-msgstr "Zahodit moji"
+msgid "See their change"
+msgstr "Zobrazit jejich změnu"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Review again"
-msgstr "Zkontrolovat znovu"
+msgid "Preview again"
+msgstr "Znovu zobrazit náhled"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Name"
+msgstr "Název"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Currency"
+msgstr "Měna"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "First account"
+msgstr "První účet"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Create books"
+msgstr "Vytvořit knihy"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Server address"
+msgstr "Adresa serveru"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Private CA"
+msgstr "Soukromá certifikační autorita"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Test connection"
+msgstr "Vyzkoušet spojení"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connect"
+msgstr "Připojit"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Refresh"
+msgstr "Obnovit"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr "Dostupné peníze nelze načíst"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr "Načítání…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cash on Hand"
 msgstr "Dostupné peníze"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "O dostupných penězích"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr "Volné peníze, které můžete utratit hned teď, po odečtení rezerv a rezerv karet."
@@ -599,17 +698,17 @@ msgctxt "%1 is an amount"
 msgid "Cash on Hand %1"
 msgstr "Dostupné peníze %1"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money on Hand"
 msgstr "Peníze k dispozici"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Money on Hand"
 msgstr "O penězích k dispozici"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Everything in your bank accounts, reserves and card reserves included, plus what people owe you. Cash on Hand is what's left once reserves, card reserves and what you're owed are set apart."
 msgstr "Vše na vašich bankovních účtech včetně rezerv a rezerv karet, plus co vám ostatní dluží. Dostupné peníze jsou to, co zbude po oddělení rezerv, rezerv karet a toho, co vám dluží."
@@ -624,7 +723,7 @@ msgstr "− Budoucí přidělení (rezervy a rezervy karet)"
 msgid "− Receivables (owed to you)"
 msgstr "− Pohledávky (co vám dluží)"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Free money by account"
 msgstr "Volné peníze podle účtu"
@@ -640,7 +739,7 @@ msgstr "%1 volné %2"
 msgid "No account has free money right now."
 msgstr "Žádný účet teď nemá volné peníze."
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Nothing is set aside in a reserve."
 msgstr "V žádné rezervě není nic odloženo."
@@ -651,12 +750,12 @@ msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "kryto"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Each card's reserve should equal what it owes."
 msgstr "Rezerva každé karty by se měla rovnat jejímu dluhu."
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cash on Hand over time"
 msgstr "Dostupné peníze v čase"
@@ -695,7 +794,7 @@ msgstr "Lidi nelze načíst"
 msgid "Nobody owes or is owed anything"
 msgstr "Nikdo nikomu nic nedluží"
 
-#: crates/kabacus-kde/qml/PreviewPane.qml
+#: crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "What changes"
 msgstr "Co se změní"
@@ -770,17 +869,17 @@ msgctxt "%1 is the books' balance, %2 the statement's, %3 the difference"
 msgid "Doesn't match yet: the books say %1, the statement %2 (difference %3). Nothing has been written."
 msgstr "Zatím nesouhlasí: účetnictví uvádí %1, výpis %2 (rozdíl %3). Nic nebylo zapsáno."
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Reconcile"
 msgstr "Odsouhlasit"
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Likely explanations"
 msgstr "Pravděpodobná vysvětlení"
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Edit"
 msgstr "Upravit"
@@ -797,7 +896,12 @@ msgctxt "money moved between an account and its funds"
 msgid "within account"
 msgstr "v rámci účtu"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Add transaction"
+msgstr "Přidat transakci"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account type"
 msgstr "Typ účtu"
@@ -808,17 +912,17 @@ msgctxt "@action compare an account with its statement"
 msgid "Reconcile…"
 msgstr "Odsouhlasit…"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Search"
 msgstr "Hledat"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Search payee, memo, account"
 msgstr "Hledat příjemce, poznámku, účet"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Unreserved only"
 msgstr "Jen bez rezervy"
@@ -858,12 +962,12 @@ msgctxt "%1 is what was searched for"
 msgid "No transactions match “%1”"
 msgstr "Hledání „%1“ neodpovídá žádná transakce"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No unreserved transactions"
 msgstr "Žádné transakce bez rezervy"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr "Žádné transakce"
@@ -889,17 +993,17 @@ msgstr "Předchozí měsíc"
 msgid "Next month"
 msgstr "Další měsíc"
 
-#: crates/kabacus-kde/qml/ReportsPage.qml
+#: crates/kabacus-kde/qml/ReportsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cash flow"
 msgstr "Peněžní tok"
 
-#: crates/kabacus-kde/qml/ReportsPage.qml
+#: crates/kabacus-kde/qml/ReportsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Income statement"
 msgstr "Výkaz zisku a ztráty"
 
-#: crates/kabacus-kde/qml/ReportsPage.qml
+#: crates/kabacus-kde/qml/ReportsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Categories"
 msgstr "Kategorie"
@@ -946,7 +1050,7 @@ msgctxt "@label income less expenses"
 msgid "Net:"
 msgstr "Čistý výsledek:"
 
-#: crates/kabacus-kde/qml/ReportsPage.qml
+#: crates/kabacus-kde/qml/ReportsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Count loan principal as money spent"
 msgstr "Počítat splátky jistiny jako utracené peníze"
@@ -969,12 +1073,12 @@ msgctxt "%1 is a month and year"
 msgid "No spending in %1"
 msgstr "Žádné výdaje: %1"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml
+#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
 msgstr "Kontrola před uložením"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml
+#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Back to edit"
 msgstr "Zpět k úpravám"
@@ -984,12 +1088,12 @@ msgstr "Zpět k úpravám"
 msgid "Saving…"
 msgstr "Ukládání…"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Save"
 msgstr "Uložit"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Checking with the server…"
 msgstr "Kontrola se serverem…"
@@ -1005,187 +1109,57 @@ msgstr "Tím by se porušila kontrola zůstatku: %1 má být %2, ale bylo by %3.
 msgid "Change the transaction"
 msgstr "Změnit transakci"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Test connection"
-msgstr "Vyzkoušet spojení"
+msgid "When Kabacus starts"
+msgstr "Při spuštění Kabacus"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Connection settings saved"
-msgstr "Nastavení spojení uloženo"
+msgid "Reopen my windows"
+msgstr "Znovu otevřít má okna"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "@label"
-msgid "Server:"
-msgstr "Server:"
+msgid "Show Welcome when this is off."
+msgstr "Při vypnutí zobrazit uvítání."
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "On this computer"
-msgstr "Na tomto počítači"
+msgid "Automation"
+msgstr "Automatizace"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "On another computer (HTTPS)"
-msgstr "Na jiném počítači (HTTPS)"
+msgid "Let agents drive this window"
+msgstr "Povolit agentům ovládat toto okno"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "the server's unix socket"
-msgid "Socket"
-msgstr "Soket"
+msgid "Control port"
+msgstr "Ovládací port"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "@label the server's unix socket"
-msgid "Socket:"
-msgstr "Soket:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Server address"
-msgstr "Adresa serveru"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label"
-msgid "Server address:"
-msgstr "Adresa serveru:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label a private certificate authority"
-msgid "Private CA:"
-msgstr "Soukromá CA:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "a private certificate authority"
-msgid "Private CA"
-msgstr "Soukromá CA"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "System certificates only"
-msgstr "Jen systémové certifikáty"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Choose…"
-msgstr "Vybrat…"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Only needed when the server's certificate comes from your own CA."
-msgstr "Potřeba jen tehdy, když certifikát serveru pochází z vaší vlastní CA."
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@title the signed-in user"
 msgid "Account"
-msgstr "Účet uživatele"
+msgstr "Účet"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label"
-msgid "Signed in:"
-msgstr "Přihlášeno:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Not needed: authentication is off (local mode)"
-msgstr "Není potřeba: ověřování je vypnuté (místní režim)"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "%1 is the user, %2 the sign-in provider"
-msgid "%1 (%2)"
-msgstr "%1 (%2)"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "signed in; %1 is the sign-in provider"
-msgid "Yes (%1)"
-msgstr "Ano (%1)"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Session ended; sign in again"
-msgstr "Relace skončila; přihlaste se znovu"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "not signed in"
-msgid "No"
-msgstr "Ne"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Unknown: can't reach the server"
-msgstr "Neznámé: nelze se spojit se serverem"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Waiting for the browser…"
-msgstr "Čeká se na prohlížeč…"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign out"
 msgstr "Odhlásit"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "@title about the server"
 msgid "About"
 msgstr "O aplikaci"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Can't reach the server to read its version"
-msgstr "K serveru se nelze připojit a přečíst jeho verzi"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label the server's version"
-msgid "Server version:"
-msgstr "Verze serveru:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label the commit the server was built from"
-msgid "Commit:"
-msgstr "Commit:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label where the server's source code is"
-msgid "Source code:"
-msgstr "Zdrojový kód:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Open the source code"
 msgstr "Otevřít zdrojový kód"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Choose the private CA"
-msgstr "Vybrat soukromou CA"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Certificates (*.pem *.crt)"
-msgstr "Certifikáty (*.pem *.crt)"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "All files (*)"
-msgstr "Všechny soubory (*)"
-
-#: crates/kabacus-kde/qml/StatementPage.qml
+#: crates/kabacus-kde/qml/StatementPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Open items only"
 msgstr "Jen otevřené položky"
@@ -1206,17 +1180,17 @@ msgstr "Výpis nelze načíst"
 msgid "Nothing this year"
 msgstr "Letos nic"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Set money aside"
 msgstr "Odložit peníze"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Edit transaction"
 msgstr "Upravit transakci"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Fix reserve lines"
 msgstr "Opravit řádky rezervy"
@@ -1255,17 +1229,17 @@ msgctxt "@option cancel a transaction with a reversal"
 msgid "Void"
 msgstr "Stornovat"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Only the reversal: it didn't happen."
 msgstr "Jen storno: nestalo se to."
 
-#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Real account"
 msgstr "Skutečný účet"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Synthetic account"
 msgstr "Syntetický účet"
@@ -1288,7 +1262,7 @@ msgctxt "@label"
 msgid "Payee:"
 msgstr "Příjemce:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Payee"
 msgstr "Příjemce"
@@ -1299,7 +1273,7 @@ msgctxt "%1 is a payee, %2 the category it usually has, %3 the amount it had las
 msgid "%1 — usually %2, last %3"
 msgstr "%1 — obvykle %2, naposledy %3"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Paid with"
 msgstr "Zaplaceno z"
@@ -1315,7 +1289,7 @@ msgstr "Z"
 msgid "That's a card: record a card purchase so its reserve stays covered."
 msgstr "To je karta: zapište nákup kartou, aby její rezerva zůstala krytá."
 
-#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Category"
 msgstr "Kategorie"
@@ -1338,7 +1312,7 @@ msgctxt "@label"
 msgid "Paid from:"
 msgstr "Zaplaceno z:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Free money"
 msgstr "Volné peníze"
@@ -1372,7 +1346,7 @@ msgctxt "@label"
 msgid "Amount:"
 msgstr "Částka:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Amount"
 msgstr "Částka"
@@ -1383,7 +1357,7 @@ msgctxt "@label"
 msgid "Their share:"
 msgstr "Jejich podíl:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Their share"
 msgstr "Jejich podíl"
@@ -1406,7 +1380,7 @@ msgctxt "@label"
 msgid "Date:"
 msgstr "Datum:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Date"
 msgstr "Datum"
@@ -1423,7 +1397,7 @@ msgctxt "@label"
 msgid "Memo:"
 msgstr "Poznámka:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Memo"
 msgstr "Poznámka"
@@ -1453,7 +1427,7 @@ msgstr "Přesune také částku z volných peněz do rezervy karty, aby karta z�
 msgid "Also moves the amount from the reserve into the card's reserve, so the card stays covered."
 msgstr "Také přesune částku z rezervy do rezervy karty, aby karta zůstala krytá."
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Preview"
 msgstr "Náhled"
@@ -1463,12 +1437,22 @@ msgstr "Náhled"
 msgid "Updates as you type. Nothing is written until you save."
 msgstr "Aktualizuje se během psaní. Nic se nezapíše, dokud neuložíte."
 
+#: crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Welcome to Kabacus"
+msgstr "Vítejte v Kabacus"
+
+#: crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Your books, on this computer. Every change is saved."
+msgstr "Vaše knihy v tomto počítači. Každá změna se uloží."
+
 #: crates/kabacus-kde/src/auth.rs
 #, kde-format
 msgid "The server uses OAuth but didn't say which provider"
 msgstr "Server používá OAuth, ale neřekl, kterého poskytovatele"
 
-#: crates/kabacus-kde/src/auth.rs
+#: crates/kabacus-kde/src/auth.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The server uses OAuth but has no client id for the app"
 msgstr "Server používá OAuth, ale nemá pro aplikaci ID klienta"
@@ -1524,12 +1508,12 @@ msgctxt "%1 is the server's address"
 msgid "Can't reach kabacus-server at %1. Is it running?"
 msgstr "Nelze se spojit s kabacus-server na adrese %1. Běží?"
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The server is taking too long to answer."
 msgstr "Serveru trvá odpověď příliš dlouho."
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Your session ended. Sign in again."
 msgstr "Vaše relace skončila. Přihlaste se znovu."
@@ -1549,12 +1533,12 @@ msgstr "Toto účetnictví si můžete prohlížet, ale ne měnit."
 msgid "That isn't in the books any more."
 msgstr "To už v účetnictví není."
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The books changed while you were editing. Review again."
 msgstr "Účetnictví se během úprav změnilo. Zkontrolujte znovu."
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The server had a problem."
 msgstr "Server měl problém."
@@ -1565,7 +1549,7 @@ msgctxt "between the items of a list, such as amounts or account names"
 msgid ", "
 msgstr ", "
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "All transactions"
 msgstr "Všechny transakce"
@@ -1604,10 +1588,10 @@ msgstr "Částka musí být větší než nula"
 
 #: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
 #, kde-format
-msgid "The books have no commits yet"
-msgstr "Účetnictví zatím nemá žádné commity"
+msgid "The books have no revisions yet"
+msgstr "Knihy zatím nemají žádné revize"
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Split transactions can't be edited here yet"
 msgstr "Rozdělené transakce zde zatím nelze upravovat"
@@ -1652,7 +1636,7 @@ msgctxt "%1 is a file, %2 why it can't be read"
 msgid "Can't read the private CA %1: %2"
 msgstr "Soukromou CA %1 nelze přečíst: %2"
 
-#: crates/kabacus-kde/src/settings.rs
+#: crates/kabacus-kde/src/settings.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The server address must start with https://"
 msgstr "Adresa serveru musí začínat https://"
@@ -1793,7 +1777,7 @@ msgctxt "%1 is the card's reserve"
 msgid "Reserve %1"
 msgstr "Rezerva %1"
 
-#: crates/kabacus-kde/src/views.rs
+#: crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Owes you"
 msgstr "Dluží vám"
@@ -1821,12 +1805,12 @@ msgctxt "Cash on Hand at the end"
 msgid "Closing"
 msgstr "Konec"
 
-#: crates/kabacus-kde/src/views.rs
+#: crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Set aside in reserves"
 msgstr "Odloženo do rezerv"
 
-#: crates/kabacus-kde/src/views.rs
+#: crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loan principal"
 msgstr "Jistina úvěrů"
@@ -1892,7 +1876,7 @@ msgstr "Musí být větší než nula"
 msgid "Enter an amount"
 msgstr "Zadejte částku"
 
-#: crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Not an amount: use digits and a decimal point, like 12.34"
 msgstr "Toto není částka: použijte číslice a desetinnou tečku, například 12.34"
@@ -1916,7 +1900,7 @@ msgstr[0] "Použijte nejvýše %1 desetinné místo"
 msgstr[1] "Použijte nejvýše %1 desetinná místa"
 msgstr[2] "Použijte nejvýše %1 desetinných míst"
 
-#: crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name the new reserve"
 msgstr "Pojmenujte novou rezervu"
@@ -2017,7 +2001,7 @@ msgstr "Jejich podíl nemůže být větší než celek"
 msgid "The transaction"
 msgstr "Transakce"
 
-#: crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Choose at least one transaction"
 msgstr "Vyberte alespoň jednu transakci"
@@ -2061,7 +2045,7 @@ msgstr "Někdo"
 msgid "Nothing to save: the books already say this."
 msgstr "Není co uložit: účetnictví už to uvádí."
 
-#: crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The books still check out with this change"
 msgstr "Knihy jsou s touto změnou stále v pořádku"
@@ -2072,10 +2056,489 @@ msgctxt "%1 is a card"
 msgid "%1 stays covered by its reserve"
 msgstr "%1 zůstává krytá rezervou"
 
-#: crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "A card is missing its reserve lines; it will be flagged"
 msgstr "Kartě chybí řádky rezervy; bude označena"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Sign in to %1"
+msgstr "Přihlásit se k %1"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Back to my books"
+msgstr "Zpět k mým knihám"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 saved a change while you were reviewing: %2. Yours hasn't been written."
+msgstr "%1 uložil změnu, zatímco jste kontrolovali: %2. Vaše nebyla zapsána."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Matched: %1 on %2, the same as the statement."
+msgstr "Souhlasí: %1 ke dni %2, stejně jako výpis."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Doesn't match yet: the books say %1, the statement %2 (difference %3). Nothing has been written."
+msgstr "Zatím nesouhlasí: účetnictví uvádí %1, výpis %2 (rozdíl %3). Nic nebylo zapsáno."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Other"
+msgstr "Ostatní"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "MCP"
+msgstr "MCP"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "External edit"
+msgstr "Externí úprava"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Fix"
+msgstr "Opravit"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connection settings saved"
+msgstr "Nastavení spojení uloženo"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Spent"
+msgstr "Utraceno"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Received"
+msgstr "Přijato"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Who"
+msgstr "Kdo"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Loans"
+msgstr "Úvěry"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Investments"
+msgstr "Investice"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Void"
+msgstr "Stornovat"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Card"
+msgstr "Karta"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Paid from:"
+msgstr "Zaplaceno z:"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 → %2"
+msgstr "%1 → %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reconcile…"
+msgstr "Odsouhlasit…"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Opening"
+msgstr "Počátek"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Closing"
+msgstr "Konec"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash"
+msgstr "Hotovost"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Not cash"
+msgstr "Nehotovost"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "vs %1"
+msgstr "oproti %1"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Income"
+msgstr "Příjmy"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Spending"
+msgstr "Výdaje"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Net:"
+msgstr "Čistý výsledek:"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Money"
+msgstr "Peníze"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Go"
+msgstr "Přejít"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
+msgstr "Transakce"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reserves"
+msgstr "Rezervy"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This app"
+msgstr "Tato aplikace"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Dluží"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reserve"
+msgstr "Rezerva"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "unreserved"
+msgstr "bez rezervy"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Check"
+msgstr "Zkontrolovat"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Review"
+msgstr "Zkontrolovat"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Unknown"
+msgstr "Neznámé"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "All"
+msgstr "Vše"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "From"
+msgstr "Z"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "To"
+msgstr "Do"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cards"
+msgstr "Karty"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "LTR"
+msgstr "LTR"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 (%2)"
+msgstr "%1 · %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 unreserved"
+msgstr "%1 bez rezervy"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Accounts"
+msgstr "Účty"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Add — what happened?"
+msgstr "Přidat — co se stalo?"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Allow editing again"
+msgstr "Znovu povolit úpravy"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Balanced · checked against revision %1"
+msgstr "Vyrovnáno · zkontrolováno proti revizi %1"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Bank & cash"
+msgstr "Banka a hotovost"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Browser storage"
+msgstr "Úložiště prohlížeče"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Can't save these books. Check the folder's permissions and available space."
+msgstr "Knihy nelze uložit. Zkontrolujte oprávnění složky a volné místo."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Choose a new file name; these books already exist."
+msgstr "Zvolte nový název souboru; tyto knihy již existují."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Choose what happened. The form fills in the lines; you see what changes before you save."
+msgstr "Vyberte, co se stalo. Formulář vyplní účetní řádky; změny uvidíte před uložením."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Close"
+msgstr "Zavřít"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connected"
+msgstr "Připojeno"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Credit"
+msgstr "Úvěr"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Nothing is set aside yet"
+msgstr "Zatím není nic odloženo"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Pick up where you left off"
+msgstr "Pokračujte tam, kde jste skončili"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reopen"
+msgstr "Znovu otevřít"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reserved"
+msgstr "Vyhrazeno"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
+msgstr "Rezervy uchovávají peníze na později, například na daň z nemovitosti nebo opravy auta. Zůstávají na vašem bankovním účtu."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Saved as revision %1"
+msgstr "Uloženo jako revize %1"
+
+#, kde-format
+#~ msgid "The books changed"
+#~ msgstr "Účetnictví se změnilo"
+
+#, kde-format
+#~ msgid "Discard mine"
+#~ msgstr "Zahodit moji"
+
+#, kde-format
+#~ msgid "Review again"
+#~ msgstr "Zkontrolovat znovu"
+
+#, kde-format
+#~ msgid "The books have no commits yet"
+#~ msgstr "Účetnictví zatím nemá žádné commity"
+
+#, kde-format
+#~ msgctxt "%1 is who made a change, %2 its commit"
+#~ msgid "%1 · %2"
+#~ msgstr "%1 · %2"
+
+#, kde-format
+#~ msgctxt "%1 is the commit's short hash"
+#~ msgid "Saved as commit %1"
+#~ msgstr "Uloženo jako commit %1"
+
+#, kde-format
+#~ msgctxt "@action:inmenu"
+#~ msgid "Quit"
+#~ msgstr "Ukončit"
+
+#, kde-format
+#~ msgctxt "@label"
+#~ msgid "Server:"
+#~ msgstr "Server:"
+
+#, kde-format
+#~ msgid "On another computer (HTTPS)"
+#~ msgstr "Na jiném počítači (HTTPS)"
+
+#, kde-format
+#~ msgctxt "the server's unix socket"
+#~ msgid "Socket"
+#~ msgstr "Soket"
+
+#, kde-format
+#~ msgctxt "@label the server's unix socket"
+#~ msgid "Socket:"
+#~ msgstr "Soket:"
+
+#, kde-format
+#~ msgctxt "@label"
+#~ msgid "Server address:"
+#~ msgstr "Adresa serveru:"
+
+#, kde-format
+#~ msgctxt "@label a private certificate authority"
+#~ msgid "Private CA:"
+#~ msgstr "Soukromá CA:"
+
+#, kde-format
+#~ msgctxt "a private certificate authority"
+#~ msgid "Private CA"
+#~ msgstr "Soukromá CA"
+
+#, kde-format
+#~ msgid "System certificates only"
+#~ msgstr "Jen systémové certifikáty"
+
+#, kde-format
+#~ msgid "Choose…"
+#~ msgstr "Vybrat…"
+
+#, kde-format
+#~ msgid "Only needed when the server's certificate comes from your own CA."
+#~ msgstr "Potřeba jen tehdy, když certifikát serveru pochází z vaší vlastní CA."
+
+#, kde-format
+#~ msgctxt "@title the signed-in user"
+#~ msgid "Account"
+#~ msgstr "Účet uživatele"
+
+#, kde-format
+#~ msgctxt "@label"
+#~ msgid "Signed in:"
+#~ msgstr "Přihlášeno:"
+
+#, kde-format
+#~ msgid "Not needed: authentication is off (local mode)"
+#~ msgstr "Není potřeba: ověřování je vypnuté (místní režim)"
+
+#, kde-format
+#~ msgctxt "%1 is the user, %2 the sign-in provider"
+#~ msgid "%1 (%2)"
+#~ msgstr "%1 (%2)"
+
+#, kde-format
+#~ msgctxt "signed in; %1 is the sign-in provider"
+#~ msgid "Yes (%1)"
+#~ msgstr "Ano (%1)"
+
+#, kde-format
+#~ msgid "Session ended; sign in again"
+#~ msgstr "Relace skončila; přihlaste se znovu"
+
+#, kde-format
+#~ msgctxt "not signed in"
+#~ msgid "No"
+#~ msgstr "Ne"
+
+#, kde-format
+#~ msgid "Unknown: can't reach the server"
+#~ msgstr "Neznámé: nelze se spojit se serverem"
+
+#, kde-format
+#~ msgid "Waiting for the browser…"
+#~ msgstr "Čeká se na prohlížeč…"
+
+#, kde-format
+#~ msgctxt "@title about the server"
+#~ msgid "About"
+#~ msgstr "O aplikaci"
+
+#, kde-format
+#~ msgid "Can't reach the server to read its version"
+#~ msgstr "K serveru se nelze připojit a přečíst jeho verzi"
+
+#, kde-format
+#~ msgctxt "@label the server's version"
+#~ msgid "Server version:"
+#~ msgstr "Verze serveru:"
+
+#, kde-format
+#~ msgctxt "@label the commit the server was built from"
+#~ msgid "Commit:"
+#~ msgstr "Commit:"
+
+#, kde-format
+#~ msgctxt "@label where the server's source code is"
+#~ msgid "Source code:"
+#~ msgstr "Zdrojový kód:"
+
+#, kde-format
+#~ msgid "Choose the private CA"
+#~ msgstr "Vybrat soukromou CA"
+
+#, kde-format
+#~ msgid "Certificates (*.pem *.crt)"
+#~ msgstr "Certifikáty (*.pem *.crt)"
+
+#, kde-format
+#~ msgid "All files (*)"
+#~ msgstr "Všechny soubory (*)"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"
@@ -2136,20 +2599,8 @@ msgstr "Kartě chybí řádky rezervy; bude označena"
 #~ msgstr "Účet:"
 
 #, kde-format
-#~ msgid "Account"
-#~ msgstr "Účet"
-
-#, kde-format
-#~ msgid "Accounts"
-#~ msgstr "Účty"
-
-#, kde-format
 #~ msgid "Into a fund, out, or between funds"
 #~ msgstr "Do fondu, z fondu nebo mezi fondy"
-
-#, kde-format
-#~ msgid "Cards"
-#~ msgstr "Karty"
 
 #, kde-format
 #~ msgid "Funds"

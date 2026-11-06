@@ -56,6 +56,7 @@ export function Activity({ api, data, onOpen }) {
                 </button>
               </h3>
               <small>
+                {change.agent && <span className="agent-badge">{t("Agent")}: {change.agent} · </span>}
                 {t("%1 · %2", change.user || change.actor || "", change.date)}
               </small>
             </div>

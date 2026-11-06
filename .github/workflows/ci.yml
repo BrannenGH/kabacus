@@ -42,8 +42,8 @@ jobs:
         run: |
           files="$(git diff --name-only "$BASE" HEAD 2>/dev/null || echo ALL)"
           touches() { echo "$files" | grep -qE "^ALL$|$1" && echo true || echo false; }
-          echo "app=$(touches '^(crates/(kabacus-kde|kabacus-client|kabacus-core)/|Cargo\.(toml|lock)$|po/|design/|packaging/|xtask/|scripts/(build-packages|package-version|dev)$|Containerfile$)')" >> "$GITHUB_OUTPUT"
-          echo "server=$(touches '^(crates/(kabacus-server|kabacus-core)/|Cargo\.(toml|lock)$|Containerfile$|container/|scripts/build-image$|apps/kabacus-ui/)')" >> "$GITHUB_OUTPUT"
+          echo "app=$(touches '^(crates/(kabacus-kde|kabacus-client|kabacus-core|kabacus-service|kabacus-store|kabacus-mcp|kabacus-cli)/|Cargo\.(toml|lock)$|po/|design/|packaging/|xtask/|scripts/(build-packages|package-version|dev)$|Containerfile$)')" >> "$GITHUB_OUTPUT"
+          echo "server=$(touches '^(crates/(kabacus-server|kabacus-service|kabacus-store|kabacus-ledger|kabacus-core)/|Cargo\.(toml|lock)$|Containerfile$|container/|scripts/build-image$|apps/kabacus-ui/)')" >> "$GITHUB_OUTPUT"
 
   # Every file states its copyright and licence (REUSE.toml, LICENSES/), as
   # KDE's licensing policy asks. The REUSE project's own image, pinned to
@@ -154,6 +154,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Build portable engine
+        run: |
+          podman build --build-arg SOURCE_COMMIT="${{ github.sha }}" --target wasm -t localhost/kabacus-wasm -f Containerfile .
+          podman run --rm --volume "$PWD/apps/kabacus-ui/public:/out:Z" localhost/kabacus-wasm sh -c 'cp -r /src/apps/kabacus-ui/public/wasm /out/'
       - name: Build and test the React interface
         run: >-
           podman run --rm --ipc=host --volume "$PWD:/work:Z"
@@ -168,13 +172,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/free-disk-space
       - name: Build the native test image
-        run: podman build --target tauri-test -t localhost/kabacus-tauri-test -f Containerfile .
+        run: podman build --build-arg SOURCE_COMMIT="${{ github.sha }}" --target tauri-test -t localhost/kabacus-tauri-test -f Containerfile .
       - name: Compile and test the native shell
         run: >-
           podman run --rm --volume "$PWD:/work:Z" --workdir /work
           --env CARGO_BUILD_JOBS=2 --env CARGO_PROFILE_DEV_DEBUG=0
           localhost/kabacus-tauri-test
-          sh -c 'cd apps/kabacus-ui && npm ci && npm run build
+          sh -c 'scripts/build-desktop-cli && cd apps/kabacus-ui && cp -r /opt/kabacus-wasm public/wasm && npm ci && npm run build
           && cargo fmt --manifest-path src-tauri/Cargo.toml --check
           && cargo test --manifest-path src-tauri/Cargo.toml --locked
           && cargo build --manifest-path src-tauri/Cargo.toml --locked

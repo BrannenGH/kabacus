@@ -11,12 +11,14 @@
 //! engine implementation specification, sections 1.2 to 1.8 and 2.4.
 
 pub mod file;
+#[cfg(not(target_arch = "wasm32"))]
 pub mod postgres;
 pub mod rows;
 pub mod sqlite;
-#[cfg(feature = "testing")]
+#[cfg(all(feature = "testing", not(target_arch = "wasm32")))]
 pub mod testing;
 
+#[cfg(not(target_arch = "wasm32"))]
 pub use postgres::PostgresStore;
 pub use rows::{ChangeSet, Row, RowChange, RowKey};
 pub use sqlite::SqliteStore;
@@ -24,6 +26,7 @@ pub use sqlite::SqliteStore;
 use kabacus_ledger::Book;
 use serde::{Deserialize, Serialize};
 use std::future::Future;
+#[cfg(not(target_arch = "wasm32"))]
 use std::path::Path;
 
 pub type LedgerId = i64;
@@ -146,6 +149,7 @@ pub enum StoreError {
     #[error(transparent)]
     Sqlite(#[from] rusqlite::Error),
     #[error(transparent)]
+    #[cfg(not(target_arch = "wasm32"))]
     Postgres(#[from] tokio_postgres::Error),
     #[error("the database connection pool: {0}")]
     Pool(String),
@@ -302,7 +306,32 @@ pub trait BookStore: Send + Sync {
         }
     }
 
-    /// Write `ledgers` to a new `.kabacus` file at `to`.
+    fn export_bytes(&self, ledgers: &[LedgerId]) -> impl Future<Output = Result<Vec<u8>>> + Send {
+        async move {
+            let mut dumps = Vec::new();
+            for &ledger in ledgers {
+                dumps.push(self.dump(ledger).await?);
+            }
+            file::write_bytes(&dumps)
+        }
+    }
+
+    fn import_bytes(
+        &self,
+        bytes: &[u8],
+        owner: UserId,
+    ) -> impl Future<Output = Result<Vec<LedgerId>>> + Send {
+        async move {
+            let dumps = file::read_bytes(bytes)?;
+            let mut ids = Vec::new();
+            for dump in dumps {
+                ids.push(self.restore(dump, owner).await?);
+            }
+            Ok(ids)
+        }
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
     fn export_file(
         &self,
         ledgers: &[LedgerId],
@@ -320,9 +349,7 @@ pub trait BookStore: Send + Sync {
         }
     }
 
-    /// Every ledger in the `.kabacus` file at `from`, as new ledgers owned
-    /// by `owner`. The file is checked whole first; any failure refuses
-    /// the whole import and nothing is written.
+    #[cfg(not(target_arch = "wasm32"))]
     fn import_file(
         &self,
         from: &Path,
@@ -345,6 +372,7 @@ pub trait BookStore: Send + Sync {
 /// Either store, chosen by configuration.
 pub enum AnyStore {
     Sqlite(SqliteStore),
+    #[cfg(not(target_arch = "wasm32"))]
     Postgres(PostgresStore),
 }
 
@@ -352,6 +380,7 @@ macro_rules! delegate {
     ($self:ident, $s:ident => $e:expr) => {
         match $self {
             AnyStore::Sqlite($s) => $e.await,
+            #[cfg(not(target_arch = "wasm32"))]
             AnyStore::Postgres($s) => $e.await,
         }
     };

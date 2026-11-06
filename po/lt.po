@@ -29,27 +29,27 @@ msgctxt "%1 is the closest account to what was typed"
 msgid "Use %1"
 msgstr "Naudoti %1"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add"
 msgstr "Pridėti"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Not signed in"
 msgstr "Neprisijungta"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Can't reach kabacus-server"
 msgstr "Nepavyksta susisiekti su kabacus-server"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml
+#: crates/kabacus-kde/qml/AccountsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No accounts"
 msgstr "Sąskaitų nėra"
 
-#: crates/kabacus-kde/qml/ActivityPage.qml crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/ActivityPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Activity"
 msgstr "Veikla"
@@ -78,9 +78,14 @@ msgctxt "changes made by"
 msgid "External"
 msgstr "Išoriniai"
 
+#: crates/kabacus-kde/qml/ActivityPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Agent"
+msgstr "Agentas"
+
 #: crates/kabacus-kde/qml/ActivityPage.qml
 #, kde-format
-msgctxt "%1 is who made a change, %2 its commit"
+msgctxt "%1 is who made a change, %2 its revision"
 msgid "%1 · %2"
 msgstr "%1 · %2"
 
@@ -89,7 +94,7 @@ msgstr "%1 · %2"
 msgid "Can't load the history"
 msgstr "Nepavyksta įkelti istorijos"
 
-#: crates/kabacus-kde/qml/ActivityPage.qml
+#: crates/kabacus-kde/qml/ActivityPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No changes"
 msgstr "Pakeitimų nėra"
@@ -100,7 +105,7 @@ msgctxt "@action what happened"
 msgid "Spent"
 msgstr "Išleista"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money left an account"
 msgstr "Pinigai išėjo iš sąskaitos"
@@ -111,67 +116,67 @@ msgctxt "@action what happened"
 msgid "Received"
 msgstr "Gauta"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Income or a refund"
 msgstr "Pajamos arba grąžinimas"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Card purchase"
 msgstr "Pirkimas kortele"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Adds the reserve lines for you"
 msgstr "Prideda rezervo eilutes už jus"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Transfer"
 msgstr "Pervedimas"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Between two bank accounts"
 msgstr "Tarp dviejų banko sąskaitų"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Set aside"
 msgstr "Atidėti"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Into a reserve, out, or between reserves"
 msgstr "Į rezervą, iš jo arba tarp rezervų"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Pay a card"
 msgstr "Apmokėti kortelę"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "From its reserve"
 msgstr "Iš jos rezervo"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Split with someone"
 msgstr "Pasidalyti su kuo nors"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "They owe you, or you owe them"
 msgstr "Jie skolingi jums, arba jūs jiems"
 
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Postings"
 msgstr "Įrašai"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Any two accounts"
 msgstr "Bet kurios dvi sąskaitos"
@@ -181,17 +186,17 @@ msgstr "Bet kurios dvi sąskaitos"
 msgid "Can't load cards"
 msgstr "Nepavyksta įkelti kortelių"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No credit cards"
 msgstr "Kredito kortelių nėra"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Record purchase"
 msgstr "Įrašyti pirkimą"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Pay card"
 msgstr "Apmokėti kortelę"
@@ -208,7 +213,7 @@ msgctxt "a card's reserve"
 msgid "Reserve"
 msgstr "Rezervas"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Still to reserve"
 msgstr "Dar reikia rezervuoti"
@@ -228,7 +233,7 @@ msgstr[1] "%1 operacijos keičia kortelę nekeisdamos jos rezervo."
 msgstr[2] "%1 operacijų keičia kortelę nekeisdamos jos rezervo."
 msgstr[3] "%1 operacija keičia kortelę nekeisdama jos rezervo."
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add all reserve lines"
 msgstr "Pridėti visas rezervo eilutes"
@@ -245,17 +250,17 @@ msgctxt "%1 is an amount"
 msgid "Missing reserve %1"
 msgstr "Trūksta rezervo %1"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add reserve lines"
 msgstr "Pridėti rezervo eilutes"
 
-#: crates/kabacus-kde/qml/CardsPage.qml
+#: crates/kabacus-kde/qml/CardsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "What the reserve holds"
 msgstr "Iš ko susideda rezervas"
 
-#: crates/kabacus-kde/qml/CommitPage.qml
+#: crates/kabacus-kde/qml/CommitPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Open transaction"
 msgstr "Atverti operaciją"
@@ -299,7 +304,7 @@ msgstr "Nepavyksta įkelti rezervų"
 msgid "No bank accounts with reserves yet"
 msgstr "Kol kas nėra banko sąskaitų su rezervais"
 
-#: crates/kabacus-kde/qml/FundsPage.qml
+#: crates/kabacus-kde/qml/FundsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "in the bank"
 msgstr "banke"
@@ -310,7 +315,7 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Laisva"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Card reserves"
 msgstr "Kortelių rezervai"
@@ -356,10 +361,15 @@ msgstr "LTR"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
+msgid "Reopened where you left off"
+msgstr "Atverta ten, kur baigėte"
+
+#: crates/kabacus-kde/qml/Main.qml
+#, kde-format
 msgid "Signed out"
 msgstr "Atsijungta"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Overview"
 msgstr "Apžvalga"
@@ -388,26 +398,46 @@ msgctxt "destination: credit cards"
 msgid "Credit"
 msgstr "Kreditas"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/PeoplePage.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/PeoplePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "People"
 msgstr "Žmonės"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/ReportsPage.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/ReportsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Reports"
 msgstr "Ataskaitos"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
-msgctxt "%1 is the commit's short hash"
-msgid "Saved as commit %1"
-msgstr "Įrašyta kaip įkėlimas %1"
+msgctxt "%1 is the revision number"
+msgid "Saved as revision %1"
+msgstr "Įrašyta kaip %1 peržiūra"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "View"
+msgstr "Rodyti"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
 msgstr "Nuostatos"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "On this computer"
+msgstr "Šiame kompiuteryje"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "All changes saved"
+msgstr "Visi pakeitimai įrašyti"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 is working in these books"
+msgstr "%1 dirba su šiomis knygomis"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
@@ -415,19 +445,43 @@ msgctxt "@title:menu"
 msgid "File"
 msgstr "Failas"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Add transaction"
-msgstr "Pridėti operaciją"
+msgid "New Window"
+msgstr "Naujas langas"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Refresh"
-msgstr "Atnaujinti"
+msgid "New Books…"
+msgstr "Naujos knygos…"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "@action:inmenu"
+msgid "Open Books…"
+msgstr "Atverti knygas…"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Open Recent"
+msgstr "Atverti paskiausias"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Save a Copy As…"
+msgstr "Įrašyti kopiją kaip…"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Close Window"
+msgstr "Užverti langą"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connect to a Server…"
+msgstr "Prisijungti prie serverio…"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Quit"
 msgstr "Baigti"
 
@@ -448,7 +502,7 @@ msgctxt "the other destinations"
 msgid "More"
 msgstr "Daugiau"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Authentication off (local mode)"
 msgstr "Tapatybės nustatymas išjungtas (vietinė veiksena)"
@@ -475,7 +529,7 @@ msgstr "Prisijunkite per %1, kad matytumėte savo apskaitą."
 msgid "Sign in again"
 msgstr "Prisijungti iš naujo"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr "Prisijungti"
@@ -485,7 +539,7 @@ msgstr "Prisijungti"
 msgid "Finish signing in in your browser…"
 msgstr "Baikite prisijungimą naršyklėje…"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cancel"
 msgstr "Atsisakyti"
@@ -496,17 +550,17 @@ msgctxt "%1 is why the server can't be reached, as one sentence"
 msgid "%1 Showing what was loaded; changes are off until it's back."
 msgstr "%1 Rodoma tai, kas buvo įkelta; keitimai išjungti, kol ryšys grįš."
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Retry"
 msgstr "Bandyti dar kartą"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/src/views.rs
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Details"
 msgstr "Išsamiau"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connection settings"
 msgstr "Ryšio nuostatos"
@@ -516,7 +570,7 @@ msgstr "Ryšio nuostatos"
 msgid "Error details"
 msgstr "Klaidos išsami informacija"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Discard this change?"
 msgstr "Atmesti šį pakeitimą?"
@@ -526,7 +580,7 @@ msgstr "Atmesti šį pakeitimą?"
 msgid "What you typed hasn't been saved."
 msgstr "Tai, ką įvedėte, neįrašyta."
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Keep editing"
 msgstr "Tęsti taisymą"
@@ -536,10 +590,10 @@ msgstr "Tęsti taisymą"
 msgid "Discard"
 msgstr "Atmesti"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "The books changed"
-msgstr "Apskaita pasikeitė"
+msgid "Someone saved first"
+msgstr "Kažkas įrašė pirmiau"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
@@ -553,37 +607,82 @@ msgctxt "%1 is who"
 msgid "%1 saved a change while you were reviewing. Yours hasn't been written."
 msgstr "%1 įrašė pakeitimą, kol jūs peržiūrėjote. Jūsiškis neįrašytas."
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Discard mine"
-msgstr "Atmesti manąjį"
+msgid "See their change"
+msgstr "Rodyti kito asmens pakeitimą"
 
-#: crates/kabacus-kde/qml/Main.qml
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Review again"
-msgstr "Peržiūrėti iš naujo"
+msgid "Preview again"
+msgstr "Vėl peržiūrėti"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Name"
+msgstr "Pavadinimas"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Currency"
+msgstr "Valiuta"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "First account"
+msgstr "Pirmoji sąskaita"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Create books"
+msgstr "Sukurti knygas"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Server address"
+msgstr "Serverio adresas"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Private CA"
+msgstr "Privati liudijimų įstaiga"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Test connection"
+msgstr "Išbandyti ryšį"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connect"
+msgstr "Prisijungti"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Refresh"
+msgstr "Atnaujinti"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr "Nepavyksta įkelti išleidžiamų pinigų"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr "Įkeliama…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cash on Hand"
 msgstr "Išleidžiami pinigai"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "Apie išleidžiamus pinigus"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr "Laisvi pinigai, kuriuos galite išleisti dabar, atėmus rezervus ir kortelių rezervus."
@@ -600,17 +699,17 @@ msgctxt "%1 is an amount"
 msgid "Cash on Hand %1"
 msgstr "Išleidžiami pinigai %1"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money on Hand"
 msgstr "Turimi pinigai"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Money on Hand"
 msgstr "Apie turimus pinigus"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Everything in your bank accounts, reserves and card reserves included, plus what people owe you. Cash on Hand is what's left once reserves, card reserves and what you're owed are set apart."
 msgstr "Viskas jūsų banko sąskaitose, įskaitant rezervus ir kortelių rezervus, plius tai, ką kiti jums skolingi. Išleidžiami pinigai – tai, kas lieka atskyrus rezervus, kortelių rezervus ir jums skolingas sumas."
@@ -625,7 +724,7 @@ msgstr "− Būsimi paskirstymai (rezervai ir kortelių rezervai)"
 msgid "− Receivables (owed to you)"
 msgstr "− Gautinos sumos (ką jums skolingi)"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Free money by account"
 msgstr "Laisvi pinigai pagal sąskaitas"
@@ -641,7 +740,7 @@ msgstr "%1 laisva %2"
 msgid "No account has free money right now."
 msgstr "Šiuo metu jokioje sąskaitoje nėra laisvų pinigų."
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Nothing is set aside in a reserve."
 msgstr "Jokiame rezerve nieko neatidėta."
@@ -652,12 +751,12 @@ msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "padengta"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Each card's reserve should equal what it owes."
 msgstr "Kiekvienos kortelės rezervas turėtų būti lygus jos skolai."
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cash on Hand over time"
 msgstr "Išleidžiami pinigai laike"
@@ -696,7 +795,7 @@ msgstr "Nepavyksta įkelti žmonių"
 msgid "Nobody owes or is owed anything"
 msgstr "Niekas niekam nieko neskolingas"
 
-#: crates/kabacus-kde/qml/PreviewPane.qml
+#: crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "What changes"
 msgstr "Kas pasikeičia"
@@ -771,17 +870,17 @@ msgctxt "%1 is the books' balance, %2 the statement's, %3 the difference"
 msgid "Doesn't match yet: the books say %1, the statement %2 (difference %3). Nothing has been written."
 msgstr "Dar nesutampa: apskaitoje %1, išraše %2 (skirtumas %3). Niekas neįrašyta."
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Reconcile"
 msgstr "Suderinti"
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Likely explanations"
 msgstr "Tikėtini paaiškinimai"
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Edit"
 msgstr "Taisyti"
@@ -798,7 +897,12 @@ msgctxt "money moved between an account and its funds"
 msgid "within account"
 msgstr "sąskaitos viduje"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Add transaction"
+msgstr "Pridėti operaciją"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account type"
 msgstr "Sąskaitos tipas"
@@ -809,17 +913,17 @@ msgctxt "@action compare an account with its statement"
 msgid "Reconcile…"
 msgstr "Suderinti…"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Search"
 msgstr "Ieškoti"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Search payee, memo, account"
 msgstr "Ieškoti gavėjo, pastabos, sąskaitos"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Unreserved only"
 msgstr "Tik be rezervo"
@@ -859,12 +963,12 @@ msgctxt "%1 is what was searched for"
 msgid "No transactions match “%1”"
 msgstr "Nėra operacijų, atitinkančių „%1“"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No unreserved transactions"
 msgstr "Nėra operacijų be rezervo"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr "Operacijų nėra"
@@ -890,17 +994,17 @@ msgstr "Ankstesnis mėnuo"
 msgid "Next month"
 msgstr "Kitas mėnuo"
 
-#: crates/kabacus-kde/qml/ReportsPage.qml
+#: crates/kabacus-kde/qml/ReportsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cash flow"
 msgstr "Pinigų srautai"
 
-#: crates/kabacus-kde/qml/ReportsPage.qml
+#: crates/kabacus-kde/qml/ReportsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Income statement"
 msgstr "Pelno (nuostolių) ataskaita"
 
-#: crates/kabacus-kde/qml/ReportsPage.qml
+#: crates/kabacus-kde/qml/ReportsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Categories"
 msgstr "Kategorijos"
@@ -947,7 +1051,7 @@ msgctxt "@label income less expenses"
 msgid "Net:"
 msgstr "Grynasis rezultatas:"
 
-#: crates/kabacus-kde/qml/ReportsPage.qml
+#: crates/kabacus-kde/qml/ReportsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Count loan principal as money spent"
 msgstr "Laikyti grąžintą pagrindinę sumą išleistais pinigais"
@@ -970,12 +1074,12 @@ msgctxt "%1 is a month and year"
 msgid "No spending in %1"
 msgstr "Išlaidų nėra: %1"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml
+#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
 msgstr "Peržiūrėti prieš įrašant"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml
+#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Back to edit"
 msgstr "Atgal į taisymą"
@@ -985,12 +1089,12 @@ msgstr "Atgal į taisymą"
 msgid "Saving…"
 msgstr "Įrašoma…"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Save"
 msgstr "Įrašyti"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Checking with the server…"
 msgstr "Tikrinama su serveriu…"
@@ -1006,187 +1110,57 @@ msgstr "Tai pažeistų likučio patikrą: %1 turėtų būti %2, bet būtų %3. P
 msgid "Change the transaction"
 msgstr "Pakeisti operaciją"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Test connection"
-msgstr "Išbandyti ryšį"
+msgid "When Kabacus starts"
+msgstr "Paleidus Kabacus"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Connection settings saved"
-msgstr "Ryšio nuostatos įrašytos"
+msgid "Reopen my windows"
+msgstr "Vėl atverti mano langus"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "@label"
-msgid "Server:"
-msgstr "Serveris:"
+msgid "Show Welcome when this is off."
+msgstr "Išjungus rodyti pasveikinimo langą."
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "On this computer"
-msgstr "Šiame kompiuteryje"
+msgid "Automation"
+msgstr "Automatizavimas"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "On another computer (HTTPS)"
-msgstr "Kitame kompiuteryje (HTTPS)"
+msgid "Let agents drive this window"
+msgstr "Leisti agentams valdyti šį langą"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "the server's unix socket"
-msgid "Socket"
-msgstr "Lizdas"
+msgid "Control port"
+msgstr "Valdymo prievadas"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "@label the server's unix socket"
-msgid "Socket:"
-msgstr "Lizdas:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Server address"
-msgstr "Serverio adresas"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label"
-msgid "Server address:"
-msgstr "Serverio adresas:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label a private certificate authority"
-msgid "Private CA:"
-msgstr "Privati LĮ:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "a private certificate authority"
-msgid "Private CA"
-msgstr "Privati LĮ"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "System certificates only"
-msgstr "Tik sistemos liudijimai"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Choose…"
-msgstr "Pasirinkti…"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Only needed when the server's certificate comes from your own CA."
-msgstr "Reikia tik tada, kai serverio liudijimą išdavė jūsų pačių liudijimų įstaiga."
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@title the signed-in user"
 msgid "Account"
-msgstr "Paskyra"
+msgstr "Sąskaita"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label"
-msgid "Signed in:"
-msgstr "Prisijungta:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Not needed: authentication is off (local mode)"
-msgstr "Nereikia: tapatybės nustatymas išjungtas (vietinė veiksena)"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "%1 is the user, %2 the sign-in provider"
-msgid "%1 (%2)"
-msgstr "%1 (%2)"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "signed in; %1 is the sign-in provider"
-msgid "Yes (%1)"
-msgstr "Taip (%1)"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Session ended; sign in again"
-msgstr "Seansas baigėsi; prisijunkite iš naujo"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "not signed in"
-msgid "No"
-msgstr "Ne"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Unknown: can't reach the server"
-msgstr "Nežinoma: nepavyksta susisiekti su serveriu"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Waiting for the browser…"
-msgstr "Laukiama naršyklės…"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign out"
 msgstr "Atsijungti"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "@title about the server"
 msgid "About"
 msgstr "Apie"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Can't reach the server to read its version"
-msgstr "Nepavyksta pasiekti serverio jo versijai perskaityti"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label the server's version"
-msgid "Server version:"
-msgstr "Serverio versija:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label the commit the server was built from"
-msgid "Commit:"
-msgstr "Commit:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgctxt "@label where the server's source code is"
-msgid "Source code:"
-msgstr "Šaltinio kodas:"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Open the source code"
 msgstr "Atverti šaltinio kodą"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Choose the private CA"
-msgstr "Pasirinkite privačią LĮ"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "Certificates (*.pem *.crt)"
-msgstr "Liudijimai (*.pem *.crt)"
-
-#: crates/kabacus-kde/qml/SettingsPage.qml
-#, kde-format
-msgid "All files (*)"
-msgstr "Visi failai (*)"
-
-#: crates/kabacus-kde/qml/StatementPage.qml
+#: crates/kabacus-kde/qml/StatementPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Open items only"
 msgstr "Tik atviri įrašai"
@@ -1207,17 +1181,17 @@ msgstr "Nepavyksta įkelti išrašo"
 msgid "Nothing this year"
 msgstr "Šiais metais nieko"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Set money aside"
 msgstr "Atidėti pinigų"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Edit transaction"
 msgstr "Taisyti operaciją"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Fix reserve lines"
 msgstr "Sutvarkyti rezervo eilutes"
@@ -1256,17 +1230,17 @@ msgctxt "@option cancel a transaction with a reversal"
 msgid "Void"
 msgstr "Anuliuoti"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Only the reversal: it didn't happen."
 msgstr "Tik atšaukimas: to nebuvo."
 
-#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Real account"
 msgstr "Tikra sąskaita"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Synthetic account"
 msgstr "Sintetinė sąskaita"
@@ -1289,7 +1263,7 @@ msgctxt "@label"
 msgid "Payee:"
 msgstr "Gavėjas:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Payee"
 msgstr "Gavėjas"
@@ -1300,7 +1274,7 @@ msgctxt "%1 is a payee, %2 the category it usually has, %3 the amount it had las
 msgid "%1 — usually %2, last %3"
 msgstr "%1 — paprastai %2, paskutinį kartą %3"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Paid with"
 msgstr "Apmokėta iš"
@@ -1316,7 +1290,7 @@ msgstr "Iš"
 msgid "That's a card: record a card purchase so its reserve stays covered."
 msgstr "Tai kortelė: įrašykite pirkimą kortele, kad jos rezervas liktų padengtas."
 
-#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Category"
 msgstr "Kategorija"
@@ -1339,7 +1313,7 @@ msgctxt "@label"
 msgid "Paid from:"
 msgstr "Apmokėta iš:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Free money"
 msgstr "Laisvų pinigų"
@@ -1373,7 +1347,7 @@ msgctxt "@label"
 msgid "Amount:"
 msgstr "Suma:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Amount"
 msgstr "Suma"
@@ -1384,7 +1358,7 @@ msgctxt "@label"
 msgid "Their share:"
 msgstr "Jų dalis:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Their share"
 msgstr "Jų dalis"
@@ -1407,7 +1381,7 @@ msgctxt "@label"
 msgid "Date:"
 msgstr "Data:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Date"
 msgstr "Data"
@@ -1424,7 +1398,7 @@ msgctxt "@label"
 msgid "Memo:"
 msgstr "Pastaba:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Memo"
 msgstr "Pastaba"
@@ -1455,7 +1429,7 @@ msgstr "Taip pat perkelia sumą iš laisvų pinigų į kortelės rezervą, kad k
 msgid "Also moves the amount from the reserve into the card's reserve, so the card stays covered."
 msgstr "Taip pat perkelia sumą iš rezervo į kortelės rezervą, kad kortelė liktų padengta."
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Preview"
 msgstr "Peržiūra"
@@ -1465,12 +1439,22 @@ msgstr "Peržiūra"
 msgid "Updates as you type. Nothing is written until you save."
 msgstr "Atnaujinama jums rašant. Niekas neįrašoma, kol neįrašysite."
 
+#: crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Welcome to Kabacus"
+msgstr "Sveiki atvykę į Kabacus"
+
+#: crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Your books, on this computer. Every change is saved."
+msgstr "Jūsų knygos šiame kompiuteryje. Kiekvienas pakeitimas įrašomas."
+
 #: crates/kabacus-kde/src/auth.rs
 #, kde-format
 msgid "The server uses OAuth but didn't say which provider"
 msgstr "Serveris naudoja OAuth, bet nenurodė, kurio teikėjo"
 
-#: crates/kabacus-kde/src/auth.rs
+#: crates/kabacus-kde/src/auth.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The server uses OAuth but has no client id for the app"
 msgstr "Serveris naudoja OAuth, bet neturi programos kliento ID"
@@ -1526,12 +1510,12 @@ msgctxt "%1 is the server's address"
 msgid "Can't reach kabacus-server at %1. Is it running?"
 msgstr "Nepavyksta susisiekti su kabacus-server adresu %1. Ar jis veikia?"
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The server is taking too long to answer."
 msgstr "Serveris per ilgai neatsako."
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Your session ended. Sign in again."
 msgstr "Jūsų seansas baigėsi. Prisijunkite iš naujo."
@@ -1551,12 +1535,12 @@ msgstr "Šią apskaitą galite peržiūrėti, bet ne keisti."
 msgid "That isn't in the books any more."
 msgstr "To apskaitoje nebėra."
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The books changed while you were editing. Review again."
 msgstr "Apskaita pasikeitė, kol taisėte. Peržiūrėkite iš naujo."
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The server had a problem."
 msgstr "Serveriui kilo problema."
@@ -1567,7 +1551,7 @@ msgctxt "between the items of a list, such as amounts or account names"
 msgid ", "
 msgstr ", "
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "All transactions"
 msgstr "Visos operacijos"
@@ -1606,10 +1590,10 @@ msgstr "Suma turi būti didesnė už nulį"
 
 #: crates/kabacus-kde/src/model.rs crates/kabacus-kde/src/writes.rs
 #, kde-format
-msgid "The books have no commits yet"
-msgstr "Apskaitoje dar nėra įkėlimų"
+msgid "The books have no revisions yet"
+msgstr "Knygos dar neturi peržiūrų"
 
-#: crates/kabacus-kde/src/model.rs
+#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Split transactions can't be edited here yet"
 msgstr "Padalytų operacijų čia dar negalima taisyti"
@@ -1654,7 +1638,7 @@ msgctxt "%1 is a file, %2 why it can't be read"
 msgid "Can't read the private CA %1: %2"
 msgstr "Nepavyksta perskaityti privačios LĮ %1: %2"
 
-#: crates/kabacus-kde/src/settings.rs
+#: crates/kabacus-kde/src/settings.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The server address must start with https://"
 msgstr "Serverio adresas turi prasidėti https://"
@@ -1798,7 +1782,7 @@ msgctxt "%1 is the card's reserve"
 msgid "Reserve %1"
 msgstr "Rezervas %1"
 
-#: crates/kabacus-kde/src/views.rs
+#: crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Owes you"
 msgstr "Skolingas jums"
@@ -1826,12 +1810,12 @@ msgctxt "Cash on Hand at the end"
 msgid "Closing"
 msgstr "Pabaiga"
 
-#: crates/kabacus-kde/src/views.rs
+#: crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Set aside in reserves"
 msgstr "Atidėta į rezervus"
 
-#: crates/kabacus-kde/src/views.rs
+#: crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loan principal"
 msgstr "Paskolų pagrindinė suma"
@@ -1897,7 +1881,7 @@ msgstr "Turi būti didesnė už nulį"
 msgid "Enter an amount"
 msgstr "Įveskite sumą"
 
-#: crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Not an amount: use digits and a decimal point, like 12.34"
 msgstr "Tai ne suma: naudokite skaitmenis ir dešimtainį tašką, pvz., 12.34"
@@ -1922,7 +1906,7 @@ msgstr[1] "Naudokite ne daugiau kaip %1 skaitmenis po taško"
 msgstr[2] "Naudokite ne daugiau kaip %1 skaitmenų po taško"
 msgstr[3] "Naudokite ne daugiau kaip %1 skaitmenį po taško"
 
-#: crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name the new reserve"
 msgstr "Pavadinkite naują rezervą"
@@ -2024,7 +2008,7 @@ msgstr "Jų dalis negali būti didesnė už visą sumą"
 msgid "The transaction"
 msgstr "Operacija"
 
-#: crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Choose at least one transaction"
 msgstr "Pasirinkite bent vieną operaciją"
@@ -2068,7 +2052,7 @@ msgstr "Kažkas"
 msgid "Nothing to save: the books already say this."
 msgstr "Nėra ką įrašyti: apskaitoje jau taip parašyta."
 
-#: crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "The books still check out with this change"
 msgstr "Su šiuo pakeitimu knygos vis dar tvarkingos"
@@ -2079,10 +2063,489 @@ msgctxt "%1 is a card"
 msgid "%1 stays covered by its reserve"
 msgstr "%1 lieka padengta rezervu"
 
-#: crates/kabacus-kde/src/writes.rs
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "A card is missing its reserve lines; it will be flagged"
 msgstr "Kortelei trūksta rezervo eilučių; ji bus pažymėta"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Sign in to %1"
+msgstr "Prisijungti prie %1"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Back to my books"
+msgstr "Grįžti prie mano knygų"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 saved a change while you were reviewing: %2. Yours hasn't been written."
+msgstr "%1 įrašė pakeitimą, kol jūs peržiūrėjote: %2. Jūsiškis neįrašytas."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Matched: %1 on %2, the same as the statement."
+msgstr "Sutampa: %1 %2, toks pat kaip išraše."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Doesn't match yet: the books say %1, the statement %2 (difference %3). Nothing has been written."
+msgstr "Dar nesutampa: apskaitoje %1, išraše %2 (skirtumas %3). Niekas neįrašyta."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Other"
+msgstr "Kita"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "MCP"
+msgstr "MCP"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "External edit"
+msgstr "Išorinis keitimas"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Fix"
+msgstr "Sutvarkyti"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connection settings saved"
+msgstr "Ryšio nuostatos įrašytos"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Spent"
+msgstr "Išleista"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Received"
+msgstr "Gauta"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Who"
+msgstr "Kas"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Loans"
+msgstr "Paskolos"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Investments"
+msgstr "Investicijos"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Void"
+msgstr "Anuliuoti"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Card"
+msgstr "Kortelė"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Paid from:"
+msgstr "Apmokėta iš:"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 → %2"
+msgstr "%1 → %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reconcile…"
+msgstr "Suderinti…"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Opening"
+msgstr "Pradžia"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Closing"
+msgstr "Pabaiga"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash"
+msgstr "Grynieji"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Not cash"
+msgstr "Ne grynieji"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "vs %1"
+msgstr "palyginti su %1"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Income"
+msgstr "Pajamos"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Spending"
+msgstr "Išlaidos"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Net:"
+msgstr "Grynasis rezultatas:"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Money"
+msgstr "Pinigai"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Go"
+msgstr "Eiti"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
+msgstr "Operacijos"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reserves"
+msgstr "Rezervai"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This app"
+msgstr "Ši programa"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Skola"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reserve"
+msgstr "Rezervas"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "unreserved"
+msgstr "be rezervo"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Check"
+msgstr "Tikrinti"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Review"
+msgstr "Peržiūrėti"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Unknown"
+msgstr "Nežinoma"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "All"
+msgstr "Visi"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "From"
+msgstr "Iš"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "To"
+msgstr "Į"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cards"
+msgstr "Kortelės"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "LTR"
+msgstr "LTR"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 (%2)"
+msgstr "%1 · %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 · %2"
+msgstr "%1 · %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 unreserved"
+msgstr "%1 be rezervo"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Accounts"
+msgstr "Sąskaitos"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Add — what happened?"
+msgstr "Pridėti — kas nutiko?"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Allow editing again"
+msgstr "Vėl leisti taisyti"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Balanced · checked against revision %1"
+msgstr "Subalansuota · patikrinta pagal %1 peržiūrą"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Bank & cash"
+msgstr "Bankas ir grynieji"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Browser storage"
+msgstr "Naršyklės saugykla"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Can't save these books. Check the folder's permissions and available space."
+msgstr "Nepavyksta įrašyti knygų. Patikrinkite aplanko leidimus ir laisvą vietą."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Choose a new file name; these books already exist."
+msgstr "Pasirinkite naują failo pavadinimą; šios knygos jau yra."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Choose what happened. The form fills in the lines; you see what changes before you save."
+msgstr "Pasirinkite, kas nutiko. Forma užpildo įrašų eilutes; prieš įrašydami matysite pakeitimus."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Close"
+msgstr "Užverti"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connected"
+msgstr "Prisijungta"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Credit"
+msgstr "Kreditas"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Nothing is set aside yet"
+msgstr "Dar nieko neatidėta"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Pick up where you left off"
+msgstr "Tęsti ten, kur baigėte"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reopen"
+msgstr "Atverti iš naujo"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reserved"
+msgstr "Rezervuota"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
+msgstr "Rezervai laiko pinigus vėlesniam laikui, pavyzdžiui, turto mokesčiui ar automobilio remontui. Jie lieka jūsų banko sąskaitoje."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Saved as revision %1"
+msgstr "Įrašyta kaip %1 peržiūra"
+
+#, kde-format
+#~ msgid "The books changed"
+#~ msgstr "Apskaita pasikeitė"
+
+#, kde-format
+#~ msgid "Discard mine"
+#~ msgstr "Atmesti manąjį"
+
+#, kde-format
+#~ msgid "Review again"
+#~ msgstr "Peržiūrėti iš naujo"
+
+#, kde-format
+#~ msgid "The books have no commits yet"
+#~ msgstr "Apskaitoje dar nėra įkėlimų"
+
+#, kde-format
+#~ msgctxt "%1 is who made a change, %2 its commit"
+#~ msgid "%1 · %2"
+#~ msgstr "%1 · %2"
+
+#, kde-format
+#~ msgctxt "%1 is the commit's short hash"
+#~ msgid "Saved as commit %1"
+#~ msgstr "Įrašyta kaip įkėlimas %1"
+
+#, kde-format
+#~ msgctxt "@action:inmenu"
+#~ msgid "Quit"
+#~ msgstr "Baigti"
+
+#, kde-format
+#~ msgctxt "@label"
+#~ msgid "Server:"
+#~ msgstr "Serveris:"
+
+#, kde-format
+#~ msgid "On another computer (HTTPS)"
+#~ msgstr "Kitame kompiuteryje (HTTPS)"
+
+#, kde-format
+#~ msgctxt "the server's unix socket"
+#~ msgid "Socket"
+#~ msgstr "Lizdas"
+
+#, kde-format
+#~ msgctxt "@label the server's unix socket"
+#~ msgid "Socket:"
+#~ msgstr "Lizdas:"
+
+#, kde-format
+#~ msgctxt "@label"
+#~ msgid "Server address:"
+#~ msgstr "Serverio adresas:"
+
+#, kde-format
+#~ msgctxt "@label a private certificate authority"
+#~ msgid "Private CA:"
+#~ msgstr "Privati LĮ:"
+
+#, kde-format
+#~ msgctxt "a private certificate authority"
+#~ msgid "Private CA"
+#~ msgstr "Privati LĮ"
+
+#, kde-format
+#~ msgid "System certificates only"
+#~ msgstr "Tik sistemos liudijimai"
+
+#, kde-format
+#~ msgid "Choose…"
+#~ msgstr "Pasirinkti…"
+
+#, kde-format
+#~ msgid "Only needed when the server's certificate comes from your own CA."
+#~ msgstr "Reikia tik tada, kai serverio liudijimą išdavė jūsų pačių liudijimų įstaiga."
+
+#, kde-format
+#~ msgctxt "@title the signed-in user"
+#~ msgid "Account"
+#~ msgstr "Paskyra"
+
+#, kde-format
+#~ msgctxt "@label"
+#~ msgid "Signed in:"
+#~ msgstr "Prisijungta:"
+
+#, kde-format
+#~ msgid "Not needed: authentication is off (local mode)"
+#~ msgstr "Nereikia: tapatybės nustatymas išjungtas (vietinė veiksena)"
+
+#, kde-format
+#~ msgctxt "%1 is the user, %2 the sign-in provider"
+#~ msgid "%1 (%2)"
+#~ msgstr "%1 (%2)"
+
+#, kde-format
+#~ msgctxt "signed in; %1 is the sign-in provider"
+#~ msgid "Yes (%1)"
+#~ msgstr "Taip (%1)"
+
+#, kde-format
+#~ msgid "Session ended; sign in again"
+#~ msgstr "Seansas baigėsi; prisijunkite iš naujo"
+
+#, kde-format
+#~ msgctxt "not signed in"
+#~ msgid "No"
+#~ msgstr "Ne"
+
+#, kde-format
+#~ msgid "Unknown: can't reach the server"
+#~ msgstr "Nežinoma: nepavyksta susisiekti su serveriu"
+
+#, kde-format
+#~ msgid "Waiting for the browser…"
+#~ msgstr "Laukiama naršyklės…"
+
+#, kde-format
+#~ msgctxt "@title about the server"
+#~ msgid "About"
+#~ msgstr "Apie"
+
+#, kde-format
+#~ msgid "Can't reach the server to read its version"
+#~ msgstr "Nepavyksta pasiekti serverio jo versijai perskaityti"
+
+#, kde-format
+#~ msgctxt "@label the server's version"
+#~ msgid "Server version:"
+#~ msgstr "Serverio versija:"
+
+#, kde-format
+#~ msgctxt "@label the commit the server was built from"
+#~ msgid "Commit:"
+#~ msgstr "Commit:"
+
+#, kde-format
+#~ msgctxt "@label where the server's source code is"
+#~ msgid "Source code:"
+#~ msgstr "Šaltinio kodas:"
+
+#, kde-format
+#~ msgid "Choose the private CA"
+#~ msgstr "Pasirinkite privačią LĮ"
+
+#, kde-format
+#~ msgid "Certificates (*.pem *.crt)"
+#~ msgstr "Liudijimai (*.pem *.crt)"
+
+#, kde-format
+#~ msgid "All files (*)"
+#~ msgstr "Visi failai (*)"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"
@@ -2143,20 +2606,8 @@ msgstr "Kortelei trūksta rezervo eilučių; ji bus pažymėta"
 #~ msgstr "Sąskaita:"
 
 #, kde-format
-#~ msgid "Account"
-#~ msgstr "Sąskaita"
-
-#, kde-format
-#~ msgid "Accounts"
-#~ msgstr "Sąskaitos"
-
-#, kde-format
 #~ msgid "Into a fund, out, or between funds"
 #~ msgstr "Į fondą, iš jo arba tarp fondų"
-
-#, kde-format
-#~ msgid "Cards"
-#~ msgstr "Kortelės"
 
 #, kde-format
 #~ msgid "Funds"

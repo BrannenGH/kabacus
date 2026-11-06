@@ -9,13 +9,17 @@
 
 use crate::sqlite::schema::{self, APPLICATION_ID};
 use crate::{book_of, replay, LedgerDump, Result, StoreError};
-use rusqlite::{Connection, OpenFlags};
+use rusqlite::Connection;
+#[cfg(not(target_arch = "wasm32"))]
+use rusqlite::OpenFlags;
 use std::collections::BTreeSet;
+#[cfg(not(target_arch = "wasm32"))]
 use std::path::Path;
 
 /// Write `dumps` to a new `.kabacus` file at `to`: rollback-journal mode,
 /// nothing beside it. Of users it holds only the display names the audit
 /// logs point at.
+#[cfg(not(target_arch = "wasm32"))]
 pub fn write(dumps: &[LedgerDump], to: &Path) -> Result<()> {
     let dir = to.parent().unwrap_or(Path::new("."));
     let scratch = tempfile::Builder::new()
@@ -51,7 +55,7 @@ pub fn write(dumps: &[LedgerDump], to: &Path) -> Result<()> {
             crate::sqlite::write_dump(&mut conn, &renumbered)?;
         }
     }
-    scratch.persist(to).map_err(|e| e.error)?;
+    scratch.persist_noclobber(to).map_err(|e| e.error)?;
     Ok(())
 }
 
@@ -82,11 +86,19 @@ fn schema_objects(conn: &Connection) -> Result<BTreeSet<(String, String, String)
 /// nothing in it our schema doesn't make, an audit log that replays to
 /// each ledger's rows, and books that pass the strict check. The file
 /// itself is never written to.
+#[cfg(not(target_arch = "wasm32"))]
 pub fn read(from: &Path) -> Result<Vec<LedgerDump>> {
     let scratch = tempfile::Builder::new()
         .prefix(".kabacus-import")
         .tempfile()?;
-    std::fs::copy(from, scratch.path()).map_err(|_| refuse("The file can't be read."))?;
+    // SQLite backup includes a live writer's WAL, unlike copying the main file.
+    let source = Connection::open_with_flags(
+        from,
+        OpenFlags::SQLITE_OPEN_READ_ONLY | OpenFlags::SQLITE_OPEN_NO_MUTEX,
+    )
+    .map_err(|_| refuse("The file can't be read."))?;
+    harden(&source)?;
+    source.backup(rusqlite::MAIN_DB, scratch.path(), None)?;
     let flags = OpenFlags::SQLITE_OPEN_READ_ONLY | OpenFlags::SQLITE_OPEN_NO_MUTEX;
     let version = {
         let conn = Connection::open_with_flags(scratch.path(), flags)
@@ -176,4 +188,68 @@ pub fn check_dump(dump: &LedgerDump) -> Result<()> {
         )));
     }
     Ok(())
+}
+
+/// A self-contained SQLite file, with the same schema and audit records as native export.
+pub fn write_bytes(dumps: &[LedgerDump]) -> Result<Vec<u8>> {
+    let mut conn = schema::open_in_memory()?;
+    let mut next_user = 1;
+    for dump in dumps {
+        // User ids are the file's own: renumber each ledger's.
+        let mut renumbered = dump.clone();
+        let map: std::collections::BTreeMap<i64, i64> = dump
+            .users
+            .iter()
+            .map(|(old, _)| {
+                let new = next_user;
+                next_user += 1;
+                (*old, new)
+            })
+            .collect();
+        renumbered.users = dump
+            .users
+            .iter()
+            .map(|(old, n)| (map[old], n.clone()))
+            .collect();
+        for row in &mut renumbered.audit {
+            row.user = *map.get(&row.user).ok_or_else(|| {
+                StoreError::Invalid(format!("audit user {} is missing", row.user))
+            })?;
+        }
+        crate::sqlite::write_dump(&mut conn, &renumbered)?;
+    }
+    Ok(conn.serialize("main")?.to_vec())
+}
+
+/// Validate an untrusted SQLite image before any ledger is restored.
+pub fn read_bytes(bytes: &[u8]) -> Result<Vec<LedgerDump>> {
+    let mut conn = Connection::open_in_memory()?;
+    conn.deserialize_read_exact("main", bytes, bytes.len(), false)
+        .map_err(|_| refuse("This isn't a Kabacus file."))?;
+    harden(&conn)?;
+    if schema::application_id(&conn)? != APPLICATION_ID {
+        return Err(refuse("This isn't a Kabacus file."));
+    }
+    let version: usize = conn.pragma_query_value(None, "user_version", |r| r.get(0))?;
+    if version > schema::latest_version() {
+        return Err(refuse(
+            "This file was made by a newer Kabacus; update Kabacus to import it.",
+        ));
+    }
+    let check: String = conn.query_row("PRAGMA integrity_check", [], |r| r.get(0))?;
+    if check != "ok" {
+        return Err(refuse("The file failed its integrity check."));
+    }
+    if schema_objects(&conn)? != reference_schema(version)? {
+        return Err(refuse("The file holds unexpected schema objects."));
+    }
+    schema::migrate(&mut conn)?;
+    let dumps = crate::sqlite::read_dumps(&mut conn)?;
+    if dumps.is_empty() {
+        return Err(refuse("The file holds no ledger."));
+    }
+    for dump in &dumps {
+        check_dump(dump)?;
+    }
+    Ok(dumps)
 }

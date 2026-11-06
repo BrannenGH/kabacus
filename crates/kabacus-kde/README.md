@@ -7,7 +7,9 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 # kabacus-kde
 
 Kabacus, the Kirigami app (its binary, package and settings are
-`kabacus`). It talks to kabacus-server only through `kabacus-client`.
+`kabacus`). `kabacus-client` dispatches local files to the shared service
+and remote connections to the authenticated server API. Window state is
+stored separately in `kabacus-windows.json`.
 
 Settings live in `kabacusrc` (KConfig format); `KABACUS_SOCKET`
 overrides the socket without saving it. `--size=WxH` opens the window at

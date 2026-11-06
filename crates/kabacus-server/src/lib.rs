@@ -2,9 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! `kabacus-server`: the gateway daemon. Only this crate touches
-//! the books: the app talks to its HTTP API, and MCP clients to
-//! the MCP endpoint it serves alongside.
+//! HTTP, MCP and sign-in around the shared book service.
 
 pub mod account_edit;
 pub mod api;
@@ -12,6 +10,7 @@ pub mod auth;
 pub mod batch;
 pub mod books;
 pub mod cache;
+mod caller;
 pub mod config;
 pub mod diff;
 pub mod import;

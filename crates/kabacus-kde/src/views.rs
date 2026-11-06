@@ -1275,6 +1275,8 @@ pub struct Commit {
     /// `mcp`, `app`, `external` or another client.
     pub actor: String,
     pub actor_label: String,
+    pub user: String,
+    pub agent: Option<String>,
     /// The transaction it wrote, from the subject's `[#…]`, if any.
     pub transaction_id: String,
 }
@@ -1326,12 +1328,14 @@ pub async fn activity(client: &KabacusClient, actor: &str) -> Result<Vec<Commit>
             };
             Commit {
                 transaction_id: subject_id(&c.summary),
-                short: c.hash.chars().take(7).collect(),
+                short: c.hash.clone(),
                 hash: c.hash,
                 date: local_time(&c.date, &chrono::Local),
                 summary: c.summary,
                 actor: who,
                 actor_label,
+                user: c.user,
+                agent: c.agent,
             }
         })
         .filter(|c| actor.is_empty() || c.actor == actor)

@@ -1,0 +1,27 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+[package]
+name = "kabacus-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+kabacus-client = { path = "../kabacus-client" }
+kabacus-service = { path = "../kabacus-service" }
+kabacus-store = { path = "../kabacus-store" }
+kabacus-ledger = { path = "../kabacus-ledger" }
+kabacus-mcp = { path = "../kabacus-mcp" }
+serde_json.workspace = true
+anyhow.workspace = true
+tokio.workspace = true
+clap = { version = "4", features = ["derive"] }
+clap_complete = "4"
+clap_mangen = "0.2"
+rmcp = { version = "3", default-features = false, features = ["server", "transport-io"] }
+
+[dev-dependencies]
+tempfile = "3"

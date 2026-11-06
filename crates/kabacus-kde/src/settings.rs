@@ -34,6 +34,8 @@ pub struct Settings {
     pub kind: ConnectionKind,
     /// Local: the server's socket; empty means [`default_socket`].
     pub socket_path: String,
+    /// Local books opened directly through the shared libraries.
+    pub books_path: String,
     /// Remote: the server's `https://` address.
     pub server_url: String,
     /// Remote: a PEM file of extra CAs to trust, e.g. a private CA; empty
@@ -76,6 +78,7 @@ impl Settings {
                 ConnectionKind::Local
             },
             socket_path: get("SocketPath"),
+            books_path: get("BooksPath"),
             server_url: get("ServerUrl"),
             private_ca: get("PrivateCa"),
         }
@@ -89,9 +92,10 @@ impl Settings {
             Ok(socket) if !socket.is_empty() => Settings {
                 kind: ConnectionKind::Local,
                 socket_path: socket,
+                books_path: String::new(),
                 ..Settings::load(&config_path())
             },
-            _ => Settings::load(&config_path()),
+            _ => Settings::default(),
         }
     }
 
@@ -108,6 +112,7 @@ impl Settings {
         for (key, value) in [
             ("Kind", kind),
             ("SocketPath", self.socket_path.trim()),
+            ("BooksPath", self.books_path.trim()),
             ("ServerUrl", self.server_url.trim()),
             ("PrivateCa", self.private_ca.trim()),
         ] {
@@ -127,6 +132,9 @@ impl Settings {
         match self.kind {
             ConnectionKind::Remote => self.server_url.trim().trim_end_matches('/').to_string(),
             ConnectionKind::Local => {
+                if !self.books_path.is_empty() || self.socket_path.is_empty() {
+                    return format!("file:{}", self.books_path);
+                }
                 let socket = self.socket_path.trim();
                 let socket = if socket.is_empty() {
                     default_socket()
@@ -142,6 +150,9 @@ impl Settings {
     pub fn connect(&self) -> Result<KabacusClient, ModelError> {
         let client = match self.kind {
             ConnectionKind::Local => {
+                if !self.books_path.is_empty() || self.socket_path.is_empty() {
+                    return Ok(KabacusClient::open_local(self.books_path.clone()));
+                }
                 let socket = self.socket_path.trim();
                 KabacusClient::connect_unix(if socket.is_empty() {
                     default_socket()
@@ -363,6 +374,7 @@ mod tests {
         let settings = Settings {
             kind: ConnectionKind::Remote,
             socket_path: String::new(),
+            books_path: String::new(),
             server_url: "https://books.lan:8443".to_string(),
             private_ca: " /home/me/ca\\dir/ca.pem".to_string(),
         };

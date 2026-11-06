@@ -83,7 +83,7 @@ def app():
         # with its display name, "Kabacus".
         if a is not None and a.name.lower() == "kabacus":
             for frame in a:
-                if frame is not None and frame.name.lower() == "kabacus":
+                if frame is not None and (frame.name.lower() == "kabacus" or frame.name.endswith("— Kabacus")):
                     return frame
     return None
 
@@ -272,7 +272,7 @@ def save():
         press(review)
         wait_for("the review page", lambda: label_starting("Review before saving"), 90)
     press(wait_for("the Save button", lambda: find(app(), "Save", pyatspi.ROLE_PUSH_BUTTON)))
-    wait_for("the saved notification", lambda: label_starting("Saved as commit"), 90)
+    wait_for("the saved notification", lambda: label_starting("Saved as revision"), 90)
 
 
 def open_row(account, payee, date):
@@ -292,27 +292,11 @@ def fill_fields(**fields):
 def main():
     command, args = sys.argv[1], sys.argv[2:]
     wait_for("the Kabacus window", app)
-    if command == "settings":
-        # Starts unable to reach the server; fixes that in Settings.
-        (socket,) = args
-        wait_for("the offline banner", lambda: label_starting("Can't reach kabacus-server"))
-        goto("Settings")
-        wait_for("the settings page", lambda: find(app(), "Socket", pyatspi.ROLE_TEXT))
-        set_text(find(app(), "Socket", pyatspi.ROLE_TEXT), socket)
-        press(find(app(), "Test connection", pyatspi.ROLE_PUSH_BUTTON))
-        wait_for("a successful test", lambda: label_starting("Connected to kabacus-server"))
-        press(find(app(), "Save", pyatspi.ROLE_PUSH_BUTTON))
-        books_loaded()
-        print("ok")
-        return
     if command == "about":
-        # The server's exact commit and where its source is, under About.
-        commit, source_url = args
+        version, source_url = args
         books_loaded()
         goto("Settings")
-        wait_for("the settings page", lambda: find(app(), "Socket", pyatspi.ROLE_TEXT))
-        wait_for("the server's commit", lambda: label_starting(commit))
-        wait_for("the source URL", lambda: label_starting(source_url))
+        wait_for("the application version", lambda: label_starting("Kabacus " + version))
         wait_for("the source button", lambda: find(app(), "Open the source code", pyatspi.ROLE_PUSH_BUTTON))
         print("ok")
         return
@@ -323,7 +307,7 @@ def main():
         press(wait_for("the Sign in button", lambda: find(app(), "Sign in", pyatspi.ROLE_PUSH_BUTTON)))
         books_loaded()
         goto("Settings")
-        wait_for(f"signed in as {username}", lambda: label_starting(username + " ("))
+        wait_for(f"signed in as {username}", lambda: label_starting(username))
         print("ok")
         return
     if command == "offline":
@@ -685,11 +669,12 @@ def main():
         open(sync + ".ready", "w").close()
         wait_for("the other write", lambda: os.path.exists(sync + ".go"), timeout=60)
         press(find(app(), "Save", pyatspi.ROLE_PUSH_BUTTON))
-        wait_for("the conflict dialog", lambda: label_starting("The books changed"))
-        press(wait_for("Discard mine", lambda: find(app(), "Discard mine", pyatspi.ROLE_PUSH_BUTTON)))
+        wait_for("the conflict dialog", lambda: label_starting("Someone saved first"))
+        press(wait_for("Keep editing", lambda: find(app(), "Keep editing", pyatspi.ROLE_PUSH_BUTTON)))
     else:
         fail(f"unknown command {command!r}")
     print("ok")
 
 
-main()
+if __name__ == "__main__":
+    main()

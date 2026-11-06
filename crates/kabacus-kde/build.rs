@@ -60,6 +60,7 @@ fn main() {
         // design/tokens.json.
         let pages = [
             "qml/Main.qml",
+            "qml/WelcomePage.qml",
             "qml/Money.qml",
             "qml/InfoButton.qml",
             "qml/StatusBanner.qml",
@@ -92,10 +93,12 @@ fn main() {
         let builder = CxxQtBuilder::new_qml_module(
             QmlModule::new("me.hallb.kabacus")
                 .qml_files(pages)
-                .qml_file(QmlFile::from("qml/Theme.qml").singleton(true)),
+                .qml_file(QmlFile::from("qml/Theme.qml").singleton(true))
+                .qml_file(QmlFile::from("qml/WindowManager.qml").singleton(true)),
         )
         .qt_module("Quick")
         .qt_module("DBus")
+        .qt_module("Widgets")
         .files(["src/bridge.rs", "src/logging.rs", "src/translation.rs"]);
         // SAFETY: only adds include directories and a define.
         let builder = unsafe {

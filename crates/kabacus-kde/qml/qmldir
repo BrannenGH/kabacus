@@ -5,3 +5,6 @@
 # For qmllint/qmlls only (the app is built from the qmldir cxx-qt
 # generates; see build.rs). Mirrors its singleton declaration.
 singleton Theme 1.0 Theme.qml
+
+singleton WindowManager 1.0 WindowManager.qml
+WelcomePage 1.0 WelcomePage.qml

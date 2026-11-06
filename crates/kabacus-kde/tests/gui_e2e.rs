@@ -236,32 +236,23 @@ async fn clicking_a_transaction_edits_it_in_place() {
     assert_eq!(rows.len(), 2, "edited in place: {rows:?}");
 }
 
-// The server's address is entered once in the app's settings.
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
-async fn the_server_connection_is_tested_and_saved_in_settings() {
-    let socket = socket_path("settings");
-    let server = spawn_server(|c| c.socket_path = socket.clone()).await;
-    let config = config_dir("settings");
-    // Start pointed at nothing, as on a fresh install with the server elsewhere.
-    let _app = launch(&socket_path("settings-missing"), &config);
-
-    drive(&["settings", &server.socket_path.display().to_string()]).await;
-
-    let saved = std::fs::read_to_string(config.join("kabacusrc")).unwrap();
-    assert!(saved.contains("Kind=local"), "{saved}");
-    assert!(
-        saved.contains(&format!("SocketPath={}", server.socket_path.display())),
-        "{saved}"
-    );
-    let _ = std::fs::remove_dir_all(&config);
+async fn local_books_are_created_and_two_windows_restore() {
+    let script = repo_root().join("crates/kabacus-kde/tests/gui/local_windows.py");
+    let status = tokio::process::Command::new("python3")
+        .arg(script)
+        .arg(env!("CARGO_BIN_EXE_kabacus"))
+        .status()
+        .await
+        .unwrap();
+    assert!(status.success());
 }
 
-// Settings' About shows the server's exact commit and
-// where its source is.
+// About exposes the application version and corresponding source.
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
-async fn about_shows_the_servers_commit_and_source() {
+async fn about_shows_the_version_and_source() {
     for (i, size) in [DESKTOP].into_iter().enumerate() {
         let server = books(&format!("about{i}")).await;
         let version = KabacusClient::connect_unix(&server.socket_path)
@@ -270,7 +261,7 @@ async fn about_shows_the_servers_commit_and_source() {
             .unwrap();
         assert_eq!(version.commit.len(), 40, "{size}");
         let _app = launch_sized(&server.socket_path, &config_dir(&format!("about{i}")), size);
-        drive(&["about", &version.commit, &version.source_url]).await;
+        drive(&["about", &version.server_version, &version.source_url]).await;
     }
 }
 

@@ -283,7 +283,7 @@ Kirigami.ScrollablePage {
                     readonly property var highest: points.reduce((a, p) => a === null || p.y > a.y ? p : a, null)
                     Accessible.role: Accessible.Chart
                     Accessible.name: i18n("Cash on Hand over time")
-                    Accessible.description: points.length < 2 ? ""
+                    Accessible.description: points.length < 2 || values.length !== points.length || !lowest || !highest ? ""
                         : i18nc("%1 and %3 are amounts on dates %2 and %4; %5 and %6 the lowest and highest amounts",
                             "From %1 on %2 to %3 on %4; lowest %5, highest %6",
                             values[0].text, points[0].date, values[values.length - 1].text,
@@ -317,8 +317,8 @@ Kirigami.ScrollablePage {
                 RowLayout {
                     visible: chart.points.length > 1
                     Layout.fillWidth: true
-                    Controls.Label { text: chart.points.length > 1 ? i18nc("the chart's first point: %1 is its date, %2 its amount", "%1  %2", chart.points[0].date, chart.values[0].text) : ""; font: Kirigami.Theme.smallFont; opacity: 0.7; Layout.fillWidth: true }
-                    Controls.Label { text: chart.points.length > 1 ? i18nc("the chart's last point, at its far end: %1 is its amount, %2 its date", "%1  %2", chart.values[chart.values.length - 1].text, chart.points[chart.points.length - 1].date) : ""; font: Kirigami.Theme.smallFont; opacity: 0.7 }
+                    Controls.Label { text: chart.points.length > 1 && chart.values.length === chart.points.length ? i18nc("the chart's first point: %1 is its date, %2 its amount", "%1  %2", chart.points[0].date, chart.values[0].text) : ""; font: Kirigami.Theme.smallFont; opacity: 0.7; Layout.fillWidth: true }
+                    Controls.Label { text: chart.points.length > 1 && chart.values.length === chart.points.length ? i18nc("the chart's last point, at its far end: %1 is its amount, %2 its date", "%1  %2", chart.values[chart.values.length - 1].text, chart.points[chart.points.length - 1].date) : ""; font: Kirigami.Theme.smallFont; opacity: 0.7 }
                 }
             }
         }

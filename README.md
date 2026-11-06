@@ -9,10 +9,14 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 Double-entry bookkeeping from a KDE app, a web interface or an MCP client. The books live in
 a SQLite `.kabacus` file or PostgreSQL, and hledger journals can be imported.
 
+- `kabacus-service` provides shared reads, reports and validated writes
+  over `kabacus-store` ([README](crates/kabacus-service/README.md)).
 - `kabacus-server` serves the HTTP API and an MCP endpoint
   ([container image](container/README.md)).
 - `apps/kabacus-ui` is the web interface the server hosts, with a Tauri
   desktop shell ([README](apps/kabacus-ui/README.md)).
+- `kabacus-cli` provides local reports, atomic command scripts and stdio MCP.
+- `kabacus-wasm` builds the shared SQLite store and service for the PWA.
 - `kabacus-kde` is the Kirigami app ([README](crates/kabacus-kde/README.md)).
 
 ## Build and test

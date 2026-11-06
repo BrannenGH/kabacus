@@ -7,6 +7,7 @@
 //! declarative integrity rules; amounts are decimal text and all
 //! arithmetic happens in Rust.
 
+#[cfg(not(target_arch = "wasm32"))]
 use std::path::{Path, PathBuf};
 
 use rusqlite::Connection;
@@ -79,6 +80,7 @@ pub fn application_id(conn: &Connection) -> rusqlite::Result<i32> {
 
 /// A file is Kabacus's when it carries the application id, is still at
 /// the first schema (before the id was set), or is empty.
+#[cfg(not(target_arch = "wasm32"))]
 fn check_identity(conn: &Connection, path: &Path) -> Result<(), SchemaError> {
     let version = schema_version(conn)?;
     let id = application_id(conn)?;
@@ -96,10 +98,12 @@ fn check_identity(conn: &Connection, path: &Path) -> Result<(), SchemaError> {
 /// copied to `<file>.v<N>.bak`, `N` being the version it was at; one with
 /// a newer schema than this build knows, or a SQLite file that isn't a
 /// `.kabacus` file, is refused without being changed.
+#[cfg(not(target_arch = "wasm32"))]
 pub fn open_file(path: &Path) -> Result<Connection, SchemaError> {
     open_file_with(path, MIGRATIONS)
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn open_file_with(path: &Path, migrations: &[&str]) -> Result<Connection, SchemaError> {
     let mut conn = Connection::open(path)?;
     check_identity(&conn, path)?;

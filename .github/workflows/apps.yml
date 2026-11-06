@@ -15,6 +15,11 @@ on:
       - apps/kabacus-ui/**
       - crates/kabacus-client/**
       - crates/kabacus-core/**
+      - crates/kabacus-service/**
+      - crates/kabacus-store/**
+      - crates/kabacus-mcp/**
+      - crates/kabacus-cli/**
+      - scripts/build-desktop-cli
       - crates/kabacus-kde/**
       - .github/workflows/apps.yml
   push:
@@ -67,7 +72,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: kabacus-desktop-${{ matrix.name }}
-          path: apps/kabacus-ui/src-tauri/target/release/${{ matrix.out }}
+          path: |
+            apps/kabacus-ui/src-tauri/target/release/${{ matrix.out }}
+            apps/kabacus-ui/src-tauri/target/release/kabacus-cli*
           if-no-files-found: error
 
   flatpak:
