@@ -19,234 +19,13 @@ use axum::{Json, Router};
 use serde::Deserialize;
 use std::sync::Arc;
 
-/// One route of the API and the MCP tools that do the same (the
-/// MCP endpoint has every function the API has).
-pub struct Endpoint {
-    pub method: &'static str,
-    pub path: &'static str,
-    pub mcp_tools: &'static [&'static str],
-}
-
-/// Ledger API routes, besides MCP and UI assets. Each route added to
-/// [`router`] is added here too, with the tools that mirror it.
-pub const ENDPOINTS: &[Endpoint] = &[
-    Endpoint {
-        method: "POST",
-        path: "/splits",
-        mcp_tools: &["record_shared_expense"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/version",
-        mcp_tools: &["get_version"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/commodity",
-        mcp_tools: &["get_commodity"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/transactions",
-        mcp_tools: &["search_transactions"],
-    },
-    Endpoint {
-        method: "POST",
-        path: "/transactions",
-        mcp_tools: &["add_transaction"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/transactions/{id}",
-        mcp_tools: &["get_transaction"],
-    },
-    Endpoint {
-        method: "PATCH",
-        path: "/transactions/{id}",
-        mcp_tools: &["edit_transaction"],
-    },
-    Endpoint {
-        method: "POST",
-        path: "/batch",
-        mcp_tools: &["batch"],
-    },
-    Endpoint {
-        method: "PUT",
-        path: "/transactions/{id}",
-        mcp_tools: &["rewrite_transaction"],
-    },
-    Endpoint {
-        method: "DELETE",
-        path: "/transactions/{id}",
-        mcp_tools: &["delete_transaction"],
-    },
-    Endpoint {
-        method: "POST",
-        path: "/transactions/{id}/corrections",
-        mcp_tools: &["correct_transaction", "void_transaction"],
-    },
-    Endpoint {
-        method: "PATCH",
-        path: "/transactions/{id}/status",
-        mcp_tools: &["set_cleared"],
-    },
-    Endpoint {
-        method: "PUT",
-        path: "/assertions",
-        mcp_tools: &["set_balance_assertion"],
-    },
-    Endpoint {
-        method: "POST",
-        path: "/assertions/inclusive",
-        mcp_tools: &["convert_money_assertions"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/history",
-        mcp_tools: &["get_history"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/history/{rev}",
-        mcp_tools: &["get_history_diff"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/history/{rev}/transactions",
-        mcp_tools: &["get_transactions_at"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/cash-on-hand",
-        mcp_tools: &["cash_on_hand"],
-    },
-    Endpoint {
-        method: "POST",
-        path: "/allocations",
-        mcp_tools: &["allocate"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/cards/reserves",
-        mcp_tools: &["card_reserves"],
-    },
-    Endpoint {
-        method: "POST",
-        path: "/cards/purchases",
-        mcp_tools: &["record_card_purchase"],
-    },
-    Endpoint {
-        method: "POST",
-        path: "/cards/payments",
-        mcp_tools: &["pay_card"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/counterparties",
-        mcp_tools: &["list_counterparties"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/counterparties/{name}/statement",
-        mcp_tools: &["counterparty_statement", "export_statement"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/accounts",
-        mcp_tools: &["list_accounts"],
-    },
-    Endpoint {
-        method: "POST",
-        path: "/accounts",
-        mcp_tools: &["declare_account"],
-    },
-    Endpoint {
-        method: "POST",
-        path: "/accounts/rename",
-        mcp_tools: &["rename_account"],
-    },
-    Endpoint {
-        method: "PUT",
-        path: "/accounts/{account}/type",
-        mcp_tools: &["set_account_type"],
-    },
-    Endpoint {
-        method: "DELETE",
-        path: "/accounts/{account}",
-        mcp_tools: &["remove_account"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/accounts/kinds",
-        mcp_tools: &["account_kinds"],
-    },
-    Endpoint {
-        method: "POST",
-        path: "/reconcile",
-        mcp_tools: &["reconcile"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/reports/income-statement",
-        mcp_tools: &["income_statement"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/reports/balance-sheet",
-        mcp_tools: &["balance_sheet"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/reports/categories",
-        mcp_tools: &["category_breakdown"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/reports/cash-on-hand-history",
-        mcp_tools: &["cash_on_hand_history"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/reports/cash-flow",
-        mcp_tools: &["cash_flow"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/reports/receivables",
-        mcp_tools: &["receivables_activity"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/payees",
-        mcp_tools: &["list_payees"],
-    },
-    Endpoint {
-        method: "GET",
-        path: "/register/{account}",
-        mcp_tools: &["get_register"],
-    },
-    Endpoint {
-        method: "POST",
-        path: "/import",
-        mcp_tools: &["import_journal"],
-    },
-    // `.kabacus` files are binary: API only, no MCP tools.
-    Endpoint {
-        method: "GET",
-        path: "/ledgers/{id}/export",
-        mcp_tools: &[],
-    },
-    Endpoint {
-        method: "POST",
-        path: "/ledgers/import",
-        mcp_tools: &[],
-    },
-];
+pub use kabacus_service::catalog::{Endpoint, ENDPOINTS};
 
 pub fn router(state: Arc<AppState>) -> Router {
     Router::new()
         .route("/splits", post(record_shared_expense))
         .route("/version", get(get_version))
+        .route("/commands", get(get_commands))
         .route("/commodity", get(get_commodity))
         .route(
             "/transactions",
@@ -417,16 +196,7 @@ pub enum ApiError {
     },
 }
 
-/// The machine-readable error shape, `{code, message, path?, details?}`.
-#[derive(Debug, Clone, serde::Serialize)]
-pub struct ErrorBody {
-    pub code: String,
-    pub message: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub path: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub details: Option<serde_json::Value>,
-}
+pub use kabacus_service::error::ErrorBody;
 
 impl ApiError {
     /// The stable error code clients match on.
@@ -538,74 +308,49 @@ impl ApiError {
     }
 }
 
-/// The strict check's failures, as callers read them.
-pub fn failures_json(failures: &[kabacus_ledger::CheckFailure]) -> serde_json::Value {
-    serde_json::Value::Array(
-        failures
-            .iter()
-            .map(|f| {
-                let mut v = serde_json::json!({
-                    "kind": f.kind.as_str(),
-                    "message": f.message(),
-                    "sentence": f.sentence,
-                    "details": f.details,
-                });
-                match &f.position {
-                    kabacus_ledger::Position::Transaction { id, posting } => {
-                        v["transaction"] = serde_json::json!(id);
-                        v["posting"] = serde_json::json!(posting);
-                    }
-                    kabacus_ledger::Position::Line { file, line } => {
-                        v["file"] = serde_json::json!(file);
-                        v["line"] = serde_json::json!(line);
-                    }
-                }
-                v
-            })
-            .collect(),
-    )
-}
+pub use kabacus_service::error::failures_json;
 
-/// The rule a failure of `kind` breaks.
-fn failure_rule(kind: kabacus_ledger::FailureKind) -> &'static str {
-    match kind {
-        kabacus_ledger::FailureKind::Readable => "readable",
-        kabacus_ledger::FailureKind::Balanced => "balanced",
-        kabacus_ledger::FailureKind::Assertion => "assertion",
-        kabacus_ledger::FailureKind::Commodity => "commodity",
-        kabacus_ledger::FailureKind::Account => "account",
+impl From<OpError> for ApiError {
+    fn from(error: OpError) -> Self {
+        kabacus_service::error::Error::from(error).into()
     }
 }
 
-impl From<OpError> for ApiError {
-    fn from(e: OpError) -> Self {
-        match e {
-            OpError::Validation(v) => invalid("validation", v.to_string()),
-            OpError::ValidationMany(errs) => {
-                let message = errs
-                    .iter()
-                    .map(|e| e.to_string())
-                    .collect::<Vec<_>>()
-                    .join("; ");
-                invalid("validation", message)
-            }
-            OpError::NotFound(id) => ApiError::NotFound(id),
-            OpError::Conflict { expected, current } => ApiError::Conflict { expected, current },
-            OpError::Invalid { rule, message } => invalid(&rule, message),
-            OpError::Check(failures) => ApiError::Invalid {
-                rule: failures
-                    .first()
-                    .map_or("check", |f| failure_rule(f.kind))
-                    .to_string(),
-                message: failures
-                    .iter()
-                    .map(|f| f.message())
-                    .collect::<Vec<_>>()
-                    .join("; "),
+impl From<kabacus_service::error::Error> for ApiError {
+    fn from(error: kabacus_service::error::Error) -> Self {
+        use kabacus_service::error::Error;
+        match error {
+            Error::Denied { permission, .. } => ApiError::MissingRole(match permission {
+                kabacus_service::caller::Permission::Read => Role::Read,
+                kabacus_service::caller::Permission::Write => Role::Write,
+                kabacus_service::caller::Permission::Rewrite => Role::Rewrite,
+            }),
+            Error::NotFound(v) => ApiError::NotFound(v),
+            Error::Conflict { expected, current } => ApiError::Conflict { expected, current },
+            Error::Invalid {
+                rule,
+                message,
+                failures,
+            } => ApiError::Invalid {
+                rule,
+                message,
                 failures,
             },
-            OpError::AccountInUse { account, counts } => ApiError::AccountInUse { account, counts },
-            other => ApiError::Internal(anyhow::anyhow!(other.to_string())),
+            Error::Internal(v) => ApiError::Internal(v),
+            Error::RewriteDisabled => ApiError::RewriteDisabled,
+            Error::AmountFormat { path, message } => ApiError::AmountFormat { path, message },
+            Error::AccountInUse { account, counts } => ApiError::AccountInUse { account, counts },
+            Error::BatchTooLarge(v) => ApiError::BatchTooLarge(v),
+            Error::ReconcileMismatch(v) => ApiError::ReconcileMismatch(v),
+            Error::BatchFailed {
+                index,
+                client_ref,
+                error,
+            } => ApiError::BatchFailed {
+                index,
+                client_ref,
+                error: Box::new((*error).into()),
+            },
         }
     }
 }
@@ -1194,4 +939,13 @@ async fn record_shared_expense(
     let status = created_unless_dry_run(body.dry_run);
     let result = crate::split::record(&state, &principal, body, &head).await?;
     Ok((status, Json(result)).into_response())
+}
+
+async fn get_commands(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+) -> Result<Response, ApiError> {
+    let caller = authenticate(&state, &headers).await?;
+    service::require(&caller, Role::Read)?;
+    Ok(Json(kabacus_service::catalog::commands()).into_response())
 }

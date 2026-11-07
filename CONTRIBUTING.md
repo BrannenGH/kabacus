@@ -12,8 +12,9 @@ rules every change follows.
 ## Licence of contributions
 
 Code is licensed as described in `REUSE.toml` and each file's SPDX header:
-`kabacus-server` under AGPL-3.0-or-later, everything else under
-GPL-3.0-or-later, docs under CC-BY-SA-4.0.
+`kabacus-server` under AGPL-3.0-or-later; everything else, the shared
+libraries the apps link included, under GPL-3.0-or-later; docs under
+CC-BY-SA-4.0.
 
 By submitting a contribution you certify the Developer Certificate of
 Origin 1.1 (<https://developercertificate.org/>) and, in addition:

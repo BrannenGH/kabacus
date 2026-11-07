@@ -3,8 +3,9 @@
 # SPDX-License-Identifier: CC0-1.0
 
 # Every statically linked dependency ends up in the binaries, which are
-# GPL-3.0-or-later (app) and AGPL-3.0-or-later (server). Only licences
-# compatible with both are allowed; GPL-2.0-only is not.
+# GPL-3.0-or-later (apps and shared libraries) and AGPL-3.0-or-later
+# (server). Only licences compatible with both are allowed; GPL-2.0-only
+# is not.
 [licenses]
 allow = [
     "MIT",

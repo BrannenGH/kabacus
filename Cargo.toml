@@ -8,6 +8,10 @@ members = [
     "crates/kabacus-core",
     "crates/kabacus-ledger",
     "crates/kabacus-store",
+    "crates/kabacus-service",
+    "crates/kabacus-mcp",
+    "crates/kabacus-cli",
+    "crates/kabacus-wasm",
     "crates/kabacus-server",
     "crates/kabacus-client",
     "crates/kabacus-testkit",
@@ -33,7 +37,7 @@ proptest = "1"
 chrono = { version = "0.4", features = ["serde"] }
 num-bigint = "0.4"
 num-traits = "0.2"
-uuid = { version = "1", features = ["v4", "serde"] }
+uuid = { version = "1", features = ["v4", "serde", "js"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tracing-journald = "0.3"

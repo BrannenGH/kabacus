@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 //
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 //! The store on PostgreSQL, for the hosted service: pooled connections,
 //! row-level security keyed on the ledger each transaction sets with

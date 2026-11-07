@@ -10,10 +10,15 @@
 // friends in QML, and lookups for the Rust side's i18n! macros.
 
 #include <cstdint>
+#include <vector>
+#include <memory>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusConnectionInterface>
 #include <QtGui/QGuiApplication>
+#include <QtWidgets/QApplication>
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
 
@@ -44,6 +49,16 @@ inline void kabacus_set_right_to_left(bool right_to_left)
     QGuiApplication::setLayoutDirection(right_to_left ? Qt::RightToLeft : Qt::LeftToRight);
 }
 
+// Whether a global menu (Plasma's) is registered on the session bus: the
+// platform theme then exports the window's native menu bar there, and the
+// in-window one would be a duplicate.
+inline bool kabacus_has_global_menu()
+{
+    auto bus = QDBusConnection::sessionBus();
+    return bus.isConnected() && bus.interface()
+        && bus.interface()->isServiceRegistered(QStringLiteral("com.canonical.AppMenu.Registrar"));
+}
+
 // Gives QML i18n(), i18nc(), i18np() and i18ncp().
 inline void kabacus_setup_qml(QQmlApplicationEngine &engine)
 {
@@ -53,6 +68,7 @@ inline void kabacus_setup_qml(QQmlApplicationEngine &engine)
     auto *context = new KLocalizedContext(&engine);
 #endif
     engine.rootContext()->setContextObject(context);
+    engine.setInitialProperties({{QStringLiteral("globalMenuRegistered"), kabacus_has_global_menu()}});
 }
 
 inline QByteArray kabacus_bytes(rust::Str text)
@@ -85,4 +101,16 @@ inline rust::String kabacus_translate(rust::Str context, rust::Str singular, rus
     }
     const QByteArray out = text.toString().toUtf8();
     return rust::String(out.constData(), std::size_t(out.size()));
+}
+
+// Qt Labs Platform uses widgets for native menus outside Plasma.
+inline std::unique_ptr<QGuiApplication> kabacus_application(const rust::Slice<const rust::String> args)
+{
+    static std::vector<QByteArray> storage;
+    static std::vector<char*> argv;
+    for (const auto &arg : args) storage.emplace_back(arg.data(), static_cast<int>(arg.size()));
+    for (auto &arg : storage) argv.push_back(arg.data());
+    static int argc = static_cast<int>(argv.size());
+    argv.push_back(nullptr);
+    return std::make_unique<QApplication>(argc, argv.data());
 }

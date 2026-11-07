@@ -2,27 +2,30 @@
 <!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
 # React and Tauri builds
 
-Requires Node.js 22. The web build and the desktop shell use the same
-React interface, served by kabacus-server at `/app/`. All book access goes
-through the existing API on that origin.
+Requires Node.js 22. The React interface runs in the browser and in a
+bundled Tauri webview. Native requests use the Rust `Books` implementation;
+browser files use `kabacus-wasm` directly in the page. Remote requests use
+the server API on its origin.
 
 ```sh
+rustup target add wasm32-unknown-unknown
+cargo install --locked wasm-bindgen-cli --version 0.2.129
 cd apps/kabacus-ui
 npm ci
+# A clang/llvm toolchain is needed by SQLite's WebAssembly build.
+npm run build:pwa
 npm test
-npm run build
 npx playwright install chromium
 npm run test:e2e
 ```
 
-Set `web_dir` at the top level of the server TOML configuration to the
-absolute path of `apps/kabacus-ui/dist`, then restart the server. Open
-`https://<server>:<port>/app/` using its configured HTTPS listener. The
-server container builds and installs this bundle automatically. For a
-local scratch server over a unix socket, use a local reverse proxy; do
-not expose no-auth mode remotely. Web hosting is disabled when `web_dir`
-is unset. Only entry-point and asset files are served; API routes keep
-their existing authentication, roles and revision checks.
+`Containerfile` builds the portable engine before the web bundle. Point the
+server's `web_dir` at `apps/kabacus-ui/dist`, or serve that directory as a
+static PWA. The service worker caches only application assets, never API
+responses or books. Chromium's file handles are kept in IndexedDB; other
+browsers keep the SQLite images there. Native windows keep sources and view
+state in the shell's app-data directory. Refresh tokens stay in the native
+keyring rather than the workspace file.
 
 Register `https://<server>:<port>/app/` as an allowed redirect URI for the
 public OAuth client configured in `auth.clients.app`. Enable Authorization
@@ -42,30 +45,21 @@ The desktop shell requires Rust and Tauri 2's platform prerequisites
 
 ```sh
 npm run tauri build -- --no-bundle
-KABACUS_SERVER_URL=https://books.example.org:8443 src-tauri/target/release/kabacus-desktop
+src-tauri/target/release/kabacus-desktop
 ```
 
-The local connection window remains available without the server and saves
-only its HTTPS origin. `KABACUS_SERVER_URL` optionally supplies its initial
-value, without credentials, paths, queries or fragments. Use a certificate
-trusted by the operating system.
-The shell discovers the configured provider through `kabacus-client`, opens
-its Authorization Code + PKCE flow in the system browser, and receives the
-redirect on a loopback port. Register the same loopback redirect pattern
-as for the KDE app (`http://127.0.0.1:<port>/callback`).
+The build hook compiles the CLI sidecar from the same checkout. Desktop
+bundles include it, and the Flatpak exposes it as `kabacus cli …`. The shell
+loads its bundled interface, restricts navigation to that trusted origin,
+and checks that origin on every filesystem command. It connects remote
+books through `kabacus-client` using PKCE in the system browser and a
+loopback redirect. Register `http://127.0.0.1:<port>/callback` with the
+provider. Linux uses Secret Service for refresh tokens; other platforms
+keep them for the session. No token is passed into JavaScript.
 
-The shell then opens the server's `/app/` in an ephemeral webview, so UI
-updates deploy with the server. Only short-lived access tokens are passed
-to the configured origin. On Linux the native shell reuses the KDE Secret
-Service implementation to persist refresh tokens in KWallet or another
-freedesktop keyring; on other platforms the refresh token lasts only for the
-session. It renews access tokens through `kabacus-client`. Tokens are never
-written to a settings file.
-Sign out ends the native session and closes the window. If the provider
-ends a session, use the connection window to sign in again. Only the bundled connection window may invoke the native connection command.
-The shell exposes no filesystem or shell capabilities to remote pages, and
-navigation is restricted to the configured server origin. `--no-bundle`
-builds only the executable.
+For attached MCP, enable Automation in a window or launch with
+`--control PORT`. The listener binds only IPv4 loopback and drops when the
+window closes. `kabacus-cli mcp --attach PORT` bridges stdio to that window.
 
 The App builds workflow (`.github/workflows/apps.yml`) builds unsigned
 packages to try: a Windows installer, a macOS disk image, a Flatpak
@@ -82,11 +76,10 @@ npx tauri ios init --ci && npx tauri ios build --debug --target aarch64-sim
 66 `po/*.po` catalogs. `src/messages.js` lists existing whole
 messages; the build refuses missing or fuzzy translations. No separate
 translation catalog is maintained. The browser chooses its preferred
-available language from the bundled catalogs (including the local connection
-window); layout direction follows the catalog's `LTR` message.
+available language from the bundled catalogs; layout direction follows the catalog's `LTR` message.
 
-Vite's development server is for UI development; API requests need a same-origin
-reverse proxy to a scratch Kabacus-server. The browser tests use synthetic
-API fixtures and do not touch real books. Server asset isolation tests live
+Vite's development server can open scratch local books after `build:wasm`.
+Server API development needs a same-origin reverse proxy. Browser tests use
+synthetic API fixtures and a real portable-engine local-file flow. Server asset isolation tests live
 in `crates/kabacus-server/tests/web_e2e.rs`. CI checks both the web build and
 native shell separately from the existing KDE jobs.

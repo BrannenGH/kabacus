@@ -1,0 +1,93 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+# SPDX-License-Identifier: GPL-3.0-or-later
+"""Exercise local creation and restoration in real desktop windows through AT-SPI."""
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import time
+import pyatspi
+import driver
+
+
+def frame(name):
+    return pyatspi.findDescendant(pyatspi.Registry.getDesktop(0), lambda n: n is not None and n.name == name and n.getRole() == pyatspi.ROLE_FRAME and n.getState().contains(pyatspi.STATE_SHOWING))
+
+
+def file_dialog(title):
+    roles = (pyatspi.ROLE_FRAME, pyatspi.ROLE_DIALOG, pyatspi.ROLE_FILE_CHOOSER)
+    return pyatspi.findDescendant(pyatspi.Registry.getDesktop(0), lambda n: n is not None and n.getRole() in roles and (n.name == title or n.name.startswith(title + ' — ')) and n.getState().contains(pyatspi.STATE_SHOWING))
+
+
+def showing(node, role):
+    return pyatspi.findDescendant(node, lambda n: n is not None and n.getRole() == role and n.getState().contains(pyatspi.STATE_SHOWING))
+
+
+def file_name_field(dialog):
+    for label in ('File name:', 'File name', 'Name:', 'Name'):
+        field = driver.find(dialog, label, pyatspi.ROLE_TEXT)
+        if field:
+            return field
+    return showing(dialog, pyatspi.ROLE_TEXT)
+
+
+def create(name, path):
+    try:
+        welcome = driver.wait_for('Welcome window', lambda: frame('Kabacus'))
+    except SystemExit:
+        driver.dump(pyatspi.Registry.getDesktop(0));raise
+    driver.press(driver.wait_for('New Books', lambda: driver.find(welcome, 'New Books…', pyatspi.ROLE_PUSH_BUTTON)))
+    try:
+        dialog = driver.wait_for('file chooser', lambda: file_dialog('New Books…'))
+    except SystemExit:
+        driver.dump(pyatspi.Registry.getDesktop(0)); raise
+    driver.dump(dialog)
+    field = driver.wait_for('file name field', lambda: file_name_field(dialog))
+    driver.click(field)
+    driver.set_text(field, path.name)
+    driver.key(0xFF09)
+    driver.click(driver.find(dialog, 'Save', pyatspi.ROLE_PUSH_BUTTON))
+    try:
+        driver.wait_for('book setup', lambda: driver.find(welcome, 'Create books', pyatspi.ROLE_PUSH_BUTTON))
+    except SystemExit:
+        driver.dump(pyatspi.Registry.getDesktop(0));raise
+    name_field=driver.find(welcome, 'Name', pyatspi.ROLE_TEXT)
+    driver.click(name_field)
+    driver.set_text(name_field, name)
+    driver.click(driver.find(welcome, 'Create books', pyatspi.ROLE_PUSH_BUTTON))
+    result = driver.wait_for(name, lambda: frame(name + ' — Kabacus'))
+    driver.wait_for('Overview balance', lambda: driver.find(result, 'Cash on Hand'))
+    assert path.is_file(), path
+    return result
+
+
+with tempfile.TemporaryDirectory(prefix='kabacus-local-windows-') as folder:
+    root = Path(folder)
+    env = dict(os.environ, XDG_CONFIG_HOME=str(root / 'config'), XDG_CACHE_HOME=str(root / 'cache'), QT_LINUX_ACCESSIBILITY_ALWAYS_ON='1', LANGUAGE='en')
+    env.pop('KABACUS_SOCKET', None)
+    binary = str(Path(sys.argv[1]).resolve())
+    process = subprocess.Popen([binary, '--size=1280x800'], env=env, cwd=root)
+    try:
+        first = create('Cedar Household', root / 'Household.kabacus')
+        driver.click(driver.wait_for('book File menu', lambda: driver.find(first, 'Cedar Household', pyatspi.ROLE_PUSH_BUTTON)))
+        menu=driver.wait_for('New Window', lambda: driver.find(first, 'New Window'))
+        driver.click(menu)
+        second = create('Cedar Studio', root / 'Studio.kabacus')
+        driver.click(driver.find(second, 'Transactions', pyatspi.ROLE_LIST_ITEM))
+        driver.wait_for('Transactions accounts', lambda: driver.find(second, 'Checking', pyatspi.ROLE_LIST_ITEM))
+        state = root / 'config' / 'kabacus-windows.json'
+        driver.wait_for('two saved windows', lambda: state.exists() and len(json.loads(state.read_text())['windows']) == 2 and any(w['page'] == 'Accounts' for w in json.loads(state.read_text())['windows']))
+    finally:
+        process.terminate()
+        process.wait(timeout=10)
+    process = subprocess.Popen([binary, '--size=1280x800'], env=env, cwd=root)
+    try:
+        driver.wait_for('restored household', lambda: frame('Cedar Household — Kabacus'))
+        restored = driver.wait_for('restored studio', lambda: frame('Cedar Studio — Kabacus'))
+        driver.wait_for('restored Transactions accounts', lambda: driver.find(restored, 'Checking', pyatspi.ROLE_LIST_ITEM))
+        print('Local Welcome → New Books → Overview and two-window restoration passed')
+    finally:
+        process.terminate()
+        process.wait(timeout=10)

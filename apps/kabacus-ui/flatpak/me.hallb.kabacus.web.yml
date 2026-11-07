@@ -8,13 +8,14 @@ id: me.hallb.kabacus.web
 runtime: org.gnome.Platform
 runtime-version: "48"
 sdk: org.gnome.Sdk
-command: kabacus-desktop
+command: kabacus
 finish-args:
   - --socket=wayland
   - --socket=fallback-x11
   - --share=ipc
   - --device=dri
   - --share=network
+  - --filesystem=host
   # The refresh token's keyring.
   - --talk-name=org.freedesktop.secrets
 modules:
@@ -24,10 +25,13 @@ modules:
       - type: file
         path: ../src-tauri/target/release/kabacus-desktop
       - type: file
+        path: ../src-tauri/target/release/kabacus-cli
+      - type: file
         path: ../src-tauri/icons/icon.png
     build-commands:
-      - install -Dm755 kabacus-desktop /app/bin/kabacus-desktop
+      - install -Dm755 kabacus-desktop /app/bin/kabacus
+      - install -Dm755 kabacus-cli /app/bin/kabacus-cli
       - install -Dm644 icon.png /app/share/icons/hicolor/512x512/apps/me.hallb.kabacus.web.png
       - >-
-        printf '[Desktop Entry]\nType=Application\nName=Kabacus\nExec=kabacus-desktop\nIcon=me.hallb.kabacus.web\nCategories=Office;Finance;\n'
+        printf '[Desktop Entry]\nType=Application\nName=Kabacus\nExec=kabacus %F\nIcon=me.hallb.kabacus.web\nMimeType=application/x-kabacus;\nCategories=Office;Finance;\n'
         | install -Dm644 /dev/stdin /app/share/applications/me.hallb.kabacus.web.desktop

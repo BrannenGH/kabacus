@@ -6,8 +6,9 @@
 Type=Application
 Name=Kabacus
 GenericName=Personal Finance
-Comment=Your hledger books, via kabacus-server
-Exec=kabacus
+Comment=Your books, on this computer or a server
+Exec=kabacus %F
+MimeType=application/x-kabacus;
 Icon=me.hallb.kabacus
 Terminal=false
 Categories=Office;Finance;Qt;KDE;
