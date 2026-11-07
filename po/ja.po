@@ -1137,7 +1137,7 @@ msgstr "エージェントによるこのウィンドウの操作を許可する
 msgid "Control port"
 msgstr "制御ポート"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "口座"
@@ -1332,6 +1332,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "相手"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "金額"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1343,11 +1348,6 @@ msgstr "合計:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "金額:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "金額"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format

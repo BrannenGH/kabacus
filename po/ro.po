@@ -1139,7 +1139,7 @@ msgstr "Permite agenților să controleze această fereastră"
 msgid "Control port"
 msgstr "Port de control"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Cont"
@@ -1334,6 +1334,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "Cu"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Sumă"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1345,11 +1350,6 @@ msgstr "Total:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "Sumă:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Sumă"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format

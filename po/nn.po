@@ -1138,7 +1138,7 @@ msgstr "La agentar styra dette vindauget"
 msgid "Control port"
 msgstr "Kontrollport"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Konto"
@@ -1333,6 +1333,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "Med"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Beløp"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1344,11 +1349,6 @@ msgstr "Totalt:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "Beløp:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Beløp"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format

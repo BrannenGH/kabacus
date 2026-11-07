@@ -917,3 +917,59 @@ async fn income_and_equity_show_positive_and_neutral() {
     let checking = row(CHECKING);
     assert_eq!(checking.balance.tone, "pos", "others keep their colour");
 }
+
+#[tokio::test]
+async fn split_posting_edits_preview_and_save_in_place() {
+    let (_server, client) = books().await;
+    let split: Draft = serde_json::from_value(serde_json::json!({
+        "kind": "split", "date": "2026-09-12", "payee": "Harbor Cafe",
+        "paid_with": CHECKING, "category": "expenses:dining", "person": "jordan",
+        "total": "60.00", "their_share": "20.00"
+    }))
+    .unwrap();
+    save(&client, &split).await;
+    let tx = client
+        .list_transactions()
+        .await
+        .unwrap()
+        .into_iter()
+        .find(|t| t.payee == "Harbor Cafe")
+        .unwrap();
+    assert_eq!(tx.postings.len(), 3);
+    let postings: Vec<_> = tx
+        .postings
+        .iter()
+        .enumerate()
+        .map(|(i, p)| {
+            serde_json::json!({ "account": p.account, "amount": p.amount.exact,
+            "commodity": p.amount.commodity, "original": i })
+        })
+        .collect();
+    let edit: Draft = serde_json::from_value(serde_json::json!({
+        "kind": "edit_postings", "id": tx.id.to_string(), "date": tx.date,
+        "payee": "Harbor Cafe lunch", "postings": postings
+    }))
+    .unwrap();
+    let preview = writes::preview(&client, &edit).await.unwrap();
+    assert!(client
+        .list_transactions()
+        .await
+        .unwrap()
+        .iter()
+        .any(|t| t.payee == "Harbor Cafe"));
+    writes::commit(&client, &edit, &preview.head).await.unwrap();
+    let edited = client
+        .list_transactions()
+        .await
+        .unwrap()
+        .into_iter()
+        .find(|t| t.id == tx.id)
+        .unwrap();
+    assert_eq!(edited.payee, "Harbor Cafe lunch");
+    assert_eq!(edited.tags, tx.tags);
+    for (before, after) in tx.postings.iter().zip(&edited.postings) {
+        assert_eq!(before.account, after.account);
+        assert_eq!(before.amount.exact, after.amount.exact);
+        assert_eq!(before.status, after.status);
+    }
+}

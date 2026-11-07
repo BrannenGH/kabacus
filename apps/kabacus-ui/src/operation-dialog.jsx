@@ -45,8 +45,10 @@ export function OperationDialog({
   const [dirty, setDirty] = useState(false);
   const [checked, setChecked] = useState(null);
   const [repairCard, setRepairCard] = useState(card || "");
-  const [rows, setRows] = useState([0, 1]);
-  const nextRow = useRef(2);
+  const postingEdit = kind === "edit" && (tx.postings.length !== 2 ||
+    tx.postings.some(p => p.amount.commodity !== data.commodity.symbol));
+  const [rows, setRows] = useState(postingEdit ? tx.postings.map((_, i) => i) : [0, 1]);
+  const nextRow = useRef(postingEdit ? tx.postings.length : 2);
   const snapshot = useRef(data);
   const head = useRef(data.version.head);
   useEffect(() => {
@@ -259,7 +261,7 @@ export function OperationDialog({
                       />
                     </label>
                   )}
-                  {kind === "postings" && (
+                  {(kind === "postings" || postingEdit) && (
                     <>
                       <datalist id="posting-accounts">
                         {data.accounts.map((a) => (
@@ -274,6 +276,7 @@ export function OperationDialog({
                           <label>
                             {t("Account")}
                             <input
+                              defaultValue={postingEdit ? tx.postings[row]?.account : ""}
                               name={"account" + row}
                               list="posting-accounts"
                               required
@@ -282,6 +285,7 @@ export function OperationDialog({
                           <label>
                             {t("Amount")}
                             <input
+                              defaultValue={postingEdit ? tx.postings[row]?.amount.exact : ""}
                               name={"amount" + row}
                               inputMode="decimal"
                               required
@@ -342,7 +346,7 @@ export function OperationDialog({
                       </label>
                     </>
                   )}
-                  {kind === "edit" &&
+                  {kind === "edit" && !postingEdit &&
                     [
                       ["from", "From", true],
                       ["to", "To", false],
@@ -531,7 +535,7 @@ export function OperationDialog({
                       </select>
                     </label>
                   )}
-                  {!["fix", "status", "postings", "account-type"].includes(kind) && (
+                  {!postingEdit && !["fix", "status", "postings", "account-type"].includes(kind) && (
                     <label>
                       {t("Amount")}
                       <input

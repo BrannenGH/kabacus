@@ -612,6 +612,29 @@ impl qobject::Ledger {
     }
 
     fn edit_draft(&self, id: &QString) -> QString {
+        if let Ok(tx) = runtime().block_on(model::find_transaction(
+            &self.rust().client,
+            &id.to_string(),
+        )) {
+            if tx.postings.len() != 2
+                || tx
+                    .postings
+                    .windows(2)
+                    .any(|p| p[0].amount.commodity != p[1].amount.commodity)
+            {
+                let postings: Vec<_> = tx
+                    .postings
+                    .iter()
+                    .enumerate()
+                    .map(|(i, p)| {
+                        serde_json::json!({ "account": p.account, "amount": p.amount.exact,
+                        "commodity": p.amount.commodity, "original": i })
+                    })
+                    .collect();
+                return json(&serde_json::json!({ "date": tx.date, "payee": tx.payee,
+                    "memo": tx.memo, "postings": postings }));
+            }
+        }
         match runtime().block_on(model::edit_draft(&self.rust().client, &id.to_string())) {
             Ok(d) => json(&serde_json::json!({
                 "date": d.date, "payee": d.payee, "memo": d.memo,

@@ -1138,7 +1138,7 @@ msgstr "एजेंट को यह विंडो चलाने दें"
 msgid "Control port"
 msgstr "नियंत्रण पोर्ट"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "खाता"
@@ -1333,6 +1333,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "साथ में"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "राशि"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1344,11 +1349,6 @@ msgstr "कुल:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "राशि:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "राशि"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format

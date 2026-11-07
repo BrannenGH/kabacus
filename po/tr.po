@@ -1138,7 +1138,7 @@ msgstr "Ajanların bu pencereyi yönetmesine izin ver"
 msgid "Control port"
 msgstr "Denetim bağlantı noktası"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Hesap"
@@ -1333,6 +1333,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "Kiminle"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Tutar"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1344,11 +1349,6 @@ msgstr "Toplam:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "Tutar:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Tutar"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format

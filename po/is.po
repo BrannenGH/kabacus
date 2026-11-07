@@ -1138,7 +1138,7 @@ msgstr "Leyfa fulltrúum að stjórna þessum glugga"
 msgid "Control port"
 msgstr "Stýrigátt"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Reikningur"
@@ -1333,6 +1333,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "Með"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Upphæð"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1344,11 +1349,6 @@ msgstr "Samtals:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "Upphæð:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Upphæð"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format

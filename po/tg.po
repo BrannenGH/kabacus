@@ -1138,7 +1138,7 @@ msgstr "Ба агентҳо идора кардани ин равзанаро и
 msgid "Control port"
 msgstr "Даргоҳи идоракунӣ"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Ҳисоб"
@@ -1333,6 +1333,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "Бо"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Маблағ"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1344,11 +1349,6 @@ msgstr "Ҳамагӣ:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "Маблағ:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Маблағ"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format

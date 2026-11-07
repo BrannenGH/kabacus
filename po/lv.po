@@ -1139,7 +1139,7 @@ msgstr "Ļaut aģentiem vadīt šo logu"
 msgid "Control port"
 msgstr "Vadības ports"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Konts"
@@ -1334,6 +1334,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "Ar"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Summa"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1345,11 +1350,6 @@ msgstr "Kopā:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "Summa:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Summa"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
