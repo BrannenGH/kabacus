@@ -6,6 +6,7 @@ import QtQuick.Window
 QtObject {
     property var windows: []
     property bool restored: false
+    property bool globalMenuAvailable: false
     function add(window) { if (windows.indexOf(window) < 0) windows = windows.concat([window]) }
     function remove(window) { windows = windows.filter(w => w !== window) }
     function focus(source, except) {

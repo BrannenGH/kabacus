@@ -59,7 +59,7 @@ maintainer = "Brannen Hall <brannen@hallb.me>"
 extended-description = "A Kirigami app for local and remote books, with a shared engine that validates and versions every change."
 section = "misc"
 features = ["gui"]
-depends = "$auto, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-dialogs, qml6-module-qtquick-layouts, qml6-module-qtquick-templates, qml6-module-qtquick-window, qml6-module-qtqml-workerscript, qml6-module-org-kde-kirigami, qml6-module-org-kde-kirigamiaddons-components"
+depends = "$auto, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-dialogs, qml6-module-qtquick-layouts, qml6-module-qtquick-templates, qml6-module-qtquick-window, qml6-module-qt-labs-platform, qml6-module-qtqml-workerscript, qml6-module-org-kde-kirigami, qml6-module-org-kde-kirigamiaddons-components"
 recommends = "qml6-module-org-kde-desktop"
 assets = [
     ["target/release/kabacus-cli", "usr/bin/", "755"],
