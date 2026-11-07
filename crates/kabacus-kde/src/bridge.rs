@@ -665,7 +665,7 @@ impl qobject::Ledger {
             && self.rust().settings.kind == ConnectionKind::Local
         {
             return json(
-                &serde_json::json!({"server_version":env!("CARGO_PKG_VERSION"),"source_url":"https://github.com/BrannenGH/kabacus"}),
+                &serde_json::json!({"server_version":kabacus_service::VERSION,"source_url":"https://github.com/BrannenGH/kabacus"}),
             );
         }
         match runtime().block_on(self.rust().client.version()) {

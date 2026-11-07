@@ -1128,7 +1128,7 @@ impl ServerHandler for KabacusMcp {
             } else {
                 "kabacus-server"
             },
-            env!("CARGO_PKG_VERSION"),
+            kabacus_service::VERSION,
         ))
         .with_instructions(skills::instructions())
     }

@@ -7,18 +7,16 @@ name: RPM repository
 # The app's RPMs for every supported distribution, from
 # packaging/rpm/kabacus.spec, each built, installed and smoke-tested in a
 # container of its distribution (packaging/rpm/build-rpm).
-# - Pushes to master and version tags: build them all, then publish to
+# - Pushes to master: build them all, then publish to
 #   repo.hallb.me.
 # - By hand (workflow_dispatch): build and test only.
 # Pull requests don't build RPMs; the CI workflow builds the DEB when the
 # app changes.
-# Versions: scripts/package-version (0.1.0~git<n>.g<commit> on master,
-# 0.1.0 on its tag, which sorts after them); release 1.<run number> on
-# master and 1 on a tag, so no two builds share a file name.
+# Versions: scripts/package-version (<major>.<minor>.<commit count>);
+# release 1.<run number>, so no two builds share a file name.
 on:
   push:
     branches: [master]
-    tags: ["v*"]
   workflow_dispatch:
 
 permissions:
@@ -38,7 +36,7 @@ jobs:
       release: ${{ steps.version.outputs.release }}
       publish: ${{ steps.version.outputs.publish }}
     steps:
-      # All history and tags: scripts/package-version counts commits.
+      # All history: scripts/package-version counts commits.
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -47,19 +45,9 @@ jobs:
           RUN_NUMBER: ${{ github.run_number }}
         run: |
           version="$(scripts/package-version)"
-          if [ "$GITHUB_REF_TYPE" = tag ]; then
-            case "$version" in
-              *~git*)
-                echo "::error::tag $GITHUB_REF_NAME doesn't match Cargo.toml's version (expected v${version%%~git*})"
-                exit 1 ;;
-            esac
-            release=1
-            publish=true
-          else
-            release="1.$RUN_NUMBER"
-            publish=false
-            [ "$GITHUB_EVENT_NAME" = push ] && [ "$GITHUB_REF" = refs/heads/master ] && publish=true
-          fi
+          release="1.$RUN_NUMBER"
+          publish=false
+          [ "$GITHUB_EVENT_NAME" = push ] && publish=true
           echo "kabacus $version-$release, publish: $publish"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "release=$release" >> "$GITHUB_OUTPUT"

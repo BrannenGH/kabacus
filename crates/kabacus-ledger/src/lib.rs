@@ -31,5 +31,9 @@ pub use import::{
 };
 pub use render::{render_book, render_money, render_posting, render_transaction};
 
-/// The engine's version, reported with the server's.
-pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+/// The version of the whole app: `KABACUS_VERSION` when the build sets it
+/// (scripts/package-version), else the crate's.
+pub const VERSION: &str = match option_env!("KABACUS_VERSION") {
+    Some(v) => v,
+    None => env!("CARGO_PKG_VERSION"),
+};

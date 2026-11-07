@@ -18,7 +18,7 @@ set -e
 cd "$(dirname "$0")/.."
 engine="${ENGINE:-podman}"
 image="${IMAGE:-localhost/kabacus-server}"
-version="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -n1)"
+version="$(scripts/package-version)"
 # The build context has no git history: the commit goes in as a file
 # (kabacus-server's build.rs reads it), which get_version reports.
 git rev-parse HEAD > KABACUS_COMMIT 2>/dev/null || rm -f KABACUS_COMMIT
@@ -30,7 +30,7 @@ while [ $# -gt 0 ]; do
     *) echo "usage: scripts/build-image [--save FILE]" >&2; exit 2 ;;
   esac
 done
-"$engine" build --target server --build-arg VERSION="$version" --build-arg SOURCE_COMMIT="$(git rev-parse HEAD)" \
+"$engine" build --target server --build-arg VERSION="$version" --build-arg KABACUS_VERSION="$version" --build-arg SOURCE_COMMIT="$(git rev-parse HEAD)" \
   -t "$image:$version" -t "$image:latest" -f Containerfile .
 if [ -n "$save" ]; then
   rm -f "$save"
