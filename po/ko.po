@@ -29,6 +29,11 @@ msgctxt "%1 is the closest account to what was typed"
 msgid "Use %1"
 msgstr "%1 사용"
 
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "All transactions"
+msgstr "모든 거래"
+
 #: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add"
@@ -920,6 +925,11 @@ msgstr "검색"
 msgid "Search payee, memo, account"
 msgstr "받는 곳, 메모, 계좌 검색"
 
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Fund transfers"
+msgstr "준비금 이체"
+
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Unreserved only"
@@ -1544,11 +1554,6 @@ msgstr "서버에 문제가 생겼습니다."
 msgctxt "between the items of a list, such as amounts or account names"
 msgid ", "
 msgstr ", "
-
-#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "All transactions"
-msgstr "모든 거래"
 
 #: crates/kabacus-kde/src/model.rs
 #, kde-format

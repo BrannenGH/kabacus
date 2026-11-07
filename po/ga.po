@@ -29,6 +29,11 @@ msgctxt "%1 is the closest account to what was typed"
 msgid "Use %1"
 msgstr "Úsáid %1"
 
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "All transactions"
+msgstr "Gach idirbheart"
+
 #: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add"
@@ -924,6 +929,11 @@ msgstr "Cuardaigh"
 msgid "Search payee, memo, account"
 msgstr "Cuardaigh íocaí, nóta, cuntas"
 
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Fund transfers"
+msgstr "Aistrithe cúlchistí"
+
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Unreserved only"
@@ -1552,11 +1562,6 @@ msgstr "Bhí fadhb ag an bhfreastalaí."
 msgctxt "between the items of a list, such as amounts or account names"
 msgid ", "
 msgstr ", "
-
-#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "All transactions"
-msgstr "Gach idirbheart"
 
 #: crates/kabacus-kde/src/model.rs
 #, kde-format
