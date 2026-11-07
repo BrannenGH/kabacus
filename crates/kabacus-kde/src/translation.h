@@ -17,6 +17,7 @@
 #include <QtCore/QString>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
+#include <QtDBus/QDBusServiceWatcher>
 #include <QtGui/QGuiApplication>
 #include <QtWidgets/QApplication>
 #include <QtQml/QQmlApplicationEngine>
@@ -49,14 +50,23 @@ inline void kabacus_set_right_to_left(bool right_to_left)
     QGuiApplication::setLayoutDirection(right_to_left ? Qt::RightToLeft : Qt::LeftToRight);
 }
 
-// Whether a global menu (Plasma's) is registered on the session bus: the
-// platform theme then exports the window's native menu bar there, and the
-// in-window one would be a duplicate.
-inline bool kabacus_has_global_menu()
+// Shared by every window, including windows created later by QML.
+inline void kabacus_setup_menu_state(QQmlApplicationEngine &engine)
 {
-    auto bus = QDBusConnection::sessionBus();
-    return bus.isConnected() && bus.interface()
-        && bus.interface()->isServiceRegistered(QStringLiteral("com.canonical.AppMenu.Registrar"));
+    auto *state = engine.singletonInstance<QObject *>("me.hallb.kabacus", "WindowManager");
+    Q_ASSERT(state);
+    const auto bus = QDBusConnection::sessionBus();
+    const auto service = QStringLiteral("com.canonical.AppMenu.Registrar");
+    auto *watcher = new QDBusServiceWatcher(service, bus,
+        QDBusServiceWatcher::WatchForOwnerChange, state);
+    const auto update = [state, bus, service]() {
+        const bool available = !qEnvironmentVariableIsSet("KDE_NO_GLOBAL_MENU")
+            && bus.isConnected() && bus.interface()
+            && bus.interface()->isServiceRegistered(service);
+        state->setProperty("globalMenuAvailable", available);
+    };
+    QObject::connect(watcher, &QDBusServiceWatcher::serviceOwnerChanged, state, update);
+    update();
 }
 
 // Gives QML i18n(), i18nc(), i18np() and i18ncp().
@@ -68,7 +78,7 @@ inline void kabacus_setup_qml(QQmlApplicationEngine &engine)
     auto *context = new KLocalizedContext(&engine);
 #endif
     engine.rootContext()->setContextObject(context);
-    engine.setInitialProperties({{QStringLiteral("globalMenuRegistered"), kabacus_has_global_menu()}});
+    kabacus_setup_menu_state(engine);
 }
 
 inline QByteArray kabacus_bytes(rust::Str text)
