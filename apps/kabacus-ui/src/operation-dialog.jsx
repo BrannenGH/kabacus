@@ -50,7 +50,8 @@ export function OperationDialog({
   const [dirty, setDirty] = useState(false);
   useDialogHistory({ onClose, preview, setPreview, dirty, busy });
   const [checked, setChecked] = useState(null);
-  const [repairCard, setRepairCard] = useState(card || "");
+  const presetCard = card || data.cash.cards.find(c => c.card === account)?.card || "";
+  const [repairCard, setRepairCard] = useState(presetCard);
   const postingEdit = kind === "edit" && (tx.postings.length !== 2 ||
     tx.postings.some(p => p.amount.commodity !== data.commodity.symbol));
   const [rows, setRows] = useState(postingEdit ? tx.postings.map((_, i) => i) : [0, 1]);
@@ -408,7 +409,7 @@ export function OperationDialog({
                         name="card"
                         required
                         onChange={(e) => setRepairCard(e.target.value)}
-                        defaultValue={card || ""}
+                        defaultValue={presetCard}
                       >
                         <option value="">{t("Card")}</option>
                         {data.cash.cards.map((c) => (
@@ -423,7 +424,7 @@ export function OperationDialog({
                     <>
                       <label>
                         {t("Paid with")}
-                        <select name="paid_with" required>
+                        <select name="paid_with" defaultValue={account || ""} required>
                           {data.accounts
                             .filter((a) =>
                               ["money", "revolving-debt"].includes(a.kind),

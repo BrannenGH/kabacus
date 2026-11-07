@@ -86,9 +86,9 @@ const cash = {
   unreserved_count: 0,
   warnings: [],
 };
-async function setup(page, conflict = false, shownTransaction = transaction) {
+async function setup(page, conflict = false, shownTransaction = transaction, suppliedAccounts = accounts) {
   const writes = [];
-  const currentAccounts = structuredClone(accounts);
+  const currentAccounts = structuredClone(suppliedAccounts);
   const currentVersion = { ...version };
   await page.route("**/*", async (route) => {
     const path = new URL(route.request().url()).pathname;
@@ -1056,6 +1056,24 @@ test.describe("phone layout", () => {
     expect(writes.at(-1).path).toBe("/transactions/12/corrections");
     expect(writes.at(-1).body.void).toBe(true);
     expect(writes.at(-1).body.dry_run).toBe(true);
+  });
+  for (const [label, kind, field, path] of [
+    ["Rainy day savings", "Spent", "from", "assets:bank:savings"],
+    ["Rainy day savings", "Received", "to", "assets:bank:savings"],
+    ["Rainy day savings", "Split with someone", "paid_with", "assets:bank:savings"],
+    ["Everyday card", "Card purchase", "card", "liabilities:card:everyday"],
+    ["Everyday card", "Pay a card", "card", "liabilities:card:everyday"],
+  ]) test(`register preset: ${kind} from ${label}`, async ({ page }) => {
+    await setup(page, false, transaction, [...accounts,
+      {account:"assets:bank:savings",display_name:"Rainy day savings",kind:"money"},
+      {account:"liabilities:card:everyday",display_name:"Everyday card",kind:"revolving-debt"},
+    ]);
+    await page.route("**/register/**", route => route.fulfill({json:[]}));
+    await page.getByRole("navigation").getByRole("button", {name:"Transactions",exact:true}).click();
+    await page.locator(".account-list").getByRole("button", {name:label,exact:true}).click();
+    await page.getByRole("button", {name:"Add",exact:true}).click();
+    await page.locator(".add-chooser button[data-choice]").filter({hasText:kind}).click();
+    await expect(page.locator(`.bookkeeping-dialog select[name="${field}"]`)).toHaveValue(path);
   });
   test("touch opens full-screen account and date pickers", async ({ page }) => {
     await setup(page);
