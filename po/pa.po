@@ -17,6 +17,16 @@ msgctxt "@label a form field's name"
 msgid "%1:"
 msgstr "%1:"
 
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Back"
+msgstr "ਪਿੱਛੇ"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Search"
+msgstr "ਖੋਜੋ"
+
 #: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "%1 is the field, %2 what's wrong with it"
@@ -427,7 +437,7 @@ msgstr "ਵੇਖੋ"
 msgid "Settings"
 msgstr "ਸੈਟਿੰਗਾਂ"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "On this computer"
 msgstr "ਇਸ ਕੰਪਿਊਟਰ ’ਤੇ"
@@ -478,7 +488,7 @@ msgstr "ਕਾਪੀ ਇਸ ਨਾਂ ਨਾਲ ਸੰਭਾਲੋ…"
 msgid "Close Window"
 msgstr "ਵਿੰਡੋ ਬੰਦ ਕਰੋ"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect to a Server…"
 msgstr "ਸਰਵਰ ਨਾਲ ਜੁੜੋ…"
@@ -620,6 +630,16 @@ msgstr "ਉਹਨਾਂ ਦੀ ਤਬਦੀਲੀ ਵੇਖੋ"
 msgid "Preview again"
 msgstr "ਮੁੜ ਝਲਕ ਵੇਖੋ"
 
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Books"
+msgstr "ਵਹੀਖਾਤੇ"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Close"
+msgstr "ਬੰਦ ਕਰੋ"
+
 #: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -659,6 +679,11 @@ msgstr "ਕਨੈਕਸ਼ਨ ਜਾਂਚੋ"
 #, kde-format
 msgid "Connect"
 msgstr "ਜੁੜੋ"
+
+#: crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch Books…"
+msgstr "ਵਹੀਖਾਤੇ ਬਦਲੋ…"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -701,6 +726,11 @@ msgstr "%2 ਤੋਂ %1"
 msgctxt "%1 is an amount"
 msgid "Cash on Hand %1"
 msgstr "ਹੱਥ ਵਿਚਲੀ ਨਕਦੀ %1"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "How it's worked out"
+msgstr "ਇਸ ਦੀ ਗਣਨਾ ਕਿਵੇਂ ਹੁੰਦੀ ਹੈ"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -918,11 +948,6 @@ msgstr "ਮਿਲਾਨ…"
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Search"
-msgstr "ਖੋਜੋ"
-
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Search payee, memo, account"
 msgstr "ਭੁਗਤਾਨ-ਪ੍ਰਾਪਤਕਰਤਾ, ਨੋਟ, ਖਾਤਾ ਖੋਜੋ"
 
@@ -1082,6 +1107,12 @@ msgctxt "%1 is a month and year"
 msgid "No spending in %1"
 msgstr "%1 ਵਿੱਚ ਕੋਈ ਖ਼ਰਚ ਨਹੀਂ"
 
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Review"
+msgstr "ਜਾਂਚੋ"
+
 #: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
@@ -1212,9 +1243,9 @@ msgstr "ਤਬਾਦਲਾ"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
-msgctxt "@action:button"
-msgid "Review"
-msgstr "ਜਾਂਚੋ"
+msgctxt "@option cancel a transaction with a reversal"
+msgid "Void"
+msgstr "ਰੱਦ ਕਰੋ"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1232,16 +1263,27 @@ msgstr "ਥਾਂ ’ਤੇ ਸੋਧੋ"
 msgid "Changes it where it is. History keeps the old version."
 msgstr "ਜਿੱਥੇ ਹੈ ਉੱਥੇ ਹੀ ਬਦਲਦਾ ਹੈ। ਇਤਿਹਾਸ ਪੁਰਾਣਾ ਸੰਸਕਰਣ ਸੰਭਾਲ ਕੇ ਰੱਖਦਾ ਹੈ।"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@option cancel a transaction with a reversal"
-msgid "Void"
-msgstr "ਰੱਦ ਕਰੋ"
-
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Only the reversal: it didn't happen."
 msgstr "ਸਿਰਫ਼ ਉਲਟ ਇੰਦਰਾਜ: ਇਹ ਹੋਇਆ ਹੀ ਨਹੀਂ।"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Total:"
+msgstr "ਕੁੱਲ:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Amount:"
+msgstr "ਰਕਮ:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "ਰਕਮ"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1342,23 +1384,6 @@ msgstr "ਰਾਖਵੀਂ ਰਕਮ"
 msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "ਨਾਲ"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "ਰਕਮ"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@label"
-msgid "Total:"
-msgstr "ਕੁੱਲ:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@label"
-msgid "Amount:"
-msgstr "ਰਕਮ:"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -2061,6 +2086,11 @@ msgstr "ਇੱਕ ਕਾਰਡ ਦੀਆਂ ਰਾਖਵੀਂ ਰਕਮ ਵਾ�
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "More"
+msgstr "ਹੋਰ"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Sign in to %1"
 msgstr "%1 ਵਿੱਚ ਸਾਈਨ ਇਨ ਕਰੋ"
 
@@ -2338,11 +2368,6 @@ msgstr "ਨਵਾਂ ਫਾਈਲ ਨਾਂ ਚੁਣੋ; ਇਹ ਵਹੀਆਂ
 #, kde-format
 msgid "Choose what happened. The form fills in the lines; you see what changes before you save."
 msgstr "ਚੁਣੋ ਕਿ ਕੀ ਹੋਇਆ। ਫਾਰਮ ਇੰਦਰਾਜ਼ਾਂ ਦੀਆਂ ਲਾਈਨਾਂ ਭਰਦਾ ਹੈ; ਸੰਭਾਲਣ ਤੋਂ ਪਹਿਲਾਂ ਤੁਸੀਂ ਤਬਦੀਲੀਆਂ ਦੇਖ ਸਕਦੇ ਹੋ।"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Close"
-msgstr "ਬੰਦ ਕਰੋ"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

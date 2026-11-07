@@ -17,6 +17,16 @@ msgctxt "@label a form field's name"
 msgid "%1:"
 msgstr "%1:"
 
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Back"
+msgstr "Back"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Search"
+msgstr "Search"
+
 #: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "%1 is the field, %2 what's wrong with it"
@@ -427,7 +437,7 @@ msgstr "View"
 msgid "Settings"
 msgstr "Settings"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "On this computer"
 msgstr "On this computer"
@@ -478,7 +488,7 @@ msgstr "Save a Copy As…"
 msgid "Close Window"
 msgstr "Close Window"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect to a Server…"
 msgstr "Connect to a Server…"
@@ -620,6 +630,16 @@ msgstr "See their change"
 msgid "Preview again"
 msgstr "Preview again"
 
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Books"
+msgstr "Books"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Close"
+msgstr "Close"
+
 #: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -659,6 +679,11 @@ msgstr "Test connection"
 #, kde-format
 msgid "Connect"
 msgstr "Connect"
+
+#: crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch Books…"
+msgstr "Switch Books…"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -701,6 +726,11 @@ msgstr "%1 since %2"
 msgctxt "%1 is an amount"
 msgid "Cash on Hand %1"
 msgstr "Cash on Hand %1"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "How it's worked out"
+msgstr "How it's worked out"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -918,11 +948,6 @@ msgstr "Reconcile…"
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Search"
-msgstr "Search"
-
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Search payee, memo, account"
 msgstr "Search payee, memo, account"
 
@@ -1082,6 +1107,12 @@ msgctxt "%1 is a month and year"
 msgid "No spending in %1"
 msgstr "No spending in %1"
 
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Review"
+msgstr "Review"
+
 #: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
@@ -1212,9 +1243,9 @@ msgstr "Transfer"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
-msgctxt "@action:button"
-msgid "Review"
-msgstr "Review"
+msgctxt "@option cancel a transaction with a reversal"
+msgid "Void"
+msgstr "Void"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1232,16 +1263,27 @@ msgstr "Edit in place"
 msgid "Changes it where it is. History keeps the old version."
 msgstr "Changes it where it is. History keeps the old version."
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@option cancel a transaction with a reversal"
-msgid "Void"
-msgstr "Void"
-
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Only the reversal: it didn't happen."
 msgstr "Only the reversal: it didn't happen."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Total:"
+msgstr "Total:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Amount:"
+msgstr "Amount:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Amount"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1342,23 +1384,6 @@ msgstr "Reserve"
 msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "With"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Amount"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@label"
-msgid "Total:"
-msgstr "Total:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@label"
-msgid "Amount:"
-msgstr "Amount:"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -2061,6 +2086,11 @@ msgstr "A card is missing its reserve lines; it will be flagged"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "More"
+msgstr "More"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Sign in to %1"
 msgstr "Sign in to %1"
 
@@ -2338,11 +2368,6 @@ msgstr "Choose a new file name; these books already exist."
 #, kde-format
 msgid "Choose what happened. The form fills in the lines; you see what changes before you save."
 msgstr "Choose what happened. The form fills in the lines; you see what changes before you save."
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Close"
-msgstr "Close"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

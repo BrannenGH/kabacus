@@ -593,7 +593,7 @@ dialog .banner {
   padding: 15px 0;
   font-size: 11px;
 }
-@media (min-width: 1600px) {
+@media (--desktop) {
   main {
     padding-top: 45px;
   }
@@ -601,7 +601,7 @@ dialog .banner {
     padding: 28px;
   }
 }
-@media (max-width: 1150px) {
+@media (--compact) {
   aside {
     width: 200px;
   }
@@ -625,7 +625,7 @@ dialog .banner {
     font-size: 26px;
   }
 }
-@media (max-width: 700px) {
+@media (--phone) {
   aside {
     position: static;
     width: 100%;
@@ -834,12 +834,12 @@ table {
   direction: ltr;
   display: inline-block;
 }
-@media (max-width: 1150px) {
+@media (--compact) {
   [dir="rtl"] .workspace {
     margin-right: 200px;
   }
 }
-@media (max-width: 700px) {
+@media (--phone) {
   [dir="rtl"] .workspace {
     margin-right: 0;
   }
@@ -848,7 +848,7 @@ table {
 .nav-spacer {
   height: 56px;
 }
-@media (max-width: 700px) {
+@media (--phone) {
   .nav-spacer {
     display: none;
   }
@@ -873,18 +873,18 @@ details p {
   width: auto;
   max-width: 180px;
 }
-@media (max-width: 700px) {
+@media (--phone) {
   .page-heading select {
     flex: 1 1 140px;
     max-width: none;
   }
 }
-@media (max-width: 420px) {
+@media (--phone) {
   .metrics {
     grid-template-columns: minmax(0, 1fr);
   }
 }
-@media (min-width: 1200px) {
+@media (--desktop) {
   dialog.bookkeeping-dialog {
     width: min(1100px, calc(100% - 80px));
   }
@@ -984,8 +984,8 @@ th { background: #efead8; color: var(--muted); font-size: 11px; }
  .book-menu button:hover { background: #394c39; } th,.preview { background: #263e35; } .metric.primary { color: inherit; }
 }
 @media (prefers-reduced-motion: reduce) { *,*::before,*::after { transition: none !important; animation: none !important; } }
-@media (max-width: 900px) { aside { width: 200px; } .workspace { margin-inline-start: 200px; width: calc(100% - 200px); } .transactions-workspace { grid-template-columns: 1fr; } }
-@media (max-width: 650px) { aside { position: static; width: 100%; } .shell { display: block; } .workspace { margin: 0; width: 100%; } .choice-grid { grid-template-columns: 1fr; } }
+@media (--compact) { aside { width: 200px; } .workspace { margin-inline-start: 200px; width: calc(100% - 200px); } .transactions-workspace { grid-template-columns: 1fr; } }
+@media (--phone) { aside { position: static; width: 100%; } .shell { display: block; } .workspace { margin: 0; width: 100%; } .choice-grid { grid-template-columns: 1fr; } }
 .overview-layout { display:grid; grid-template-columns: 1.3fr 1fr; grid-template-areas: "cash free" "cash credit" "reserves trend"; gap:16px; align-items:start; }
 .cash-summary { grid-area:cash; padding:22px; }
 .free-accounts { grid-area:free; padding:20px; }
@@ -1017,8 +1017,8 @@ th { background: #efead8; color: var(--muted); font-size: 11px; }
 .conflict-panel { border:1px solid #ad915b;padding:20px;border-radius:10px;background:var(--surface); }
 .conflict-panel button { margin:5px; }
 @media(prefers-color-scheme:dark) { .bookkeeping-dialog[open]{background:#15271f}.cash-summary .total-line{background:#394c39} }
-@media(max-width:900px) { .bookkeeping-dialog[open]{inset-inline-start:200px;width:calc(100% - 200px)}.overview-layout{grid-template-columns:1fr;grid-template-areas:"cash" "free" "credit" "reserves" "trend"} }
-@media(max-width:650px) { .bookkeeping-dialog[open]{inset:0;width:100%}.editor-grid{grid-template-columns:1fr} }
+@media(--compact) { .bookkeeping-dialog[open]{inset-inline-start:200px;width:calc(100% - 200px)}.overview-layout{grid-template-columns:1fr;grid-template-areas:"cash" "free" "credit" "reserves" "trend"} }
+@media(--phone) { .bookkeeping-dialog[open]{inset:0;width:100%}.editor-grid{grid-template-columns:1fr} }
 .welcome { max-width:680px;margin:10vh auto;padding:32px; }.welcome>img{width:72px;height:72px}.welcome h1{font-size:36px;margin-top:24px}.welcome>p{color:var(--muted)}.welcome-actions{display:flex;gap:12px;flex-wrap:wrap;margin:28px 0 40px}.welcome h2{border-top:1px solid var(--border);padding-top:24px}.recent-row{display:flex;justify-content:space-between;align-items:center;width:100%;border-bottom:1px solid var(--border);padding:8px 0}.workspace-dialog{position:fixed;inset:0;background:#263e3560;z-index:300;display:grid;place-items:center}.workspace-dialog-body{position:relative;width:min(480px,calc(100vw - 32px));background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:28px}.workspace-dialog-body form{display:grid;gap:16px}.workspace-dialog-body label{display:grid;gap:5px}.close-dialog{float:inline-end}.workspace-dialog-body h2{clear:both;padding-top:12px}
 
 .cash-summary dl { display:block; margin:16px 0 0; }
@@ -1032,7 +1032,7 @@ tr[aria-selected="true"] { background:color-mix(in srgb,var(--sage) 25%,transpar
 tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
 
 [hidden] { display:none !important; }
-@media(max-width:650px) {
+@media(--phone) {
  .sidebar-bottom { display:block;position:static; }
  .sidebar-bottom .location { display:none; }
  .settings-action { width:auto;margin:4px 0; }
@@ -1046,3 +1046,104 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
 }
 
 :root { --sage:#a7b298; --gold:#ad915b; }
+
+/* The media aliases are expanded from design/tokens.json by Vite. */
+.phone-appbar, .phone-tabs, .phone-fab { display:none; }
+@media (--tablet) {
+  aside { width:80px; padding-inline:8px; }
+  .workspace,[dir="rtl"] .workspace { margin-inline-start:80px; margin-inline-end:0; width:calc(100% - 80px); }
+  aside .brand span,aside .sidebar-bottom,aside kbd { display:none; }
+  aside .brand { justify-content:center; }
+  aside nav button { font-size:0; justify-content:center; }
+  aside nav button .line-icon { width:24px; height:24px; margin:0; }
+  .bookkeeping-dialog[open] { inset-inline-start:80px; width:calc(100% - 80px); }
+}
+@media (--phone) {
+  :root { --phone-tabs-height:76px; }
+  .shell { display:block; padding-top:env(safe-area-inset-top); }
+  .workspace,[dir="rtl"] .workspace { margin:0; width:100%; }
+  .workspace>main { padding:16px 16px calc(156px + env(safe-area-inset-bottom)); }
+  .page-heading { min-height:0; padding:0; margin:0 0 16px; border:0; }
+  .page-heading h1 { font:600 30px "Playfair Display",Georgia,serif; }
+  .header-actions { display:none; }
+  .phone-appbar { position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:8px; height:64px; padding:8px 16px; border-bottom:1px solid var(--border); background:var(--surface); }
+  .phone-appbar strong { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .phone-appbar .phone-books-name { font-size:16px; margin-inline-end:auto; min-width:0; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; font-weight:600; }
+  .phone-appbar button { padding:8px; }
+  .phone-search { padding:8px 16px; background:var(--surface); }
+  .phone-overflow summary { display:grid; place-items:center; padding:8px; width:48px; list-style:none; font-size:24px; }
+  .phone-overflow>div { position:absolute; inset-inline-end:8px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px; display:grid; gap:8px; box-shadow:0 5px 20px #263e3520; }
+  nav.phone-tabs { position:fixed; inset:auto 0 0; z-index:40; height:calc(var(--phone-tabs-height) + env(safe-area-inset-bottom)); padding:8px 8px calc(8px + env(safe-area-inset-bottom)); margin:0; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; overflow:visible; background:var(--surface); border-top:1px solid var(--border); }
+  nav.phone-tabs button { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:4px 0; min-width:0; min-height:48px; background:transparent; color:var(--muted); font-size:10px; white-space:normal; }
+  nav.phone-tabs button span { display:block; font:inherit; width:auto; height:auto; overflow-wrap:anywhere; text-align:center; }
+  nav.phone-tabs button .line-icon { width:24px; height:24px; margin:0; }
+  nav.phone-tabs button[aria-current="page"] { color:var(--accent); font-weight:600; background:color-mix(in srgb,var(--sage) 28%,transparent); border-radius:20px; }
+  .phone-fab { display:grid; place-items:center; position:fixed; z-index:45; inset-inline-end:16px; bottom:calc(var(--phone-tabs-height) + 16px + env(safe-area-inset-bottom)); width:56px; height:56px; padding:0; border-radius:20px; background:#304e41; color:#fbf8f0; border:1px solid var(--gold); box-shadow:0 4px 12px #263e3530; }
+  .phone-fab .line-icon { width:28px; height:28px; margin:0; }
+  .save-toast { bottom:calc(var(--phone-tabs-height) + 8px + env(safe-area-inset-bottom)); max-width:calc(100% - 32px); width:max-content; }
+  button,input,select,textarea,summary { min-height:48px; }
+  button,summary { min-width:48px; }
+  input,select,textarea { font-size:16px; }
+  .checkbox { min-height:48px; }
+  .checkbox input { width:24px; height:24px; min-height:0; }
+  .panel-heading,.header-actions,.dialog-actions { gap:8px; }
+  .phone-more { display:grid; gap:8px; }
+  .phone-more>button { display:flex; align-items:center; gap:16px; width:100%; text-align:start; border-bottom:1px solid var(--border); border-radius:0; }
+  .phone-more>button span { margin-inline-start:auto; }
+  .phone-more h2 { margin-top:24px; }
+  .transactions-workspace { display:block; }
+  .account-list { padding:8px; }
+  .account-list button { font-size:14px; min-height:56px; margin-bottom:8px; }
+  .account-list h3 { font-size:12px; }
+  .phone-register { padding:0 12px 16px; }
+  .phone-register h3 { font:600 12px Inter,sans-serif; color:var(--muted); padding:8px 0; }
+  .register-row { display:flex; align-items:center; gap:12px; width:100%; min-height:64px; margin-bottom:8px; border:1px solid var(--border); border-radius:12px; background:var(--surface); text-align:start; }
+  .register-row small { display:block; color:var(--muted); margin-top:4px; font-size:12px; }
+  .register-row>span:last-child { text-align:end; }
+  dialog.add-chooser,dialog.books-sheet { position:fixed; inset:auto 0 0; width:100%; max-width:100%; max-height:90dvh; margin:0; padding:16px 16px calc(16px + env(safe-area-inset-bottom)); border-radius:20px 20px 0 0; overflow:auto; }
+  .add-chooser .dialog-heading,.books-sheet .dialog-heading { padding:0 0 8px; }
+  .add-chooser .choice-grid { gap:8px; }
+  .add-chooser .choice-grid button { min-height:56px; padding:8px; }
+  .books-sheet>button { display:block; width:100%; text-align:start; margin-top:8px; }
+  .bookkeeping-dialog[open] { inset:0; width:100%; height:100dvh; padding:16px 16px calc(16px + env(safe-area-inset-bottom)); background:var(--surface); z-index:60; }
+  .bookkeeping-dialog .form-fields { display:flex; flex-direction:column; padding:0; gap:16px; }
+  .bookkeeping-dialog .dialog-heading { margin:0 0 16px; padding-bottom:12px; }
+  .bookkeeping-dialog .dialog-actions { position:sticky; bottom:0; background:var(--surface); padding:16px 0 0; margin-top:16px; }
+  .bookkeeping-dialog .dialog-actions>button:last-child { flex:1; }
+  .bookkeeping-dialog input[name="amount"],.bookkeeping-dialog input[name="total"] { font-size:32px; }
+  .bookkeeping-dialog .preview { padding:16px; border:1px solid var(--border); border-radius:12px; }
+  .overview-layout { grid-template-columns:1fr; grid-template-areas:"cash" "warnings" "free" "credit" "reserves" "trend"; }
+  .workspace-dialog { align-items:end; }
+  .workspace-dialog-body { width:100%; max-height:90dvh; overflow:auto; border-radius:20px 20px 0 0; padding-bottom:calc(24px + env(safe-area-inset-bottom)); }
+}
+@media (pointer:coarse) { html:not(.hardware-keyboard) kbd { display:none; } }
+
+.phone-picker[open] { position:fixed; inset:0; width:100%; max-width:none; height:100dvh; max-height:none; margin:0; border:0; border-radius:0; padding:16px; background:var(--surface); }
+.phone-picker .dialog-heading { padding:0 0 16px; gap:16px; justify-content:start; }
+.picker-options { display:grid; gap:8px; margin-top:16px; }
+.picker-options button { text-align:start; width:100%; border-bottom:1px solid var(--border); }
+
+.overview-warnings { grid-area:warnings; }
+.cash-breakdown { border-top:1px solid var(--border); }
+.cash-breakdown summary { display:flex; align-items:center; min-height:48px; font-size:14px; padding:12px 0 0; }
+@media (--phone) {
+  .cash-total { font-size:clamp(28px,11vw,48px); }
+  .free-accounts h2,.overview-credit h2,.overview-reserves h2 { font:600 12px Inter,sans-serif; text-transform:uppercase; color:var(--muted); letter-spacing:.05em; }
+  .overview-row { font-size:14px; min-height:56px; }
+  .cash-label { font-size:16px; }
+}
+
+@media (--phone) {
+  .bookkeeping-dialog .form-fields>label:has(input[name="amount"]) { order:-2; text-align:center; padding:16px; border:1px solid var(--border); border-radius:12px; background:var(--surface); }
+  .bookkeeping-dialog .form-fields>label:has(input[name="amount"]) input { text-align:center; font-family:"Playfair Display",Georgia,serif; font-size:40px; background:transparent; border:0; }
+  .bookkeeping-dialog .form-fields>label:has(input[name="date"]) { order:10; }
+  .bookkeeping-dialog .form-fields>label:has(input[name="memo"]) { order:11; }
+  .bookkeeping-dialog .dialog-heading>div { flex:1; text-align:center; }
+  .bookkeeping-dialog .dialog-heading>button { order:-1; }
+  .bookkeeping-dialog .eyebrow { display:none; }
+  .bookkeeping-dialog .form-fields>label { font-size:14px; }
+}
+
+.operation-overflow { position:relative; }
+.operation-overflow summary { list-style:none; font-size:24px; text-align:center; }
+.operation-overflow button { position:absolute; inset-inline-end:0; top:100%; z-index:5; min-width:100px; background:var(--surface); border:1px solid var(--border); }

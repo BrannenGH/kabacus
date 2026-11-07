@@ -6,6 +6,8 @@ import QtQuick
 
 QtObject {
     id: theme
+    readonly property int desktopBreakpoint: 1200
+    readonly property int phoneBreakpoint: 600
 
     // The token set for a page's background: Theme.of(Kirigami.Theme.backgroundColor).
     function of(background: color): QtObject { return background.hslLightness < 0.5 ? theme.dark : theme.light }

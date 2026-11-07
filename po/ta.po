@@ -17,6 +17,16 @@ msgctxt "@label a form field's name"
 msgid "%1:"
 msgstr "%1:"
 
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Back"
+msgstr "பின்செல்"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Search"
+msgstr "தேடு"
+
 #: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "%1 is the field, %2 what's wrong with it"
@@ -427,7 +437,7 @@ msgstr "காண்"
 msgid "Settings"
 msgstr "அமைப்புகள்"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "On this computer"
 msgstr "இந்தக் கணினியில்"
@@ -478,7 +488,7 @@ msgstr "நகலை இவ்வாறு சேமி…"
 msgid "Close Window"
 msgstr "சாளரத்தை மூடு"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect to a Server…"
 msgstr "சேவையகத்துடன் இணை…"
@@ -620,6 +630,16 @@ msgstr "அவர்களின் மாற்றத்தைக் காண�
 msgid "Preview again"
 msgstr "மீண்டும் முன்னோட்டம்"
 
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Books"
+msgstr "கணக்குப் புத்தகங்கள்"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Close"
+msgstr "மூடு"
+
 #: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -659,6 +679,11 @@ msgstr "இணைப்பைச் சோதி"
 #, kde-format
 msgid "Connect"
 msgstr "இணை"
+
+#: crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch Books…"
+msgstr "கணக்குப் புத்தகங்களை மாற்று…"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -701,6 +726,11 @@ msgstr "%2 முதல் %1"
 msgctxt "%1 is an amount"
 msgid "Cash on Hand %1"
 msgstr "கையிருப்புப் பணம் %1"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "How it's worked out"
+msgstr "இது எவ்வாறு கணக்கிடப்படுகிறது"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -918,11 +948,6 @@ msgstr "ஒப்பிட்டுச் சரிபார்…"
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Search"
-msgstr "தேடு"
-
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Search payee, memo, account"
 msgstr "பெறுநர், குறிப்பு, கணக்கைத் தேடு"
 
@@ -1082,6 +1107,12 @@ msgctxt "%1 is a month and year"
 msgid "No spending in %1"
 msgstr "%1 இல் செலவு இல்லை"
 
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Review"
+msgstr "சரிபார்"
+
 #: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
@@ -1212,9 +1243,9 @@ msgstr "பரிமாற்றம்"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
-msgctxt "@action:button"
-msgid "Review"
-msgstr "சரிபார்"
+msgctxt "@option cancel a transaction with a reversal"
+msgid "Void"
+msgstr "ரத்துசெய்"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1232,16 +1263,27 @@ msgstr "இருந்த இடத்திலேயே திருத்த�
 msgid "Changes it where it is. History keeps the old version."
 msgstr "இருக்கும் இடத்திலேயே மாற்றுகிறது. பழைய பதிப்பை வரலாறு வைத்திருக்கும்."
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@option cancel a transaction with a reversal"
-msgid "Void"
-msgstr "ரத்துசெய்"
-
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Only the reversal: it didn't happen."
 msgstr "எதிர்ப்பதிவு மட்டும்: அது நடக்கவே இல்லை."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Total:"
+msgstr "மொத்தம்:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Amount:"
+msgstr "தொகை:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "தொகை"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1342,23 +1384,6 @@ msgstr "ஒதுக்கீடு"
 msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "உடன்"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "தொகை"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@label"
-msgid "Total:"
-msgstr "மொத்தம்:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@label"
-msgid "Amount:"
-msgstr "தொகை:"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -2061,6 +2086,11 @@ msgstr "ஓர் அட்டையில் ஒதுக்கீட்டு 
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "More"
+msgstr "மேலும்"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Sign in to %1"
 msgstr "%1 இல் உள்நுழை"
 
@@ -2338,11 +2368,6 @@ msgstr "புதிய கோப்புப் பெயரைத் தேர
 #, kde-format
 msgid "Choose what happened. The form fills in the lines; you see what changes before you save."
 msgstr "என்ன நடந்தது என்பதைத் தேர்ந்தெடுக்கவும். படிவம் பதிவுவரிகளை நிரப்பும்; சேமிக்கும் முன் மாற்றங்களைக் காணலாம்."
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Close"
-msgstr "மூடு"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

@@ -58,6 +58,7 @@ Kirigami.ApplicationWindow {
     function newBooks() { saveDialog.mode = "new"; saveDialog.open() }
     function openBooks() { openDialog.open() }
     function saveCopy() { saveDialog.mode = "copy"; saveDialog.open() }
+    function openBooksSheet() { booksSheet.open() }
     function connectServer() { connectDialog.open() }
     function closeWindow() { runFileAction(function() { explicitClose = true; ledger.forgetWindow(windowId); root.close() }) }
     function runFileAction(action) {
@@ -91,14 +92,17 @@ Kirigami.ApplicationWindow {
     width: requestedSize ? requestedSize[0] : 1280
     height: requestedSize ? requestedSize[1] : 800
     minimumWidth: 320
+    font.pixelSize: narrow ? 16 : Kirigami.Theme.defaultFont.pixelSize
 
     property alias ledger: ledgerObject
     Ledger {
         id: ledgerObject
     }
 
-    readonly property bool wide: width >= 1200
-    readonly property bool narrow: width < 600
+    readonly property bool wide: width >= Theme.desktopBreakpoint
+    readonly property bool narrow: width < Theme.phoneBreakpoint
+    readonly property Kirigami.Page phonePage: (pageStack.layers.depth > 1 ? pageStack.layers.currentItem : pageStack.currentItem) as Kirigami.Page
+    onPhonePageChanged: if (narrow && phonePage && phonePage.objectName === "more") current = "More"
     // {status, username, issuer, signing_in, error?}.
     readonly property var auth: JSON.parse(ledger.authJson)
     readonly property bool needsSignIn: auth.status === "signed_out" || auth.status === "expired"
@@ -203,10 +207,11 @@ Kirigami.ApplicationWindow {
     }
 
     function leaveFor(name, props) {
+        const fromMore = narrow && current === "More" && ["Loans", "People", "Reports", "Activity"].includes(name)
         current = name
         ledger.check()
         while (pageStack.layers.depth > 1) pageStack.layers.pop()
-        pageStack.clear()
+        if (!fromMore) pageStack.clear()
         pageStack.push(pages[name], props || {})
     }
 
@@ -288,7 +293,7 @@ Kirigami.ApplicationWindow {
         id: drawer
         title: ""
         topContent: Controls.ToolButton { text: root.bookSource ? root.bookSource.name : "Kabacus"; icon.name: "me.hallb.kabacus"; onClicked: filePopup.open() }
-        visible: root.hasBooks
+        visible: root.hasBooks && !root.narrow
         modal: root.narrow
         drawerOpen: !root.narrow
         handleVisible: false
@@ -414,21 +419,20 @@ Kirigami.ApplicationWindow {
         }
     }
 
-    // On a phone, bottom tabs; Credit, Loans, Reports, Activity and
-    // Settings are under More.
+    // The first four destinations and More stay in shared order.
     footer: Kirigami.NavigationTabBar {
         id: tabBar
-        visible: root.narrow
+        visible: root.narrow && root.hasBooks && root.pageStack.layers.depth === 1
         // The drawer leaves room for the footer even when it's hidden.
         height: visible ? implicitHeight : 0
         actions: [
-            Kirigami.Action { text: root.labels.Overview; icon.name: "go-home"; checked: root.current === "Overview"; onTriggered: root.go("Overview") },
-            Kirigami.Action { text: root.labels.Accounts; icon.name: "wallet-open"; checked: root.current === "Accounts"; onTriggered: root.go("Accounts") },
+            Kirigami.Action { text: root.labels.Overview; icon.name: "go-home"; checked: root.current === "Overview" && !(root.phonePage && root.phonePage.objectName === "register"); onTriggered: root.go("Overview") },
+            Kirigami.Action { text: root.labels.Accounts; icon.name: "wallet-open"; checked: root.current === "Accounts" || (root.phonePage && root.phonePage.objectName === "register"); onTriggered: root.go("Accounts") },
             Kirigami.Action { text: root.labels.Funds; icon.name: "folder-text"; checked: root.current === "Funds"; onTriggered: root.go("Funds") },
-            Kirigami.Action { text: root.labels.People; icon.name: "system-users"; checked: root.current === "People"; onTriggered: root.go("People") },
+            Kirigami.Action { text: root.labels.Cards; icon.name: "view-credit-card"; checked: root.current === "Cards"; onTriggered: root.go("Cards") },
             Kirigami.Action {
                 text: i18nc("the other destinations", "More"); icon.name: "overflow-menu"
-                checked: ["More", "Cards", "Loans", "Reports", "Activity"].includes(root.current)
+                checked: ["More", "People", "Loans", "Reports", "Activity"].includes(root.current) && !(root.phonePage && root.phonePage.objectName === "register")
                 onTriggered: root.go("More")
             }
         ]
@@ -444,6 +448,70 @@ Kirigami.ApplicationWindow {
         anchors.right: parent.right
         z: 5
         spacing: 0
+
+        Controls.ToolBar {
+            visible: root.narrow && root.hasBooks
+            Layout.fillWidth: true
+            Layout.minimumHeight: 64
+            RowLayout {
+                anchors.fill: parent
+                spacing: 8
+                readonly property bool pushed: root.pageStack.layers.depth > 1 || root.pageStack.depth > 1 || ["Loans", "People", "Reports", "Activity"].includes(root.current)
+                Controls.ToolButton {
+                    visible: parent.pushed
+                    text: i18n("Back")
+                    icon.name: "go-previous"
+                    implicitHeight: 48
+                    onClicked: root.runFileAction(function() {
+                        if (root.pageStack.layers.depth > 1) root.pageStack.layers.pop()
+                        else if (root.pageStack.depth > 1) root.pageStack.pop()
+                        else root.go("More")
+                    })
+                }
+                Controls.ToolButton {
+                    visible: !parent.pushed
+                    text: root.bookSource ? root.bookSource.name : "Kabacus"
+                    icon.name: "arrow-down"
+                    Layout.fillWidth: true
+                    implicitHeight: 48
+                    onClicked: root.openBooksSheet()
+                }
+                Controls.Label {
+                    visible: parent.pushed
+                    text: root.phonePage ? root.phonePage.title : ""
+                    elide: Text.ElideRight
+                    Layout.fillWidth: true
+                    font.bold: true
+                }
+                Controls.ToolButton {
+                    text: i18n("Search")
+                    icon.name: "search"
+                    display: Controls.AbstractButton.IconOnly
+                    implicitWidth: 48; implicitHeight: 48
+                    onClicked: {
+                        const register = root.pageStack.currentItem as RegisterPage
+                        if (register) register.searchOpen = !register.searchOpen
+                        else root.go("Accounts")
+                    }
+                }
+                Controls.ToolButton {
+                    text: i18nc("the other destinations", "More")
+                    icon.name: "overflow-menu"
+                    display: Controls.AbstractButton.IconOnly
+                    implicitWidth: 48; implicitHeight: 48
+                    onClicked: phoneActions.open()
+                    Controls.Menu {
+                        id: phoneActions
+                        Instantiator {
+                            model: root.phonePage ? root.phonePage.actions : []
+                            delegate: Controls.MenuItem { required property var modelData; action: modelData; visible: modelData.visible !== false; implicitHeight: 48 }
+                            onObjectAdded: function(index, object) { phoneActions.insertItem(index, object) }
+                            onObjectRemoved: function(index, object) { phoneActions.removeItem(object) }
+                        }
+                    }
+                }
+            }
+        }
 
         StatusBanner {
             id: authOff
@@ -549,7 +617,7 @@ Kirigami.ApplicationWindow {
     // The floating Add button on a phone.
     Controls.RoundButton {
         objectName: "fab"
-        visible: root.narrow && root.canWrite && root.pageStack.layers.depth === 1
+        visible: root.narrow && root.canWrite && root.pageStack.layers.depth === 1 && !["More", "Reports", "Activity"].includes(root.current)
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: Kirigami.Units.gridUnit
@@ -574,7 +642,7 @@ Kirigami.ApplicationWindow {
     pageStack.initialPage: welcomePage
     pageStack.anchors.topMargin: banners.height
     pageStack.defaultColumnWidth: Kirigami.Units.gridUnit * 20
-    pageStack.globalToolBar.style: Kirigami.ApplicationHeaderStyle.ToolBar
+    pageStack.globalToolBar.style: root.narrow ? Kirigami.ApplicationHeaderStyle.None : Kirigami.ApplicationHeaderStyle.ToolBar
 
     Component { id: welcomePage; WelcomePage { app: root } }
     Component { id: revisionPage; CommitPage { app: root } }
@@ -678,6 +746,50 @@ Kirigami.ApplicationWindow {
     Instantiator {
         model: ["Overview", "Accounts", "Funds", "Cards", "Loans", "People", "Reports", "Activity"]
         delegate: Shortcut { required property int index; required property string modelData; sequence: "Ctrl+" + (index + 1); enabled: root.hasBooks; onActivated: root.go(modelData) }
+    }
+    Kirigami.OverlayDrawer {
+        id: booksSheet
+        edge: Qt.BottomEdge
+        modal: true
+        handleVisible: false
+        width: root.width
+        height: Math.min(root.height * 0.9, booksContent.implicitHeight + 32)
+        contentItem: ColumnLayout {
+            id: booksContent
+            spacing: 8
+            RowLayout {
+                Kirigami.Heading { text: i18n("Books"); Layout.fillWidth: true }
+                Controls.ToolButton { text: i18n("Close"); implicitHeight: 48; onClicked: booksSheet.close() }
+            }
+            Controls.Label { text: root.bookSource ? root.bookSource.name : "Kabacus"; font.bold: true; Layout.fillWidth: true }
+            Controls.Label { text: root.bookSource && root.bookSource.kind === "local" ? i18n("On this computer") + " · " + root.bookSource.path : root.bookSource ? root.bookSource.url : root.connection.socket_path; wrapMode: Text.WrapAnywhere; Layout.fillWidth: true }
+            Controls.Label { text: i18n("Open Recent"); font.bold: true }
+            ListView {
+                Layout.fillWidth: true
+                Layout.preferredHeight: Math.min(contentHeight, root.height * 0.25)
+                clip: true
+                model: root.recentBooks
+                delegate: Controls.ItemDelegate {
+                    required property var modelData
+                    width: ListView.view.width
+                    implicitHeight: 48
+                    text: modelData.name
+                    onClicked: { booksSheet.close(); root.runFileAction(function() { root.openSource(modelData) }) }
+                }
+            }
+            Repeater {
+                model: [i18n("New Books…"), i18n("Open Books…"), i18n("Save a Copy As…"), i18n("Connect to a Server…")]
+                delegate: Controls.ItemDelegate {
+                    required property string modelData
+                    required property int index
+                    Layout.fillWidth: true
+                    implicitHeight: 48
+                    text: modelData
+                    enabled: index !== 2 || root.hasBooks
+                    onClicked: { booksSheet.close(); root.runFileAction([root.newBooks, root.openBooks, root.saveCopy, root.connectServer][index]) }
+                }
+            }
+        }
     }
     Controls.Menu {
         id: filePopup

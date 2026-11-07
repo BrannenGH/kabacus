@@ -86,9 +86,9 @@ const cash = {
   unreserved_count: 0,
   warnings: [],
 };
-async function setup(page, conflict = false, shownTransaction = transaction) {
+async function setup(page, conflict = false, shownTransaction = transaction, suppliedAccounts = accounts) {
   const writes = [];
-  const currentAccounts = structuredClone(accounts);
+  const currentAccounts = structuredClone(suppliedAccounts);
   const currentVersion = { ...version };
   await page.route("**/*", async (route) => {
     const path = new URL(route.request().url()).pathname;
@@ -856,7 +856,8 @@ async function largeBalances(page) {
       },
     }),
   );
-  await page.locator('[data-action="refresh"]').click();
+  if (await page.locator(".phone-overflow").isVisible()) await page.locator(".phone-overflow summary").click();
+  await page.locator('[data-action="refresh"]:visible').click();
   await expect(page.locator(".cash-total .amount").first()).toHaveText(
     balance.formatted,
   );
@@ -873,19 +874,15 @@ for (const locale of ["en-US", "de-DE", "ar"]) {
   test.describe(`phone reflow ${locale}`, () => {
     test.use({ locale, viewport: { width: 320, height: 740 } });
 
-    test("posting accounts stay readable in a scrollable table", async ({
+    test("accounts push a readable register grouped by day", async ({
       page,
     }) => {
       await setup(page);
       await page.locator('[data-destination="Register"]').click();
-      const posting = page.locator(".posting > span:first-child").first();
-      expect(
-        await posting.evaluate((node) => node.clientWidth),
-      ).toBeGreaterThanOrEqual(120);
-      const wrap = page.locator(".table-wrap").first();
-      expect(await wrap.evaluate((node) => node.scrollWidth)).toBeGreaterThan(
-        await wrap.evaluate((node) => node.clientWidth),
-      );
+      await page.locator(".account-list button").filter({hasText:"Checking"}).first().click();
+      await expect(page.locator(".phone-register")).toBeVisible();
+      await expect(page.locator(".register-row").first()).toContainText("Maple Market");
+      await expectContained(page.locator(".register-row").first());
       await expectContained(page.locator("html"));
     });
 
@@ -897,19 +894,18 @@ for (const locale of ["en-US", "de-DE", "ar"]) {
         await expectContained(metric);
     });
 
-    test("heading actions keep the Add choice readable", async ({ page }) => {
+    test("floating Add choice stays within thumb reach", async ({ page }) => {
       await setup(page);
-      await page.locator("nav button").last().click();
-      expect(
-        await page.locator('[data-action="add"]').evaluate(
-          (node) => node.clientWidth,
-        ),
-      ).toBeGreaterThanOrEqual(80);
+      const fab = await page.locator(".phone-fab").boundingBox();
+      const tabs = await page.locator(".phone-tabs").boundingBox();
+      expect(fab.width).toBeGreaterThanOrEqual(48);
+      expect(fab.y + fab.height).toBeLessThan(tabs.y);
       await expectContained(page.locator("html"));
     });
 
     test("settings expose the version and corresponding source", async ({ page }) => {
       await setup(page);
+      await page.locator('[data-destination="More"]').click();
       await page.locator(".settings-action").click();
       await expect(page.getByText(`Kabacus ${version.server_version}`, {exact:true})).toBeVisible();
       await expect(page.locator(`main a[href="${version.source_url}"]`)).toBeVisible();
@@ -943,7 +939,7 @@ for (const width of [390, 1440]) {
     await dialog.locator('select[name="from"]').selectOption({ label: "Salary" });
     await dialog.locator('select[name="to"]').selectOption({ label: "Checking" });
     await dialog.getByLabel("Amount (USD)").fill("650.25");
-    await dialog.getByRole("button", { name: "Preview", exact: true }).click();
+    await dialog.getByRole("button", { name: width < 600 ? "Review" : "Preview", exact: true }).click();
     await expect(dialog.locator(".preview")).toBeVisible();
     expect(writes.at(-1).body).toMatchObject({ dry_run: true, postings: [
       { account: accounts[0].account, amount: { mantissa: "65025", places: 2 } },
@@ -962,7 +958,7 @@ for (const width of [390, 1440]) {
     await dialog.getByLabel("From").selectOption(accounts[0].account);
     await dialog.locator('input[name="to"]').fill("Travel");
     await dialog.getByLabel("Amount (USD)").fill("100.00");
-    await dialog.getByRole("button", { name: "Preview", exact: true }).click();
+    await dialog.getByRole("button", { name: width < 600 ? "Review" : "Preview", exact: true }).click();
     await expect(dialog.locator(".preview")).toBeVisible();
     expect(writes.at(-1).body).toMatchObject({ to: accounts[1].account, new_fund: false, dry_run: true });
   });
@@ -972,12 +968,12 @@ test("phone controls have readable input text and comfortable tap targets", asyn
   await page.setViewportSize({ width: 390, height: 844 });
   await setup(page);
   for (const button of await page.locator("nav button").all())
-    expect((await button.boundingBox()).height).toBeGreaterThanOrEqual(44);
+    expect((await button.boundingBox()).height).toBeGreaterThanOrEqual(48);
   await page.getByRole("button",{name:"Add",exact:true}).click();
   await page.getByRole("button",{name:/^Set aside/}).click();
   for (const field of await page.locator('dialog input:not([type="checkbox"]), dialog select').all()) {
     expect(await field.evaluate(e => parseFloat(getComputedStyle(e).fontSize))).toBeGreaterThanOrEqual(16);
-    expect((await field.boundingBox()).height).toBeGreaterThanOrEqual(44);
+    expect((await field.boundingBox()).height).toBeGreaterThanOrEqual(48);
   }
 });
 
@@ -997,6 +993,142 @@ for (const width of [320, 1440]) {
   });
 }
 
+
+test.describe("phone layout", () => {
+  test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  test("shared tabs, More, Books and register Back", async ({ page }) => {
+    await setup(page);
+    const tabs = page.getByRole("navigation", { name: "Go" });
+    await expect(tabs.getByRole("button")).toHaveText(["Overview", "Transactions", "Reserves", "Credit", "More"]);
+    for (const tab of await tabs.getByRole("button").all()) {
+      const box = await tab.boundingBox();
+      expect(box.height).toBeGreaterThanOrEqual(48);
+      expect(box.width).toBeGreaterThanOrEqual(48);
+      expect(box.y).toBeGreaterThan(740);
+    }
+    await tabs.getByRole("button", { name: "More", exact: true }).click();
+    for (const label of ["Loans", "People", "Reports", "Activity", "Settings", "Books"])
+      await expect(page.getByRole("main").getByRole(label === "Books" ? "heading" : "button", { name: label, exact: true })).toBeVisible();
+    await page.getByRole("button", { name: "Switch Books…", exact: true }).click();
+    const books = page.getByRole("dialog", { name: "Books", exact: true });
+    for (const label of ["New Books…", "Open Books…", "Save a Copy As…", "Connect to a Server…"])
+      await expect(books.getByRole("button", { name: label, exact: true })).toBeVisible();
+    for (const label of ["New Window", "Close Window", "Quit"])
+      await expect(books.getByRole("button", { name: label, exact: true })).toHaveCount(0);
+    await books.getByRole("button", { name: "Close", exact: true }).click();
+    await tabs.getByRole("button", { name: "Transactions", exact: true }).click();
+    await page.getByRole("button", { name: /Checking/ }).first().click();
+    await expect(page.locator(".phone-register")).toBeVisible();
+    await page.goBack();
+    await expect(page.locator(".account-list")).toBeVisible();
+    await expect(page.locator(".phone-register")).toHaveCount(0);
+  });
+  test("browser Back returns from Review and protects an unsaved form", async ({ page }) => {
+    await setup(page);
+    await page.getByRole("button", { name: "Add", exact: true }).click();
+    await page.getByRole("button", { name: /^Spent/ }).click();
+    const form = page.locator(".bookkeeping-dialog");
+    await form.getByLabel("Amount (USD)").fill("84.25");
+    await form.getByLabel("Payee", { exact: true }).fill("Maple Market");
+    await form.locator('select[name="from"]').selectOption(accounts[0].account);
+    await form.locator('input[name="to"]').fill("Groceries");
+    await form.getByRole("button", { name: "Review", exact: true }).click();
+    await expect(form.locator(".preview")).toBeVisible();
+    await page.goBack();
+    await expect(form.getByLabel("Amount (USD)")).toHaveValue("84.25");
+    page.once("dialog", dialog => dialog.dismiss());
+    await page.goBack();
+    await expect(form).toBeVisible();
+    page.once("dialog", dialog => dialog.accept());
+    await page.goBack();
+    await expect(form).toHaveCount(0);
+    await expect(page.locator(".overview-layout")).toBeVisible();
+  });
+  test("Void stays in the edit overflow and previews before writing", async ({ page }) => {
+    const writes = await setup(page);
+    await page.getByRole("navigation").getByRole("button", {name:"Transactions",exact:true}).click();
+    await page.locator(".account-list button").filter({hasText:"Checking"}).first().click();
+    await page.locator(".register-row").first().click();
+    const form = page.getByRole("dialog");
+    await form.locator(".operation-overflow summary").click();
+    await form.getByRole("button", {name:"Void",exact:true}).click();
+    await form.getByRole("button", {name:"Review",exact:true}).click();
+    expect(writes.at(-1).path).toBe("/transactions/12/corrections");
+    expect(writes.at(-1).body.void).toBe(true);
+    expect(writes.at(-1).body.dry_run).toBe(true);
+  });
+  for (const [label, kind, field, path] of [
+    ["Rainy day savings", "Spent", "from", "assets:bank:savings"],
+    ["Rainy day savings", "Received", "to", "assets:bank:savings"],
+    ["Rainy day savings", "Split with someone", "paid_with", "assets:bank:savings"],
+    ["Everyday card", "Card purchase", "card", "liabilities:card:everyday"],
+    ["Everyday card", "Pay a card", "card", "liabilities:card:everyday"],
+  ]) test(`register preset: ${kind} from ${label}`, async ({ page }) => {
+    await setup(page, false, transaction, [...accounts,
+      {account:"assets:bank:savings",display_name:"Rainy day savings",kind:"money"},
+      {account:"liabilities:card:everyday",display_name:"Everyday card",kind:"revolving-debt"},
+    ]);
+    await page.route("**/register/**", route => route.fulfill({json:[]}));
+    await page.getByRole("navigation").getByRole("button", {name:"Transactions",exact:true}).click();
+    await page.locator(".account-list").getByRole("button", {name:label,exact:true}).click();
+    await page.getByRole("button", {name:"Add",exact:true}).click();
+    await page.locator(".add-chooser button[data-choice]").filter({hasText:kind}).click();
+    await expect(page.locator(`.bookkeeping-dialog select[name="${field}"]`)).toHaveValue(path);
+  });
+  test("touch opens full-screen account and date pickers", async ({ page }) => {
+    await setup(page);
+    await page.getByRole("button", { name: "Add", exact: true }).tap();
+    await page.getByRole("button", { name: /^Received/ }).tap();
+    const form = page.locator(".bookkeeping-dialog");
+    await form.locator('select[name="from"]').tap();
+    let picker = page.locator(".phone-picker");
+    await expect(picker).toBeVisible();
+    expect((await picker.boundingBox()).height).toBe(844);
+    await picker.getByRole("button", { name: "Salary", exact: true }).tap();
+    await expect(form.locator('select[name="from"]')).toHaveValue("income:salary");
+    await form.locator('input[name="date"]').tap();
+    await expect(picker).toBeVisible();
+    await picker.getByRole("button", { name: "Back", exact: true }).tap();
+    await expect(picker).toHaveCount(0);
+  });
+  test("Add sheet, Amount first, Review and Save above the tabs", async ({ page }) => {
+    const writes = await setup(page);
+    await page.getByRole("button", { name: "Add", exact: true }).click();
+    const sheet = page.getByRole("dialog");
+    await expect(sheet.locator("button[data-choice]")).toHaveCount(8);
+    await sheet.getByRole("button", { name: /^Spent/ }).click();
+    const form = page.getByRole("dialog");
+    await expect(form.locator(".form-fields input").first()).toHaveAttribute("name", "amount");
+    await form.getByLabel("Amount (USD)").fill("84.25");
+    await form.getByLabel("Payee", { exact: true }).fill("Maple Market");
+    await form.locator('select[name="from"]').selectOption(accounts[0].account);
+    await form.locator('input[name="to"]').fill("Groceries");
+    await form.getByRole("button", { name: "Review", exact: true }).click();
+    expect(writes.at(-1).body.dry_run).toBe(true);
+    await expect(form.getByText("What changes", { exact: true })).toBeVisible();
+    await form.getByRole("button", { name: "Save", exact: true }).click();
+    expect(writes.at(-1).body.dry_run).toBe(false);
+    const toast = await page.locator(".save-toast").boundingBox();
+    const tabs = await page.getByRole("navigation").boundingBox();
+    expect(toast.y + toast.height).toBeLessThanOrEqual(tabs.y);
+  });
+});
+
+
+test("shared breakpoint boundaries switch between tabs, rail and sidebar", async ({ page }) => {
+  await setup(page);
+  for (const [width, sidebar] of [[599, 0], [600, 80], [1199, 80], [1200, 240]]) {
+    await page.setViewportSize({width, height: 844});
+    if (!sidebar) {
+      await expect(page.locator("aside")).toHaveCount(0);
+      await expect(page.locator(".phone-tabs")).toBeVisible();
+    } else {
+      await expect(page.locator(".phone-tabs")).toHaveCount(0);
+      await expect(page.locator("aside")).toBeVisible();
+      expect((await page.locator("aside").boundingBox()).width).toBe(sidebar);
+    }
+  }
+});
 
 test("desktop split editing previews every posting and preserves the reviewed draft", async ({ page }) => {
   const split = { ...transaction, tags: [["trip", "Bergen"]], postings: [

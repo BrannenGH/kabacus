@@ -77,9 +77,9 @@ Kirigami.ScrollablePage {
                 anchors.fill: parent
                 // Arrows point the way the language reads: mirrored, the
                 // previous month is to the right.
-                Controls.ToolButton { icon.name: (page.LayoutMirroring.enabled ? "go-next" : "go-previous"); text: i18n("Previous month"); display: Controls.AbstractButton.IconOnly; onClicked: page.step(-1) }
+                Controls.ToolButton { Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight; Layout.minimumWidth: page.app.narrow ? 48 : implicitWidth; icon.name: (page.LayoutMirroring.enabled ? "go-next" : "go-previous"); text: i18n("Previous month"); display: Controls.AbstractButton.IconOnly; onClicked: page.step(-1) }
                 Controls.Label { text: page.monthName; font.bold: true; horizontalAlignment: Text.AlignHCenter; Layout.fillWidth: true }
-                Controls.ToolButton { icon.name: (page.LayoutMirroring.enabled ? "go-previous" : "go-next"); text: i18n("Next month"); display: Controls.AbstractButton.IconOnly; onClicked: page.step(1) }
+                Controls.ToolButton { Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight; Layout.minimumWidth: page.app.narrow ? 48 : implicitWidth; icon.name: (page.LayoutMirroring.enabled ? "go-previous" : "go-next"); text: i18n("Next month"); display: Controls.AbstractButton.IconOnly; onClicked: page.step(1) }
             }
         }
         Controls.TabBar {

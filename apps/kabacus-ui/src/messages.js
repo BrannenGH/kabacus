@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 // SPDX-License-Identifier: GPL-3.0-or-later
 export const messages = [
+  "How it's worked out",
+  "Back", "Books", "Switch Books…", "More",
   "Sign in to %1",
   "Back to my books",
   "Account type",

@@ -10,10 +10,12 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls as Controls
 import org.kde.kirigami as Kirigami
+import me.hallb.kabacus
 
 ColumnLayout {
     id: picker
 
+    readonly property bool phone: picker.Window.window !== null && picker.Window.window.width < Theme.phoneBreakpoint
     property string label: ""
     // [{account, name, kind, home}]
     property var accounts: []
@@ -72,6 +74,14 @@ ColumnLayout {
 
     Controls.ComboBox {
         id: combo
+        implicitHeight: picker.phone ? 48 : Math.max(contentItem.implicitHeight + topPadding + bottomPadding, background ? background.implicitHeight : 0)
+        font.pixelSize: picker.phone ? 16 : Kirigami.Theme.defaultFont.pixelSize
+        MouseArea {
+            anchors.fill: parent
+            enabled: picker.phone
+            z: 1
+            onClicked: accountSheet.open()
+        }
         editable: true
         textRole: "name"
         valueRole: "account"
@@ -95,6 +105,57 @@ ColumnLayout {
             }
         }
         onActiveFocusChanged: if (activeFocus) { contentItem.forceActiveFocus(); (contentItem as TextInput)?.selectAll() }
+    Controls.Dialog {
+        id: accountSheet
+        title: picker.label
+        parent: Controls.Overlay.overlay
+        modal: true
+        x: 0; y: 0
+        width: parent ? parent.width : 0
+        height: parent ? parent.height : 0
+        padding: 16
+        onOpened: accountSearch.text = ""
+        header: Controls.ToolBar {
+            RowLayout {
+                anchors.fill: parent
+                Controls.ToolButton { text: i18n("Back"); implicitHeight: 48; onClicked: accountSheet.close() }
+                Kirigami.Heading { text: picker.label; Layout.fillWidth: true }
+            }
+        }
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 8
+            Controls.TextField {
+                id: accountSearch
+                Accessible.name: i18n("Search")
+                placeholderText: i18n("Search")
+                Layout.fillWidth: true
+                Layout.minimumHeight: 48
+                font.pixelSize: 16
+            }
+            ListView {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                clip: true
+                spacing: 8
+                model: picker.accounts.filter(a => (a.name + " " + a.account).toLowerCase().includes(accountSearch.text.toLowerCase()))
+                delegate: Controls.ItemDelegate {
+                    required property var modelData
+                    width: ListView.view.width
+                    implicitHeight: 48
+                    text: modelData.name
+                    onClicked: { picker.set(modelData.account); picker.edited(); accountSheet.close() }
+                }
+            }
+            Controls.Button {
+                visible: accountSearch.text.trim() !== "" && !picker.accounts.some(a => a.name === accountSearch.text || a.account === accountSearch.text)
+                text: accountSearch.text
+                Layout.fillWidth: true
+                Layout.minimumHeight: 48
+                onClicked: { picker.set(accountSearch.text.trim()); picker.edited(); accountSheet.close() }
+            }
+        }
+    }
     }
     Controls.Label {
         visible: picker.error !== ""

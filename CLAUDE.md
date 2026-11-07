@@ -91,9 +91,9 @@ Hard rules:
   for the GitHub Actions CI/CD to run the full suite, only run small targeted tests
   locally.
 
-- **Every UI change works on the desktop form factor** and is covered by
-  GUI e2e at the desktop size. Phone and tablet layouts are out of scope
-  for now.
+- **Every UI change works on desktop and phone** and is covered by
+  GUI e2e at desktop (1280 × 800) and phone (390 × 844) sizes. Tablets use
+  the desktop layout with an icon rail. Breakpoints come from design tokens.
 
 - **Authentication is configurable OAuth 2.0 / OIDC.** The provider
   is set by issuer URL and discovery; roles come from configurable claims via

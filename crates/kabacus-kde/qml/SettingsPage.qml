@@ -10,6 +10,8 @@ Kirigami.ScrollablePage {
     id: page
     objectName: "settings"
     title: i18n("Settings")
+    globalToolBarStyle: app.narrow ? Kirigami.ApplicationHeaderStyle.None : Kirigami.ApplicationHeaderStyle.ToolBar
+
     required property var app
     readonly property var preferences: JSON.parse(app.ledger.workspaceJson())
     readonly property var about: JSON.parse(app.ledger.aboutJson())
@@ -23,9 +25,9 @@ Kirigami.ScrollablePage {
         Controls.Label { text: page.problem; visible: text !== ""; wrapMode: Text.Wrap; Layout.fillWidth: true }
         Kirigami.Separator { Kirigami.FormData.isSection: true }
         Controls.Label { Kirigami.FormData.label: i18n("Account"); text: page.app.auth.username || i18n("On this computer"); wrapMode: Text.Wrap; Layout.fillWidth: true }
-        Controls.Button { text: i18n("Sign out"); visible: page.app.auth.status === "signed_in"; onClicked: page.app.signOut() }
+        Controls.Button { Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight; text: i18n("Sign out"); visible: page.app.auth.status === "signed_in"; onClicked: page.app.signOut() }
         Kirigami.Separator { Kirigami.FormData.isSection: true }
         Controls.Label { Kirigami.FormData.label: i18n("About"); text: "Kabacus " + (page.about.server_version || ""); Layout.fillWidth: true }
-        Controls.Button { text: i18n("Open the source code"); flat: true; onClicked: Qt.openUrlExternally(page.about.source_url || "https://github.com/BrannenGH/kabacus") }
+        Controls.Button { Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight; text: i18n("Open the source code"); flat: true; onClicked: Qt.openUrlExternally(page.about.source_url || "https://github.com/BrannenGH/kabacus") }
     }
 }

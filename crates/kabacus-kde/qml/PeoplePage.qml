@@ -32,7 +32,7 @@ Kirigami.ScrollablePage {
         // Room for the floating Add button on a phone.
         bottomMargin: page.app.narrow ? Kirigami.Units.gridUnit * 4 : 0
         model: page.people
-        delegate: Controls.ItemDelegate {
+        delegate: Controls.ItemDelegate { implicitHeight: page.app.narrow ? Math.max(56, contentItem.implicitHeight + topPadding + bottomPadding) : contentItem.implicitHeight + topPadding + bottomPadding;
             id: personDelegate
             required property var modelData
             width: ListView.view.width
