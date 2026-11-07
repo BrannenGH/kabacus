@@ -44,7 +44,13 @@ jobs:
           - { name: macos, os: macos-latest, bundles: dmg, out: bundle/dmg/*.dmg }
           - { name: linux, os: ubuntu-24.04, bundles: "", out: kabacus-desktop }
     steps:
+      # All history: scripts/package-version counts commits.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Version
+        shell: bash
+        run: echo "KABACUS_VERSION=$(../../scripts/package-version)" >> "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -63,7 +69,7 @@ jobs:
           BUNDLES: ${{ matrix.bundles }}
         run: |
           if [ -n "$BUNDLES" ]; then flags="--bundles $BUNDLES"; else flags="--no-bundle"; fi
-          npx tauri build $flags -- --locked
+          npx tauri build --config "{\"version\":\"$KABACUS_VERSION\"}" $flags -- --locked
       - uses: actions/upload-artifact@v4
         with:
           name: kabacus-desktop-${{ matrix.name }}
@@ -96,7 +102,13 @@ jobs:
     name: ios (simulator)
     runs-on: macos-latest
     steps:
+      # All history: scripts/package-version counts commits.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Version
+        shell: bash
+        run: echo "KABACUS_VERSION=$(../../scripts/package-version)" >> "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -107,7 +119,7 @@ jobs:
       - run: npm ci
       - run: npx tauri ios init --ci
       - run: npx tauri icon src-tauri/icons/icon.png
-      - run: npx tauri ios build --ci --debug --target aarch64-sim
+      - run: npx tauri ios build --config "{\"version\":\"$KABACUS_VERSION\"}" --ci --debug --target aarch64-sim
       - uses: actions/upload-artifact@v4
         with:
           name: kabacus-desktop-ios-simulator
@@ -118,7 +130,13 @@ jobs:
     name: android
     runs-on: ubuntu-latest
     steps:
+      # All history: scripts/package-version counts commits.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Version
+        shell: bash
+        run: echo "KABACUS_VERSION=$(../../scripts/package-version)" >> "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -135,7 +153,7 @@ jobs:
           echo "NDK_HOME=$ANDROID_NDK_LATEST_HOME" >> "$GITHUB_ENV"
           NDK_HOME="$ANDROID_NDK_LATEST_HOME" npx tauri android init --ci
       - run: npx tauri icon src-tauri/icons/icon.png
-      - run: npx tauri android build --ci --debug --apk --target aarch64
+      - run: npx tauri android build --config "{\"version\":\"$KABACUS_VERSION\"}" --ci --debug --apk --target aarch64
       - uses: actions/upload-artifact@v4
         with:
           name: kabacus-desktop-android

@@ -7,7 +7,7 @@ const amount = (exact) => ({
   formatted: `${exact.startsWith("-") ? "-" : ""}$${exact.replace("-", "")}`,
 });
 const version = {
-  server_version: "0.1.0",
+  server_version: "0.2.12",
   commit: "7a9fce322640ecba4268aa2edf2c8013e8f33329",
   source_url: "https://github.com/BrannenGH/khledger",
   head: "42",

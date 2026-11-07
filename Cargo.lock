@@ -1413,7 +1413,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-client"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "axum",
  "base64 0.22.1",
@@ -1436,7 +1436,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-core"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "chrono",
  "num-bigint",
@@ -1450,7 +1450,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-kde"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "chrono",
  "cxx",
@@ -1474,7 +1474,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-ledger"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "chrono",
  "glob",
@@ -1489,7 +1489,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-server"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "axum",
@@ -1529,7 +1529,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-store"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "chrono",
  "deadpool-postgres",
@@ -1550,7 +1550,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-testkit"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "axum",
  "base64 0.22.1",
@@ -3670,7 +3670,7 @@ checksum = "3ad82d2a33cdc9674dc7465672f271e096168fcdbe0f799d9e6db8c5892679dc"
 
 [[package]]
 name = "xtask"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "serde",

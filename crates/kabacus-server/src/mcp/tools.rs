@@ -1684,7 +1684,7 @@ impl ServerHandler for KabacusMcp {
         // The same version `get_version` reports.
         .with_server_info(Implementation::new(
             "kabacus-server",
-            env!("CARGO_PKG_VERSION"),
+            kabacus_ledger::VERSION,
         ))
         .with_instructions(skills::instructions())
     }

@@ -19,8 +19,8 @@ and Kirigami. CI and every release build them:
 
     scripts/build-packages  # target/packages: RPM (openSUSE Tumbleweed), DEB (Debian)
 
-Outside a tagged release the packages are versioned
-`<version>~git<commits>.g<commit>`, so each master build upgrades the last.
+The packages are versioned `<major>.<minor>.<commit count>`, so each master
+build upgrades the last.
 Their metadata (files, QML module dependencies) is in `Cargo.toml`.
 
 The server is deployed from its image, `scripts/build-image`; see

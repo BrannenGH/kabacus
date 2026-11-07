@@ -10,7 +10,7 @@
 # with the hledger it was tested against.
 #
 # Defines:
-#   pkg_version  scripts/package-version (0.1.0, or 0.1.0~git<n>.g<commit>)
+#   pkg_version  scripts/package-version (<major>.<minor>.<commit count>)
 #   pkg_release  1 for a tag; 1.<run number> for each CI build of master,
 #                so no two different builds share a file name
 #   pkg_source_url, pkg_commit
@@ -95,6 +95,7 @@ Source: %{pkg_source_url}/tree/%{pkg_commit}
 # cxx-qt-build asks qmake which Qt to build against.
 qmake="$(command -v qmake6 || command -v qmake-qt6 || true)"
 [ -n "$qmake" ] && export QMAKE="$qmake"
+export KABACUS_VERSION=%{pkg_version}
 cargo build --release --locked -p kabacus-kde --features gui
 # The translations (po/), compiled for KI18n.
 cargo run --release --locked -p xtask -- i18n-build target/locale

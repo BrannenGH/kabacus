@@ -95,6 +95,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 FROM dev AS build
 WORKDIR /src
 COPY . .
+ARG KABACUS_VERSION
 RUN --mount=type=cache,target=/root/.cargo/registry \
     --mount=type=cache,target=/src/target \
     cargo build --release --locked -p kabacus-server \
