@@ -68,6 +68,7 @@ Requires:       qt6qmlimport(QtQuick)
 Requires:       qt6qmlimport(QtQuick.Controls)
 Requires:       qt6qmlimport(QtQuick.Dialogs)
 Requires:       qt6qmlimport(QtQuick.Layouts)
+Requires:       qt6qmlimport(Qt.labs.platform)
 Requires:       qt6qmlimport(org.kde.kirigami)
 Requires:       qt6qmlimport(org.kde.kirigamiaddons.components)
 %else
