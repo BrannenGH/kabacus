@@ -11,12 +11,27 @@ import QtQuick.Controls as Controls
 import org.kde.kirigami as Kirigami
 import me.hallb.kabacus
 
-Kirigami.Dialog {
+Item {
     id: chooser
-    title: i18n("Add")
-    standardButtons: Kirigami.Dialog.NoButton
-    preferredWidth: Kirigami.Units.gridUnit * 26
-    padding: Kirigami.Units.largeSpacing
+    function open() { if (app.narrow) sheet.open(); else dialog.open() }
+    function close() { sheet.close(); dialog.close() }
+    readonly property bool opened: sheet.opened || dialog.opened
+    Kirigami.Dialog {
+        id: dialog
+        title: i18n("Add")
+        standardButtons: Kirigami.Dialog.NoButton
+        preferredWidth: Kirigami.Units.gridUnit * 26
+        Loader { sourceComponent: choices }
+    }
+    Kirigami.OverlayDrawer {
+        id: sheet
+        edge: Qt.BottomEdge
+        modal: true
+        handleVisible: false
+        width: chooser.app.width
+        height: Math.min(chooser.app.height * 0.9, sheetLoader.implicitHeight + 32)
+        contentItem: Loader { id: sheetLoader; sourceComponent: choices }
+    }
 
     required property var app
     // The register it was opened from, if any: preset in the form.
@@ -45,10 +60,12 @@ Kirigami.Dialog {
         { id: "transaction.postings", kind: "postings", title: i18n("Postings"), detail: i18n("Any two accounts"), icon: "view-list-details" }
     ]
 
-    GridLayout {
+    Component {
+      id: choices
+      GridLayout {
         columns: chooser.app.narrow ? 1 : 2
         columnSpacing: Kirigami.Units.smallSpacing
-        rowSpacing: Kirigami.Units.smallSpacing
+        rowSpacing: 8
 
         Repeater {
             model: chooser.kinds
@@ -60,7 +77,7 @@ Kirigami.Dialog {
                 Layout.minimumHeight: Kirigami.Units.gridUnit * 3
                 Accessible.name: modelData.title
                 onClicked: chooser.app.openForm(modelData.kind, chooser.preset(modelData.kind))
-                Shortcut { sequence: String(choiceDelegate.index + 1); enabled: chooser.visible; onActivated: chooser.app.openForm(choiceDelegate.modelData.kind, chooser.preset(choiceDelegate.modelData.kind)) }
+                Shortcut { sequence: String(choiceDelegate.index + 1); enabled: chooser.opened; onActivated: chooser.app.openForm(choiceDelegate.modelData.kind, chooser.preset(choiceDelegate.modelData.kind)) }
                 contentItem: RowLayout {
                     spacing: Kirigami.Units.largeSpacing
                     Kirigami.Icon {
@@ -74,9 +91,10 @@ Kirigami.Dialog {
                         Controls.Label { text: choiceDelegate.modelData.title; font.bold: true; wrapMode: Text.Wrap; Layout.fillWidth: true }
                         Controls.Label { text: choiceDelegate.modelData.detail; opacity: 0.7; wrapMode: Text.Wrap; font: Kirigami.Theme.smallFont; Layout.fillWidth: true }
                     }
-                    Controls.Label { text: String(choiceDelegate.index + 1); opacity: 0.6 }
+                    Controls.Label { text: String(choiceDelegate.index + 1); opacity: 0.6; visible: !chooser.app.narrow || !Kirigami.Settings.tabletMode }
                 }
             }
         }
+    }
     }
 }

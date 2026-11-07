@@ -290,6 +290,20 @@ Kirigami.ScrollablePage {
         }
     ]
 
+    footer: Controls.ToolBar {
+        visible: page.app.narrow
+        height: visible ? implicitHeight : 0
+        padding: 8
+        Controls.Button {
+            width: parent.width
+            text: i18nc("@action:button", "Review")
+            highlighted: true
+            implicitHeight: 48
+            enabled: page.app.canWrite && !page.previewing
+            onClicked: page.review()
+        }
+    }
+
     RowLayout {
         spacing: Kirigami.Units.gridUnit
 
@@ -343,6 +357,7 @@ Kirigami.ScrollablePage {
                         spacing: 0
                         Layout.fillWidth: true
                         Controls.RadioButton {
+                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                             id: modeRadio
                             text: modeDelegate.modelData[1]
                             checked: page.mode === modeDelegate.modelData[0]
@@ -382,12 +397,36 @@ Kirigami.ScrollablePage {
                 // Saving: what's shown is what's written.
                 enabled: !page.saving && !(page.kind === "edit" && page.mode === "void")
 
+                // Amount, then date: stacked, never side by side.
+                Controls.TextField {
+                    id: amount
+                    font.pixelSize: page.app.narrow ? 32 : Kirigami.Theme.defaultFont.pixelSize
+                    Layout.minimumHeight: page.app.narrow ? 56 : implicitHeight
+                    visible: page.app.narrow && !["fix_reserves", "reconcile", "account_type"].includes(page.kind)
+                    Kirigami.FormData.label: page.kind === "split" ? i18nc("@label", "Total:") : i18nc("@label", "Amount:")
+                    Accessible.name: i18n("Amount")
+                    inputMethodHints: Qt.ImhFormattedNumbersOnly
+                    onTextEdited: page.edited()
+                    onAccepted: page.live ? page.saveNow() : page.review()
+                }
+                // The amount's problem shows as it's typed.
+                Controls.Label {
+                    readonly property string typed: amount.text === "" ? "" : page.ledger.checkAmount(amount.text, page.places, true)
+                    visible: page.app.narrow && text !== ""
+                    text: page.fieldErrors.amount || page.fieldErrors.total || typed
+                    color: Kirigami.Theme.negativeTextColor
+                    wrapMode: Text.Wrap
+                    Layout.fillWidth: true
+                    Accessible.name: i18nc("%1 is the field, %2 what's wrong with it", "%1 problem: %2", i18n("Amount"), text)
+                }
                 Controls.Label {
                     visible: page.kind === "account_type"
                     font.bold: true
                     text: (page.accounts.find(a => a.account === page.preset.account) || {}).name || page.preset.account || ""
                 }
                 Controls.ComboBox {
+                    font.pixelSize: page.app.narrow ? 16 : Kirigami.Theme.defaultFont.pixelSize
+                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                     id: accountType
                     visible: page.kind === "account_type"
                     Kirigami.FormData.label: i18n("Account type")
@@ -404,6 +443,8 @@ Kirigami.ScrollablePage {
                     onEdited: page.edited()
                 }
                 Controls.TextField {
+                    font.pixelSize: page.app.narrow ? 16 : Kirigami.Theme.defaultFont.pixelSize
+                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                     id: payee
                     visible: !["set_aside", "pay_card", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     Kirigami.FormData.label: page.kind === "split" ? i18nc("@label what a shared cost was for", "What:") : i18nc("@label", "Payee:")
@@ -491,12 +532,14 @@ Kirigami.ScrollablePage {
                     visible: ["card_purchase", "fix_reserves"].includes(page.kind)
                     Kirigami.FormData.label: i18nc("@label", "Paid from:")
                     Controls.RadioButton {
+                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                         text: i18n("Free money")
                         checked: page.source === "free"
                         Controls.ButtonGroup.group: sourceGroup
                         onToggled: { page.source = "free"; page.edited() }
                     }
                     Controls.RadioButton {
+                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                         text: i18n("A reserve")
                         checked: page.source === "fund"
                         Controls.ButtonGroup.group: sourceGroup
@@ -519,18 +562,21 @@ Kirigami.ScrollablePage {
                 }
                 // Amount, then date: stacked, never side by side.
                 Controls.TextField {
-                    id: amount
-                    visible: !["fix_reserves", "reconcile", "account_type"].includes(page.kind)
+                    id: desktopAmount
+                    font.pixelSize: page.app.narrow ? 32 : Kirigami.Theme.defaultFont.pixelSize
+                    Layout.minimumHeight: page.app.narrow ? 56 : implicitHeight
+                    visible: !page.app.narrow && !["fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     Kirigami.FormData.label: page.kind === "split" ? i18nc("@label", "Total:") : i18nc("@label", "Amount:")
                     Accessible.name: i18n("Amount")
                     inputMethodHints: Qt.ImhFormattedNumbersOnly
-                    onTextEdited: page.edited()
+                    text: amount.text
+                    onTextEdited: { amount.text = text; page.edited() }
                     onAccepted: page.live ? page.saveNow() : page.review()
                 }
                 // The amount's problem shows as it's typed.
                 Controls.Label {
                     readonly property string typed: amount.text === "" ? "" : page.ledger.checkAmount(amount.text, page.places, true)
-                    visible: text !== ""
+                    visible: !page.app.narrow && text !== ""
                     text: page.fieldErrors.amount || page.fieldErrors.total || typed
                     color: Kirigami.Theme.negativeTextColor
                     wrapMode: Text.Wrap
@@ -538,6 +584,8 @@ Kirigami.ScrollablePage {
                     Accessible.name: i18nc("%1 is the field, %2 what's wrong with it", "%1 problem: %2", i18n("Amount"), text)
                 }
                 Controls.TextField {
+                    font.pixelSize: page.app.narrow ? 16 : Kirigami.Theme.defaultFont.pixelSize
+                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                     id: theirShare
                     visible: page.kind === "split"
                     Kirigami.FormData.label: i18nc("@label", "Their share:")
@@ -568,6 +616,9 @@ Kirigami.ScrollablePage {
                 }
                 Controls.TextField {
                     id: date
+                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
+                    font.pixelSize: page.app.narrow ? 16 : Kirigami.Theme.defaultFont.pixelSize
+                    TapHandler { enabled: page.app.narrow; onTapped: datePicker.open() }
                     visible: !["fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     Kirigami.FormData.label: i18nc("@label", "Date:")
                     Accessible.name: i18n("Date")
@@ -580,6 +631,8 @@ Kirigami.ScrollablePage {
                     color: Kirigami.Theme.negativeTextColor
                 }
                 Controls.TextField {
+                    font.pixelSize: page.app.narrow ? 16 : Kirigami.Theme.defaultFont.pixelSize
+                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                     id: memo
                     visible: !["pay_card", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     Kirigami.FormData.label: page.kind === "set_aside" ? i18nc("@label", "Description:") : i18nc("@label", "Memo:")
@@ -603,16 +656,7 @@ Kirigami.ScrollablePage {
                     : i18n("Also moves the amount from the reserve into the card's reserve, so the card stays covered.")
             }
 
-            Controls.Button {
-                visible: page.app.narrow
-                text: i18nc("@action:button", "Review")
-                icon.name: (page.LayoutMirroring.enabled ? "go-previous" : "go-next")
-                highlighted: true
-                enabled: page.app.canWrite && !page.previewing
-                Layout.fillWidth: true
-                Layout.minimumHeight: Kirigami.Units.gridUnit * 2.5
-                onClicked: page.review()
-            }
+
         }
 
         // The live dry run, beside the fields on wide windows.
@@ -641,6 +685,53 @@ Kirigami.ScrollablePage {
                 preview: page.preview
                 Layout.fillWidth: true
             }
+        }
+    }
+
+    Controls.Dialog {
+        id: datePicker
+        parent: Controls.Overlay.overlay
+        modal: true
+        x: 0; y: 0
+        width: parent ? parent.width : 0
+        height: parent ? parent.height : 0
+        padding: 16
+        property date shown: new Date()
+        onOpened: { const parsed = new Date(date.text + "T12:00:00"); shown = isNaN(parsed.getTime()) ? new Date() : parsed }
+        header: Controls.ToolBar {
+            RowLayout {
+                anchors.fill: parent
+                Controls.ToolButton { text: i18n("Back"); implicitHeight: 48; onClicked: datePicker.close() }
+                Kirigami.Heading { text: i18n("Date"); Layout.fillWidth: true }
+            }
+        }
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 8
+            RowLayout {
+                Controls.ToolButton {
+                    icon.name: "go-previous"
+                    implicitWidth: 48; implicitHeight: 48
+                    Accessible.name: Qt.formatDate(new Date(datePicker.shown.getFullYear(), datePicker.shown.getMonth() - 1, 1), "MMMM yyyy")
+                    onClicked: datePicker.shown = new Date(datePicker.shown.getFullYear(), datePicker.shown.getMonth() - 1, 1)
+                }
+                Controls.Label { text: Qt.formatDate(datePicker.shown, "MMMM yyyy"); Layout.fillWidth: true; horizontalAlignment: Text.AlignHCenter }
+                Controls.ToolButton {
+                    icon.name: "go-next"
+                    implicitWidth: 48; implicitHeight: 48
+                    Accessible.name: Qt.formatDate(new Date(datePicker.shown.getFullYear(), datePicker.shown.getMonth() + 1, 1), "MMMM yyyy")
+                    onClicked: datePicker.shown = new Date(datePicker.shown.getFullYear(), datePicker.shown.getMonth() + 1, 1)
+                }
+            }
+            Controls.DayOfWeekRow { Layout.fillWidth: true }
+            Controls.MonthGrid {
+                month: datePicker.shown.getMonth()
+                year: datePicker.shown.getFullYear()
+                Layout.fillWidth: true
+                Layout.preferredHeight: 6 * 48
+                onClicked: function(chosen) { date.text = Qt.formatDate(chosen, "yyyy-MM-dd"); page.edited(); datePicker.close() }
+            }
+            Item { Layout.fillHeight: true }
         }
     }
 

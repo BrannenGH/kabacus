@@ -569,6 +569,7 @@ fn group_accounts(accounts: &[AccountView], coh: &CashOnHandView) -> Vec<Account
 
 #[derive(Debug, Clone, Serialize, PartialEq)]
 pub struct RegisterRow {
+    pub status: String,
     pub id: String,
     pub date: String,
     pub payee: String,
@@ -683,6 +684,7 @@ async fn all_register(
                 .collect::<Vec<_>>()
                 .join(&crate::model::list_separator());
             RegisterRow {
+                status: t.status.clone(),
                 id: t.id.to_string(),
                 date: t.date.clone(),
                 payee: t.payee.clone(),
@@ -744,6 +746,7 @@ pub async fn register(
                 date: l.date,
                 payee: l.payee,
                 memo: l.memo,
+                status: l.status,
                 amount: Shown::of(&l.amount),
                 balance: Shown::of(&l.balance),
                 kind: kind.to_string(),

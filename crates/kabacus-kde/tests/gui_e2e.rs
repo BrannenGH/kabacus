@@ -388,7 +388,7 @@ async fn card(client: &KabacusClient) -> kabacus_kde::views::CardDetail {
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
 async fn a_card_purchase_is_recorded_with_its_reserve_on_every_form_factor() {
-    for (i, size) in [DESKTOP].into_iter().enumerate() {
+    for (i, size) in [DESKTOP, "390x844"].into_iter().enumerate() {
         let server = books(&format!("purchase{i}")).await;
         let client = KabacusClient::connect_unix(&server.socket_path);
         let app = launch_sized(
@@ -1001,4 +1001,16 @@ async fn the_app_speaks_the_users_language_on_every_form_factor() {
             .await;
         }
     }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn phone_navigation_sheets_and_register_back() {
+    let server = books("phone-navigation").await;
+    let _app = launch_sized(
+        &server.socket_path,
+        &config_dir("phone-navigation"),
+        "390x844",
+    );
+    drive(&["phone-navigation"]).await;
 }

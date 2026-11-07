@@ -55,6 +55,7 @@ Kirigami.ScrollablePage {
         id: list
         // Room for the floating Add button on a phone.
         bottomMargin: page.app.narrow ? Kirigami.Units.gridUnit * 4 : 0
+        spacing: page.app.narrow ? 8 : 0
         model: page.rows
         delegate: ColumnLayout {
             id: groupDelegate
@@ -72,6 +73,7 @@ Kirigami.ScrollablePage {
             id: accountDelegate
             readonly property var modelData: groupDelegate.modelData
             Layout.fillWidth: true
+            Layout.minimumHeight: page.app.narrow ? 56 : implicitHeight
             highlighted: modelData.account === page.selected
             Accessible.name: modelData.name
             onClicked: {

@@ -21,6 +21,7 @@ Kirigami.ScrollablePage {
     required property var app
     readonly property var ledger: app.ledger
     readonly property var overview: fetch.value
+    readonly property int warningCount: overview ? overview.warnings.length : 0
     readonly property string problem: fetch.problem
     property Fetch fetch: Fetch { ledger: page.ledger; view: "overview"; owner: page }
 
@@ -37,6 +38,7 @@ Kirigami.ScrollablePage {
 
         // The page's actions, labelled.
         Kirigami.ActionToolBar {
+            visible: !page.app.narrow
             Layout.fillWidth: true
             alignment: page.app.narrow ? Qt.AlignHCenter : Qt.AlignRight
             actions: [
@@ -59,7 +61,7 @@ Kirigami.ScrollablePage {
         GridLayout {
             id: grid
             visible: page.overview !== null
-            columns: page.width >= Kirigami.Units.gridUnit * 30 ? 2 : 1
+            columns: !page.app.narrow && page.width >= Kirigami.Units.gridUnit * 30 ? 2 : 1
             uniformCellWidths: true
             columnSpacing: Kirigami.Units.largeSpacing
             rowSpacing: Kirigami.Units.largeSpacing
@@ -67,6 +69,7 @@ Kirigami.ScrollablePage {
 
             // Cash on Hand, and the sum it comes from behind Money on Hand.
             Kirigami.AbstractCard {
+                Layout.row: page.app.narrow ? 0 : -1
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.alignment: Qt.AlignTop
@@ -108,18 +111,20 @@ Kirigami.ScrollablePage {
                             id: breakdown
                             objectName: "moneyOnHand"
                             checkable: true
-                            text: i18n("Money on Hand")
+                            text: page.app.narrow ? i18n("How it's worked out") : i18n("Money on Hand")
+                            implicitHeight: page.app.narrow ? 48 : Math.max(contentItem.implicitHeight + topPadding + bottomPadding, background ? background.implicitHeight : 0)
                             icon.name: checked ? "arrow-up" : "arrow-down"
                             display: Controls.AbstractButton.TextBesideIcon
-                            Accessible.name: text
+                            Accessible.name: i18n("Money on Hand")
                         }
                         InfoButton {
+                            visible: !page.app.narrow || breakdown.checked
                             text: i18n("About Money on Hand")
                             topic: i18n("Money on Hand")
                             explanation: i18n("Everything in your bank accounts, reserves and card reserves included, plus what people owe you. Cash on Hand is what's left once reserves, card reserves and what you're owed are set apart.")
                         }
                         Item { Layout.fillWidth: true }
-                        Money { amount: page.overview ? page.overview.money_on_hand : null; colored: false }
+                        Money { visible: !page.app.narrow || breakdown.checked; amount: page.overview ? page.overview.money_on_hand : null; colored: false }
                     }
                     GridLayout {
                         visible: breakdown.checked
@@ -138,6 +143,7 @@ Kirigami.ScrollablePage {
             // Only accounts with free money (views.rs leaves the rest
             // off); each opens its register.
             Kirigami.AbstractCard {
+                Layout.row: page.app.narrow ? page.warningCount + 1 : -1
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.alignment: Qt.AlignTop
@@ -149,6 +155,7 @@ Kirigami.ScrollablePage {
                             id: homeDelegate
                             required property var modelData
                             Layout.fillWidth: true
+                            Layout.minimumHeight: page.app.narrow ? 56 : implicitHeight
                             Accessible.name: i18nc("%1 is an account, %2 its free money", "%1 free %2", modelData.name, modelData.free.text)
                             onClicked: page.app.showRegister(modelData.account, modelData.name)
                             contentItem: RowLayout {
@@ -173,6 +180,8 @@ Kirigami.ScrollablePage {
                 model: page.overview ? page.overview.warnings : []
                 delegate: Kirigami.InlineMessage {
                     id: warningDelegate
+                    required property int index
+                    Layout.row: page.app.narrow ? index + 1 : -1
                     required property var modelData
                     Layout.fillWidth: true
                     Layout.columnSpan: grid.columns
@@ -195,6 +204,7 @@ Kirigami.ScrollablePage {
             // opens the set-aside form for it, where it can be topped up,
             // released or moved.
             Kirigami.AbstractCard {
+                Layout.row: page.app.narrow ? page.warningCount + 3 : -1
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.alignment: Qt.AlignTop
@@ -209,6 +219,7 @@ Kirigami.ScrollablePage {
                             id: fundDelegate
                             required property var modelData
                             Layout.fillWidth: true
+                            Layout.minimumHeight: page.app.narrow ? 56 : implicitHeight
                             Accessible.name: modelData.name
                             enabled: page.app.canWrite
                             onClicked: page.app.openForm("set_aside", { from: modelData.home, to: modelData.account })
@@ -231,6 +242,7 @@ Kirigami.ScrollablePage {
 
             // Each card opens on the Cards page.
             Kirigami.AbstractCard {
+                Layout.row: page.app.narrow ? page.warningCount + 2 : -1
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.alignment: Qt.AlignTop
@@ -242,6 +254,7 @@ Kirigami.ScrollablePage {
                             id: cardDelegate
                             required property var modelData
                             Layout.fillWidth: true
+                            Layout.minimumHeight: page.app.narrow ? 56 : implicitHeight
                             Accessible.name: modelData.name
                             onClicked: page.app.go("Cards", { focusCard: modelData.card })
                             contentItem: RowLayout {

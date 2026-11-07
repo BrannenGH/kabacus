@@ -1,5 +1,8 @@
 // SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 // SPDX-License-Identifier: GPL-3.0-or-later
+import { useDialogHistory } from "./phone-history";
+import { PhonePicker } from "./phone-picker";
+import { useMedia, phoneQuery, desktopQuery } from "./form-factor";
 import React, { useEffect, useRef, useState } from "react";
 import { operation } from "./operations";
 import { t } from "./i18n";
@@ -27,7 +30,8 @@ export function OperationDialog({
   onSaved,
   onInspect,
 }) {
-  const wide = window.innerWidth >= 1200;
+  const wide = useMedia(desktopQuery);
+  const phone = useMedia(phoneQuery);
   const generation = useRef(0);
   const timer = useRef();
   const previewRef = useRef();
@@ -43,6 +47,7 @@ export function OperationDialog({
   async function previewAgain(){head.current=(await api.request("/version")).head;setStale(false);setError("");setPreview(null);}
   async function theirChange(){const history=await api.request("/history");if(history[0])setConflictDiff(await api.text(`/history/${history[0].hash}`));}
   const [dirty, setDirty] = useState(false);
+  useDialogHistory({ onClose, preview, setPreview, dirty, busy });
   const [checked, setChecked] = useState(null);
   const [repairCard, setRepairCard] = useState(card || "");
   const [rows, setRows] = useState([0, 1]);
@@ -174,6 +179,28 @@ export function OperationDialog({
   const localDate = new Date();
   const typeAccount = snapshot.current.accounts.find((a) => a.account === account);
   const date = `${localDate.getFullYear()}-${String(localDate.getMonth() + 1).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}`;
+  const amountField = (
+    !["fix", "status", "postings", "account-type"].includes(kind) && (
+                    <label>
+                      {t("Amount")}
+                      <input
+                        name="amount"
+                        autoFocus={phone}
+                        inputMode="decimal"
+                        required
+                        pattern={
+                          kind === "reconcile"
+                            ? "-?[0-9]+([.][0-9]+)?"
+                            : "[0-9]+([.][0-9]+)?"
+                        }
+                        defaultValue={tx?.postings[0]?.amount.exact.replace(
+                          /^-/,
+                          "",
+                        )}
+                      />
+                    </label>
+                  )
+  );
   return (
     <dialog
       aria-labelledby="operation-title"
@@ -211,6 +238,7 @@ export function OperationDialog({
                 </p>
               ) : (
                 <div className="form-fields">
+{phone && amountField}
                   {kind === "account-type" && (
                     <>
                       <label>
@@ -531,25 +559,7 @@ export function OperationDialog({
                       </select>
                     </label>
                   )}
-                  {!["fix", "status", "postings", "account-type"].includes(kind) && (
-                    <label>
-                      {t("Amount")}
-                      <input
-                        name="amount"
-                        inputMode="decimal"
-                        required
-                        pattern={
-                          kind === "reconcile"
-                            ? "-?[0-9]+([.][0-9]+)?"
-                            : "[0-9]+([.][0-9]+)?"
-                        }
-                        defaultValue={tx?.postings[0]?.amount.exact.replace(
-                          /^-/,
-                          "",
-                        )}
-                      />
-                    </label>
-                  )}
+{!phone && amountField}
                 </div>
               )}
             </div>
@@ -680,11 +690,12 @@ export function OperationDialog({
             }
           >
             {t(
-              busy ? "Checking with the server…" : preview ? "Save" : "Preview",
+              busy ? "Checking with the server…" : preview ? "Save" : phone ? "Review" : "Preview",
             )}
           </button>
         </div>
       </form>
+      <PhonePicker form={formRef} />
     </dialog>
   );
 }

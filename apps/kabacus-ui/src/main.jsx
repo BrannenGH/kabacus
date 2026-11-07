@@ -2,6 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import { t, initializeLocale } from "./i18n";
 import { Workspace } from "./workspace";
+import { useDialogHistory } from "./phone-history";
+import { PhonePicker } from "./phone-picker";
+import { useMedia, phoneQuery, desktopQuery } from "./form-factor";
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Api, exactAmount } from "./api";
@@ -15,7 +18,7 @@ import { Overview } from "./overview";
 import { Activity } from "./activity";
 import { CardDetails } from "./card-details";
 import icon from "./icon.svg";
-import { destinations, pageLabels, Icon, Key, AddChooser, AccountList } from "./navigation";
+import { destinations, pageLabels, Icon, Key, AddChooser, AccountList, BooksSheet } from "./navigation";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
@@ -38,6 +41,7 @@ function Empty({ children }) {
   return <p className="empty">{children}</p>;
 }
 export function App({ auth, book, onFileAction }) {
+  const phone = useMedia(phoneQuery);
   const [api] = useState(() => book?.api || new Api(auth.token));
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
@@ -51,6 +55,29 @@ export function App({ auth, book, onFileAction }) {
   const [bookMenu, setBookMenu] = useState(false);
   const [notice, setNotice] = useState("");
   const controller = useRef();
+  const [phoneSearch, setPhoneSearch] = useState(false);
+  const [registerQuery, setRegisterQuery] = useState("");
+  const [registerOpen, setRegisterOpen] = useState(!!book?.state?.account);
+  useEffect(() => {
+    if (!phone) return;
+    const state = { kabacus: true, page, account: openedAccount, registerOpen };
+    history.replaceState(state, "");
+    const back = (event) => {
+      if (!event.state?.kabacus) return;
+      if (document.querySelector('.bookkeeping-dialog form[data-dirty="true"]') && !window.confirm(t("Discard this change?"))) {
+        history.pushState(state, ""); return;
+      }
+      setForm(null); setOperationForm(null); setChooser(false); setBookMenu(false);
+      setPage(event.state.page); setOpenedAccount(event.state.account); setRegisterOpen(event.state.registerOpen);
+    };
+    window.addEventListener("popstate", back);
+    return () => window.removeEventListener("popstate", back);
+  }, [phone, book?.id]);
+  const navigate = (destination, account = "", register = false) => {
+    if (phone) history.pushState({ kabacus: true, page: destination, account, registerOpen: register }, "");
+    setPage(destination); setOpenedAccount(account); setRegisterOpen(register); setPhoneSearch(false); setRegisterQuery("");
+  };
+  const openRegister = (account) => navigate("Register", account, true);
   const retry = useRef();
   const delay = useRef(3000);
   const latestRefresh = useRef();
@@ -83,7 +110,7 @@ export function App({ auth, book, onFileAction }) {
   useEffect(()=>{if(book?.activity?.expires_at)latestRefresh.current();},[book?.activity?.expires_at]);
   const go = (destination) => {
     if (document.querySelector('.bookkeeping-dialog form[data-dirty="true"]') && !window.confirm(t("Discard this change?"))) return;
-    setForm(null); setOperationForm(null); setPage(destination);
+    setForm(null); setOperationForm(null); navigate(destination, phone ? "" : openedAccount);
   };
   const beginAdd=()=>{
     if(document.querySelector('.bookkeeping-dialog form[data-dirty="true"]')&&!window.confirm(t("Discard this change?")))return;
@@ -92,13 +119,14 @@ export function App({ auth, book, onFileAction }) {
   const choose = (command) => {
     setChooser(false);
     const kind = { "transaction.spent": "transaction", "transaction.received": "received", "transaction.transfer": "transfer", "reserve.setAside": "allocation" }[command.id];
-    if (kind) setForm({ kind, from: openedAccount });
+    if (kind) setForm(kind === "received" ? {kind, to: openedAccount} : { kind, from: openedAccount });
     else setOperationForm({ kind: { "card.purchase": "purchase", "card.pay": "payment", "split.record": "split", "transaction.split": "split", "transaction.postings": "postings" }[command.id], account: openedAccount });
   };
   useEffect(() => { book?.remember?.({ page, account: openedAccount, selected:selectedRow }); }, [page, openedAccount, selectedRow, book?.id]);
   useEffect(() => {
     let goUntil = 0;
     const keys = (event) => {
+      if (event.key.length === 1 || event.key === "Tab") document.documentElement.classList.add("hardware-keyboard");
       const editing = event.target.closest("input, textarea, select, [contenteditable=true]");
       if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
         const form = document.querySelector(".bookkeeping-dialog form");
@@ -164,6 +192,20 @@ export function App({ auth, book, onFileAction }) {
   };
   return (
     <div className="shell">
+      {phone && <header className="phone-appbar">
+        {registerOpen || ["Loans", "People", "Reports", "Activity", "Settings"].includes(page)
+          ? <><button className="quiet" aria-label={t("Back")} onClick={() => history.back()}>‹</button><strong>{registerOpen ? name(data?.accounts.find(a => a.account === openedAccount) || { account: openedAccount }) : t(pageLabels[page])}</strong></>
+          : <button className="quiet phone-books-name" onClick={() => setBookMenu(true)}>{book?.name || "Kabacus"} ⌄</button>}
+        <button className="quiet" aria-label={t("Search")} onClick={() => { if (page !== "Register") navigate("Register"); setPhoneSearch(!phoneSearch); }}>⌕</button>
+        <details className="phone-overflow"><summary aria-label={t("More")}>⋮</summary><div>
+          <button className="quiet" data-action="refresh" onClick={refresh}>{t("Refresh")}</button>
+          {registerOpen && <button className="quiet" onClick={() => setOperationForm({kind: "reconcile", account: openedAccount})}>{t("Reconcile…")}</button>}
+          <button className="quiet" onClick={() => setBookMenu(true)}>{t("Books")}</button>
+        </div></details>
+      </header>}
+      {phone && phoneSearch && <div className="phone-search"><input type="search" aria-label={t("Search")} placeholder={t("Search payee, memo, account")} value={registerQuery} onChange={e => setRegisterQuery(e.target.value)} autoFocus /></div>}
+      {phone && bookMenu && <BooksSheet book={book} onClose={() => setBookMenu(false)} onAction={id => {setBookMenu(false); onFileAction?.(id);}} />}
+      {!phone && <>
       <aside>
         <button className="brand quiet" aria-haspopup="menu" aria-expanded={bookMenu} onClick={() => setBookMenu(!bookMenu)}>
           <img className="brand-icon" src={icon} alt="" /><span>{book?.name || "Kabacus"}<small>{book?.filename || location.host}</small></span><span aria-hidden="true">⌄</span>
@@ -196,13 +238,13 @@ export function App({ auth, book, onFileAction }) {
           {book?.activity?.agent && <p role="status">{t("%1 is working in these books", book.activity.agent)}</p>}
           {auth.signOut && <button className="quiet" onClick={auth.signOut}>{t("Sign out")}</button>}
         </div>
-      </aside>
+      </aside></>}
       <div className="workspace">
         <main>
           <div className="page-heading">
             <div>
 
-              <h1>{t(pageLabels[page])}</h1>
+              <h1>{page === "More" ? t("More") : t(pageLabels[page])}</h1>
 
             </div>
             <div className="header-actions">
@@ -231,6 +273,12 @@ export function App({ auth, book, onFileAction }) {
           {notice && (
             <div className="save-toast" role="status">{notice}<button className="quiet" onClick={() => go("Activity")}>{t("View")}</button></div>
           )}
+          {phone && page === "More" && <section className="phone-more">
+            {["Loans", "People", "Reports", "Activity", "Settings"].map(item => <button key={item} data-destination={item} className={item === "Settings" ? "quiet settings-action" : "quiet"} onClick={() => go(item)}><Icon name={item} />{t(pageLabels[item])}<span aria-hidden="true">›</span></button>)}
+            <h2>{t("Books")}</h2><div className="location"><strong>{book?.name || "Kabacus"}</strong><small>{book?.local ? t("On this computer") : location.host} · {book?.location || auth.username || ""}</small></div>
+            <button className="quiet" onClick={() => setBookMenu(true)}>{t("Switch Books…")}</button>
+            <button className="quiet" onClick={() => onFileAction?.("connect")}>{t("Connect to a Server…")}</button>
+          </section>}
           {page === "Settings" && (
             <Settings
               data={data || { version: { auth: {}, server_version: "—" } }}
@@ -242,7 +290,7 @@ export function App({ auth, book, onFileAction }) {
             <Empty>{loading ? t("Loading…") : t("Refresh")}</Empty>
           ) : (
             <>
-              {data.cash.warnings.map((warning, i) => (
+              {(!phone || page !== "Overview") && data.cash.warnings.map((warning, i) => (
                 <div className="banner warning" key={i}>
                   {warning.message}
                   <button
@@ -261,21 +309,21 @@ export function App({ auth, book, onFileAction }) {
                   </button>
                 </div>
               ))}
-              {page === "Overview" && <Overview data={data} api={api} onAccount={(account)=>{setOpenedAccount(account);go("Register");}} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} />}
+              {page === "Overview" && <Overview data={data} api={api} onFix={warning => go(warning.code?.includes("reserve") ? "Cards" : warning.code?.includes("fund") ? "Funds" : "Register")} onAccount={openRegister} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} />}
               {page === "Loans" && (
                 <Accounts
                   data={data}
                   loans={page === "Loans"}
                   onOpen={(account) => {
-                    setOpenedAccount(account);
-                    go("Register");
+                    openRegister(account);
                   }}
                 />
               )}
               {page === "People" && <People api={api} />}
               {page === "Reports" && <Reports api={api} />}
               {page === "Register" && (
-                <div className="transactions-workspace"><AccountList data={data} selected={openedAccount} onSelect={setOpenedAccount} /><Register
+                <div className="transactions-workspace">{(!phone || !registerOpen) && <AccountList data={registerQuery ? {...data, accounts: data.accounts.filter(a => `${a.display_name} ${a.account}`.toLowerCase().includes(registerQuery.toLowerCase()))} : data} selected={openedAccount} onSelect={phone ? openRegister : setOpenedAccount} />}{(!phone || registerOpen) && <Register
+                  phone={phone} query={registerQuery}
                   data={data}
                   api={api}
                   initialAccount={openedAccount}
@@ -284,7 +332,7 @@ export function App({ auth, book, onFileAction }) {
                   onOperation={
                     !error && !loading ? setOperationForm : undefined
                   }
-                /></div>
+                />}</div>
               )}
               {page === "Funds" && (
                 <section className="panel">
@@ -412,6 +460,10 @@ export function App({ auth, book, onFileAction }) {
           )}
         </main>
       </div>
+      {phone && <>
+        <nav className="phone-tabs" aria-label={t("Go")}>{["Overview", "Register", "Funds", "Cards", "More"].map(item => <button key={item} data-destination={item} aria-label={t(item === "More" ? "More" : pageLabels[item])} aria-current={(item === page || (item === "More" && ["Loans", "People", "Reports", "Activity", "Settings"].includes(page))) ? "page" : undefined} onClick={() => go(item)}><Icon name={item} /><span>{t(item === "More" ? "More" : pageLabels[item])}</span></button>)}</nav>
+        {!["More", "Reports", "Activity", "Settings"].includes(page) && <button className="phone-fab" aria-label={t("Add")} disabled={!data || loading || !!error} onClick={beginAdd}><Icon name="Add" /></button>}
+      </>}
       {chooser && data?.commands?.add && <AddChooser commands={data.commands.add} onChoose={choose} onClose={() => setChooser(false)} />}
       {operationForm && (
         <OperationDialog
@@ -520,7 +572,7 @@ function Transactions({ transactions, onOperation, selected, onSelect, activity 
     </div>
   );
 }
-function Register({ data, api, onOperation, initialAccount = "", onAccountChange, selected, onSelect, activity }) {
+function Register({ phone, query: phoneQuery = "", data, api, onOperation, initialAccount = "", onAccountChange, selected, onSelect, activity }) {
   const [query, setQuery] = useState("");
   const [unreserved, setUnreserved] = useState(false);
   const [account, setAccount] = useState(initialAccount);
@@ -543,12 +595,13 @@ function Register({ data, api, onOperation, initialAccount = "", onAccountChange
       });
     return () => controller.abort();
   }, [account, data, api]);
+  const searchQuery = phone ? phoneQuery : query;
   const transactions = data.transactions.filter(
     (tx) =>
       (!unreserved || tx.unreserved) &&
       `${tx.payee} ${tx.memo} ${tx.postings.map((p) => p.account).join(" ")}`
         .toLowerCase()
-        .includes(query.toLowerCase()),
+        .includes(searchQuery.toLowerCase()),
   );
   return (
     <section className="panel">
@@ -558,7 +611,7 @@ function Register({ data, api, onOperation, initialAccount = "", onAccountChange
           <p>{t("Search payee, memo, account")}</p>
         </div>
       </div>
-      <div className="filters">
+      <div className="filters" hidden={phone}>
         <label className="checkbox">
           <input
             type="checkbox"
@@ -619,7 +672,7 @@ function Register({ data, api, onOperation, initialAccount = "", onAccountChange
           {error}
         </p>
       )}
-      {!account ? (
+      {phone && !account ? <div className="phone-register">{[...new Set(transactions.map(tx => tx.date))].sort().reverse().map(day => <section key={day}><h3>{day}</h3>{transactions.filter(tx => tx.date === day).map(tx => <button key={tx.id} className="register-row quiet" onClick={() => onOperation?.({kind:"edit",tx})}><span>{["*", "cleared"].includes(tx.status) ? "●" : "○"}</span><span className="grow"><strong>{tx.payee}</strong><small>{tx.memo}</small></span><Amount value={tx.postings[0]?.amount} /></button>)}</section>)}</div> : !account ? (
         <Transactions
           transactions={[...transactions].reverse()}
           onOperation={onOperation}
@@ -628,6 +681,11 @@ function Register({ data, api, onOperation, initialAccount = "", onAccountChange
       ) : !lines ? (
         <Empty>{t("Loading…")}</Empty>
       ) : (
+        phone ? <div className="phone-register">{[...new Set(lines.map(line => line.date))].sort().reverse().map(day => <section key={day}>
+          <h3>{day}</h3>{lines.filter(line => line.date === day && `${line.payee} ${line.memo} ${line.other_account}`.toLowerCase().includes(searchQuery.toLowerCase())).map((line, i) => <button className="register-row quiet" key={`${line.id}-${i}`} onClick={() => {onSelect?.(String(line.id)); const tx = data.transactions.find(tx => tx.id === line.id); if (tx && onOperation) onOperation({kind: "edit", tx});}}>
+            <span className="cleared-mark">{["*", "cleared"].includes(data.transactions.find(tx => tx.id === line.id)?.status) ? "●" : "○"}</span>
+            <span className="grow"><strong>{line.payee}</strong><small>{line.memo || line.other_account}</small></span><span><Amount value={line.amount} /><small><Amount value={line.balance} /></small></span>
+          </button>)}</section>)}</div> :
         <div className="table-wrap">
           <table>
             <thead>
@@ -648,7 +706,7 @@ function Register({ data, api, onOperation, initialAccount = "", onAccountChange
                         ?.unreserved) &&
                     `${line.payee} ${line.memo} ${line.other_account}`
                       .toLowerCase()
-                      .includes(query.toLowerCase()),
+                      .includes(searchQuery.toLowerCase()),
                 )
                 .map((line, i) => (
                   <tr key={`${line.id}-${i}`} aria-selected={selected===String(line.id)} onClick={()=>onSelect?.(String(line.id))} className={activity?.changed?.includes(line.id)?"agent-changed":""} title={activity?.changed?.includes(line.id)?activity.changed_by:undefined}>
@@ -700,7 +758,8 @@ function WriteDialog({
   onClose,
   onSaved,
 }) {
-  const wide = window.innerWidth >= 1200;
+  const wide = useMedia(desktopQuery);
+  const phone = useMedia(phoneQuery);
   const generation = useRef(0);
   const timer = useRef();
   const previewRef = useRef();
@@ -720,6 +779,7 @@ function WriteDialog({
   const draft = useRef({});
   const [payees, setPayees] = useState([]);
   const [dirty, setDirty] = useState(false);
+  useDialogHistory({ onClose, preview, setPreview, dirty, busy });
   const close = () => {
     if (!busy && (!dirty || window.confirm(t("Discard this change?"))))
       onClose();
@@ -886,6 +946,19 @@ function WriteDialog({
       setBusy(false);
     }
   }
+  const amountField = (
+    <label>
+                  {t("%1 (%2)", t("Amount"), data.commodity.symbol)}
+                  <input
+                    name="amount"
+                    autoFocus={phone}
+                    inputMode="decimal"
+                    required
+                    pattern="[0-9]+([.][0-9]+)?"
+                    placeholder="0.00"
+                  />
+                </label>
+  );
   return (
     <dialog
       aria-labelledby="dialog-title"
@@ -903,7 +976,7 @@ function WriteDialog({
               {preview ? t("Review before saving") : t("Add")}
             </p>
             <h2 id="dialog-title">
-              {allocation
+              {phone && preview ? t("Review") : allocation
                 ? t("Set money aside")
                 : received
                   ? t("Received")
@@ -913,11 +986,11 @@ function WriteDialog({
           <button
             type="button"
             className="quiet"
-            aria-label={t("Cancel")}
-            onClick={close}
+            aria-label={t(phone && preview ? "Back" : "Cancel")}
+            onClick={() => phone && preview ? setPreview(null) : close()}
             disabled={busy}
           >
-            {"✕"}
+            {phone ? t(preview ? "Edit" : "Cancel") : "✕"}
           </button>
         </div>
         {error && !blocked && (
@@ -931,6 +1004,7 @@ function WriteDialog({
           <div hidden={blocked} className={wide ? "editor-grid" : undefined}>
             <div hidden={!wide && !!preview}>
               <div className="form-fields">
+                {phone && amountField}
                 <label>
                   {t("Date")}
                   <input
@@ -948,7 +1022,7 @@ function WriteDialog({
                       list="known-payees"
                       onChange={(e) => recall(e.target.value)}
                       required
-                      autoFocus
+                      autoFocus={!phone}
                       placeholder={t("Payee")}
                     />
                     <datalist id="known-payees">
@@ -1019,16 +1093,7 @@ function WriteDialog({
                     ))}
                   </datalist>
                 </label>
-                <label>
-                  {t("%1 (%2)", t("Amount"), data.commodity.symbol)}
-                  <input
-                    name="amount"
-                    inputMode="decimal"
-                    required
-                    pattern="[0-9]+([.][0-9]+)?"
-                    placeholder="0.00"
-                  />
-                </label>
+                {!phone && amountField}
                 {allocation && (
                   <label className="checkbox">
                     <input name="new_fund" type="checkbox" />
@@ -1091,10 +1156,11 @@ function WriteDialog({
               ? t("Checking with the server…")
               : preview
                 ? t("Save")
-                : t("Preview")} {preview && <Key>Ctrl+Enter</Key>}
+                : t(phone ? "Review" : "Preview")} {preview && <Key>Ctrl+Enter</Key>}
           </button>
         </div>
       </form>
+      <PhonePicker form={formRef} />
     </dialog>
   );
 }

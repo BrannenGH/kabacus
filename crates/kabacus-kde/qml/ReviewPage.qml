@@ -14,7 +14,7 @@ import org.kde.kirigami as Kirigami
 Kirigami.ScrollablePage {
     id: page
     objectName: "review"
-    title: i18n("Review before saving")
+    title: app.narrow ? i18nc("@action:button", "Review") : i18n("Review before saving")
 
     property var draft: null
     property var preview: null
@@ -65,6 +65,22 @@ Kirigami.ScrollablePage {
         Kirigami.Action { text: page.saving ? i18n("Saving…") : i18n("Save"); icon.name: "document-save"; enabled: page.canSave; onTriggered: page.saveIt() }
     ]
 
+    footer: Controls.ToolBar {
+        visible: page.app.narrow
+        height: visible ? implicitHeight : 0
+        padding: 8
+        Controls.Button {
+            width: parent.width
+            text: page.saving ? i18n("Saving…") : i18n("Save")
+            icon.name: "document-save"
+            enabled: page.canSave
+            highlighted: true
+            implicitHeight: 48
+            Accessible.name: text
+            onClicked: page.saveIt()
+        }
+    }
+
     ColumnLayout {
         spacing: Kirigami.Units.largeSpacing
 
@@ -106,16 +122,6 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
         }
 
-        Controls.Button {
-            visible: page.app.narrow
-            text: page.saving ? i18n("Saving…") : i18n("Save")
-            icon.name: "document-save"
-            enabled: page.canSave
-            highlighted: true
-            Layout.fillWidth: true
-            Layout.minimumHeight: Kirigami.Units.gridUnit * 2.5
-            Accessible.name: text
-            onClicked: page.saveIt()
-        }
+
     }
 }
