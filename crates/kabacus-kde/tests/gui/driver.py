@@ -599,6 +599,20 @@ def main():
             click(wait_for("the Go menu", lambda: find_any("Go", menus), 10))
             click(wait_for("Go → Reserves", lambda: find_any("Reserves", {pyatspi.ROLE_MENU_ITEM, pyatspi.ROLE_PUSH_BUTTON}), 10))
             wait_for("the Reserves page", lambda: find(app(), "Set aside for Gifts", pyatspi.ROLE_PUSH_BUTTON), 20)
+    elif command == "all-transactions":
+        # All transactions lists real ones across accounts; fund transfers
+        # come back with their switch.
+        real, transfer = args
+        goto("Transactions")
+        open_list_item("All transactions", lambda: find(app(), "All transactions", pyatspi.ROLE_LIST_ITEM),
+                 lambda: row(real))
+        if row(transfer):
+            fail(f"the fund transfer {transfer!r} shows by default")
+        toggles = {pyatspi.ROLE_TOGGLE_BUTTON, pyatspi.ROLE_PUSH_BUTTON, pyatspi.ROLE_CHECK_BOX}
+        press(wait_for("the Fund transfers switch", lambda: find_any("Fund transfers", toggles)))
+        wait_for(f"the {transfer!r} fund transfer", lambda: row(transfer))
+        if not row(real):
+            fail(f"{real!r} went missing with fund transfers on")
     elif command == "loans":
         # Loans lists each loan; a loan opens its register.
         loan, payee = args

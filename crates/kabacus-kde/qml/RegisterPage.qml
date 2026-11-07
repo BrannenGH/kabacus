@@ -15,11 +15,14 @@ import me.hallb.kabacus
 Kirigami.ScrollablePage {
     id: page
     objectName: "register"
-    title: accountName !== "" ? accountName : account
+    // Empty `account`: every real account's transactions together.
+    readonly property bool all: account === ""
+    title: all ? i18n("All transactions") : accountName !== "" ? accountName : account
 
     property string account: ""
     property string accountName: ""
     property bool unreservedOnly: false
+    property bool fundTransfers: false
     readonly property var rows: fetch.value || []
     readonly property string problem: fetch.problem
 
@@ -42,7 +45,7 @@ Kirigami.ScrollablePage {
     property Fetch fetch: Fetch {
         ledger: page.ledger
         view: "register"
-        args: ({ account: page.account, text: page.query, unreservedOnly: page.unreservedOnly })
+        args: ({ account: page.account, text: page.query, unreservedOnly: page.unreservedOnly, fundTransfers: page.fundTransfers })
         owner: page
     }
 
@@ -91,6 +94,11 @@ Kirigami.ScrollablePage {
             // Not shown: they measure the chips for chipColumnWidth.
             Kirigami.Chip { id: unreservedSizer; visible: false; closable: false; checkable: false; text: page.chipLabels.unreserved }
             Kirigami.Chip { id: moveSizer; visible: false; closable: false; checkable: false; text: page.chipLabels.move }
+            Controls.Switch {
+                text: i18n("Fund transfers")
+                checked: page.fundTransfers
+                onToggled: page.fundTransfers = checked
+            }
             Controls.Switch {
                 text: i18n("Unreserved only")
                 checked: page.unreservedOnly
@@ -185,8 +193,9 @@ Kirigami.ScrollablePage {
                         opacity: transactionDelegate.modelData.kind === "move" ? 0.7 : 1
                         Layout.preferredWidth: Kirigami.Units.gridUnit * 6
                     }
+                    // A running balance belongs to one account.
                     Money {
-                        visible: page.oneLine
+                        visible: page.oneLine && !page.all
                         amount: transactionDelegate.modelData.balance
                         Layout.preferredWidth: Kirigami.Units.gridUnit * 6
                     }
@@ -201,6 +210,7 @@ Kirigami.ScrollablePage {
                         Layout.fillWidth: true
                     }
                     Money {
+                        visible: !page.all
                         amount: transactionDelegate.modelData.balance
                         font: Kirigami.Theme.smallFont
                     }
