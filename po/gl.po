@@ -1148,7 +1148,7 @@ msgstr "Permitir que os axentes controlen esta xanela"
 msgid "Control port"
 msgstr "Porto de control"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Conta"
@@ -1343,6 +1343,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "Con"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Importe"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1354,11 +1359,6 @@ msgstr "Total:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "Importe:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Importe"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format

@@ -1148,7 +1148,7 @@ msgstr "Ügynökök vezérelhetik ezt az ablakot"
 msgid "Control port"
 msgstr "Vezérlési port"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Számla"
@@ -1343,6 +1343,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "Kivel"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Összeg"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1354,11 +1359,6 @@ msgstr "Összesen:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "Összeg:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Összeg"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format

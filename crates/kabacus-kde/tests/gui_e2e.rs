@@ -1002,3 +1002,38 @@ async fn the_app_speaks_the_users_language_on_every_form_factor() {
         }
     }
 }
+
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn desktop_split_postings_can_be_edited() {
+    let socket = socket_path("edit-split");
+    let journal = format!("{BOOKS}\n2026-09-12 Harbor Cafe\n    expenses:dining  12.00 USD\n    expenses:dining  8.00 USD\n    assets:bank:checking  -20.00 USD\n");
+    let server =
+        kabacus_testkit::spawn_server_with_journal(&journal, |c| c.socket_path = socket.clone())
+            .await;
+    let client = KabacusClient::connect_unix(&server.socket_path);
+    let before = client
+        .list_transactions()
+        .await
+        .unwrap()
+        .into_iter()
+        .find(|t| t.payee == "Harbor Cafe")
+        .unwrap();
+    let _app = launch(&server.socket_path, &config_dir("edit-split"));
+    drive(&["edit-split", "Checking", "Harbor Cafe", "2026-09-12"]).await;
+    let after = client
+        .list_transactions()
+        .await
+        .unwrap()
+        .into_iter()
+        .find(|t| t.id == before.id)
+        .unwrap();
+    assert_eq!(
+        after
+            .postings
+            .iter()
+            .map(|p| p.amount.exact.as_str())
+            .collect::<Vec<_>>(),
+        vec!["15.00", "5.00", "-20.00"]
+    );
+}

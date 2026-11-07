@@ -1150,7 +1150,7 @@ msgstr "Dovoli agentom upravljanje tega okna"
 msgid "Control port"
 msgstr "Nadzorna vrata"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Račun"
@@ -1345,6 +1345,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "S kom"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Znesek"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1356,11 +1361,6 @@ msgstr "Skupaj:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "Znesek:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Znesek"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format

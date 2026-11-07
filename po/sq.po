@@ -1148,7 +1148,7 @@ msgstr "Lejo agjentët të drejtojnë këtë dritare"
 msgid "Control port"
 msgstr "Porta e kontrollit"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Llogari"
@@ -1343,6 +1343,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "Me"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Shumë"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1354,11 +1359,6 @@ msgstr "Gjithsej:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "Shumë:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Shumë"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format

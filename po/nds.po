@@ -1148,7 +1148,7 @@ msgstr "Agenten dörvt dit Finster stüern"
 msgid "Control port"
 msgstr "Stüerport"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Konto"
@@ -1343,6 +1343,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "Mit"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Bedrag"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1354,11 +1359,6 @@ msgstr "Tosamen:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "Bedrag:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Bedrag"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format

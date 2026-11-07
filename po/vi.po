@@ -1147,7 +1147,7 @@ msgstr "Cho phép tác tử điều khiển cửa sổ này"
 msgid "Control port"
 msgstr "Cổng điều khiển"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Tài khoản"
@@ -1342,6 +1342,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "Với"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Số tiền"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1353,11 +1358,6 @@ msgstr "Tổng cộng:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "Số tiền:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Số tiền"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format

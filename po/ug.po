@@ -1147,7 +1147,7 @@ msgstr "ۋاكالەتچىلەرنىڭ بۇ كۆزنەكنى باشقۇرۇشى�
 msgid "Control port"
 msgstr "باشقۇرۇش ئېغىزى"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "ھېسابات"
@@ -1342,6 +1342,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "بىلەن"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "سومما"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1353,11 +1358,6 @@ msgstr "جەمئىي:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "سومما:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "سومما"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format

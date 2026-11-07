@@ -1147,7 +1147,7 @@ msgstr "允许代理控制此窗口"
 msgid "Control port"
 msgstr "控制端口"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "账户"
@@ -1342,6 +1342,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "对象"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "金额"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1353,11 +1358,6 @@ msgstr "总计："
 msgctxt "@label"
 msgid "Amount:"
 msgstr "金额："
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "金额"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format

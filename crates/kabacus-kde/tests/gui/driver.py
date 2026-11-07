@@ -377,6 +377,14 @@ def main():
         fill_fields(Date=date, Payee=payee, Amount=amount)
         choose("To", to_name)
         save()
+    elif command == "edit-split":
+        account, payee, date = args
+        click(wait_for(f"the {account} account", lambda: find(app(), account, pyatspi.ROLE_LIST_ITEM)))
+        click(wait_for(f"the {payee!r} row", lambda: row(payee, date)))
+        wait_for("the edit form", lambda: label_starting("Edit transaction"))
+        for name, value in (("Amount 1", "15.00"), ("Amount 2", "5.00"), ("Amount 3", "-20.00")):
+            set_text(wait_for(name, lambda: find(app(), name, pyatspi.ROLE_TEXT, showing=False)), value)
+        save()
     elif command == "edit-prefill":
         # The edit form shows the transaction's own accounts, and
         # keeps them when the pickers' account list is reloaded.

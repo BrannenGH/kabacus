@@ -1152,7 +1152,7 @@ msgstr "اسمح للوكلاء بالتحكم في هذه النافذة"
 msgid "Control port"
 msgstr "منفذ التحكم"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "الحساب"
@@ -1347,6 +1347,11 @@ msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "مع"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "المبلغ"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1358,11 +1363,6 @@ msgstr "المجموع:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "المبلغ:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "المبلغ"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
