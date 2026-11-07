@@ -286,7 +286,7 @@ def open_row(account, payee, date):
 def fill_fields(**fields):
     # Wait for each: a form that just opened may still be laying out.
     for name, value in fields.items():
-        set_text(wait_for(name, lambda: find(app(), name, pyatspi.ROLE_TEXT)), value)
+        set_text(wait_for(name, lambda: find(app(), name, pyatspi.ROLE_TEXT, showing=False)), value)
 
 
 def main():
@@ -383,7 +383,7 @@ def main():
         click(wait_for(f"the {payee!r} row", lambda: row(payee, date)))
         wait_for("the edit form", lambda: label_starting("Edit transaction"))
         for name, value in (("Amount 1", "15.00"), ("Amount 2", "5.00"), ("Amount 3", "-20.00")):
-            set_text(wait_for(name, lambda: find(app(), name, pyatspi.ROLE_TEXT)), value)
+            set_text(wait_for(name, lambda: find(app(), name, pyatspi.ROLE_TEXT, showing=False)), value)
         save()
     elif command == "edit-prefill":
         # The edit form shows the transaction's own accounts, and

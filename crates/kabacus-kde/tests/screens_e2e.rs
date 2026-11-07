@@ -936,7 +936,7 @@ async fn split_posting_edits_preview_and_save_in_place() {
         .find(|t| t.payee == "Harbor Cafe")
         .unwrap();
     assert_eq!(tx.postings.len(), 3);
-    let postings: Vec<_> = tx
+    let mut postings: Vec<_> = tx
         .postings
         .iter()
         .enumerate()
@@ -945,6 +945,16 @@ async fn split_posting_edits_preview_and_save_in_place() {
             "commodity": p.amount.commodity, "original": i })
         })
         .collect();
+    postings[0]["amount"] = "35.00".into();
+    postings[1]["amount"] = "25.00".into();
+    let mut unbalanced = postings.clone();
+    unbalanced[0]["amount"] = "36.00".into();
+    let invalid: Draft = serde_json::from_value(serde_json::json!({
+        "kind": "edit_postings", "id": tx.id.to_string(), "date": tx.date,
+        "payee": "Harbor Cafe lunch", "postings": unbalanced
+    }))
+    .unwrap();
+    assert!(writes::preview(&client, &invalid).await.is_err());
     let edit: Draft = serde_json::from_value(serde_json::json!({
         "kind": "edit_postings", "id": tx.id.to_string(), "date": tx.date,
         "payee": "Harbor Cafe lunch", "postings": postings
@@ -967,9 +977,16 @@ async fn split_posting_edits_preview_and_save_in_place() {
         .unwrap();
     assert_eq!(edited.payee, "Harbor Cafe lunch");
     assert_eq!(edited.tags, tx.tags);
+    assert_eq!(
+        edited
+            .postings
+            .iter()
+            .map(|p| p.amount.exact.as_str())
+            .collect::<Vec<_>>(),
+        vec!["35.00", "25.00", "-60.00"]
+    );
     for (before, after) in tx.postings.iter().zip(&edited.postings) {
         assert_eq!(before.account, after.account);
-        assert_eq!(before.amount.exact, after.amount.exact);
         assert_eq!(before.status, after.status);
     }
 }

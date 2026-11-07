@@ -41,7 +41,7 @@ export function operation(kind, fields, data, tx) {
       body: { void: true },
     };
   if (kind === "edit") {
-    if (fields.account0 !== undefined) {
+    if (Object.keys(fields).some(key => /^account[0-9]+$/.test(key))) {
       return {
         method: "PATCH",
         path: `/transactions/${tx.id}`,

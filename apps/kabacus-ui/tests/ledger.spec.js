@@ -1017,14 +1017,18 @@ test("desktop split editing previews every posting and preserves the reviewed dr
   await expect(dialog.getByRole("heading", { name: "Review before saving" })).toBeVisible();
   await dialog.getByRole("button", { name: "Back to edit", exact: true }).click();
   await expect(amounts.nth(0)).toHaveValue("50.00");
+  await dialog.getByRole("button", { name: "Postings · 1", exact: true }).click();
+  await dialog.getByRole("button", { name: "Add", exact: true }).click();
+  await dialog.getByLabel("Account", { exact: true }).nth(2).fill("expenses:groceries");
+  await amounts.nth(2).fill("50.00");
   await dialog.getByRole("button", { name: "Preview", exact: true }).click();
   await dialog.getByRole("button", { name: "Save", exact: true }).click();
   await expect(dialog).not.toBeVisible();
   const saved = writes.at(-1);
   expect(saved.headers["if-match"]).toBe('"42"');
   expect(saved.body).toMatchObject({ dry_run: false, tags: split.tags, postings: [
-    { account: split.postings[0].account, status: "!", amount: { mantissa: "5000" } },
     { account: split.postings[1].account, status: "", amount: { mantissa: "3425" } },
     { account: split.postings[2].account, status: "*", amount: { mantissa: "-8425" } },
+    { account: split.postings[0].account, status: "", amount: { mantissa: "5000" } },
   ] });
 });

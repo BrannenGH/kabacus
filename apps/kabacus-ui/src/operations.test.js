@@ -161,3 +161,22 @@ test("split edits preserve repeated accounts' individual marks and exact amounts
     ],
   } });
 });
+
+
+test("removing the first split posting and adding a new one retains row identities", () => {
+  const tx = { id: 18, tags: [], postings: [
+    { account: "expenses:groceries", status: "!", amount: { commodity: "USD" } },
+    { account: "expenses:dining", status: "*", amount: { commodity: "USD" } },
+    { account: "assets:bank:checking", status: "*", amount: { commodity: "USD" } },
+  ] };
+  const result = operation("edit", {
+    date: "2026-10-25", description: "Harbor Cafe",
+    account1: "expenses:dining", amount1: "15.00",
+    account2: "assets:bank:checking", amount2: "-20.00",
+    account3: "expenses:groceries", amount3: "5.00",
+  }, data, tx);
+  expect(result.body.postings.map(p => [p.account, p.status, p.amount.mantissa])).toEqual([
+    ["expenses:dining", "*", "1500"], ["assets:bank:checking", "*", "-2000"],
+    ["expenses:groceries", "", "500"],
+  ]);
+});
