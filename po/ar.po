@@ -17,6 +17,16 @@ msgctxt "@label a form field's name"
 msgid "%1:"
 msgstr "%1:"
 
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Back"
+msgstr "رجوع"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Search"
+msgstr "ابحث"
+
 #: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "%1 is the field, %2 what's wrong with it"
@@ -431,7 +441,7 @@ msgstr "اعرض"
 msgid "Settings"
 msgstr "الإعدادات"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "On this computer"
 msgstr "على هذا الحاسوب"
@@ -482,7 +492,7 @@ msgstr "احفظ نسخة باسم…"
 msgid "Close Window"
 msgstr "أغلق النافذة"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect to a Server…"
 msgstr "اتصل بخادم…"
@@ -624,6 +634,16 @@ msgstr "اعرض تغييرهم"
 msgid "Preview again"
 msgstr "عاين مجددًا"
 
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Books"
+msgstr "الدفاتر"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Close"
+msgstr "أغلق"
+
 #: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -663,6 +683,11 @@ msgstr "اختبر الاتصال"
 #, kde-format
 msgid "Connect"
 msgstr "اتصل"
+
+#: crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch Books…"
+msgstr "تبديل الدفاتر…"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -705,6 +730,11 @@ msgstr "%1 منذ %2"
 msgctxt "%1 is an amount"
 msgid "Cash on Hand %1"
 msgstr "المال المتاح %1"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "How it's worked out"
+msgstr "كيفية الحساب"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -922,11 +952,6 @@ msgstr "طابِق…"
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Search"
-msgstr "ابحث"
-
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Search payee, memo, account"
 msgstr "ابحث عن مستفيد، ملاحظة، حساب"
 
@@ -1086,6 +1111,12 @@ msgctxt "%1 is a month and year"
 msgid "No spending in %1"
 msgstr "لا مصروفات في %1"
 
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Review"
+msgstr "راجِع"
+
 #: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
@@ -1216,12 +1247,6 @@ msgstr "تحويل"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
-msgctxt "@action:button"
-msgid "Review"
-msgstr "راجِع"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
 msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
 msgid "This would break a balance check: %1 should be %2 but would be %3. Check the date and amount."
 msgstr "هذا سيكسر تحققًا من الرصيد: يجب أن يكون %1 بقيمة %2 لكنه سيصبح %3. تحقّق من التاريخ والمبلغ."
@@ -1246,6 +1271,23 @@ msgstr "ألغِ"
 #, kde-format
 msgid "Only the reversal: it didn't happen."
 msgstr "القيد العكسي فقط: لم يحدث."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Total:"
+msgstr "المجموع:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Amount:"
+msgstr "المبلغ:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "المبلغ"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1346,23 +1388,6 @@ msgstr "الاحتياطي"
 msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "مع"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@label"
-msgid "Total:"
-msgstr "المجموع:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@label"
-msgid "Amount:"
-msgstr "المبلغ:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "المبلغ"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -2089,6 +2114,11 @@ msgstr "تنقص بطاقة أسطر احتياطيها؛ ستُعلَّم"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "More"
+msgstr "المزيد"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Sign in to %1"
 msgstr "سجّل الدخول إلى %1"
 
@@ -2366,11 +2396,6 @@ msgstr "اختر اسم ملف جديدًا؛ هذه الدفاتر موجودة
 #, kde-format
 msgid "Choose what happened. The form fills in the lines; you see what changes before you save."
 msgstr "اختر ما حدث. يملأ النموذج أسطر القيد؛ وترى التغييرات قبل الحفظ."
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Close"
-msgstr "أغلق"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
