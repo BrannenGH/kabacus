@@ -522,6 +522,14 @@ Kirigami.ScrollablePage {
                     accounts: page.people
                     onEdited: page.edited()
                 }
+                Controls.Label {
+                    visible: page.postingEdit && text !== ""
+                    text: page.fieldErrors.postings || ""
+                    color: Kirigami.Theme.negativeTextColor
+                    wrapMode: Text.Wrap
+                    Layout.fillWidth: true
+                    Accessible.name: text
+                }
                 Repeater {
                     model: page.postingEdit ? page.postingRows : []
                     delegate: ColumnLayout {
