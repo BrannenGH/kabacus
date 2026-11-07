@@ -76,10 +76,11 @@ ColumnLayout {
         id: combo
         implicitHeight: picker.phone ? 48 : Math.max(contentItem.implicitHeight + topPadding + bottomPadding, background ? background.implicitHeight : 0)
         font.pixelSize: picker.phone ? 16 : Kirigami.Theme.defaultFont.pixelSize
-        TapHandler {
+        MouseArea {
+            anchors.fill: parent
             enabled: picker.phone
-            acceptedDevices: PointerDevice.TouchScreen
-            onTapped: { combo.popup.close(); accountSheet.open() }
+            z: 1
+            onClicked: accountSheet.open()
         }
         editable: true
         textRole: "name"
@@ -106,6 +107,7 @@ ColumnLayout {
         onActiveFocusChanged: if (activeFocus) { contentItem.forceActiveFocus(); (contentItem as TextInput)?.selectAll() }
     Controls.Dialog {
         id: accountSheet
+        title: picker.label
         parent: Controls.Overlay.overlay
         modal: true
         x: 0; y: 0

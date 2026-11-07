@@ -18,6 +18,8 @@ Kirigami.ScrollablePage {
     objectName: "reconcile"
     title: i18nc("%1 is an account", "Reconcile %1", accountName)
 
+    globalToolBarStyle: app.narrow ? Kirigami.ApplicationHeaderStyle.None : Kirigami.ApplicationHeaderStyle.ToolBar
+
     required property var app
     // Set when it's opened (Main.qml's openReconcile).
     property string account: ""

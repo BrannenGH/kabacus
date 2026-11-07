@@ -22,6 +22,8 @@ Kirigami.ScrollablePage {
     property var form: null
     property var problem: null
 
+    globalToolBarStyle: app.narrow ? Kirigami.ApplicationHeaderStyle.None : Kirigami.ApplicationHeaderStyle.ToolBar
+
     required property var app
     readonly property var ledger: app.ledger
 

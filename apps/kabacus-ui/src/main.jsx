@@ -673,7 +673,7 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, initi
           {error}
         </p>
       )}
-      {phone && !account ? <div className="phone-register">{[...new Set(transactions.map(tx => tx.date))].sort().reverse().map(day => <section key={day}><h3>{day}</h3>{transactions.filter(tx => tx.date === day).map(tx => <button key={tx.id} className="register-row quiet" onClick={() => onOperation?.({kind:"edit",tx})}><span>{["*", "cleared"].includes(tx.status) ? "●" : "○"}</span><span className="grow"><strong>{tx.payee}</strong><small>{tx.memo}</small></span><Amount value={tx.postings[0]?.amount} /></button>)}</section>)}</div> : !account ? (
+      {phone && !account ? <div className="phone-register">{[...new Set(transactions.map(tx => tx.date))].sort().reverse().map(day => <section key={day}><h3>{day}</h3>{transactions.filter(tx => tx.date === day).reverse().map(tx => <button key={tx.id} className="register-row quiet" onClick={() => onOperation?.({kind:"edit",tx})}><span>{["*", "cleared"].includes(tx.status) ? "●" : "○"}</span><span className="grow"><strong>{tx.payee}</strong><small>{tx.memo}</small></span><Amount value={tx.postings[0]?.amount} /></button>)}</section>)}</div> : !account ? (
         <Transactions
           transactions={[...transactions].reverse()}
           onOperation={onOperation}
@@ -683,7 +683,7 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, initi
         <Empty>{t("Loading…")}</Empty>
       ) : (
         phone ? <div className="phone-register">{[...new Set(lines.map(line => line.date))].sort().reverse().map(day => <section key={day}>
-          <h3>{day}</h3>{lines.filter(line => line.date === day && `${line.payee} ${line.memo} ${line.other_account}`.toLowerCase().includes(searchQuery.toLowerCase())).map((line, i) => <button className="register-row quiet" key={`${line.id}-${i}`} onClick={() => {onSelect?.(String(line.id)); const tx = data.transactions.find(tx => tx.id === line.id); if (tx && onOperation) onOperation({kind: "edit", tx});}}>
+          <h3>{day}</h3>{lines.filter(line => line.date === day && `${line.payee} ${line.memo} ${line.other_account}`.toLowerCase().includes(searchQuery.toLowerCase())).reverse().map((line, i) => <button className="register-row quiet" key={`${line.id}-${i}`} onClick={() => {onSelect?.(String(line.id)); const tx = data.transactions.find(tx => tx.id === line.id); if (tx && onOperation) onOperation({kind: "edit", tx});}}>
             <span className="cleared-mark">{["*", "cleared"].includes(data.transactions.find(tx => tx.id === line.id)?.status) ? "●" : "○"}</span>
             <span className="grow"><strong>{line.payee}</strong><small>{line.memo || line.other_account}</small></span><span><Amount value={line.amount} /><small><Amount value={line.balance} /></small></span>
           </button>)}</section>)}</div> :

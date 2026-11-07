@@ -22,6 +22,8 @@ Kirigami.ScrollablePage {
     property string kind: "spent"
     property var preset: ({})
 
+    globalToolBarStyle: app.narrow ? Kirigami.ApplicationHeaderStyle.None : Kirigami.ApplicationHeaderStyle.ToolBar
+
     required property var app
     readonly property var ledger: app.ledger
     property Fetch pickerFetch: Fetch { ledger: page.ledger; view: "picker" }

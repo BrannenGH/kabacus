@@ -121,7 +121,7 @@ Kirigami.ScrollablePage {
                                 Controls.Label { text: unreservedDelegate.modelData.description; font.bold: true; elide: Text.ElideRight; Layout.fillWidth: true }
                                 Controls.Label { text: i18nc("%1 is an amount", "Missing reserve %1", unreservedDelegate.modelData.missing.text); opacity: 0.7; font: Kirigami.Theme.smallFont }
                             }
-                            Controls.Button {
+                            Controls.Button { Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight;
                                 text: i18n("Add reserve lines")
                                 icon.name: "list-add"
                                 enabled: page.app.canWrite

@@ -112,7 +112,7 @@ Kirigami.ScrollablePage {
                             objectName: "moneyOnHand"
                             checkable: true
                             text: page.app.narrow ? i18n("How it's worked out") : i18n("Money on Hand")
-                            implicitHeight: page.app.narrow ? 48 : Math.max(contentItem.implicitHeight + topPadding + bottomPadding, background ? background.implicitHeight : 0)
+                            Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                             icon.name: checked ? "arrow-up" : "arrow-down"
                             display: Controls.AbstractButton.TextBesideIcon
                             Accessible.name: i18n("Money on Hand")

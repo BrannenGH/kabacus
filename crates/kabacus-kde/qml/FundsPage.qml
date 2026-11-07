@@ -92,7 +92,7 @@ Kirigami.ScrollablePage {
                     Kirigami.ListSectionHeader { text: page.app.labels.Funds; Layout.fillWidth: true; visible: card.modelData.funds.length > 0 }
                     Repeater {
                         model: card.modelData.funds
-                        delegate: Controls.ItemDelegate {
+                        delegate: Controls.ItemDelegate { Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight;
                             id: fundDelegate
                             required property var modelData
                             Layout.fillWidth: true
@@ -102,7 +102,7 @@ Kirigami.ScrollablePage {
                                 Kirigami.Icon { source: "folder-text"; Layout.preferredWidth: Kirigami.Units.iconSizes.small; Layout.preferredHeight: Layout.preferredWidth }
                                 Controls.Label { text: fundDelegate.modelData.name; Layout.fillWidth: true; elide: Text.ElideRight }
                                 Money { amount: fundDelegate.modelData.amount }
-                                Controls.ToolButton {
+                                Controls.ToolButton { Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight; Layout.minimumWidth: page.app.narrow ? 48 : implicitWidth;
                                     icon.name: "list-add"
                                     text: i18n("Set aside")
                                     display: page.app.narrow ? Controls.AbstractButton.IconOnly : Controls.AbstractButton.TextBesideIcon
@@ -116,7 +116,7 @@ Kirigami.ScrollablePage {
                     Kirigami.ListSectionHeader { text: i18n("Card reserves"); Layout.fillWidth: true; visible: card.modelData.reserves.length > 0 }
                     Repeater {
                         model: card.modelData.reserves
-                        delegate: Controls.ItemDelegate {
+                        delegate: Controls.ItemDelegate { Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight;
                             id: reserveDelegate
                             required property var modelData
                             Layout.fillWidth: true

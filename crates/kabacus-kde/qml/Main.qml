@@ -504,7 +504,7 @@ Kirigami.ApplicationWindow {
                         id: phoneActions
                         Instantiator {
                             model: root.phonePage ? root.phonePage.actions : []
-                            delegate: Controls.MenuItem { required property var modelData; action: modelData; visible: modelData.visible !== false }
+                            delegate: Controls.MenuItem { required property var modelData; action: modelData; visible: modelData.visible !== false; implicitHeight: 48 }
                             onObjectAdded: function(index, object) { phoneActions.insertItem(index, object) }
                             onObjectRemoved: function(index, object) { phoneActions.removeItem(object) }
                         }

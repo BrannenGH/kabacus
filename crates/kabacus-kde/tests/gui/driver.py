@@ -179,6 +179,18 @@ def choose(combo_name, item_name):
     pyatspi.Registry.generateKeyboardEvent(0xFF09, None, pyatspi.KEY_SYM)  # Tab
 
 
+def choose_phone(combo_name, item_name):
+    click(wait_for(f"the {combo_name} field", lambda: find(app(), combo_name, pyatspi.ROLE_COMBO_BOX)))
+    search = wait_for("the full-screen account picker", lambda: find(app(), "Search", pyatspi.ROLE_TEXT))
+    set_text(search, item_name)
+    item = wait_for(f"the {item_name} choice", lambda: find(app(), item_name, pyatspi.ROLE_LIST_ITEM))
+    _, _, width, height = item.queryComponent().getExtents(pyatspi.DESKTOP_COORDS)
+    if width < 48 or height < 48:
+        fail(f"the {item_name} picker target is only {width} by {height}")
+    click(item)
+    wait_for("the picker to close", lambda: not find(app(), "Search", pyatspi.ROLE_TEXT))
+
+
 def row(payee, date=None):
     name = f"{payee} {date}" if date else None
     return pyatspi.findDescendant(
@@ -594,8 +606,8 @@ def main():
         toggles = {pyatspi.ROLE_TOGGLE_BUTTON, pyatspi.ROLE_PUSH_BUTTON, pyatspi.ROLE_CHECK_BOX}
         if label_starting("− Receivables"):
             fail("Money on Hand's sum is open before it's asked for")
-        press(wait_for("the Money on Hand button", lambda: find_any("Money on Hand", toggles)))
-        wait_for("Money on Hand's sum", lambda: label_starting("− Receivables"), 10)
+        open_list_item("Money on Hand's sum", lambda: find_any("Money on Hand", toggles),
+                       lambda: label_starting("− Receivables"))
 
         wait_for(f"the {fund} fund", lambda: find(app(), fund, pyatspi.ROLE_LIST_ITEM))
         if find(app(), empty, pyatspi.ROLE_LIST_ITEM):
@@ -681,9 +693,11 @@ def main():
     elif command == "card-purchase":
         payee, amount, card, category = args
         open_add("Card purchase")
-        choose("Card", card)
+        _, _, width, _ = app().queryComponent().getExtents(pyatspi.DESKTOP_COORDS)
+        pick = choose_phone if width < 600 else choose
+        pick("Card", card)
         fill_fields(Payee=payee, Amount=amount)
-        choose("Category", category)
+        pick("Category", category)
         save()
     elif command == "set-aside":
         fund, amount = args
