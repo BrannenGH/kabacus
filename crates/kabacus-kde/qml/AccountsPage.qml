@@ -22,14 +22,15 @@ Kirigami.ScrollablePage {
     readonly property var tokens: Theme.of(Kirigami.Theme.backgroundColor)
     // An account to open right away (from an Overview warning).
     property string open: ""
-    property string selected: ""
+    // `null`: nothing chosen yet; "" is the all-transactions entry.
+    property var selected: null
     property Fetch fetch: Fetch { ledger: page.ledger; view: "accounts"; owner: page }
     readonly property string problem: fetch.problem
     // The groups flattened; each group's first row carries its heading,
     // drawn before it, so screen readers meet the heading first.
     // ListView sections are created after their first item.
     readonly property var rows: {
-        const out = []
+        const out = [{ account: "", name: i18n("All transactions"), detail: "", warn: false, balance: null, group: "" }]
         for (const g of fetch.value || []) {
             g.rows.forEach((row, i) => {
                 row.group = i === 0 ? g.title : ""
@@ -107,7 +108,7 @@ Kirigami.ScrollablePage {
                     Layout.preferredWidth: Kirigami.Units.iconSizes.small
                     Layout.preferredHeight: Layout.preferredWidth
                 }
-                Money { amount: accountDelegate.modelData.balance; highlighted: accountDelegate.highlighted }
+                Money { visible: accountDelegate.modelData.balance !== null; amount: accountDelegate.modelData.balance; highlighted: accountDelegate.highlighted }
             }
         }
         }

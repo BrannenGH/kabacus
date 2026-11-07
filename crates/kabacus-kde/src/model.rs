@@ -96,7 +96,7 @@ pub struct SimpleDraft {
 
 /// Between the items of a list ("12.00 USD, 3.00 EUR"): the comma is
 /// the language's (Arabic writes "،", Chinese "、").
-fn list_separator() -> String {
+pub(crate) fn list_separator() -> String {
     i18nc!(
         "between the items of a list, such as amounts or account names",
         ", "

@@ -29,6 +29,11 @@ msgctxt "%1 is the closest account to what was typed"
 msgid "Use %1"
 msgstr "Выкарыстаць %1"
 
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "All transactions"
+msgstr "Усе аперацыі"
+
 #: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add"
@@ -922,6 +927,11 @@ msgstr "Пошук"
 msgid "Search payee, memo, account"
 msgstr "Пошук па атрымальніку, нататцы, рахунку"
 
+#: crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Fund transfers"
+msgstr "Пераводы рэзерваў"
+
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Unreserved only"
@@ -1548,11 +1558,6 @@ msgstr "На серверы адбылася памылка."
 msgctxt "between the items of a list, such as amounts or account names"
 msgid ", "
 msgstr ", "
-
-#: crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "All transactions"
-msgstr "Усе аперацыі"
 
 #: crates/kabacus-kde/src/model.rs
 #, kde-format
