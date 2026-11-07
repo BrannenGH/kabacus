@@ -15,11 +15,21 @@ on:
       - apps/kabacus-ui/**
       - crates/kabacus-client/**
       - crates/kabacus-core/**
+      - crates/kabacus-service/**
+      - crates/kabacus-store/**
+      - crates/kabacus-mcp/**
+      - crates/kabacus-cli/**
+      - scripts/build-desktop-cli
       - crates/kabacus-kde/**
       - .github/workflows/apps.yml
   push:
     branches: [master]
   workflow_dispatch:
+    inputs:
+      diagnose-run:
+        description: Optional existing workflow run ID to inspect instead of building.
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -34,6 +44,7 @@ defaults:
 
 jobs:
   desktop:
+    if: inputs.diagnose-run == ''
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -73,7 +84,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: kabacus-desktop-${{ matrix.name }}
-          path: apps/kabacus-ui/src-tauri/target/release/${{ matrix.out }}
+          path: |
+            apps/kabacus-ui/src-tauri/target/release/${{ matrix.out }}
+            apps/kabacus-ui/src-tauri/target/release/kabacus-cli*
           if-no-files-found: error
 
   flatpak:
@@ -99,6 +112,7 @@ jobs:
           cache-key: flatpak-${{ github.sha }}
 
   ios:
+    if: inputs.diagnose-run == ''
     name: ios (simulator)
     runs-on: macos-latest
     steps:
@@ -127,6 +141,7 @@ jobs:
           if-no-files-found: error
 
   android:
+    if: inputs.diagnose-run == ''
     name: android
     runs-on: ubuntu-latest
     steps:
@@ -159,3 +174,17 @@ jobs:
           name: kabacus-desktop-android
           path: apps/kabacus-ui/src-tauri/gen/android/app/build/outputs/apk/**/*.apk
           if-no-files-found: error
+
+  failure-details:
+    name: Failure details
+    if: always() && (inputs.diagnose-run != '' || contains(needs.*.result, 'failure'))
+    needs: [desktop, flatpak, ios, android]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/report-failures
+        with:
+          run-id: ${{ inputs.diagnose-run }}

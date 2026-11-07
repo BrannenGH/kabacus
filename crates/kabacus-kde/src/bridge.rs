@@ -56,6 +56,51 @@ pub mod qobject {
         #[qproperty(bool, saving)]
         type Ledger = super::LedgerRust;
 
+        #[qinvokable]
+        #[cxx_name = "canonicalBooksPath"]
+        fn canonical_books_path(self: &Ledger, path: &QString) -> QString;
+        #[qinvokable]
+        #[cxx_name = "localBooksInfo"]
+        fn local_books_info(self: &Ledger) -> QString;
+        #[qinvokable]
+        #[cxx_name = "openBooks"]
+        fn open_books(self: Pin<&mut Ledger>, path: &QString) -> QString;
+        #[qinvokable]
+        #[cxx_name = "newBooks"]
+        fn new_books(
+            self: Pin<&mut Ledger>,
+            path: &QString,
+            name: &QString,
+            currency: &QString,
+            account: &QString,
+        ) -> QString;
+        #[qinvokable]
+        #[cxx_name = "saveCopy"]
+        fn save_copy(self: &Ledger, path: &QString) -> QString;
+        #[qinvokable]
+        #[cxx_name = "workspaceJson"]
+        fn workspace_json(self: &Ledger) -> QString;
+        #[qinvokable]
+        #[cxx_name = "rememberWindow"]
+        fn remember_window(self: &Ledger, state: &QString) -> QString;
+        #[qinvokable]
+        #[cxx_name = "forgetWindow"]
+        fn forget_window(self: &Ledger, id: &QString);
+        #[qinvokable]
+        #[cxx_name = "savePreferences"]
+        fn save_preferences(
+            self: Pin<&mut Ledger>,
+            reopen: bool,
+            automation: bool,
+            port: i32,
+        ) -> QString;
+        #[qinvokable]
+        #[cxx_name = "agentActivity"]
+        fn agent_activity(self: &Ledger) -> QString;
+        #[qinvokable]
+        #[cxx_name = "commandCatalog"]
+        fn command_catalog(self: &Ledger) -> QString;
+
         /// A screen's data: `view` with its `args` (a JSON object).
         /// Returns `{"pending": bool, "reply": …}` at once, `reply` being
         /// the last one for this view and args (null if none, and possibly
@@ -191,6 +236,8 @@ fn runtime() -> &'static tokio::runtime::Runtime {
 
 pub struct LedgerRust {
     settings: Settings,
+    control: Option<kabacus_client::control::ControlChannel>,
+    window_id: OnceLock<String>,
     client: KabacusClient,
     error: QString,
     error_details: QString,
@@ -294,13 +341,18 @@ impl Default for LedgerRust {
         let settings = Settings::for_app();
         let (base, problem) = connect(&settings);
         let store: Arc<dyn SecretStore> = Arc::new(SecretServiceStore);
-        let auth = if problem.is_none() {
+        let has_books = settings.kind == ConnectionKind::Remote
+            || !settings.books_path.is_empty()
+            || !settings.socket_path.is_empty();
+        let auth = if problem.is_none() && has_books {
             connect_auth(&settings, &base, &store)
         } else {
             None
         };
         let mut this = LedgerRust {
             settings,
+            control: None,
+            window_id: OnceLock::new(),
             client: base,
             error: QString::from(problem.unwrap_or_default().as_str()),
             error_details: QString::default(),
@@ -333,6 +385,12 @@ impl qobject::Ledger {
     /// Learn the server's auth mode if that failed before (it was
     /// unreachable), and reconnect with it.
     fn ensure_auth(mut self: Pin<&mut Self>) {
+        if self.rust().settings.kind == ConnectionKind::Local
+            && self.rust().settings.books_path.is_empty()
+            && self.rust().settings.socket_path.is_empty()
+        {
+            return;
+        }
         if self.rust().auth.is_some() {
             return;
         }
@@ -366,6 +424,12 @@ impl qobject::Ledger {
     /// Check the server, learning its auth mode first if that failed
     /// before, and preload the screens most visited. Never blocks.
     fn refresh(mut self: Pin<&mut Self>) {
+        if self.rust().settings.kind == ConnectionKind::Local
+            && self.rust().settings.books_path.is_empty()
+            && self.rust().settings.socket_path.is_empty()
+        {
+            return;
+        }
         if self.rust().refreshing {
             self.as_mut().rust_mut().refresh_again = true;
             return;
@@ -548,6 +612,29 @@ impl qobject::Ledger {
     }
 
     fn edit_draft(&self, id: &QString) -> QString {
+        if let Ok(tx) = runtime().block_on(model::find_transaction(
+            &self.rust().client,
+            &id.to_string(),
+        )) {
+            if tx.postings.len() != 2
+                || tx
+                    .postings
+                    .windows(2)
+                    .any(|p| p[0].amount.commodity != p[1].amount.commodity)
+            {
+                let postings: Vec<_> = tx
+                    .postings
+                    .iter()
+                    .enumerate()
+                    .map(|(i, p)| {
+                        serde_json::json!({ "account": p.account, "amount": p.amount.exact,
+                        "commodity": p.amount.commodity, "original": i })
+                    })
+                    .collect();
+                return json(&serde_json::json!({ "date": tx.date, "payee": tx.payee,
+                    "memo": tx.memo, "postings": postings }));
+            }
+        }
         match runtime().block_on(model::edit_draft(&self.rust().client, &id.to_string())) {
             Ok(d) => json(&serde_json::json!({
                 "date": d.date, "payee": d.payee, "memo": d.memo,
@@ -573,6 +660,14 @@ impl qobject::Ledger {
     }
 
     fn about_json(&self) -> QString {
+        if self.rust().settings.books_path.is_empty()
+            && self.rust().settings.socket_path.is_empty()
+            && self.rust().settings.kind == ConnectionKind::Local
+        {
+            return json(
+                &serde_json::json!({"server_version":kabacus_service::VERSION,"source_url":"https://github.com/BrannenGH/kabacus"}),
+            );
+        }
         match runtime().block_on(self.rust().client.version()) {
             Ok(v) => json(&serde_json::json!({
                 "server_version": v.server_version,
@@ -799,6 +894,7 @@ fn settings_from(
             ConnectionKind::Local
         },
         socket_path: socket_path.to_string().trim().to_string(),
+        books_path: String::new(),
         server_url: server_url.to_string().trim().to_string(),
         private_ca: private_ca.to_string().trim().to_string(),
     }
@@ -810,4 +906,202 @@ fn json<T: serde::Serialize>(value: &T) -> QString {
             .unwrap_or_else(|_| "[]".to_string())
             .as_str(),
     )
+}
+
+fn workspace_path() -> std::path::PathBuf {
+    settings::config_path().with_file_name("kabacus-windows.json")
+}
+fn workspace_lock() -> &'static std::sync::Mutex<()> {
+    static LOCK: OnceLock<std::sync::Mutex<()>> = OnceLock::new();
+    LOCK.get_or_init(Default::default)
+}
+
+impl qobject::Ledger {
+    fn canonical_books_path(&self, path: &QString) -> QString {
+        std::fs::canonicalize(path.to_string())
+            .map(|p| QString::from(p.to_string_lossy().as_ref()))
+            .unwrap_or_else(|_| path.clone())
+    }
+    fn local_books_info(&self) -> QString {
+        let result = runtime().block_on(async {
+            let Some(books) = self.rust().client.local_books().await? else {
+                return Ok::<_, kabacus_client::ClientError>(serde_json::Value::Null);
+            };
+            Ok(serde_json::json!({"path":books.path,"name":books.name().await?}))
+        });
+        json(&result.unwrap_or(serde_json::Value::Null))
+    }
+    fn open_books(mut self: Pin<&mut Self>, path: &QString) -> QString {
+        match runtime().block_on(kabacus_client::LocalBooks::open(
+            path.to_string(),
+            kabacus_service::local::LocalCaller::for_app(kabacus_client::books::computer_user()),
+        )) {
+            Ok(books) => {
+                let path = books.path.clone().unwrap_or_default();
+                {
+                    let mut this = self.as_mut().rust_mut();
+                    this.settings.books_path = path.to_string_lossy().into_owned();
+                    this.settings.socket_path.clear();
+                    this.settings.kind = ConnectionKind::Local;
+                    this.client = KabacusClient::from_local(books);
+                    this.auth = None;
+                    this.sign_in_generation += 1;
+                    this.loads = Loads::default();
+                    this.books_seen = None;
+                    this.control = None;
+                }
+                self.as_mut().set_error(QString::default());
+                self.as_mut().set_auth_json(json(
+                    &serde_json::json!({"status":"off","username":"","issuer":"","warning":""}),
+                ));
+                self.as_mut().refresh();
+                QString::default()
+            }
+            Err(e) => QString::from(e.to_string()),
+        }
+    }
+    fn new_books(
+        mut self: Pin<&mut Self>,
+        path: &QString,
+        name: &QString,
+        currency: &QString,
+        account: &QString,
+    ) -> QString {
+        match runtime().block_on(kabacus_client::LocalBooks::create(
+            path.to_string(),
+            &name.to_string(),
+            &currency.to_string(),
+            &account.to_string(),
+            kabacus_service::local::LocalCaller::for_app(kabacus_client::books::computer_user()),
+        )) {
+            Ok(books) => {
+                drop(books);
+                self.as_mut().open_books(path)
+            }
+            Err(e) => QString::from(e.to_string()),
+        }
+    }
+    fn save_copy(&self, path: &QString) -> QString {
+        let result = runtime().block_on(async {
+            let client = &self.rust().client;
+            if let Some(books) = client.local_books().await? {
+                return books.save_copy(path.to_string()).await;
+            }
+            let version = client.version().await?;
+            let response = client
+                .request_books(kabacus_client::BooksRequest {
+                    method: "GET".into(),
+                    path: format!("/ledgers/{}/export", version.ledger),
+                    head: None,
+                    body: serde_json::Value::Null,
+                })
+                .await?;
+            if response.status >= 400 {
+                return Err(kabacus_client::ClientError::Request(
+                    String::from_utf8_lossy(&response.body).into_owned(),
+                ));
+            }
+            let mut file = std::fs::OpenOptions::new()
+                .write(true)
+                .create_new(true)
+                .open(path.to_string())
+                .map_err(|e| kabacus_client::ClientError::Request(e.to_string()))?;
+            std::io::Write::write_all(&mut file, &response.body)
+                .map_err(|e| kabacus_client::ClientError::Request(e.to_string()))
+        });
+        match result {
+            Ok(()) => QString::default(),
+            Err(e) => QString::from(e.to_string()),
+        }
+    }
+    fn workspace_json(&self) -> QString {
+        let _lock = workspace_lock().lock().unwrap_or_else(|p| p.into_inner());
+        let mut workspace = kabacus_client::workspace::Workspace::load(&workspace_path());
+        let window = self
+            .rust()
+            .window_id
+            .get()
+            .and_then(|id| workspace.windows.iter().find(|w| &w.id == id));
+        let automation = window.is_some_and(|w| w.automation);
+        let port = window.map_or(7979, |w| w.control_port);
+        workspace.automation = automation;
+        workspace.control_port = port;
+        json(&workspace)
+    }
+    fn remember_window(&self, state: &QString) -> QString {
+        let result = (|| -> anyhow::Result<()> {
+            let window: kabacus_client::workspace::WindowState =
+                serde_json::from_str(&state.to_string())?;
+            let _ = self.rust().window_id.set(window.id.clone());
+            let _lock = workspace_lock().lock().unwrap_or_else(|p| p.into_inner());
+            let mut workspace = kabacus_client::workspace::Workspace::load(&workspace_path());
+            workspace.remember(window);
+            workspace.save(&workspace_path())?;
+            Ok(())
+        })();
+        match result {
+            Ok(()) => QString::default(),
+            Err(e) => QString::from(e.to_string()),
+        }
+    }
+    fn forget_window(&self, id: &QString) {
+        let _lock = workspace_lock().lock().unwrap_or_else(|p| p.into_inner());
+        let mut workspace = kabacus_client::workspace::Workspace::load(&workspace_path());
+        workspace.close(&id.to_string());
+        let _ = workspace.save(&workspace_path());
+    }
+    fn save_preferences(
+        mut self: Pin<&mut Self>,
+        reopen: bool,
+        automation: bool,
+        port: i32,
+    ) -> QString {
+        if automation {
+            if self
+                .rust()
+                .control
+                .as_ref()
+                .is_none_or(|c| i32::from(c.port) != port)
+            {
+                let result = runtime().block_on(async {
+                    kabacus_client::control::ControlChannel::for_client(
+                        self.rust().client.clone(),
+                        port.try_into().map_err(|_| {
+                            kabacus_client::ClientError::Request(
+                                "Choose a port from 1 to 65535".into(),
+                            )
+                        })?,
+                    )
+                    .await
+                });
+                match result {
+                    Ok(channel) => self.as_mut().rust_mut().control = Some(channel),
+                    Err(e) => return QString::from(e.to_string()),
+                }
+            }
+        } else {
+            self.as_mut().rust_mut().control = None;
+        }
+        let _lock = workspace_lock().lock().unwrap_or_else(|p| p.into_inner());
+        let mut workspace = kabacus_client::workspace::Workspace::load(&workspace_path());
+        workspace.reopen = reopen;
+        if let Some(window) = workspace
+            .windows
+            .iter_mut()
+            .find(|w| Some(&w.id) == self.rust().window_id.get())
+        {
+            window.automation = automation;
+            window.control_port = port.try_into().unwrap_or(7979);
+        }
+        match workspace.save(&workspace_path()) {
+            Ok(()) => QString::default(),
+            Err(e) => QString::from(e.to_string()),
+        }
+    }
+    fn agent_activity(&self) -> QString {
+        json(&self.rust().control.as_ref().map(|c| c.activity()))
+    }
+    fn command_catalog(&self) -> QString {
+        json(&kabacus_service::catalog::commands())
+    }
 }

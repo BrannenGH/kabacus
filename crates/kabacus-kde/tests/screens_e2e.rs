@@ -220,17 +220,84 @@ async fn accounts_are_grouped_by_kind_with_funds_under_their_home() {
     assert!(visa.warn, "reserve short: {visa:?}");
 }
 
-/// The register colours by sign, marks moves between a fund and its home,
-/// and filters by text or unreserved.
+/// The register lists real transactions; moves between a fund and its
+/// bank account come back when asked for, and are marked.
 #[tokio::test]
-async fn the_register_marks_moves_and_filters() {
+async fn the_register_hides_fund_transfers_until_asked() {
     let (_server, client) = books().await;
-    let rows = views::register(&client, CHECKING, &RegisterFilter::default())
+    let real = views::register(&client, CHECKING, &RegisterFilter::default())
         .await
         .unwrap();
+    let payees: Vec<&str> = real.iter().map(|r| r.payee.as_str()).collect();
+    assert_eq!(payees, ["Opening"], "{real:?}");
+    assert_eq!(real[0].balance.tone, "pos");
+
+    let rows = views::register(
+        &client,
+        CHECKING,
+        &RegisterFilter {
+            fund_transfers: true,
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
     assert_eq!(rows[0].payee, "Set aside", "newest first: {rows:?}");
     assert_eq!(rows[0].kind, "move");
-    assert_eq!(rows[0].balance.tone, "pos");
+}
+
+/// Every real transaction together, across accounts, without the fund
+/// transfers unless asked for.
+#[tokio::test]
+async fn all_transactions_lists_real_ones_across_accounts() {
+    let (_server, client) = books().await;
+    let rows = views::register(&client, views::ALL_ACCOUNTS, &RegisterFilter::default())
+        .await
+        .unwrap();
+    let payees: Vec<&str> = rows.iter().map(|r| r.payee.as_str()).collect();
+    // The scratch books open with an opening balance of their own.
+    assert_eq!(
+        payees,
+        ["Coffee Roasters", "Opening", "Opening"],
+        "{rows:?}"
+    );
+    assert_eq!(rows[0].amount.exact, "-20.00");
+    assert!(rows[0].unreserved);
+    assert_eq!(rows[1].amount.exact, "2000.00");
+
+    let with = views::register(
+        &client,
+        views::ALL_ACCOUNTS,
+        &RegisterFilter {
+            fund_transfers: true,
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let payees: Vec<&str> = with.iter().map(|r| r.payee.as_str()).collect();
+    assert_eq!(
+        payees,
+        ["Coffee Roasters", "Set aside", "Opening", "Opening"],
+        "{with:?}"
+    );
+
+    let found = views::register(
+        &client,
+        views::ALL_ACCOUNTS,
+        &RegisterFilter {
+            text: "coffee".into(),
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    assert_eq!(found.len(), 1);
+}
+
+#[tokio::test]
+async fn the_register_filters_by_text_and_unreserved() {
+    let (_server, client) = books().await;
     let found = views::register(
         &client,
         CHECKING,
@@ -348,7 +415,7 @@ async fn load_reads_the_args_each_page_sends() {
     // RegisterPage.
     let visa = load(
         "register",
-        serde_json::json!({ "account": VISA, "text": "", "unreservedOnly": true }),
+        serde_json::json!({ "account": VISA, "text": "", "unreservedOnly": true, "fundTransfers": false }),
     )
     .await
     .unwrap();
@@ -916,4 +983,77 @@ async fn income_and_equity_show_positive_and_neutral() {
     );
     let checking = row(CHECKING);
     assert_eq!(checking.balance.tone, "pos", "others keep their colour");
+}
+
+#[tokio::test]
+async fn split_posting_edits_preview_and_save_in_place() {
+    let (_server, client) = books().await;
+    let split: Draft = serde_json::from_value(serde_json::json!({
+        "kind": "split", "date": "2026-09-12", "payee": "Harbor Cafe",
+        "paid_with": CHECKING, "category": "expenses:dining", "person": "jordan",
+        "total": "60.00", "their_share": "20.00"
+    }))
+    .unwrap();
+    save(&client, &split).await;
+    let tx = client
+        .list_transactions()
+        .await
+        .unwrap()
+        .into_iter()
+        .find(|t| t.payee == "Harbor Cafe")
+        .unwrap();
+    assert_eq!(tx.postings.len(), 3);
+    let mut postings: Vec<_> = tx
+        .postings
+        .iter()
+        .enumerate()
+        .map(|(i, p)| {
+            serde_json::json!({ "account": p.account, "amount": p.amount.exact,
+            "commodity": p.amount.commodity, "original": i })
+        })
+        .collect();
+    postings[0]["amount"] = "35.00".into();
+    postings[1]["amount"] = "25.00".into();
+    let mut unbalanced = postings.clone();
+    unbalanced[0]["amount"] = "36.00".into();
+    let invalid: Draft = serde_json::from_value(serde_json::json!({
+        "kind": "edit_postings", "id": tx.id.to_string(), "date": tx.date,
+        "payee": "Harbor Cafe lunch", "postings": unbalanced
+    }))
+    .unwrap();
+    assert!(writes::preview(&client, &invalid).await.is_err());
+    let edit: Draft = serde_json::from_value(serde_json::json!({
+        "kind": "edit_postings", "id": tx.id.to_string(), "date": tx.date,
+        "payee": "Harbor Cafe lunch", "postings": postings
+    }))
+    .unwrap();
+    let preview = writes::preview(&client, &edit).await.unwrap();
+    assert!(client
+        .list_transactions()
+        .await
+        .unwrap()
+        .iter()
+        .any(|t| t.payee == "Harbor Cafe"));
+    writes::commit(&client, &edit, &preview.head).await.unwrap();
+    let edited = client
+        .list_transactions()
+        .await
+        .unwrap()
+        .into_iter()
+        .find(|t| t.id == tx.id)
+        .unwrap();
+    assert_eq!(edited.payee, "Harbor Cafe lunch");
+    assert_eq!(edited.tags, tx.tags);
+    assert_eq!(
+        edited
+            .postings
+            .iter()
+            .map(|p| p.amount.exact.as_str())
+            .collect::<Vec<_>>(),
+        vec!["35.00", "25.00", "-60.00"]
+    );
+    for (before, after) in tx.postings.iter().zip(&edited.postings) {
+        assert_eq!(before.account, after.account);
+        assert_eq!(before.status, after.status);
+    }
 }

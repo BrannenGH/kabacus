@@ -27,9 +27,12 @@ trap 'rm -f "$report" "$theme_report"' EXIT
 # qml/Theme.qml is a link to the generated file. qmllint 6.12 can't match a
 # linked singleton to a qmldir, so the link isn't linted: the file it names
 # is, on its own and with no module path, against the qmldir beside it.
-files=$(find crates/kabacus-kde/qml -maxdepth 1 -name '*.qml' ! -type l)
+# Lint the copies declared by the built module's qmldir. Newer Qt checks
+# singleton declarations against these paths, rather than the source paths.
+qml_module="$modules/me/hallb/kabacus"
+files=$(find "$qml_module/qml" -maxdepth 1 -name '*.qml' ! -name Theme.qml)
 # shellcheck disable=SC2086
-"$lint" -I "$modules" --json "$report" $files || true
+"$lint" -I "$modules" -i "$qml_module/qmldir" --json "$report" $files || true
 "$lint" --json "$theme_report" "$PWD/design/generated/Theme.qml" || true
 python3 - "$report" "$theme_report" <<'PY'
 import json, re, sys

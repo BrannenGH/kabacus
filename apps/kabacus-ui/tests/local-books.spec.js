@@ -1,0 +1,43 @@
+// SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+// SPDX-License-Identifier: GPL-3.0-or-later
+import {expect,test} from '@playwright/test';
+import {readFileSync} from 'node:fs';
+test('local books use the real engine, save a revision, reopen and download a portable copy',async({page})=>{
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.addInitScript(()=>{window.showSaveFilePicker=undefined;window.showOpenFilePicker=undefined;});
+ await page.route('**/version',route=>route.fulfill({status:404,body:'No server'}));
+ await page.goto('/app/');
+ await expect(page.getByRole('heading',{name:'Welcome to Kabacus'})).toBeVisible();
+ await page.getByRole('button',{name:'New Books…',exact:true}).click();
+ await page.getByLabel('Name',{exact:true}).fill('Cedar Household');
+ await page.getByRole('button',{name:'Create books',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Overview',exact:true})).toBeVisible();
+ await expect(page.getByRole('button',{name:'Add',exact:true})).toBeEnabled();
+ await page.keyboard.press('n');
+ await expect(page.getByRole('dialog')).toHaveAccessibleName('Add — what happened?');
+ await page.keyboard.press('2');
+ await page.getByLabel('Payee',{exact:true}).fill('Cedar Design payroll');
+ await page.getByLabel('Amount (USD)').fill('3200.00');
+ await expect(page.getByText(/Balanced · checked against revision/)).toBeVisible();
+ await page.keyboard.press('Control+Enter');
+ await expect(page.getByRole('status').filter({hasText:'Saved as revision 3'})).toBeVisible();
+ await page.getByRole('navigation').getByRole('button',{name:'Transactions',exact:true}).click();
+ await expect(page.getByText('Cedar Design payroll',{exact:true})).toBeVisible();
+ const id=await page.evaluate(()=>new Promise((resolve,reject)=>{const r=indexedDB.open('kabacus-local-books',1);r.onsuccess=()=>{const tx=r.result.transaction('books');const q=tx.objectStore('books').getAll();q.onsuccess=()=>resolve(q.result[0].id);q.onerror=()=>reject(q.error);};}));
+ await page.goto(`/app/?books=${id}`);
+ await expect(page.getByRole('heading',{name:'Transactions',exact:true,level:1})).toBeVisible();
+ await expect(page.getByText('Cedar Design payroll',{exact:true})).toBeVisible();
+ await page.getByRole('button',{name:/Cedar Household/}).first().click();
+ const download=page.waitForEvent('download');await page.getByRole('menuitem',{name:/Save a Copy As/}).click();
+ const copy=await download;
+ expect(copy.suggestedFilename()).toBe('Cedar Household.kabacus');
+ await page.getByRole('button',{name:/Cedar Household/}).first().click();
+ await page.getByRole('menuitem',{name:/Close Window/}).click();
+ await expect(page.getByRole('heading',{name:'Welcome to Kabacus'})).toBeVisible();
+ await page.getByRole('button',{name:'Open Books…',exact:true}).click();
+ await page.locator('input[type=file]').setInputFiles({name:copy.suggestedFilename(),mimeType:'application/x-kabacus',buffer:readFileSync(await copy.path())});
+ await expect(page.getByRole('button',{name:'Add',exact:true})).toBeEnabled();
+ await page.locator('[data-destination="Register"]').click();
+ await expect(page.getByText('Cedar Design payroll',{exact:true})).toBeVisible();
+ expect(errors).toEqual([]);
+});

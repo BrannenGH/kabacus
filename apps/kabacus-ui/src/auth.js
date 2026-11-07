@@ -71,7 +71,23 @@ export async function initializeAuth() {
       history.replaceState({}, "", "/app/");
     }
   }
-  const user = await manager.getUser();
+  // One renewal at a time: a rotating refresh token is spent by the first
+  // request, so a second one made together would be refused.
+  let renewing = null;
+  const renew = () =>
+    (renewing ??= manager.signinSilent().finally(() => {
+      renewing = null;
+    }));
+  let user = await manager.getUser();
+  // The access token lapses in minutes, the refresh token lives on: a
+  // reopened app renews instead of asking to sign in again.
+  if (user?.expired && user.refresh_token) {
+    try {
+      user = (await renew()) ?? user;
+    } catch {
+      // Still expired: the sign-in screen follows.
+    }
+  }
   return {
     signedIn: !!user && !user.expired,
     identity:
@@ -82,7 +98,7 @@ export async function initializeAuth() {
     token: async () => {
       let current = await manager.getUser();
       if (current?.expired && current.refresh_token)
-        current = await manager.signinSilent();
+        current = await renew();
       if (!current || current.expired)
         throw new Error(t("Your session ended. Sign in again."));
       return current.access_token;

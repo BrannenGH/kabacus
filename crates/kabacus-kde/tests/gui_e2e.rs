@@ -236,32 +236,23 @@ async fn clicking_a_transaction_edits_it_in_place() {
     assert_eq!(rows.len(), 2, "edited in place: {rows:?}");
 }
 
-// The server's address is entered once in the app's settings.
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
-async fn the_server_connection_is_tested_and_saved_in_settings() {
-    let socket = socket_path("settings");
-    let server = spawn_server(|c| c.socket_path = socket.clone()).await;
-    let config = config_dir("settings");
-    // Start pointed at nothing, as on a fresh install with the server elsewhere.
-    let _app = launch(&socket_path("settings-missing"), &config);
-
-    drive(&["settings", &server.socket_path.display().to_string()]).await;
-
-    let saved = std::fs::read_to_string(config.join("kabacusrc")).unwrap();
-    assert!(saved.contains("Kind=local"), "{saved}");
-    assert!(
-        saved.contains(&format!("SocketPath={}", server.socket_path.display())),
-        "{saved}"
-    );
-    let _ = std::fs::remove_dir_all(&config);
+async fn local_books_are_created_and_two_windows_restore() {
+    let script = repo_root().join("crates/kabacus-kde/tests/gui/local_windows.py");
+    let status = tokio::process::Command::new("python3")
+        .arg(script)
+        .arg(env!("CARGO_BIN_EXE_kabacus"))
+        .status()
+        .await
+        .unwrap();
+    assert!(status.success());
 }
 
-// Settings' About shows the server's exact commit and
-// where its source is.
+// About exposes the application version and corresponding source.
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
-async fn about_shows_the_servers_commit_and_source() {
+async fn about_shows_the_version_and_source() {
     for (i, size) in [DESKTOP].into_iter().enumerate() {
         let server = books(&format!("about{i}")).await;
         let version = KabacusClient::connect_unix(&server.socket_path)
@@ -270,7 +261,7 @@ async fn about_shows_the_servers_commit_and_source() {
             .unwrap();
         assert_eq!(version.commit.len(), 40, "{size}");
         let _app = launch_sized(&server.socket_path, &config_dir(&format!("about{i}")), size);
-        drive(&["about", &version.commit, &version.source_url]).await;
+        drive(&["about", &version.server_version, &version.source_url]).await;
     }
 }
 
@@ -675,6 +666,35 @@ account liabilities:mortgage:home   ; ynab-account:Home Mortgage
     }
 }
 
+// All transactions lists real transactions across accounts, and fund
+// transfers only with their switch.
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn all_transactions_hides_fund_transfers_until_asked() {
+    let journal = format!(
+        "{BOOKS}
+2026-09-12 Set aside for Insurance
+    assets:bank:checking:insurance  300.00 USD
+    assets:bank:checking  -300.00 USD
+"
+    );
+    for (i, size) in [DESKTOP].into_iter().enumerate() {
+        let name = format!("alltx{i}");
+        let socket = socket_path(&name);
+        let server = kabacus_testkit::spawn_server_with_journal(&journal, |c| {
+            c.socket_path = socket.clone()
+        })
+        .await;
+        let _app = launch_sized(&server.socket_path, &config_dir(&name), size);
+        drive(&[
+            "all-transactions",
+            "Coffee Roasters",
+            "Set aside for Insurance",
+        ])
+        .await;
+    }
+}
+
 // Reconcile is on a bank account's register (not a
 // destination of its own, and not on a spending account's) and checks the
 // account against a statement.
@@ -981,4 +1001,39 @@ async fn the_app_speaks_the_users_language_on_every_form_factor() {
             .await;
         }
     }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn desktop_split_postings_can_be_edited() {
+    let socket = socket_path("edit-split");
+    let journal = format!("{BOOKS}\n2026-09-12 Harbor Cafe\n    expenses:dining  12.00 USD\n    expenses:dining  8.00 USD\n    assets:bank:checking  -20.00 USD\n");
+    let server =
+        kabacus_testkit::spawn_server_with_journal(&journal, |c| c.socket_path = socket.clone())
+            .await;
+    let client = KabacusClient::connect_unix(&server.socket_path);
+    let before = client
+        .list_transactions()
+        .await
+        .unwrap()
+        .into_iter()
+        .find(|t| t.payee == "Harbor Cafe")
+        .unwrap();
+    let _app = launch(&server.socket_path, &config_dir("edit-split"));
+    drive(&["edit-split", "Checking", "Harbor Cafe", "2026-09-12"]).await;
+    let after = client
+        .list_transactions()
+        .await
+        .unwrap()
+        .into_iter()
+        .find(|t| t.id == before.id)
+        .unwrap();
+    assert_eq!(
+        after
+            .postings
+            .iter()
+            .map(|p| p.amount.exact.as_str())
+            .collect::<Vec<_>>(),
+        vec!["15.00", "5.00", "-20.00"]
+    );
 }

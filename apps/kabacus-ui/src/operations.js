@@ -41,11 +41,27 @@ export function operation(kind, fields, data, tx) {
       body: { void: true },
     };
   if (kind === "edit") {
-    if (
-      tx.postings.length !== 2 ||
-      tx.postings.some((p) => p.amount.commodity !== data.commodity.symbol)
-    )
-      throw new Error(t("Split transactions can't be edited here yet"));
+    if (Object.keys(fields).some(key => /^account[0-9]+$/.test(key))) {
+      return {
+        method: "PATCH",
+        path: `/transactions/${tx.id}`,
+        body: {
+          date: fields.date,
+          description: fields.description,
+          tags: tx.tags || [],
+          postings: Object.keys(fields).filter(key => /^account[0-9]+$/.test(key)).map(key => {
+            const index = Number(key.slice(7));
+            const old = tx.postings[index];
+            const account = fields[key];
+            return {
+              account,
+              status: old?.account === account ? old.status || "" : "",
+              amount: exactAmount(fields["amount" + index], old?.amount.commodity || data.commodity.symbol),
+            };
+          }),
+        },
+      };
+    }
     const positive = amount(fields.amount);
     return {
       method: "PATCH",

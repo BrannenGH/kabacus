@@ -458,6 +458,27 @@ fn collect(root: &Path) -> Result<Vec<Entry>> {
             }
         }
     }
+    let web_path = "apps/kabacus-ui/src/messages.js";
+    let web = std::fs::read_to_string(root.join(web_path))?;
+    let start = web.find('[').context("missing web message array")?;
+    let end = web.rfind(']').context("missing web message array end")?;
+    // The vocabulary is a JSON-compatible array; trailing commas are permitted in JS.
+    let array = web[start..=end].replace(",\n]", "\n]");
+    let messages: Vec<String> = serde_json::from_str(&array)?;
+    for id in messages {
+        let mut entry = Entry {
+            id,
+            ..Entry::default()
+        };
+        if let Some(&at) = index.get(&entry.key()) {
+            entries[at].references.push(web_path.into());
+        } else {
+            entry.references.push(web_path.into());
+            entry.flags.insert("kde-format".into());
+            index.insert(entry.key(), entries.len());
+            entries.push(entry);
+        }
+    }
     Ok(entries)
 }
 

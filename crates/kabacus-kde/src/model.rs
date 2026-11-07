@@ -96,7 +96,7 @@ pub struct SimpleDraft {
 
 /// Between the items of a list ("12.00 USD, 3.00 EUR"): the comma is
 /// the language's (Arabic writes "،", Chinese "、").
-fn list_separator() -> String {
+pub(crate) fn list_separator() -> String {
     i18nc!(
         "between the items of a list, such as amounts or account names",
         ", "
@@ -275,7 +275,7 @@ pub async fn add_simple(client: &KabacusClient, draft: &SimpleDraft) -> Result<S
         .version()
         .await?
         .head
-        .ok_or_else(|| ModelError::Invalid(i18n!("The books have no commits yet")))?;
+        .ok_or_else(|| ModelError::Invalid(i18n!("The books have no revisions yet")))?;
     Ok(client
         .add_transaction(&head, body)
         .await?
@@ -346,14 +346,14 @@ pub async fn save_edit(
         .version()
         .await?
         .head
-        .ok_or_else(|| ModelError::Invalid(i18n!("The books have no commits yet")))?;
+        .ok_or_else(|| ModelError::Invalid(i18n!("The books have no revisions yet")))?;
     client
         .edit_transaction(transaction_id(id)?, &head, body)
         .await?;
     Ok(())
 }
 
-async fn find_transaction(
+pub(crate) async fn find_transaction(
     client: &KabacusClient,
     id: &str,
 ) -> Result<kabacus_client::types::TransactionView, ModelError> {

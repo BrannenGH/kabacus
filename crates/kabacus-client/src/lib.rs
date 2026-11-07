@@ -2,10 +2,13 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-//! `kabacus-client`: the typed async client for kabacus-server's API,
-//! used by the KDE app. The app never opens the books itself:
-//! everything goes through here.
+//! Typed book operations over a local shared service or the remote server API.
 
+pub mod books;
+pub mod control;
+pub mod workspace;
+pub use books::{Books, LocalBooks};
+pub use kabacus_service::dispatch::{Request as BooksRequest, Response as BooksResponse};
 pub mod oauth;
 pub mod types;
 
@@ -59,6 +62,7 @@ pub enum ClientError {
 /// connection pool.
 #[derive(Clone)]
 pub struct KabacusClient {
+    local: Option<Arc<books::LocalFile>>,
     http: reqwest::Client,
     base_url: String,
     auth: Option<Arc<dyn oauth::TokenSource>>,
@@ -81,6 +85,52 @@ pub(crate) fn builder() -> reqwest::ClientBuilder {
 }
 
 impl KabacusClient {
+    /// Open local books lazily on their first asynchronous request.
+    pub fn open_local(path: impl Into<std::path::PathBuf>) -> Self {
+        let caller = kabacus_service::local::LocalCaller::for_app(books::computer_user());
+        Self {
+            local: Some(Arc::new(books::LocalFile {
+                path: path.into(),
+                caller,
+                ready: tokio::sync::OnceCell::new(),
+            })),
+            http: builder().build().expect("client builds"),
+            base_url: String::new(),
+            auth: None,
+            client_hint: None,
+        }
+    }
+
+    pub fn from_local(books: LocalBooks) -> Self {
+        let ready = tokio::sync::OnceCell::new_with(Some(books.clone()));
+        Self {
+            local: Some(Arc::new(books::LocalFile {
+                path: books.path.clone().unwrap_or_default(),
+                caller: books.caller,
+                ready,
+            })),
+            http: builder().build().expect("client builds"),
+            base_url: String::new(),
+            auth: None,
+            client_hint: None,
+        }
+    }
+
+    pub async fn local_books(&self) -> Result<Option<&LocalBooks>, ClientError> {
+        match &self.local {
+            Some(local) => Ok(Some(local.books().await?)),
+            None => Ok(None),
+        }
+    }
+
+    pub fn is_local(&self) -> bool {
+        self.local.is_some()
+    }
+
+    pub async fn request_books(&self, request: BooksRequest) -> Result<BooksResponse, ClientError> {
+        Books::request(self, request).await
+    }
+
     #[cfg(unix)]
     pub fn connect_unix(socket_path: impl Into<PathBuf>) -> Self {
         KabacusClient {
@@ -90,6 +140,7 @@ impl KabacusClient {
                 .build()
                 .expect("a unix-socket client builds"),
             base_url: "http://localhost".to_string(),
+            local: None,
             auth: None,
             client_hint: None,
         }
@@ -124,6 +175,7 @@ impl KabacusClient {
         Ok(KabacusClient {
             http,
             base_url,
+            local: None,
             auth: None,
             client_hint: None,
         })
@@ -152,6 +204,33 @@ impl KabacusClient {
         if_match: Option<&str>,
         body: Option<Vec<u8>>,
     ) -> Result<(u16, Vec<u8>, reqwest::header::HeaderMap), ClientError> {
+        if let Some(local) = &self.local {
+            let response = Books::request(
+                local.books().await?,
+                BooksRequest {
+                    method: method.to_string(),
+                    path: path.into(),
+                    head: if_match.map(str::to_string),
+                    body: body
+                        .as_deref()
+                        .filter(|b| !b.is_empty())
+                        .map(serde_json::from_slice)
+                        .transpose()?
+                        .unwrap_or_default(),
+                },
+            )
+            .await?;
+            let mut headers = reqwest::header::HeaderMap::new();
+            if let Ok(value) = response.content_type.parse() {
+                headers.insert("content-type", value);
+            }
+            if let Some(filename) = response.filename {
+                if let Ok(value) = format!("attachment; filename=\"{filename}\"").parse() {
+                    headers.insert("content-disposition", value);
+                }
+            }
+            return Ok((response.status, response.body, headers));
+        }
         let read = method == Method::GET;
         // Logged without the query: it can hold account names and amounts.
         let what = format!("{method} {}", path.split('?').next().unwrap_or(path));
@@ -690,7 +769,7 @@ pub struct StatementFile {
 
 /// Minimal query-parameter percent-encoding (no extra crate for this one
 /// use): escapes everything but unreserved characters.
-fn urlencode(s: &str) -> String {
+pub fn urlencode(s: &str) -> String {
     let mut out = String::with_capacity(s.len());
     for b in s.bytes() {
         match b {

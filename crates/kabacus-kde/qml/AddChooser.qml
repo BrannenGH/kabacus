@@ -32,17 +32,17 @@ Kirigami.Dialog {
         return { from: account }
     }
 
-    // On a card's register, Card purchase comes first.
-    readonly property var kinds: onCard ? allKinds.filter(k => k.kind === "card_purchase").concat(allKinds.filter(k => k.kind !== "card_purchase")) : allKinds
+    readonly property var catalog: JSON.parse(app.ledger.commandCatalog()).add
+    readonly property var kinds: catalog.map(command => allKinds.find(kind => kind.id === command.id)).filter(kind => kind !== undefined)
     readonly property var allKinds: [
-        { kind: "spent", title: i18nc("@action what happened", "Spent"), detail: i18n("Money left an account"), icon: "go-up" },
-        { kind: "received", title: i18nc("@action what happened", "Received"), detail: i18n("Income or a refund"), icon: "go-down" },
-        { kind: "card_purchase", title: i18n("Card purchase"), detail: i18n("Adds the reserve lines for you"), icon: "view-credit-card" },
-        { kind: "transfer", title: i18n("Transfer"), detail: i18n("Between two bank accounts"), icon: "exchange-positions" },
-        { kind: "set_aside", title: i18n("Set aside"), detail: i18n("Into a reserve, out, or between reserves"), icon: "folder-text" },
-        { kind: "pay_card", title: i18n("Pay a card"), detail: i18n("From its reserve"), icon: "view-credit-card" },
-        { kind: "split", title: i18n("Split with someone"), detail: i18n("They owe you, or you owe them"), icon: "system-users" },
-        { kind: "postings", title: i18n("Postings"), detail: i18n("Any two accounts"), icon: "view-list-details" }
+        { id: "transaction.spent", kind: "spent", title: i18nc("@action what happened", "Spent"), detail: i18n("Money left an account"), icon: "go-up" },
+        { id: "transaction.received", kind: "received", title: i18nc("@action what happened", "Received"), detail: i18n("Income or a refund"), icon: "go-down" },
+        { id: "card.purchase", kind: "card_purchase", title: i18n("Card purchase"), detail: i18n("Adds the reserve lines for you"), icon: "view-credit-card" },
+        { id: "transaction.transfer", kind: "transfer", title: i18n("Transfer"), detail: i18n("Between two bank accounts"), icon: "exchange-positions" },
+        { id: "reserve.setAside", kind: "set_aside", title: i18n("Set aside"), detail: i18n("Into a reserve, out, or between reserves"), icon: "folder-text" },
+        { id: "card.pay", kind: "pay_card", title: i18n("Pay a card"), detail: i18n("From its reserve"), icon: "view-credit-card" },
+        { id: "split.record", kind: "split", title: i18n("Split with someone"), detail: i18n("They owe you, or you owe them"), icon: "system-users" },
+        { id: "transaction.postings", kind: "postings", title: i18n("Postings"), detail: i18n("Any two accounts"), icon: "view-list-details" }
     ]
 
     GridLayout {
@@ -55,10 +55,12 @@ Kirigami.Dialog {
             delegate: Controls.ItemDelegate {
                 id: choiceDelegate
                 required property var modelData
+                required property int index
                 Layout.fillWidth: true
                 Layout.minimumHeight: Kirigami.Units.gridUnit * 3
                 Accessible.name: modelData.title
                 onClicked: chooser.app.openForm(modelData.kind, chooser.preset(modelData.kind))
+                Shortcut { sequence: String(choiceDelegate.index + 1); enabled: chooser.visible; onActivated: chooser.app.openForm(choiceDelegate.modelData.kind, chooser.preset(choiceDelegate.modelData.kind)) }
                 contentItem: RowLayout {
                     spacing: Kirigami.Units.largeSpacing
                     Kirigami.Icon {
@@ -72,6 +74,7 @@ Kirigami.Dialog {
                         Controls.Label { text: choiceDelegate.modelData.title; font.bold: true; wrapMode: Text.Wrap; Layout.fillWidth: true }
                         Controls.Label { text: choiceDelegate.modelData.detail; opacity: 0.7; wrapMode: Text.Wrap; font: Kirigami.Theme.smallFont; Layout.fillWidth: true }
                     }
+                    Controls.Label { text: String(choiceDelegate.index + 1); opacity: 0.6 }
                 }
             }
         }

@@ -22,6 +22,8 @@ path = "src/main.rs"
 required-features = ["gui"]
 
 [dependencies]
+anyhow.workspace = true
+kabacus-service = { path = "../kabacus-service" }
 kabacus-client = { path = "../kabacus-client" }
 kabacus-core = { path = "../kabacus-core" }
 num-traits = { workspace = true }
@@ -43,8 +45,8 @@ cxx-qt-lib = { version = "0.10", features = ["qt_full"], optional = true }
 cxx-qt-build = { version = "0.10", optional = true }
 
 [dev-dependencies]
-reqwest = { version = "0.12", default-features = false }
 kabacus-store = { path = "../kabacus-store" }
+reqwest = { version = "0.12", default-features = false }
 kabacus-testkit = { path = "../kabacus-testkit" }
 tempfile = "3"
 
@@ -54,12 +56,17 @@ tempfile = "3"
 [package.metadata.deb]
 name = "kabacus"
 maintainer = "Brannen Hall <brannen@hallb.me>"
-extended-description = "A Kirigami app for hledger books. It reads and writes only through kabacus-server, which validates and versions every change."
+extended-description = "A Kirigami app for local and remote books, with a shared engine that validates and versions every change."
 section = "misc"
 features = ["gui"]
-depends = "$auto, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-dialogs, qml6-module-qtquick-layouts, qml6-module-qtquick-templates, qml6-module-qtquick-window, qml6-module-qtqml-workerscript, qml6-module-org-kde-kirigami, qml6-module-org-kde-kirigamiaddons-components"
+depends = "$auto, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-dialogs, qml6-module-qtquick-layouts, qml6-module-qtquick-templates, qml6-module-qtquick-window, qml6-module-qt-labs-platform, qml6-module-qtqml-workerscript, qml6-module-org-kde-kirigami, qml6-module-org-kde-kirigamiaddons-components"
 recommends = "qml6-module-org-kde-desktop"
 assets = [
+    ["target/release/kabacus-cli", "usr/bin/", "755"],
+    ["../../target/cli-doc/kabacus-cli.1", "usr/share/man/man1/", "644"],
+    ["../../target/cli-doc/kabacus-cli.bash", "usr/share/bash-completion/completions/kabacus-cli", "644"],
+    ["../../target/cli-doc/_kabacus-cli", "usr/share/zsh/vendor-completions/", "644"],
+    ["../../target/cli-doc/kabacus-cli.fish", "usr/share/fish/vendor_completions.d/", "644"],
     ["target/release/kabacus", "usr/bin/", "755"],
     ["../../packaging/desktop/me.hallb.kabacus.desktop", "usr/share/applications/", "644"],
     ["../../packaging/desktop/me.hallb.kabacus.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],

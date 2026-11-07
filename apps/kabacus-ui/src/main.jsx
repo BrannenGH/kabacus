@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 // SPDX-License-Identifier: GPL-3.0-or-later
 import { t, initializeLocale } from "./i18n";
-import { NativeLauncher } from "./native-launcher";
+import { Workspace } from "./workspace";
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Api, exactAmount } from "./api";
@@ -11,21 +11,15 @@ import { Reports } from "./reports";
 import { OperationDialog } from "./operation-dialog";
 import { Accounts, People } from "./accounts";
 import { Settings } from "./settings";
-import { OverviewDetails } from "./overview-details";
+import { Overview } from "./overview";
 import { Activity } from "./activity";
 import { CardDetails } from "./card-details";
-const pageLabels = {
-  Settings: "Settings",
-  Accounts: "Money",
-  Loans: "Loans",
-  People: "People",
-  Reports: "Reports",
-  Overview: "Overview",
-  Register: "Transactions",
-  Funds: "Reserves",
-  Cards: "Cards",
-  Activity: "Activity",
-};
+import icon from "./icon.svg";
+import { destinations, pageLabels, Icon, Key, AddChooser, AccountList } from "./navigation";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/playfair-display/600.css";
 const today = () => {
   const date = new Date();
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -43,15 +37,18 @@ function Amount({ value }) {
 function Empty({ children }) {
   return <p className="empty">{children}</p>;
 }
-function App({ auth }) {
-  const [api] = useState(() => new Api(auth.token));
+export function App({ auth, book, onFileAction }) {
+  const [api] = useState(() => book?.api || new Api(auth.token));
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState("Overview");
+  const [page, setPage] = useState(book?.state?.page || "Overview");
   const [form, setForm] = useState(null);
   const [operationForm, setOperationForm] = useState(null);
-  const [openedAccount, setOpenedAccount] = useState("");
+  const [openedAccount, setOpenedAccount] = useState(book?.state?.account || "");
+  const [selectedRow,setSelectedRow]=useState(book?.state?.selected||"");
+  const [chooser, setChooser] = useState(false);
+  const [bookMenu, setBookMenu] = useState(false);
   const [notice, setNotice] = useState("");
   const controller = useRef();
   const retry = useRef();
@@ -83,6 +80,49 @@ function App({ auth }) {
     }
   }
   latestRefresh.current = refresh;
+  useEffect(()=>{if(book?.activity?.expires_at)latestRefresh.current();},[book?.activity?.expires_at]);
+  const go = (destination) => {
+    if (document.querySelector('.bookkeeping-dialog form[data-dirty="true"]') && !window.confirm(t("Discard this change?"))) return;
+    setForm(null); setOperationForm(null); setPage(destination);
+  };
+  const beginAdd=()=>{
+    if(document.querySelector('.bookkeeping-dialog form[data-dirty="true"]')&&!window.confirm(t("Discard this change?")))return;
+    setForm(null);setOperationForm(null);setChooser(true);
+  };
+  const choose = (command) => {
+    setChooser(false);
+    const kind = { "transaction.spent": "transaction", "transaction.received": "received", "transaction.transfer": "transfer", "reserve.setAside": "allocation" }[command.id];
+    if (kind) setForm({ kind, from: openedAccount });
+    else setOperationForm({ kind: { "card.purchase": "purchase", "card.pay": "payment", "split.record": "split", "transaction.split": "split", "transaction.postings": "postings" }[command.id], account: openedAccount });
+  };
+  useEffect(() => { book?.remember?.({ page, account: openedAccount, selected:selectedRow }); }, [page, openedAccount, selectedRow, book?.id]);
+  useEffect(() => {
+    let goUntil = 0;
+    const keys = (event) => {
+      const editing = event.target.closest("input, textarea, select, [contenteditable=true]");
+      if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+        const form = document.querySelector(".bookkeeping-dialog form");
+        if (form?.checkValidity()) { event.preventDefault(); form.requestSubmit(); }
+        return;
+      }
+      const native=!!window.__TAURI_INTERNALS__;
+      if(native&&(event.ctrlKey||event.metaKey)&&/^[1-8]$/.test(event.key)){event.preventDefault();go(destinations[Number(event.key)-1]);return;}
+      if((event.ctrlKey||event.metaKey)&&event.key===","){event.preventDefault();go("Settings");return;}
+      if(native&&((event.ctrlKey&&event.key.toLowerCase()==="n")||event.key==="F5")){event.preventDefault();if(event.key==="F5")latestRefresh.current();else if(data&&!error)beginAdd();return;}
+      if (editing || event.altKey || event.ctrlKey || event.metaKey || document.querySelector("dialog[open]")) return;
+      if (event.key.toLowerCase() === "g") { goUntil = Date.now() + 1500; return; }
+      if (/^[1-8]$/.test(event.key) && Date.now() < goUntil) { event.preventDefault(); go(destinations[Number(event.key)-1]); goUntil = 0; }
+      else if (event.key.toLowerCase() === "n" && data && !error) { event.preventDefault(); beginAdd(); }
+      else if (event.key.toLowerCase() === "r") { event.preventDefault(); latestRefresh.current(); }
+      else if (event.key === "/") { event.preventDefault(); go("Register"); setTimeout(() => document.querySelector('input[type="search"], input[placeholder="' + t("Search payee, memo, account") + '"]')?.focus(), 0); }
+    };
+    window.addEventListener("keydown", keys); return () => window.removeEventListener("keydown", keys);
+  }, [data, error]);
+  const saved = (result) => {
+    const revision = result?.head || result?.written?.head;
+    setNotice(revision ? t("Saved as revision %1", revision) : "");
+    refresh();
+  };
   useEffect(() => {
     if (!auth.signedIn) return;
     latestRefresh.current();
@@ -99,13 +139,14 @@ function App({ auth }) {
       window.removeEventListener("focus", wake);
       document.removeEventListener("visibilitychange", wake);
     };
-  }, []);
+  }, [auth.signedIn]);
   if (!auth.signedIn)
     return (
       <main className="signin">
-        <div className="brand-icon">{"k"}</div>
-        <h1>{t("Overview")}</h1>
+        <img className="brand-icon" src={icon} alt="" />
+        <h1>{t("Sign in to %1", book?.filename || location.host)}</h1>
         <p>{t("Not signed in")}</p>
+        <button className="quiet" onClick={()=>onFileAction?.("welcome")}>{t("Back to my books")}</button>
         <button onClick={() => auth.signIn().catch((e) => setError(e.message))}>
           {t("Sign in")}
         </button>
@@ -124,108 +165,50 @@ function App({ auth }) {
   return (
     <div className="shell">
       <aside>
-        <a className="brand" href="/app/">
-          <span className="brand-icon">{"k"}</span>
-          {"Kabacus"}
-        </a>
+        <button className="brand quiet" aria-haspopup="menu" aria-expanded={bookMenu} onClick={() => setBookMenu(!bookMenu)}>
+          <img className="brand-icon" src={icon} alt="" /><span>{book?.name || "Kabacus"}<small>{book?.filename || location.host}</small></span><span aria-hidden="true">⌄</span>
+        </button>
+        {bookMenu && <div className="book-menu" role="menu">{[
+          ["new-window", "New Window", "Ctrl+Shift+N"], ["new", "New Books…", ""], ["open", "Open Books…", "Ctrl+O"], ["recent", "Open Recent", ""], ["save-copy", "Save a Copy As…", "Ctrl+Shift+S"], ["close", "Close Window", "Ctrl+Shift+W"], ["connect", "Connect to a Server…", ""], ["quit", "Quit", "Ctrl+Q"]
+        ].map(([id, label, key]) => <button role="menuitem" key={id} onClick={() => { setBookMenu(false); onFileAction?.(id); }}>{t(label)}{key && <Key>{key}</Key>}</button>)}</div>}
         <div className="nav-spacer" />
         <nav aria-label={t("Go")}>
-          {[
-            "Overview",
-            "Accounts",
-            "Register",
-            "Funds",
-            "Cards",
-            "Loans",
-            "People",
-            "Activity",
-            "Reports",
-            "Settings",
-          ].map((item, i) => (
+          {destinations.map((item, i) => (
             <button
-              key={t(pageLabels[item])}
+              key={item}
+              data-destination={item}
+              aria-label={t(pageLabels[item])}
               className={page === item ? "active" : ""}
               aria-current={page === item ? "page" : undefined}
               onClick={() => {
-                setPage(item);
+                go(item);
                 setNotice("");
               }}
             >
-              <span aria-hidden="true">{["◫", "≡", "▤", "▱", "↺"][i]}</span>
-              {t(pageLabels[item])}
+              <Icon name={item} />
+              {t(pageLabels[item])}<Key>{window.__TAURI_INTERNALS__?`Ctrl+${i+1}`:`G ${i+1}`}</Key>
             </button>
           ))}
         </nav>
         <div className="sidebar-bottom">
-          <span className="status-dot" />
-          {"Kabacus-server"}
-          {auth.signOut && (
-            <button className="quiet" onClick={auth.signOut}>
-              {t("Sign out")}
-            </button>
-          )}
+          <button className="quiet settings-action" onClick={() => go("Settings")}><Icon name="Settings" />{t("Settings")}<Key>Ctrl+,</Key></button>
+          <div className="location"><span className="status-dot" /> <strong>{book?.local ? t("On this computer") : location.host}</strong><small>{book?.location || auth.username || ""} · {t("All changes saved")}</small></div>
+          {book?.activity?.agent && <p role="status">{t("%1 is working in these books", book.activity.agent)}</p>}
+          {auth.signOut && <button className="quiet" onClick={auth.signOut}>{t("Sign out")}</button>}
         </div>
       </aside>
       <div className="workspace">
-        <header>
-          <span>
-            {t("This app")}
-            <span className="slash">/</span>{" "}
-            <strong>{t(pageLabels[page])}</strong>
-          </span>
-          <div className="header-actions">
-            <span className="revision">
-              {t("Commit:")}
-              {data?.version.head ?? "—"}
-            </span>
-            <button className="secondary" onClick={refresh} disabled={loading}>
-              {loading ? t("Loading…") : t("Refresh")}
-            </button>
-          </div>
-        </header>
         <main>
           <div className="page-heading">
             <div>
-              <p className="eyebrow">{t("Overview")}</p>
+
               <h1>{t(pageLabels[page])}</h1>
-              <p className="subtitle">{titles[page]}</p>
+
             </div>
-            <select
-              aria-label={t("Add")}
-              value=""
-              disabled={!data || loading || !!error}
-              onChange={(e) => {
-                const kind = e.target.value;
-                if (["transaction", "received", "allocation"].includes(kind))
-                  setForm(kind);
-                else if (kind)
-                  setOperationForm({
-                    kind,
-                  });
-              }}
-            >
-              <option value="">{t("Add")}</option>
-              {[
-                ["transaction", "Spent"],
-                ["received", "Received"],
-                ["purchase", "Card purchase"],
-                ["transaction", "Transfer"],
-                ["allocation", "Set aside"],
-                ["payment", "Pay a card"],
-                ["split", "Split with someone"],
-                ["postings", "Postings"],
-              ].map(([kind, label]) => (
-                <option key={label} value={kind}>
-                  {t(label)}
-                </option>
-              ))}
-            </select>
-            <button
-              disabled={!data || loading || !!error}
-              onClick={() => setForm("transaction")}
-            >
-              {t("Add transaction")}
-            </button>
+            <div className="header-actions">
+              <button disabled={!data || loading || !!error} data-action="add" aria-label={t("Add")} onClick={beginAdd}><Icon name="Add" />{t("Add")} <Key>{window.__TAURI_INTERNALS__?"Ctrl+N":"N"}</Key></button>
+              <button className="secondary" data-action="refresh" aria-label={t("Refresh")} onClick={refresh} disabled={loading}><Icon name="Refresh" />{loading ? t("Loading…") : t("Refresh")} <Key>{window.__TAURI_INTERNALS__?"F5":"R"}</Key></button>
+            </div>
           </div>
           {error && (
             <div className="banner error" role="alert">
@@ -246,15 +229,13 @@ function App({ auth }) {
             </div>
           )}
           {notice && (
-            <div className="banner" role="status">
-              {notice}
-            </div>
+            <div className="save-toast" role="status">{notice}<button className="quiet" onClick={() => go("Activity")}>{t("View")}</button></div>
           )}
           {page === "Settings" && (
             <Settings
               data={data || { version: { auth: {}, server_version: "—" } }}
               api={api}
-              auth={auth}
+              auth={auth} book={book}
             />
           )}
           {!data ? (
@@ -267,12 +248,12 @@ function App({ auth }) {
                   <button
                     className="quiet"
                     onClick={() =>
-                      setPage(
+                      go(
                         warning.code?.includes("reserve")
                           ? "Cards"
                           : warning.code?.includes("fund")
                             ? "Funds"
-                            : "Accounts",
+                            : "Register",
                       )
                     }
                   >
@@ -280,222 +261,30 @@ function App({ auth }) {
                   </button>
                 </div>
               ))}
-              {page === "Overview" && (
-                <>
-                  <section className="metrics" aria-label={t("Money")}>
-                    <article className="metric primary">
-                      <p>{t("Cash on Hand")}</p>
-                      <Amount value={data.cash.cash_on_hand} />
-                      {data.cash.change && (
-                        <small>
-                          {t("vs %1", data.cash.change.compare_to)}{" "}
-                          <Amount value={data.cash.change.cash_on_hand} />
-                        </small>
-                      )}
-                      <small>
-                        {t(
-                          "Free money you can spend right now, after reserves and card reserves.",
-                        )}
-                      </small>
-                    </article>
-                    {[
-                      [
-                        t("Money on Hand"),
-                        data.cash.money_on_hand,
-                        t("Money on Hand"),
-                      ],
-                      [
-                        t("Set aside in reserves"),
-                        data.cash.future_allocations,
-                        t("Set aside in reserves"),
-                      ],
-                      [t("Owes you"), data.cash.receivables, t("Owes you")],
-                    ].map(([label, amount, detail]) => (
-                      <article className="metric" key={label}>
-                        <p>{label}</p>
-                        <Amount value={amount} />
-                        <small>{detail}</small>
-                      </article>
-                    ))}
-                  </section>
-                  <div className="overview-grid">
-                    <section className="panel">
-                      <div className="panel-heading">
-                        <div>
-                          <h2>{t("Money")}</h2>
-                          <p>{t("in the bank")}</p>
-                        </div>
-                        <span className="badge">{data.cash.homes.length}</span>
-                      </div>
-                      {!data.cash.homes.length && (
-                        <Empty>{t("No accounts")}</Empty>
-                      )}
-                      {data.cash.homes
-                        .filter(
-                          (home) =>
-                            !/^[-+]?0(?:\.0+)?$/.test(home.inclusive.exact),
-                        )
-                        .map((home) => (
-                          <article className="home" key={home.account}>
-                            <div className="home-title">
-                              <div>
-                                <h3>
-                                  <button
-                                    className="quiet"
-                                    onClick={() => {
-                                      setOpenedAccount(home.account);
-                                      setPage("Register");
-                                    }}
-                                  >
-                                    {home.display_name || home.account}
-                                  </button>
-                                </h3>
-                                <small>{home.account}</small>
-                              </div>
-                              <Amount value={home.inclusive} />
-                            </div>
-                            <dl>
-                              <div>
-                                <dt>
-                                  <i className="dot free" />
-                                  {t("Free money")}
-                                </dt>
-                                <dd>
-                                  <Amount value={home.free} />
-                                </dd>
-                              </div>
-                              <div>
-                                <dt>
-                                  <i className="dot funds" />
-                                  {t("Reserves")}
-                                </dt>
-                                <dd>
-                                  <Amount value={home.funds} />
-                                </dd>
-                              </div>
-                              <div>
-                                <dt>
-                                  <i className="dot reserves" />
-                                  {t("Card reserves")}
-                                </dt>
-                                <dd>
-                                  <Amount value={home.reserves} />
-                                </dd>
-                              </div>
-                            </dl>
-                          </article>
-                        ))}
-                    </section>
-                    <section className="panel">
-                      <div className="panel-heading">
-                        <div>
-                          <h2>{t("Reserves")}</h2>
-                          <p>{t("Set money aside")}</p>
-                        </div>
-                      </div>
-                      {data.cash.funds
-                        .filter(
-                          (f) => !/^[-+]?0(?:\.0+)?$/.test(f.balance.exact),
-                        )
-                        .slice(0, 5)
-                        .map((fund) => (
-                          <div className="list-row" key={fund.account}>
-                            <div>
-                              <h3>
-                                <button
-                                  className="quiet"
-                                  onClick={() =>
-                                    setForm({
-                                      kind: "allocation",
-                                      from: fund.home,
-                                      to: fund.account,
-                                    })
-                                  }
-                                >
-                                  {fund.display_name || fund.account}
-                                </button>
-                              </h3>
-                              <small>{fund.home}</small>
-                            </div>
-                            <Amount value={fund.balance} />
-                          </div>
-                        ))}
-                      {!data.cash.funds.length && (
-                        <Empty>{t("Nothing is set aside in a reserve.")}</Empty>
-                      )}
-                      <div className="panel-footer">
-                        <button
-                          className="secondary"
-                          onClick={() => setPage("Funds")}
-                        >
-                          {t("Reserves")}
-                        </button>
-                      </div>
-                    </section>
-                  </div>
-                  <section className="panel">
-                    <div className="panel-heading">
-                      <h2>{t("Cards")}</h2>
-                    </div>
-                    {data.cash.cards
-                      .filter(
-                        (card) => !/^[-+]?0(?:\.0+)?$/.test(card.owed.exact),
-                      )
-                      .map((card) => (
-                        <div className="list-row" key={card.card}>
-                          <button
-                            className="quiet"
-                            onClick={() => setPage("Cards")}
-                          >
-                            {card.display_name || card.card}
-                          </button>
-                          <span className="amount">{card.owed.formatted}</span>
-                        </div>
-                      ))}
-                  </section>
-                  <OverviewDetails api={api} data={data} />
-                  <section className="panel">
-                    <div className="panel-heading">
-                      <div>
-                        <h2>{t("Transactions")}</h2>
-                        <p>{t("All transactions")}</p>
-                      </div>
-                      <button
-                        className="quiet"
-                        onClick={() => setPage("Register")}
-                      >
-                        {t("Transactions")}
-                      </button>
-                    </div>
-                    <Transactions
-                      transactions={[...data.transactions]
-                        .reverse()
-                        .slice(0, 6)}
-                    />
-                  </section>
-                </>
-              )}
-              {["Accounts", "Loans"].includes(page) && (
+              {page === "Overview" && <Overview data={data} api={api} onAccount={(account)=>{setOpenedAccount(account);go("Register");}} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} />}
+              {page === "Loans" && (
                 <Accounts
                   data={data}
                   loans={page === "Loans"}
                   onOpen={(account) => {
                     setOpenedAccount(account);
-                    setPage("Register");
+                    go("Register");
                   }}
                 />
               )}
               {page === "People" && <People api={api} />}
               {page === "Reports" && <Reports api={api} />}
               {page === "Register" && (
-                <Register
+                <div className="transactions-workspace"><AccountList data={data} selected={openedAccount} onSelect={setOpenedAccount} /><Register
                   data={data}
                   api={api}
                   initialAccount={openedAccount}
+                  onAccountChange={setOpenedAccount}
+                  selected={selectedRow} onSelect={setSelectedRow} activity={book?.activity}
                   onOperation={
                     !error && !loading ? setOperationForm : undefined
                   }
-                />
+                /></div>
               )}
               {page === "Funds" && (
                 <section className="panel">
@@ -618,11 +407,12 @@ function App({ auth }) {
               {page === "Activity" && (
                 <Activity api={api} data={data} onOpen={setOperationForm} />
               )}
-              <footer>{t("%1 · %2", "kabacus-server", location.host)} </footer>
+
             </>
           )}
         </main>
       </div>
+      {chooser && data?.commands?.add && <AddChooser commands={data.commands.add} onChoose={choose} onClose={() => setChooser(false)} />}
       {operationForm && (
         <OperationDialog
           key={`${operationForm.kind}:${operationForm.tx?.id || ""}`}
@@ -632,10 +422,7 @@ function App({ auth }) {
           data={data}
           api={api}
           onClose={() => setOperationForm(null)}
-          onSaved={() => {
-            setOperationForm(null);
-            refresh();
-          }}
+          onSaved={(result) => { setOperationForm(null); saved(result); }}
         />
       )}
       {form && (
@@ -646,17 +433,13 @@ function App({ auth }) {
           data={data}
           api={api}
           onClose={() => setForm(null)}
-          onSaved={() => {
-            setForm(null);
-            setNotice(t("The books still check out with this change"));
-            refresh();
-          }}
+          onSaved={(result) => { setForm(null); saved(result); }}
         />
       )}
     </div>
   );
 }
-function Transactions({ transactions, onOperation }) {
+function Transactions({ transactions, onOperation, selected, onSelect, activity }) {
   if (!transactions.length) return <Empty>{t("No transactions")}</Empty>;
   return (
     <div className="table-wrap">
@@ -671,7 +454,7 @@ function Transactions({ transactions, onOperation }) {
         </thead>
         <tbody>
           {transactions.map((tx) => (
-            <tr key={tx.id}>
+            <tr key={tx.id} aria-selected={selected===String(tx.id)} onClick={()=>onSelect?.(String(tx.id))} className={activity?.changed?.includes(tx.id)?"agent-changed":""} title={activity?.changed?.includes(tx.id)?activity.changed_by:undefined}>
               <td className="date">{tx.date}</td>
               <td>
                 {onOperation && (
@@ -737,10 +520,12 @@ function Transactions({ transactions, onOperation }) {
     </div>
   );
 }
-function Register({ data, api, onOperation, initialAccount = "" }) {
+function Register({ data, api, onOperation, initialAccount = "", onAccountChange, selected, onSelect, activity }) {
   const [query, setQuery] = useState("");
   const [unreserved, setUnreserved] = useState(false);
   const [account, setAccount] = useState(initialAccount);
+  useEffect(()=>setAccount(initialAccount),[initialAccount]);
+  useEffect(()=>onAccountChange?.(account),[account]);
   const [lines, setLines] = useState(null);
   const [error, setError] = useState("");
   useEffect(() => {
@@ -838,6 +623,7 @@ function Register({ data, api, onOperation, initialAccount = "" }) {
         <Transactions
           transactions={[...transactions].reverse()}
           onOperation={onOperation}
+          selected={selected} onSelect={onSelect} activity={activity}
         />
       ) : !lines ? (
         <Empty>{t("Loading…")}</Empty>
@@ -865,7 +651,7 @@ function Register({ data, api, onOperation, initialAccount = "" }) {
                       .includes(query.toLowerCase()),
                 )
                 .map((line, i) => (
-                  <tr key={`${line.id}-${i}`}>
+                  <tr key={`${line.id}-${i}`} aria-selected={selected===String(line.id)} onClick={()=>onSelect?.(String(line.id))} className={activity?.changed?.includes(line.id)?"agent-changed":""} title={activity?.changed?.includes(line.id)?activity.changed_by:undefined}>
                     <td>{line.date}</td>
                     <td>
                       {onOperation &&
@@ -923,6 +709,12 @@ function WriteDialog({
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [blocked, setBlocked] = useState(false);
+  const headRef = useRef(data.version.head);
+  const [conflictDiff, setConflictDiff] = useState("");
+  async function previewAgain() {
+    const version=await api.request("/version");headRef.current=version.head;setPreview(null);setBlocked(false);setError("");
+  }
+  async function theirChange() {const history=await api.request("/history");if(history[0])setConflictDiff(await api.text(`/history/${history[0].hash}`));}
   const dialog = useRef();
   const formRef = useRef();
   const draft = useRef({});
@@ -933,7 +725,7 @@ function WriteDialog({
       onClose();
   };
   useEffect(() => {
-    dialog.current.showModal();
+    dialog.current.show();
   }, []);
   useEffect(() => {
     if (preview) return;
@@ -947,6 +739,7 @@ function WriteDialog({
   }, [preview]);
   const allocation = kind === "allocation";
   const received = kind === "received";
+  const transfer = kind === "transfer";
   const incomeAccounts = data.accounts.filter((a) => a.kind === "income");
   const moneyAccounts = data.accounts.filter((a) => a.kind === "money");
   function accountPath(value) {
@@ -1010,6 +803,7 @@ function WriteDialog({
   }
   function changed(event) {
     setDirty(true);
+    event.currentTarget.dataset.dirty = "true";
     draft.current = Object.fromEntries(new FormData(event.currentTarget));
     generation.current++;
     setPreview(null);
@@ -1025,8 +819,8 @@ function WriteDialog({
     setError("");
     try {
       if (preview) {
-        await api.write(preview.path, preview.body, preview.head, false);
-        onSaved();
+        const result = await api.write(preview.path, preview.body, preview.head, false);
+        onSaved(result);
       } else {
         const fields = Object.fromEntries(new FormData(event.currentTarget));
         let path, body;
@@ -1072,12 +866,12 @@ function WriteDialog({
             tags: [],
           };
         }
-        const result = await api.write(path, body, data.version.head, true);
+        const result = await api.write(path, body, headRef.current, true);
         if (currentGeneration !== generation.current) return;
         setPreview({
           path,
           body,
-          head: data.version.head,
+          head: headRef.current,
           result,
         });
       }
@@ -1113,7 +907,7 @@ function WriteDialog({
                 ? t("Set money aside")
                 : received
                   ? t("Received")
-                  : t("Add transaction")}
+                  : transfer ? t("Transfer") : t("Spent")}
             </h2>
           </div>
           <button
@@ -1126,17 +920,15 @@ function WriteDialog({
             {"✕"}
           </button>
         </div>
-        {error && (
+        {error && !blocked && (
           <div className="banner error" role="alert">
             {error}
           </div>
         )}
-        {blocked ? (
-          <Empty>
-            {t("The books changed while you were editing. Review again.")}
-          </Empty>
-        ) : (
-          <div className={wide ? "editor-grid" : undefined}>
+        {blocked && (
+          <section className="conflict-panel" role="alert"><h3>{t("Someone saved first")}</h3><p>{error}</p><button type="button" onClick={()=>theirChange().catch(e=>setError(e.message))}>{t("See their change")}</button><button type="button" onClick={()=>setBlocked(false)}>{t("Keep editing")}</button><button type="button" onClick={()=>previewAgain().catch(e=>setError(e.message))}>{t("Preview again")}</button>{conflictDiff&&<pre>{conflictDiff}</pre>}</section>
+        )}
+          <div hidden={blocked} className={wide ? "editor-grid" : undefined}>
             <div hidden={!wide && !!preview}>
               <div className="form-fields">
                 <label>
@@ -1247,7 +1039,7 @@ function WriteDialog({
             </div>
             {preview && (
               <section className="preview">
-                <h3>{t("Preview")}</h3>
+                <h3>{t("What changes")}</h3><p className="balanced-badge">{t("Balanced · checked against revision %1", preview.head)}</p>
                 <pre>{preview.result.preview || preview.result.after}</pre>
                 {preview.result.cash_on_hand && (
                   <div className="list-row">
@@ -1285,7 +1077,6 @@ function WriteDialog({
               </section>
             )}
           </div>
-        )}
         <div className="dialog-actions">
           <button
             type="button"
@@ -1300,7 +1091,7 @@ function WriteDialog({
               ? t("Checking with the server…")
               : preview
                 ? t("Save")
-                : t("Preview")}
+                : t("Preview")} {preview && <Key>Ctrl+Enter</Key>}
           </button>
         </div>
       </form>
@@ -1312,19 +1103,14 @@ const nativeLauncher =
   (window.__TAURI_INTERNALS__ &&
     (location.protocol === "tauri:" ||
       location.hostname === "tauri.localhost"));
-initializeLocale()
-  .then(() => (nativeLauncher ? null : initializeAuth()))
-  .then((auth) =>
-    createRoot(document.getElementById("root")).render(
-      nativeLauncher ? <NativeLauncher /> : <App auth={auth} />,
-    ),
-  )
-  .catch((error) =>
-    createRoot(document.getElementById("root")).render(
-      <main className="signin">
-        <h1>{t("Can't reach kabacus-server")}</h1>
-        <p role="alert">{String(error.message || error)}</p>
-        <button onClick={() => location.reload()}>{t("Retry")}</button>
-      </main>,
-    ),
-  );
+initializeLocale().then(async () => {
+  const query=new URLSearchParams(location.search);
+  if(query.has("connect"))sessionStorage.setItem("kabacus.connect","1");
+  if(query.has("returnTo")){try{const back=new URL(query.get("returnTo"));if(back.protocol==="https:"||back.origin===location.origin)sessionStorage.setItem("kabacus.return",back.href);}catch{}}
+  let auth=null;
+  if(!nativeLauncher && location.pathname.startsWith("/app/")) {
+    try { auth=await initializeAuth(); } catch { /* Local books remain available offline. */ }
+  }
+  createRoot(document.getElementById("root")).render(<Workspace Application={App} hosted={auth}/>);
+  if("serviceWorker" in navigator && !nativeLauncher)navigator.serviceWorker.register(new URL("./sw.js",document.baseURI)).catch(()=>{});
+});

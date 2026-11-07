@@ -75,6 +75,26 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # build runs with), so a package build doesn't compile it again.
 RUN cargo install --locked cargo-deb
 
+FROM docker.io/library/node:22-bookworm-slim AS wasm-node
+
+FROM docker.io/library/rust:1-trixie AS wasm
+ARG SOURCE_COMMIT
+ENV SOURCE_COMMIT=${SOURCE_COMMIT}
+ENV CC_wasm32_unknown_unknown=clang AR_wasm32_unknown_unknown=llvm-ar
+COPY --from=wasm-node /usr/local/bin/node /usr/local/bin/node
+RUN rustup target add wasm32-unknown-unknown \
+ && cargo install --locked wasm-bindgen-cli --version 0.2.129
+RUN apt-get update && apt-get install -y --no-install-recommends clang llvm \
+ && rm -rf /var/lib/apt/lists/*
+WORKDIR /src
+COPY Cargo.toml Cargo.lock ./
+COPY crates ./crates
+COPY xtask ./xtask
+COPY design ./design
+COPY scripts/build-wasm ./scripts/build-wasm
+RUN scripts/build-wasm \
+ && CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUNNER=wasm-bindgen-test-runner cargo test --locked --target wasm32-unknown-unknown -p kabacus-store --test portable
+
 FROM docker.io/library/node:22-bookworm-slim AS web
 WORKDIR /src/apps/kabacus-ui
 COPY apps/kabacus-ui/package*.json ./
@@ -82,10 +102,14 @@ RUN npm ci --no-audit --no-fund
 COPY apps/kabacus-ui/index.html apps/kabacus-ui/vite.config.js apps/kabacus-ui/catalogs.js ./
 COPY po /src/po
 COPY apps/kabacus-ui/src ./src
+COPY apps/kabacus-ui/public ./public
+COPY apps/kabacus-ui/sw-source.js ./
+COPY --from=wasm /src/apps/kabacus-ui/public/wasm ./public/wasm
 RUN npm run build
 
 FROM docker.io/library/rust:1-trixie AS tauri-test
 RUN rustup component add rustfmt
+COPY --from=wasm /src/apps/kabacus-ui/public/wasm /opt/kabacus-wasm
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nodejs npm pkg-config libwebkit2gtk-4.1-dev \
     libayatana-appindicator3-dev librsvg2-dev patchelf \

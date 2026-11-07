@@ -13,6 +13,7 @@ fn local(socket: &std::path::Path) -> Settings {
     Settings {
         kind: ConnectionKind::Local,
         socket_path: socket.display().to_string(),
+        books_path: String::new(),
         ..Default::default()
     }
 }

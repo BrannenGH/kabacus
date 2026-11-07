@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 //
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 use super::*;
-use crate::auth::none::no_auth_principal;
-use crate::config::{AuthConfig, AuthMode, Config};
+use crate::caller::{Caller, Permission};
+use crate::state::{KindTable, Settings};
 use kabacus_store::{AnyStore, SqliteStore};
 use std::path::Path;
 
@@ -16,7 +16,7 @@ const BOOKS: &str = "commodity USD1000.00\n\
     \n\
     2026-01-01 Opening\n    assets:checking  1000.00 USD\n    equity:opening\n\n";
 
-async fn state(extra: &str) -> AppState {
+async fn state(extra: &str) -> Service {
     let store = AnyStore::Sqlite(SqliteStore::in_memory().unwrap());
     let main = Path::new("/books/main.journal");
     let src = kabacus_ledger::MemorySource(BTreeMap::from([(
@@ -36,19 +36,39 @@ async fn state(extra: &str) -> AppState {
         details: serde_json::json!({}),
     };
     store.import(ledger, &outcome.book, &who).await.unwrap();
-    let mut config = Config {
-        auth: AuthConfig {
-            mode: AuthMode::None,
-            ..Default::default()
+    Service::new(
+        store,
+        ledger,
+        Settings::default(),
+        KindTable {
+            rules: kabacus_core::default_kind_rules(),
+            reserve_template: kabacus_core::DEFAULT_RESERVE_TEMPLATE.to_string(),
         },
-        ..Default::default()
-    };
-    config.auth.clients.app = Some("kabacus-app".to_string());
-    AppState::with_store(config, store).await.unwrap()
+    )
 }
 
-fn local() -> Principal {
-    no_auth_principal(&[], Some("kabacus-app"))
+struct LocalCaller;
+impl Caller for LocalCaller {
+    fn require(&self, _: Permission) -> Result<(), crate::error::Error> {
+        Ok(())
+    }
+    fn user<'a>(
+        &'a self,
+        store: &'a AnyStore,
+    ) -> std::pin::Pin<
+        Box<dyn std::future::Future<Output = anyhow::Result<kabacus_store::UserId>> + Send + 'a>,
+    > {
+        Box::pin(async move { Ok(store.local_user("Dana Okafor").await?) })
+    }
+    fn actor(&self, _: Option<&str>) -> String {
+        "app".to_string()
+    }
+    fn details(&self) -> serde_json::Value {
+        serde_json::json!({"user": "Dana Okafor", "client": "kabacus-app", "session": "none", "auth": "none"})
+    }
+}
+fn local() -> LocalCaller {
+    LocalCaller
 }
 
 fn usd(cents: i128) -> Amount {
@@ -80,7 +100,7 @@ fn groceries(cents: i128) -> AddRequest {
     }
 }
 
-async fn head(state: &AppState) -> String {
+async fn head(state: &Service) -> String {
     state
         .store
         .revision(state.ledger)
@@ -89,11 +109,11 @@ async fn head(state: &AppState) -> String {
         .to_string()
 }
 
-async fn books(state: &AppState) -> kabacus_ledger::Book {
+async fn books(state: &Service) -> kabacus_ledger::Book {
     state.store.load(state.ledger, None).await.unwrap().book
 }
 
-async fn add(state: &AppState, req: AddRequest) -> (u64, String) {
+async fn add(state: &Service, req: AddRequest) -> (u64, String) {
     let done = write(
         state,
         &local(),
@@ -125,7 +145,7 @@ async fn an_add_is_one_revision_recording_who_made_it() {
         .info;
     assert_eq!(change.kind, "add");
     assert_eq!(change.actor, "app");
-    assert_eq!(change.user, "local");
+    assert_eq!(change.user, "Dana Okafor");
     assert_eq!(change.details["auth"], "none");
     assert!(
         change
@@ -525,7 +545,7 @@ fn edit_set_aside(id: u64, cents: i128) -> WriteOp {
     })
 }
 
-async fn set_aside_id(state: &AppState) -> u64 {
+async fn set_aside_id(state: &Service) -> u64 {
     books(state)
         .await
         .transactions
@@ -600,7 +620,7 @@ const CARD_BOOKS: &str = "account assets:bank:checking\n\
     \n\
     2026-01-02 Opening\n    assets:bank:checking  8500.00 USD\n    equity:opening\n\n";
 
-async fn cash_on_hand(state: &AppState, as_of: Option<String>) -> crate::service::CashOnHandDto {
+async fn cash_on_hand(state: &Service, as_of: Option<String>) -> crate::service::CashOnHandDto {
     let q = crate::service::CashOnHandQuery {
         as_of,
         ..Default::default()

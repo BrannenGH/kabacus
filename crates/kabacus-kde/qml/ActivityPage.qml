@@ -73,8 +73,9 @@ Kirigami.ScrollablePage {
                 ColumnLayout {
                     spacing: 0
                     Layout.fillWidth: true
+                    Controls.Label { text: commitDelegate.modelData.agent ? i18n("Agent") + ": " + commitDelegate.modelData.agent : ""; visible: text !== ""; font: Kirigami.Theme.smallFont }
                     Controls.Label { text: commitDelegate.modelData.summary; font.bold: true; elide: Text.ElideRight; Layout.fillWidth: true }
-                    Controls.Label { text: i18nc("%1 is who made a change, %2 its commit", "%1 · %2", commitDelegate.modelData.actor_label, commitDelegate.modelData.short); opacity: 0.7; font: Kirigami.Theme.smallFont }
+                    Controls.Label { text: i18nc("%1 is who made a change, %2 its revision", "%1 · %2", commitDelegate.modelData.user || commitDelegate.modelData.actor_label, commitDelegate.modelData.short); opacity: 0.7; font: Kirigami.Theme.smallFont }
                 }
                 Controls.Label { text: commitDelegate.modelData.date; opacity: 0.7; font: Kirigami.Theme.smallFont }
             }

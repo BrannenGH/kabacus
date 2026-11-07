@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 //
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 //! The store on SQLite: one `.kabacus` file, one writer at a time.
 //! Implements the engine implementation specification, sections 1.2 to
@@ -18,6 +18,7 @@ use crate::{
 use kabacus_ledger::Book;
 use rusqlite::{params, Connection, OptionalExtension, Transaction as SqlTx, TransactionBehavior};
 use std::collections::BTreeMap;
+#[cfg(not(target_arch = "wasm32"))]
 use std::path::Path;
 use std::sync::{Arc, Mutex};
 
@@ -29,6 +30,7 @@ pub struct SqliteStore {
 
 impl SqliteStore {
     /// Open (or create) the `.kabacus` file at `path`.
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn open(path: &Path) -> Result<SqliteStore> {
         let conn = schema::open_file(path)?;
         conn.pragma_update(None, "journal_mode", "wal")?;
@@ -48,17 +50,37 @@ impl SqliteStore {
         })
     }
 
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self> {
+        crate::file::read_bytes(bytes)?;
+        let mut conn = Connection::open_in_memory()?;
+        conn.deserialize_read_exact("main", bytes, bytes.len(), false)?;
+        schema::migrate(&mut conn)?;
+        Self::with_connection(conn)
+    }
+
+    pub async fn to_bytes(&self) -> Result<Vec<u8>> {
+        self.call(|conn| Ok(conn.serialize("main")?.to_vec())).await
+    }
+
     async fn call<T: Send + 'static>(
         &self,
         f: impl FnOnce(&mut Connection) -> Result<T> + Send + 'static,
     ) -> Result<T> {
         let conn = self.conn.clone();
-        tokio::task::spawn_blocking(move || {
+        #[cfg(not(target_arch = "wasm32"))]
+        {
+            tokio::task::spawn_blocking(move || {
+                let mut conn = conn.lock().unwrap_or_else(|p| p.into_inner());
+                f(&mut conn)
+            })
+            .await
+            .map_err(|e| StoreError::Invalid(e.to_string()))?
+        }
+        #[cfg(target_arch = "wasm32")]
+        {
             let mut conn = conn.lock().unwrap_or_else(|p| p.into_inner());
             f(&mut conn)
-        })
-        .await
-        .map_err(|e| StoreError::Invalid(e.to_string()))?
+        }
     }
 }
 

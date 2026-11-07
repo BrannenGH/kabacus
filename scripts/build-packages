@@ -28,6 +28,12 @@ for kind in ${*:-rpm deb}; do
       cp target/rpm/tumbleweed/*.rpm target/packages/ ;;
     deb) scripts/dev --deb sh -c 'set -e
       cargo run --release --locked -p xtask -- i18n-build "$CARGO_TARGET_DIR/release/locale"
+      cargo build --release --locked -p kabacus-cli
+      mkdir -p target/cli-doc
+      "$CARGO_TARGET_DIR/release/kabacus-cli" man > target/cli-doc/kabacus-cli.1
+      "$CARGO_TARGET_DIR/release/kabacus-cli" completions bash > target/cli-doc/kabacus-cli.bash
+      "$CARGO_TARGET_DIR/release/kabacus-cli" completions zsh > target/cli-doc/_kabacus-cli
+      "$CARGO_TARGET_DIR/release/kabacus-cli" completions fish > target/cli-doc/kabacus-cli.fish
       KABACUS_VERSION="$1" cargo deb --locked -p kabacus-kde -o target/packages/ --deb-version "$1"' sh "$version" ;;
     *) echo "usage: scripts/build-packages [rpm] [deb]" >&2; exit 2 ;;
   esac

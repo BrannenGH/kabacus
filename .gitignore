@@ -26,3 +26,13 @@ node_modules/
 apps/kabacus-ui/dist/
 apps/kabacus-ui/test-results/
 apps/kabacus-ui/playwright-report/
+
+# Generated from the shared Rust crates by scripts/build-wasm.
+apps/kabacus-ui/public/wasm/
+
+# Tauri generates these schemas from its dependencies.
+/apps/kabacus-ui/src-tauri/gen/
+
+__pycache__/
+
+/apps/kabacus-ui/src-tauri/binaries/

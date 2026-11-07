@@ -39,15 +39,20 @@ export function OperationDialog({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [stale, setStale] = useState(false);
+  const [conflictDiff,setConflictDiff]=useState("");
+  async function previewAgain(){head.current=(await api.request("/version")).head;setStale(false);setError("");setPreview(null);}
+  async function theirChange(){const history=await api.request("/history");if(history[0])setConflictDiff(await api.text(`/history/${history[0].hash}`));}
   const [dirty, setDirty] = useState(false);
   const [checked, setChecked] = useState(null);
   const [repairCard, setRepairCard] = useState(card || "");
-  const [rows, setRows] = useState([0, 1]);
-  const nextRow = useRef(2);
+  const postingEdit = kind === "edit" && (tx.postings.length !== 2 ||
+    tx.postings.some(p => p.amount.commodity !== data.commodity.symbol));
+  const [rows, setRows] = useState(postingEdit ? tx.postings.map((_, i) => i) : [0, 1]);
+  const nextRow = useRef(postingEdit ? tx.postings.length : 2);
   const snapshot = useRef(data);
   const head = useRef(data.version.head);
   useEffect(() => {
-    dialog.current.showModal();
+    dialog.current.show();
   }, []);
   useEffect(() => {
     if (preview) return;
@@ -94,6 +99,7 @@ export function OperationDialog({
   }
   function changed(event) {
     setDirty(true);
+    event.currentTarget.dataset.dirty = "true";
     setChecked(null);
     const form = new FormData(event.currentTarget);
     draft.current = Object.fromEntries(form);
@@ -141,7 +147,7 @@ export function OperationDialog({
         },
       });
       if (preview) {
-        onSaved();
+        onSaved(result);
         return;
       }
       if (currentGeneration !== generation.current) return;
@@ -192,6 +198,7 @@ export function OperationDialog({
             {t("Cancel")}
           </button>
         </div>
+        {stale && <section className="conflict-panel"><h3>{t("Someone saved first")}</h3><button type="button" onClick={()=>theirChange().catch(e=>setError(e.message))}>{t("See their change")}</button><button type="button" onClick={()=>setStale(false)}>{t("Keep editing")}</button><button type="button" onClick={()=>previewAgain().catch(e=>setError(e.message))}>{t("Preview again")}</button>{conflictDiff&&<pre>{conflictDiff}</pre>}</section>}
         {error && (
           <p role="alert" className="banner error">
             {error}
@@ -254,7 +261,7 @@ export function OperationDialog({
                       />
                     </label>
                   )}
-                  {kind === "postings" && (
+                  {(kind === "postings" || postingEdit) && (
                     <>
                       <datalist id="posting-accounts">
                         {data.accounts.map((a) => (
@@ -269,6 +276,7 @@ export function OperationDialog({
                           <label>
                             {t("Account")}
                             <input
+                              defaultValue={postingEdit ? tx.postings[row]?.account : ""}
                               name={"account" + row}
                               list="posting-accounts"
                               required
@@ -277,6 +285,7 @@ export function OperationDialog({
                           <label>
                             {t("Amount")}
                             <input
+                              defaultValue={postingEdit ? tx.postings[row]?.amount.exact : ""}
                               name={"amount" + row}
                               inputMode="decimal"
                               required
@@ -337,7 +346,7 @@ export function OperationDialog({
                       </label>
                     </>
                   )}
-                  {kind === "edit" &&
+                  {kind === "edit" && !postingEdit &&
                     [
                       ["from", "From", true],
                       ["to", "To", false],
@@ -526,7 +535,7 @@ export function OperationDialog({
                       </select>
                     </label>
                   )}
-                  {!["fix", "status", "postings", "account-type"].includes(kind) && (
+                  {!postingEdit && !["fix", "status", "postings", "account-type"].includes(kind) && (
                     <label>
                       {t("Amount")}
                       <input
