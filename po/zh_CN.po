@@ -1242,6 +1242,12 @@ msgstr "转账"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
+msgctxt "@option cancel a transaction with a reversal"
+msgid "Void"
+msgstr "作废"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
 msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
 msgid "This would break a balance check: %1 should be %2 but would be %3. Check the date and amount."
 msgstr "这会破坏一项余额检查：%1 应为 %2，但将变为 %3。请检查日期和金额。"
@@ -1255,12 +1261,6 @@ msgstr "就地编辑"
 #, kde-format
 msgid "Changes it where it is. History keeps the old version."
 msgstr "在原处修改。历史记录会保留旧版本。"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@option cancel a transaction with a reversal"
-msgid "Void"
-msgstr "作废"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format

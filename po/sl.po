@@ -1245,6 +1245,12 @@ msgstr "Prenos"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
+msgctxt "@option cancel a transaction with a reversal"
+msgid "Void"
+msgstr "Razveljavi"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
 msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
 msgid "This would break a balance check: %1 should be %2 but would be %3. Check the date and amount."
 msgstr "To bi prekršilo preverjanje stanja: %1 bi moralo biti %2, a bi bilo %3. Preverite datum in znesek."
@@ -1258,12 +1264,6 @@ msgstr "Uredi na mestu"
 #, kde-format
 msgid "Changes it where it is. History keeps the old version."
 msgstr "Spremeni jo tam, kjer je. Zgodovina ohrani staro različico."
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@option cancel a transaction with a reversal"
-msgid "Void"
-msgstr "Razveljavi"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format

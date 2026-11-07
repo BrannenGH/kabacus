@@ -279,7 +279,15 @@ Kirigami.ScrollablePage {
 
     actions: [
         // Not while saving: the save closes the form when it's done.
-        Kirigami.Action { text: i18n("Cancel"); icon.name: "dialog-cancel"; enabled: !page.saving; onTriggered: page.app.pageStack.layers.pop() },
+        Kirigami.Action { text: i18n("Cancel"); icon.name: "dialog-cancel"; enabled: !page.saving; onTriggered: page.app.runFileAction(function() { page.app.pageStack.layers.pop() }) },
+        Kirigami.Action {
+            text: i18nc("@option cancel a transaction with a reversal", "Void")
+            icon.name: "edit-delete"
+            visible: page.app.narrow && page.kind === "edit" && page.mode !== "void"
+            enabled: !page.saving
+            displayHint: Kirigami.DisplayHint.AlwaysHide
+            onTriggered: { page.mode = "void"; page.edited() }
+        },
         Kirigami.Action {
             text: page.live ? (page.saving ? i18n("Saving…") : i18n("Save")) : i18nc("@action:button", "Review")
             icon.name: page.live ? "document-save" : (page.LayoutMirroring.enabled ? "go-previous" : "go-next")
@@ -343,7 +351,7 @@ Kirigami.ScrollablePage {
 
             // How a change to a recorded transaction is kept.
             ColumnLayout {
-                visible: page.kind === "edit"
+                visible: page.kind === "edit" && !page.app.narrow
                 Layout.fillWidth: true
                 Controls.ButtonGroup { id: modeGroup }
                 Repeater {

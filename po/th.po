@@ -1242,6 +1242,12 @@ msgstr "โอน"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
+msgctxt "@option cancel a transaction with a reversal"
+msgid "Void"
+msgstr "ยกเลิก"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
 msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
 msgid "This would break a balance check: %1 should be %2 but would be %3. Check the date and amount."
 msgstr "การนี้จะทำให้การตรวจยอดคงเหลือไม่ผ่าน: %1 ควรเป็น %2 แต่จะเป็น %3 ตรวจสอบวันที่และจำนวนเงิน"
@@ -1255,12 +1261,6 @@ msgstr "แก้ไขในที่เดิม"
 #, kde-format
 msgid "Changes it where it is. History keeps the old version."
 msgstr "เปลี่ยนในที่เดิม ประวัติเก็บรุ่นเก่าไว้"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@option cancel a transaction with a reversal"
-msgid "Void"
-msgstr "ยกเลิก"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format

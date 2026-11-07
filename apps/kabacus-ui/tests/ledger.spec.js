@@ -1044,6 +1044,19 @@ test.describe("phone layout", () => {
     await expect(form).toHaveCount(0);
     await expect(page.locator(".overview-layout")).toBeVisible();
   });
+  test("Void stays in the edit overflow and previews before writing", async ({ page }) => {
+    const writes = await setup(page);
+    await page.getByRole("navigation").getByRole("button", {name:"Transactions",exact:true}).click();
+    await page.locator(".account-list button").filter({hasText:"Checking"}).first().click();
+    await page.locator(".register-row").first().click();
+    const form = page.getByRole("dialog");
+    await form.locator(".operation-overflow summary").click();
+    await form.getByRole("button", {name:"Void",exact:true}).click();
+    await form.getByRole("button", {name:"Review",exact:true}).click();
+    expect(writes.at(-1).path).toBe("/transactions/12/corrections");
+    expect(writes.at(-1).body.void).toBe(true);
+    expect(writes.at(-1).body.dry_run).toBe(true);
+  });
   test("touch opens full-screen account and date pickers", async ({ page }) => {
     await setup(page);
     await page.getByRole("button", { name: "Add", exact: true }).tap();

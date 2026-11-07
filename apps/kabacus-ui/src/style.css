@@ -1143,3 +1143,7 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
   .bookkeeping-dialog .eyebrow { display:none; }
   .bookkeeping-dialog .form-fields>label { font-size:14px; }
 }
+
+.operation-overflow { position:relative; }
+.operation-overflow summary { list-style:none; font-size:24px; text-align:center; }
+.operation-overflow button { position:absolute; inset-inline-end:0; top:100%; z-index:5; min-width:100px; background:var(--surface); border:1px solid var(--border); }

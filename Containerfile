@@ -101,6 +101,7 @@ COPY apps/kabacus-ui/package*.json ./
 RUN npm ci --no-audit --no-fund
 COPY apps/kabacus-ui/index.html apps/kabacus-ui/vite.config.js apps/kabacus-ui/catalogs.js ./
 COPY po /src/po
+COPY design/tokens.json /src/design/tokens.json
 COPY apps/kabacus-ui/src ./src
 COPY apps/kabacus-ui/public ./public
 COPY apps/kabacus-ui/sw-source.js ./

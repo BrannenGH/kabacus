@@ -20,7 +20,7 @@ const titles = {
 };
 export function OperationDialog({
   disabled,
-  kind,
+  kind: initialKind,
   data,
   api,
   tx,
@@ -30,6 +30,7 @@ export function OperationDialog({
   onSaved,
   onInspect,
 }) {
+  const [kind, setKind] = useState(initialKind);
   const wide = useMedia(desktopQuery);
   const phone = useMedia(phoneQuery);
   const generation = useRef(0);
@@ -213,7 +214,8 @@ export function OperationDialog({
     >
       <form ref={formRef} onSubmit={submit} onChange={changed}>
         <div className="dialog-heading">
-          <h2 id="operation-title">{t(titles[kind])}</h2>
+          <h2 id="operation-title">{phone && preview ? t("Review") : t(titles[kind])}</h2>
+          {phone && kind === "edit" && <details className="operation-overflow"><summary aria-label={t("More")}>⋮</summary><button type="button" className="quiet" onClick={() => {setKind("void"); setPreview(null); setDirty(true);}}>{t("Void")}</button></details>}
           <button
             type="button"
             className="quiet"

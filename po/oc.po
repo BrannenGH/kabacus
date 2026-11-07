@@ -1243,6 +1243,12 @@ msgstr "Transferiment"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
+msgctxt "@option cancel a transaction with a reversal"
+msgid "Void"
+msgstr "Anullar"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
 msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
 msgid "This would break a balance check: %1 should be %2 but would be %3. Check the date and amount."
 msgstr "Aquò rompriá un contraròtle de sòlde : %1 deuriá èsser %2 mas seriá %3. Verificatz la data e lo montant."
@@ -1256,12 +1262,6 @@ msgstr "Modificar sus plaça"
 #, kde-format
 msgid "Changes it where it is. History keeps the old version."
 msgstr "La modifica ont es. L’istoric garda la version anciana."
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@option cancel a transaction with a reversal"
-msgid "Void"
-msgstr "Anullar"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format

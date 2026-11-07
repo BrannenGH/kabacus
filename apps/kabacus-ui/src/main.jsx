@@ -47,6 +47,7 @@ export function App({ auth, book, onFileAction }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(book?.state?.page || "Overview");
+  useEffect(() => { if (!phone && page === "More") setPage("Overview"); }, [phone, page]);
   const [form, setForm] = useState(null);
   const [operationForm, setOperationForm] = useState(null);
   const [openedAccount, setOpenedAccount] = useState(book?.state?.account || "");

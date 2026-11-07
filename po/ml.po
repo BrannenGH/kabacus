@@ -1243,6 +1243,12 @@ msgstr "കൈമാറ്റം"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
+msgctxt "@option cancel a transaction with a reversal"
+msgid "Void"
+msgstr "റദ്ദാക്കുക"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
 msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
 msgid "This would break a balance check: %1 should be %2 but would be %3. Check the date and amount."
 msgstr "ഇത് ഒരു ബാക്കി പരിശോധന തെറ്റിക്കും: %1 %2 ആയിരിക്കണം, പക്ഷേ %3 ആകും. തീയതിയും തുകയും പരിശോധിക്കുക."
@@ -1256,12 +1262,6 @@ msgstr "അവിടെത്തന്നെ തിരുത്തുക"
 #, kde-format
 msgid "Changes it where it is. History keeps the old version."
 msgstr "ഉള്ളിടത്തുതന്നെ മാറ്റുന്നു. പഴയ പതിപ്പ് ചരിത്രം സൂക്ഷിക്കുന്നു."
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@option cancel a transaction with a reversal"
-msgid "Void"
-msgstr "റദ്ദാക്കുക"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
