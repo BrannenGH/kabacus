@@ -1178,7 +1178,7 @@ msgstr "Агенттерге осы терезені басқаруға рұқс
 msgid "Control port"
 msgstr "Басқару порты"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Шот"

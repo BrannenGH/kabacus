@@ -1179,7 +1179,7 @@ msgstr "Ügynökök vezérelhetik ezt az ablakot"
 msgid "Control port"
 msgstr "Vezérlési port"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Számla"

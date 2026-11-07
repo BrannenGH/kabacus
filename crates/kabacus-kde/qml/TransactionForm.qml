@@ -23,6 +23,8 @@ Kirigami.ScrollablePage {
     property var preset: ({})
 
     globalToolBarStyle: app.narrow ? Kirigami.ApplicationHeaderStyle.None : Kirigami.ApplicationHeaderStyle.ToolBar
+    property var postingRows: preset.postings || []
+    readonly property bool postingEdit: kind === "edit" && preset.postings !== undefined
 
     required property var app
     readonly property var ledger: app.ledger
@@ -102,6 +104,8 @@ Kirigami.ScrollablePage {
                 their_share: theirShare.text }
         case "edit":
             if (mode === "void") return { kind: "void", id: preset.id }
+            if (postingEdit) return { kind: "edit_postings", id: preset.id, date: date.text,
+                payee: payee.text, memo: memo.text, postings: postingRows }
             return Object.assign(base, { kind: "edit", id: preset.id,
                 payee: payee.text, memo: memo.text, from: fromPicker.value, to: toPicker.value })
         case "fix_reserves":
@@ -412,7 +416,7 @@ Kirigami.ScrollablePage {
                     id: amount
                     font.pixelSize: page.app.narrow ? 32 : Kirigami.Theme.defaultFont.pixelSize
                     Layout.minimumHeight: page.app.narrow ? 56 : implicitHeight
-                    visible: page.app.narrow && !["fix_reserves", "reconcile", "account_type"].includes(page.kind)
+                    visible: page.app.narrow && !page.postingEdit && !["fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     Kirigami.FormData.label: page.kind === "split" ? i18nc("@label", "Total:") : i18nc("@label", "Amount:")
                     Accessible.name: i18n("Amount")
                     inputMethodHints: Qt.ImhFormattedNumbersOnly
@@ -422,7 +426,7 @@ Kirigami.ScrollablePage {
                 // The amount's problem shows as it's typed.
                 Controls.Label {
                     readonly property string typed: amount.text === "" ? "" : page.ledger.checkAmount(amount.text, page.places, true)
-                    visible: page.app.narrow && text !== ""
+                    visible: page.app.narrow && !page.postingEdit && text !== ""
                     text: page.fieldErrors.amount || page.fieldErrors.total || typed
                     color: Kirigami.Theme.negativeTextColor
                     wrapMode: Text.Wrap
@@ -490,7 +494,7 @@ Kirigami.ScrollablePage {
                 }
                 AccountPicker {
                     id: fromPicker
-                    visible: !["card_purchase", "pay_card", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
+                    visible: !page.postingEdit && !["card_purchase", "pay_card", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     label: page.kind === "split" ? i18n("Paid with") : i18nc("the account money comes from", "From")
                     accounts: page.kind === "set_aside" ? page.asideFrom
                         : page.kind === "received" ? page.incomes : page.moneyAndCards
@@ -513,7 +517,7 @@ Kirigami.ScrollablePage {
                 }
                 AccountPicker {
                     id: toPicker
-                    visible: !["pay_card", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
+                    visible: !page.postingEdit && !["pay_card", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     label: ["spent", "card_purchase", "split"].includes(page.kind) ? i18n("Category") : i18nc("the account money goes to", "To")
                     accounts: page.kind === "set_aside" ? page.asideTo
                         : ["spent", "card_purchase", "split"].includes(page.kind) ? page.categories
@@ -570,12 +574,68 @@ Kirigami.ScrollablePage {
                     accounts: page.people
                     onEdited: page.edited()
                 }
+                Controls.Label {
+                    visible: page.postingEdit && text !== ""
+                    text: page.fieldErrors.postings || ""
+                    color: Kirigami.Theme.negativeTextColor
+                    wrapMode: Text.Wrap
+                    Layout.fillWidth: true
+                    Accessible.name: text
+                }
+                Repeater {
+                    model: page.postingEdit ? page.postingRows : []
+                    delegate: ColumnLayout {
+                        id: postingRow
+                        required property int index
+                        required property var modelData
+                        Layout.fillWidth: true
+                        Controls.Label { text: i18n("Postings") + " " + (postingRow.index + 1) }
+                        AccountPicker {
+                            label: i18n("Account")
+                            accounts: page.accounts
+                            Component.onCompleted: set(postingRow.modelData.account)
+                            onEdited: {
+                                page.postingRows[postingRow.index].account = value
+                                page.edited()
+                            }
+                        }
+                        Controls.Label { text: i18n("Amount") }
+                        Controls.TextField {
+                            Layout.fillWidth: true
+                            Accessible.name: i18n("Amount") + " " + (postingRow.index + 1)
+                            text: postingRow.modelData.amount
+                            inputMethodHints: Qt.ImhFormattedNumbersOnly
+                            onTextEdited: {
+                                page.postingRows[postingRow.index].amount = text
+                                page.edited()
+                            }
+                        }
+                        Controls.Button {
+                            visible: page.postingRows.length > 2
+                            text: "−"
+                            Accessible.name: i18n("Postings") + " " + (postingRow.index + 1)
+                            onClicked: {
+                                page.postingRows = page.postingRows.filter((_, i) => i !== postingRow.index)
+                                page.edited()
+                            }
+                        }
+                    }
+                }
+                Controls.Button {
+                    visible: page.postingEdit
+                    text: i18n("Add")
+                    onClicked: {
+                        page.postingRows = page.postingRows.concat([{ account: "", amount: "",
+                            commodity: page.postingRows[0].commodity, original: null }])
+                        page.edited()
+                    }
+                }
                 // Amount, then date: stacked, never side by side.
                 Controls.TextField {
                     id: desktopAmount
                     font.pixelSize: page.app.narrow ? 32 : Kirigami.Theme.defaultFont.pixelSize
                     Layout.minimumHeight: page.app.narrow ? 56 : implicitHeight
-                    visible: !page.app.narrow && !["fix_reserves", "reconcile", "account_type"].includes(page.kind)
+                    visible: !page.app.narrow && !page.postingEdit && !["fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     Kirigami.FormData.label: page.kind === "split" ? i18nc("@label", "Total:") : i18nc("@label", "Amount:")
                     Accessible.name: i18n("Amount")
                     inputMethodHints: Qt.ImhFormattedNumbersOnly
@@ -586,7 +646,7 @@ Kirigami.ScrollablePage {
                 // The amount's problem shows as it's typed.
                 Controls.Label {
                     readonly property string typed: amount.text === "" ? "" : page.ledger.checkAmount(amount.text, page.places, true)
-                    visible: !page.app.narrow && text !== ""
+                    visible: !page.app.narrow && !page.postingEdit && text !== ""
                     text: page.fieldErrors.amount || page.fieldErrors.total || typed
                     color: Kirigami.Theme.negativeTextColor
                     wrapMode: Text.Wrap

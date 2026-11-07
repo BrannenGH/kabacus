@@ -12,16 +12,11 @@ name: Release
 # - Every push to master publishes "latest":
 #   - the app's RPM (openSUSE Tumbleweed) and DEB (Debian) on the rolling
 #     `latest` pre-release, replaced on each push;
-#   - ghcr.io/<owner>/kabacus-server:latest (and :sha-<commit>).
-# - A version tag (v0.1.0; v0.2.0-rc.1 is a pre-release) publishes that
-#   version: a GitHub release with the RPM and DEB, and
-#   ghcr.io/<owner>/kabacus-server:<version>. The tag must match the
-#   workspace version in Cargo.toml.
+#   - ghcr.io/<owner>/kabacus-server:latest (and :<version>, :sha-<commit>).
 # - Run it by hand (workflow_dispatch) to build both without publishing.
 on:
   push:
     branches: [master]
-    tags: ["v*"]
   workflow_dispatch:
 
 permissions:
@@ -38,32 +33,18 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
-      # latest (push to master), release (version tag) or none (by hand).
+      # latest (push to master) or none (by hand).
       channel: ${{ steps.version.outputs.channel }}
-      prerelease: ${{ steps.version.outputs.prerelease }}
     steps:
+      # All history: scripts/package-version counts commits.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - id: version
         run: |
-          version="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -n1)"
-          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
-            channel=none
-          elif [ "$GITHUB_REF_TYPE" = tag ]; then
-            if [ "$GITHUB_REF_NAME" != "v$version" ]; then
-              echo "::error::tag $GITHUB_REF_NAME doesn't match Cargo.toml's version $version (expected v$version)"
-              exit 1
-            fi
-            channel=release
-          else
-            channel=latest
-            version="$version-g${GITHUB_SHA::7}"
-          fi
-          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "version=$(scripts/package-version)" >> "$GITHUB_OUTPUT"
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then channel=none; else channel=latest; fi
           echo "channel=$channel" >> "$GITHUB_OUTPUT"
-          case "$version" in
-            *-*) echo "prerelease=true" >> "$GITHUB_OUTPUT" ;;
-            *) echo "prerelease=false" >> "$GITHUB_OUTPUT" ;;
-          esac
 
   image:
     name: server image
@@ -75,29 +56,27 @@ jobs:
     env:
       PUBLISH: ${{ needs.version.outputs.channel != 'none' }}
     steps:
+      # All history: scripts/package-version counts commits.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/free-disk-space
       # The Containerfile's server stage, as scripts/build-image builds it,
-      # with podman. :latest follows master;
-      # version tags get only their versions; every build gets :sha-<commit>.
+      # with podman. :latest follows master; every build gets :<version> and
+      # :sha-<commit>.
       - name: Build
         env:
           VERSION: ${{ needs.version.outputs.version }}
           CHANNEL: ${{ needs.version.outputs.channel }}
-          PRERELEASE: ${{ needs.version.outputs.prerelease }}
         run: |
           image="ghcr.io/$(echo "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')/kabacus-server"
-          tags="sha-${GITHUB_SHA::7}"
-          case "$CHANNEL" in
-            latest) tags="$tags latest" ;;
-            release)
-              tags="$tags $VERSION"
-              [ "$PRERELEASE" = true ] || tags="$tags ${VERSION%.*}" ;;
-          esac
+          tags="sha-${GITHUB_SHA::7} $VERSION"
+          [ "$CHANNEL" = latest ] && tags="$tags latest"
           args=""
           for t in $tags; do args="$args -t $image:$t"; done
           podman build --target server --iidfile "$RUNNER_TEMP/iid" --platform linux/amd64 \
             --build-arg VERSION="$VERSION" \
+            --build-arg KABACUS_VERSION="$(scripts/package-version)" \
             --label org.opencontainers.image.title=kabacus-server \
             --label "org.opencontainers.image.description=Gateway to double-entry books in SQLite or PostgreSQL: validated writes, one revision per change" \
             --label org.opencontainers.image.licenses=AGPL-3.0-or-later \
@@ -140,7 +119,6 @@ jobs:
       GH_REPO: ${{ github.repository }}
       CHANNEL: ${{ needs.version.outputs.channel }}
       VERSION: ${{ needs.version.outputs.version }}
-      PRERELEASE: ${{ needs.version.outputs.prerelease }}
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -153,14 +131,10 @@ jobs:
       - name: Write the notes
         run: |
           owner="$(echo "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')"
-          image_tag="$VERSION"
-          [ "$CHANNEL" = latest ] && image_tag=latest
           (cd dist && sha256sum -- * > SHA256SUMS)
           {
-            if [ "$CHANNEL" = latest ]; then
-              echo "The latest build of master ($GITHUB_SHA), $VERSION. Replaced on every push."
-              echo
-            fi
+            echo "The latest build of master ($GITHUB_SHA), $VERSION. Replaced on every push."
+            echo
             cat <<EOF
           ## Install
 
@@ -176,7 +150,7 @@ jobs:
 
           The server (podman; see container/README.md for the volumes and settings):
 
-              podman pull ghcr.io/$owner/kabacus-server:$image_tag
+              podman pull ghcr.io/$owner/kabacus-server:latest
           EOF
           } > notes.md
       # The rolling release is recreated so its tag moves to this commit.
@@ -188,11 +162,3 @@ jobs:
             --target "$GITHUB_SHA" \
             --title "Kabacus latest (master)" \
             --notes-file notes.md --prerelease --latest=false
-      - name: Publish the version
-        if: env.CHANNEL == 'release'
-        run: |
-          flags=""
-          [ "$PRERELEASE" = true ] && flags="--prerelease"
-          gh release create "$GITHUB_REF_NAME" dist/* \
-            --title "Kabacus $VERSION" \
-            --notes-file notes.md --generate-notes $flags

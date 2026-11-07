@@ -1179,7 +1179,7 @@ msgstr "Permitir que os axentes controlen esta xanela"
 msgid "Control port"
 msgstr "Porto de control"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Conta"

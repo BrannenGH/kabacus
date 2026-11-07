@@ -1179,7 +1179,7 @@ msgstr "ഈ ജാലകം നിയന്ത്രിക്കാൻ ഏജന
 msgid "Control port"
 msgstr "നിയന്ത്രണ പോർട്ട്"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "അക്കൗണ്ട്"

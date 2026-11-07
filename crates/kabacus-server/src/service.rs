@@ -81,7 +81,7 @@ pub async fn version(state: &AppState) -> VersionDto {
     };
     VersionDto {
         ledger: state.ledger,
-        server_version: env!("CARGO_PKG_VERSION").to_string(),
+        server_version: kabacus_ledger::VERSION.to_string(),
         commit: COMMIT.to_string(),
         source_url: source_url(),
         tool_list_hash: crate::mcp::tool_list_hash(),

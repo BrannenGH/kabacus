@@ -1179,7 +1179,7 @@ msgstr "Autoriser les agents à piloter cette fenêtre"
 msgid "Control port"
 msgstr "Port de contrôle"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Compte"

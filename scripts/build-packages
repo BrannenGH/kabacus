@@ -34,7 +34,7 @@ for kind in ${*:-rpm deb}; do
       "$CARGO_TARGET_DIR/release/kabacus-cli" completions bash > target/cli-doc/kabacus-cli.bash
       "$CARGO_TARGET_DIR/release/kabacus-cli" completions zsh > target/cli-doc/_kabacus-cli
       "$CARGO_TARGET_DIR/release/kabacus-cli" completions fish > target/cli-doc/kabacus-cli.fish
-      cargo deb --locked -p kabacus-kde -o target/packages/ --deb-version "$1"' sh "$version" ;;
+      KABACUS_VERSION="$1" cargo deb --locked -p kabacus-kde -o target/packages/ --deb-version "$1"' sh "$version" ;;
     *) echo "usage: scripts/build-packages [rpm] [deb]" >&2; exit 2 ;;
   esac
 done

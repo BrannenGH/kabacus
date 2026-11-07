@@ -1181,7 +1181,7 @@ msgstr "Разрешить агентам управлять этим окном
 msgid "Control port"
 msgstr "Порт управления"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Счёт"

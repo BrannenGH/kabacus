@@ -142,3 +142,41 @@ test("reserve repairs use server-computed shortfalls in one batch and preserve t
     },
   ]);
 });
+
+test("split edits preserve repeated accounts' individual marks and exact amounts", () => {
+  const tx = { id: 18, tags: [["trip", "Bergen"]], postings: [
+    { account: "expenses:groceries", status: "!", amount: { exact: "30.00", commodity: "USD" } },
+    { account: "expenses:groceries", status: "*", amount: { exact: "10.00", commodity: "USD" } },
+    { account: "assets:bank:checking", status: "*", amount: { exact: "-40.00", commodity: "USD" } },
+  ] };
+  const fields = { date: "2026-10-25", description: "Maple Market",
+    account0: "expenses:groceries", amount0: "25.00",
+    account1: "expenses:groceries", amount1: "15.00",
+    account2: "assets:bank:checking", amount2: "-40.00" };
+  expect(operation("edit", fields, data, tx)).toMatchObject({ method: "PATCH", path: "/transactions/18", body: {
+    tags: tx.tags, postings: [
+      { account: fields.account0, status: "!", amount: { mantissa: "2500" } },
+      { account: fields.account1, status: "*", amount: { mantissa: "1500" } },
+      { account: fields.account2, status: "*", amount: { mantissa: "-4000" } },
+    ],
+  } });
+});
+
+
+test("removing the first split posting and adding a new one retains row identities", () => {
+  const tx = { id: 18, tags: [], postings: [
+    { account: "expenses:groceries", status: "!", amount: { commodity: "USD" } },
+    { account: "expenses:dining", status: "*", amount: { commodity: "USD" } },
+    { account: "assets:bank:checking", status: "*", amount: { commodity: "USD" } },
+  ] };
+  const result = operation("edit", {
+    date: "2026-10-25", description: "Harbor Cafe",
+    account1: "expenses:dining", amount1: "15.00",
+    account2: "assets:bank:checking", amount2: "-20.00",
+    account3: "expenses:groceries", amount3: "5.00",
+  }, data, tx);
+  expect(result.body.postings.map(p => [p.account, p.status, p.amount.mantissa])).toEqual([
+    ["expenses:dining", "*", "1500"], ["assets:bank:checking", "*", "-2000"],
+    ["expenses:groceries", "", "500"],
+  ]);
+});

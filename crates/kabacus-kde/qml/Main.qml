@@ -255,7 +255,7 @@ Kirigami.ApplicationWindow {
             return
         }
         openForm("edit", { id: id, mode: mode || "edit", date: d.date, payee: d.payee,
-            memo: d.memo, from: d.from, to: d.to, amount: d.amount })
+            memo: d.memo, from: d.from, to: d.to, amount: d.amount, postings: d.postings })
     }
 
     // The preview's Save: commit against the preview's head, off the GUI

@@ -353,7 +353,7 @@ pub async fn save_edit(
     Ok(())
 }
 
-async fn find_transaction(
+pub(crate) async fn find_transaction(
     client: &KabacusClient,
     id: &str,
 ) -> Result<kabacus_client::types::TransactionView, ModelError> {

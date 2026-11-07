@@ -46,13 +46,11 @@ jobs:
       - name: Name the package
         env:
           BUNDLE: ${{ inputs.bundle }}
-          COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
           KIND: ${{ matrix.kind }}
         run: |
           name="$BUNDLE"
           if [ -z "$name" ]; then
-            version="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -n1)"
-            name="$version-g${COMMIT::7}"
+            name="$(scripts/package-version)"
           fi
           mkdir dist
           mv target/packages/*."$KIND" "dist/kabacus-$name-x86_64.$KIND"

@@ -87,6 +87,14 @@ pub enum Draft {
         to: String,
         amount: String,
     },
+    EditPostings {
+        id: String,
+        date: String,
+        payee: String,
+        #[serde(default)]
+        memo: String,
+        postings: Vec<EditPosting>,
+    },
     /// Only the reversal.
     Void {
         id: String,
@@ -105,6 +113,14 @@ pub enum Draft {
         ids: Vec<String>,
         source: String,
     },
+}
+
+#[derive(Debug, Clone, Deserialize, PartialEq)]
+pub struct EditPosting {
+    pub account: String,
+    pub amount: String,
+    pub commodity: String,
+    pub original: Option<usize>,
 }
 
 /// Why a draft can't be written, in terms the form can show.
@@ -526,7 +542,7 @@ fn summary(draft: &Draft, books: &Books) -> String {
             person,
             their_share
         ),
-        Draft::Edit { payee, .. } => {
+        Draft::Edit { payee, .. } | Draft::EditPostings { payee, .. } => {
             i18nc!(
                 "%1 is a payee",
                 "Edit %1 in place. History keeps the old version.",
@@ -589,6 +605,19 @@ fn validate(draft: &Draft, books: &Books) -> Result<(), WriteError> {
                 return Err(field("to", i18n!("From and To must differ")));
             }
             check_amount("amount", amount, books.places, true)?;
+        }
+        Draft::EditPostings {
+            date,
+            payee,
+            postings,
+            ..
+        } => {
+            check_date(date)?;
+            required("payee", payee, &i18n!("Payee"))?;
+            for p in postings {
+                books.known("postings", &p.account)?;
+                check_amount("postings", &p.amount, books.places, false)?;
+            }
         }
         Draft::CardPurchase {
             date,
@@ -1009,6 +1038,46 @@ async fn send(
                         description: description(payee, memo),
                         postings,
                         tags: tx.tags.clone(),
+                        dry_run,
+                    },
+                )
+                .await
+        }
+        Draft::EditPostings {
+            id,
+            date,
+            payee,
+            memo,
+            postings,
+        } => {
+            let tx = transaction(client, id).await?;
+            let postings = postings
+                .iter()
+                .map(|p| {
+                    let money = p
+                        .amount
+                        .parse::<Money>()
+                        .map_err(|e| field("postings", e.to_string()))?;
+                    let mut body = posting(&p.account, &p.commodity, money);
+                    if let Some(old) = p
+                        .original
+                        .and_then(|i| tx.postings.get(i))
+                        .filter(|old| old.account == p.account)
+                    {
+                        body.status = old.status.clone();
+                    }
+                    Ok(body)
+                })
+                .collect::<Result<Vec<_>, WriteError>>()?;
+            client
+                .edit_transaction(
+                    crate::model::transaction_id(id)?,
+                    head,
+                    AddTransactionBody {
+                        date: date.trim().into(),
+                        description: description(payee, memo),
+                        postings,
+                        tags: tx.tags,
                         dry_run,
                     },
                 )

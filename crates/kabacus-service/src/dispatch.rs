@@ -70,7 +70,7 @@ pub async fn version(state: &Service) -> Result<Value, Error> {
         .map_err(|e| Error::Internal(e.into()))?
         .to_string();
     Ok(
-        json!({"server_version": env!("CARGO_PKG_VERSION"), "engine_version": kabacus_ledger::VERSION,
+        json!({"server_version": kabacus_ledger::VERSION, "engine_version": kabacus_ledger::VERSION,
         "head": head, "books": head, "schema_version": kabacus_store::sqlite::schema::latest_version(), "ledger":state.ledger, "store": "sqlite", "commit": "",
         "source_url": env!("KABACUS_LIBRARY_SOURCE"), "tool_list_hash": "",
         "auth": {"mode": "none", "issuer": null, "app_client_id": null}}),

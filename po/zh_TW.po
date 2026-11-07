@@ -1178,7 +1178,7 @@ msgstr "允許代理程式控制此視窗"
 msgid "Control port"
 msgstr "控制連接埠"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "帳戶"

@@ -2100,7 +2100,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-client"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "base64 0.22.1",
  "kabacus-core",
@@ -2122,7 +2122,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-core"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "chrono",
  "num-bigint",
@@ -2135,7 +2135,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-desktop"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "kabacus-client",
  "kabacus-kde",
@@ -2153,7 +2153,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-kde"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "chrono",
@@ -2171,7 +2171,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-ledger"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "chrono",
  "glob",
@@ -2183,7 +2183,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-mcp"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "base64 0.22.1",
@@ -2198,7 +2198,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-service"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "base64 0.22.1",
@@ -2219,7 +2219,7 @@ dependencies = [
 
 [[package]]
 name = "kabacus-store"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "chrono",
  "deadpool-postgres",

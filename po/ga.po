@@ -1182,7 +1182,7 @@ msgstr "Lig do ghníomhairí an fhuinneog seo a rialú"
 msgid "Control port"
 msgstr "Port rialaithe"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "Cuntas"

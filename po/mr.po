@@ -1179,7 +1179,7 @@ msgstr "एजंटना ही खिडकी चालवू द्या"
 msgid "Control port"
 msgstr "नियंत्रण पोर्ट"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "खाते"

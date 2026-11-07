@@ -1183,7 +1183,7 @@ msgstr "اسمح للوكلاء بالتحكم في هذه النافذة"
 msgid "Control port"
 msgstr "منفذ التحكم"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "الحساب"

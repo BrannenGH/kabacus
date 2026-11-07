@@ -1179,7 +1179,7 @@ msgstr "இந்தச் சாளரத்தை இயக்க முகவ
 msgid "Control port"
 msgstr "கட்டுப்பாட்டுத் துறை"
 
-#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Account"
 msgstr "கணக்கு"

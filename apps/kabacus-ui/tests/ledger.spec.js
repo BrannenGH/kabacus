@@ -7,7 +7,7 @@ const amount = (exact) => ({
   formatted: `${exact.startsWith("-") ? "-" : ""}$${exact.replace("-", "")}`,
 });
 const version = {
-  server_version: "0.1.0",
+  server_version: "0.2.12",
   commit: "7a9fce322640ecba4268aa2edf2c8013e8f33329",
   source_url: "https://github.com/BrannenGH/khledger",
   head: "42",
@@ -86,7 +86,7 @@ const cash = {
   unreserved_count: 0,
   warnings: [],
 };
-async function setup(page, conflict = false) {
+async function setup(page, conflict = false, shownTransaction = transaction) {
   const writes = [];
   const currentAccounts = structuredClone(accounts);
   const currentVersion = { ...version };
@@ -149,7 +149,7 @@ async function setup(page, conflict = false) {
         ],
       },
       "/accounts": currentAccounts,
-      "/transactions": [transaction],
+      "/transactions": [shownTransaction],
       "/counterparties": [
         { name: "jordan", net: amount("42.08"), label: "Owes you" },
       ],
@@ -1110,4 +1110,39 @@ test("shared breakpoint boundaries switch between tabs, rail and sidebar", async
       expect((await page.locator("aside").boundingBox()).width).toBe(sidebar);
     }
   }
+});
+
+test("desktop split editing previews every posting and preserves the reviewed draft", async ({ page }) => {
+  const split = { ...transaction, tags: [["trip", "Bergen"]], postings: [
+    { account: "expenses:groceries", status: "!", amount: amount("60.00") },
+    { account: "assets:receivable:jordan", status: "", amount: amount("24.25") },
+    { account: "assets:bank:checking", status: "*", amount: amount("-84.25") },
+  ] };
+  const writes = await setup(page, false, split);
+  await page.getByRole("navigation").getByRole("button", { name: "Transactions", exact: true }).click();
+  await page.getByRole("button", { name: "Edit", exact: true }).click();
+  const dialog = page.getByRole("dialog");
+  const amounts = dialog.getByLabel("Amount", { exact: true });
+  await expect(amounts).toHaveCount(3);
+  await expect(amounts.nth(2)).toHaveValue("-84.25");
+  await amounts.nth(0).fill("50.00");
+  await amounts.nth(1).fill("34.25");
+  await dialog.getByRole("button", { name: "Preview", exact: true }).click();
+  await expect(dialog.getByRole("heading", { name: "Review before saving" })).toBeVisible();
+  await dialog.getByRole("button", { name: "Back to edit", exact: true }).click();
+  await expect(amounts.nth(0)).toHaveValue("50.00");
+  await dialog.getByRole("button", { name: "Postings · 1", exact: true }).click();
+  await dialog.getByRole("button", { name: "Add", exact: true }).click();
+  await dialog.getByLabel("Account", { exact: true }).nth(2).fill("expenses:groceries");
+  await amounts.nth(2).fill("50.00");
+  await dialog.getByRole("button", { name: "Preview", exact: true }).click();
+  await dialog.getByRole("button", { name: "Save", exact: true }).click();
+  await expect(dialog).not.toBeVisible();
+  const saved = writes.at(-1);
+  expect(saved.headers["if-match"]).toBe('"42"');
+  expect(saved.body).toMatchObject({ dry_run: false, tags: split.tags, postings: [
+    { account: split.postings[1].account, status: "", amount: { mantissa: "3425" } },
+    { account: split.postings[2].account, status: "*", amount: { mantissa: "-8425" } },
+    { account: split.postings[0].account, status: "", amount: { mantissa: "5000" } },
+  ] });
 });
