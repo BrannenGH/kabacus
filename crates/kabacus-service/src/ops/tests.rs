@@ -127,6 +127,35 @@ async fn add(state: &Service, req: AddRequest) -> (u64, String) {
 }
 
 #[tokio::test]
+async fn transaction_reads_filter_without_changing_the_cached_books() {
+    let state = state("").await;
+    let (id, _) = add(&state, groceries(6412)).await;
+    let snapshot = state.books_snapshot().await.unwrap();
+    let before = snapshot.transactions.clone();
+    let loads = state.books_cache.loads();
+    let query = serde_json::from_value(serde_json::json!({
+        "account": "expenses:groceries", "payee": "Fresh Thyme", "sort": "date_desc"
+    }))
+    .unwrap();
+    let rows = crate::search::matching(&state, &query).await.unwrap();
+    assert_eq!(rows.len(), 1);
+    let found = crate::search::get_transaction(&state, &local(), &id.to_string(), false)
+        .await
+        .unwrap();
+    assert_eq!(
+        serde_json::to_value(&rows[0].0).unwrap(),
+        serde_json::to_value(&found.transaction).unwrap()
+    );
+    assert!(found.history.is_none());
+    assert!(matches!(
+        crate::search::get_transaction(&state, &local(), "999", false).await,
+        Err(crate::error::Error::NotFound(_))
+    ));
+    assert_eq!(snapshot.transactions, before);
+    assert_eq!(state.books_cache.loads(), loads);
+}
+
+#[tokio::test]
 async fn an_add_is_one_revision_recording_who_made_it() {
     let state = state("").await;
     let before = head(&state).await;

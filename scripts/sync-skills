@@ -6,16 +6,17 @@ import os
 from pathlib import Path
 
 root = Path(__file__).resolve().parent.parent
-vendor = root / ".agents/vendor/claude-skills/skills"
-if not vendor.is_dir():
-    raise SystemExit("Run git submodule update --init --recursive first.")
+vendors = [root / ".agents/vendor" / name / "skills" for name in ("claude-skills", "ponytail")]
 
 sources = {}
-for source in sorted(vendor.glob("**/SKILL.md")):
-    name = source.parent.name
-    if name in sources:
-        raise SystemExit(f"Duplicate skill name: {name}")
-    sources[name] = source.parent
+for vendor in vendors:
+    if not vendor.is_dir():
+        raise SystemExit("Run git submodule update --init --recursive first.")
+    for source in sorted(vendor.glob("**/SKILL.md")):
+        name = source.parent.name
+        if name in sources:
+            raise SystemExit(f"Duplicate skill name: {name}")
+        sources[name] = source.parent
 if not sources:
     raise SystemExit("The upstream collection contains no skills.")
 
@@ -32,6 +33,8 @@ for link, source in links.items():
     if not link.is_symlink():
         link.symlink_to(os.path.relpath(source, link.parent), target_is_directory=True)
 for link in skills.iterdir():
-    if link.is_symlink() and link.name not in sources and os.readlink(link).startswith("../vendor/claude-skills/skills/"):
+    if link.is_symlink() and link.name not in sources and any(
+        os.readlink(link).startswith(os.path.relpath(vendor, skills) + "/") for vendor in vendors
+    ):
         link.unlink()
 print(f"Linked {len(sources)} skills.")
