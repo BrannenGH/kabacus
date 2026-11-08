@@ -4,3 +4,6 @@
 [submodule ".agents/vendor/claude-skills"]
 	path = .agents/vendor/claude-skills
 	url = https://github.com/qa-aman/claude-skills.git
+[submodule ".agents/vendor/ponytail"]
+	path = .agents/vendor/ponytail
+	url = https://github.com/DietrichGebert/ponytail.git
