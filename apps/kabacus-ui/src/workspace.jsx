@@ -31,7 +31,13 @@ export function Workspace({Application,hosted}){
  async function open(source,state){
   setBusy(true);setError("");try{
    if(native()){const metadata=await invoke("open_books",{source});if(metadata.focused)return;current(metadata,new NativeApi(),state);}
-   else{if(source?.kind==="remote"){location.assign(`${source.url}/app/`);return;}const record=typeof source==="string"?await stored("books","get",source):source;if(await focusExisting(record.id))return;const api=await BrowserApi.open(record);current({id:record.id,name:record.name,filename:record.filename,local:true,location:record.handle?record.filename:t("Browser storage"),source:{kind:"browser",id:record.id}},api,state);}
+   else if(source?.kind==="remote"){
+    const url=new URL(source.url);
+    if(hosted&&url.origin===location.origin){
+     current({id:location.origin,name:location.host,filename:location.host,location:hosted.identity,local:false,source:{...source,url:url.origin}},new Api(hosted.token),state);
+    }else{location.assign(`${url.origin}/app/?connect=1`);return;}
+   }
+   else{const record=typeof source==="string"?await stored("books","get",source):source;if(await focusExisting(record.id))return;const api=await BrowserApi.open(record);current({id:record.id,name:record.name,filename:record.filename,local:true,location:record.handle?record.filename:t("Browser storage"),source:{kind:"browser",id:record.id}},api,state);}
    await list();
   }catch(e){setError(String(e.message||e));}finally{setBusy(false);}
  }
@@ -102,7 +108,7 @@ export function Workspace({Application,hosted}){
    {dialog.kind==="new"&&<><h2 id="workspace-dialog-title">{t("New Books…")}</h2><form onSubmit={setup}><label>{t("Name")}<input name="name" defaultValue="Household" required autoFocus/></label><label>{t("Currency")}<input name="currency" defaultValue="USD" required pattern="[A-Za-z0-9]+"/></label><label>{t("First account")}<input name="account" defaultValue="assets:bank:checking" required/></label><button disabled={busy}>{t("Create books")}</button></form></>}
    {dialog.kind==="connect"&&<><h2 id="workspace-dialog-title">{t("Connect to a Server…")}</h2><form onSubmit={connect}><label>{t("Server address")}<input name="url" type="url" placeholder="https://books.example.org" required autoFocus/></label>{native()&&<label>{t("Private CA")}<input name="ca"/></label>}<button>{t("Connect")}</button><button type="button" className="secondary" onClick={async(e)=>{const form=e.currentTarget.form;try{if(native())await invoke("test_server",{origin:form.elements.url.value,privateCa:form.elements.ca?.value||""});else{const response=await fetch(`${new URL(form.elements.url.value).origin}/version`,{signal:AbortSignal.timeout(10000)});if(!response.ok)throw new Error(response.statusText);}setError(t("Connected"));}catch(e){setError(String(e.message||e));}}}>{t("Test connection")}</button></form></>}
    {dialog.kind==="recent"&&<><h2 id="workspace-dialog-title">{t("Open Recent")}</h2>{recent.map((source,i)=><button key={i} className="recent-row quiet" onClick={()=>open(source)}>{source.name||source.filename||source.path||source.url}</button>)}</>}
-   {dialog.kind==="reopen"&&<><h2 id="workspace-dialog-title">{t("Pick up where you left off")}</h2><p>{t("Allow editing again")}</p><button onClick={async()=>{const windows=dialog.windows;for(let i=0;i<windows.length;i++){const item=windows[i];if(item.source?.kind==="remote")window.open(`${item.source.url}/app/`,`kabacus-${item.source.url}`);else if(i===0)await open(item.bookId,item);else window.open(`?books=${item.bookId}`,`kabacus-${item.bookId}`);}}}>{t("Reopen")}</button></>}
+   {dialog.kind==="reopen"&&<><h2 id="workspace-dialog-title">{t("Pick up where you left off")}</h2><p>{t("Allow editing again")}</p><button onClick={async()=>{const windows=dialog.windows;for(let i=0;i<windows.length;i++){const item=windows[i];if(i===0)await open(item.source?.kind==="remote"?item.source:item.bookId,item);else if(item.source?.kind==="remote")window.open(`${item.source.url}/app/?connect=1`,`kabacus-${item.source.url}`);else window.open(`?books=${item.bookId}`,`kabacus-${item.bookId}`);}}}>{t("Reopen")}</button></>}
    {error&&<p role="alert" className="banner error">{error}</p>}
   </div></div>}
   {error&&!dialog&&<div className="save-toast" role="alert">{error}<button className="quiet" onClick={()=>setError("")}>{t("Close")}</button></div>}
