@@ -74,7 +74,7 @@ export function OperationDialog({
         else field.value = value;
       }
     }
-  }, [preview]);
+  }, [preview, phone]);
   useEffect(() => {
     if (!dirty) return;
     const leave = (e) => {

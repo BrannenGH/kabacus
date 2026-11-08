@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import React,{useEffect,useRef,useState} from "react";
 import { t } from "./i18n";
+import { useDialogHistory } from "./phone-history";
 import { Api } from "./api";
 import { BrowserApi, NativeApi, importFile, stored } from "./local-books";
 import icon from "./icon.svg";
@@ -10,6 +11,7 @@ const invoke=(command,args)=>window.__TAURI_INTERNALS__.invoke(command,args);
 const localAuth={signedIn:true,identity:"",token:async()=>null};
 export function Workspace({Application,hosted}){
  const [book,setBook]=useState(null),[recent,setRecent]=useState([]),[dialog,setDialog]=useState(null),[error,setError]=useState(""),[busy,setBusy]=useState(false),[settings,setSettings]=useState({reopen:true,automation:false,control_port:7979}),[activity,setActivity]=useState(null);
+ useDialogHistory({ active: !!dialog, busy, onClose: () => { setDialog(null); setError(""); } });
  const [nativeSignedIn,setNativeSignedIn]=useState(true);
  const previous=useRef(null);
  const input=useRef(),windowId=useRef(window.__KABACUS_WINDOW_ID__||((window.opener&&performance.getEntriesByType("navigation")[0]?.type!=="reload")?crypto.randomUUID():sessionStorage.getItem("kabacus.window"))||crypto.randomUUID());

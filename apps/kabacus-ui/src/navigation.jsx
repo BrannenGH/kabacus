@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import React, { useEffect, useRef } from "react";
 import { t } from "./i18n";
+import { useDialogHistory } from "./phone-history";
 
 export const destinations = ["Overview", "Register", "Funds", "Cards", "Loans", "People", "Reports", "Activity"];
 export const pageLabels = { Overview: "Overview", Register: "Transactions", Funds: "Reserves", Cards: "Credit", Loans: "Loans", People: "People", Reports: "Reports", Activity: "Activity", Settings: "Settings" };
@@ -21,6 +22,7 @@ const paths = {
 export function Icon({ name }) { return <svg className="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name] || paths.Register} /></svg>; }
 export function Key({ children }) { return <kbd>{children}</kbd>; }
 export function AddChooser({ commands, onChoose, onClose }) {
+  useDialogHistory({ onClose });
   const ref = useRef();
   useEffect(() => { ref.current.showModal(); ref.current.querySelector("button[data-choice]")?.focus(); }, []);
   return <dialog ref={ref} className="add-chooser" aria-labelledby="add-title" onCancel={(e) => { e.preventDefault(); onClose(); }} onKeyDown={(e) => {
@@ -52,6 +54,7 @@ export function AccountList({ data, selected, onSelect }) {
 
 
 export function BooksSheet({ book, onClose, onAction }) {
+  useDialogHistory({ onClose });
   const ref = useRef();
   useEffect(() => { ref.current.showModal(); }, []);
   return <dialog ref={ref} className="books-sheet" aria-labelledby="books-title" onCancel={e => {e.preventDefault(); onClose();}}>

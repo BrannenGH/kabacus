@@ -15,7 +15,9 @@ export function useDialogHistory({ active = true, onClose, preview, setPreview, 
     const token = id.current;
     const base = history.state;
     const entry = review => ({ ...base, phoneDialog: token, review });
-    history.pushState(entry(false), "");
+    const handoff = base?.phoneDialog && !dialogs.includes(base.phoneDialog);
+    if (handoff) history.replaceState(entry(false), "");
+    else history.pushState(entry(false), "");
     dialogs.push(token);
     const back = event => {
       if (dialogs.at(-1) !== token) return;
@@ -32,7 +34,10 @@ export function useDialogHistory({ active = true, onClose, preview, setPreview, 
     return () => {
       window.removeEventListener("popstate", back, true);
       dialogs.splice(dialogs.indexOf(token), 1);
-      if (history.state?.phoneDialog === token) history.go(history.state.review ? -2 : -1);
+      // A replacement dialog can take over this entry in the same render.
+      queueMicrotask(() => {
+        if (history.state?.phoneDialog === token) history.go(history.state.review ? -2 : -1);
+      });
     };
   }, [phone, active]);
   useEffect(() => {
