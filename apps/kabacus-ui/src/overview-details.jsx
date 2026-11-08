@@ -7,6 +7,8 @@ export function OverviewDetails({ api, data }) {
   const [error, setError] = useState("");
   useEffect(() => {
     const c = new AbortController();
+    setHistory(null);
+    setError("");
     const date = new Date();
     const to = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
     const from = `${date.getFullYear() - 1}-${String(date.getMonth() + 1).padStart(2, "0")}-01`;
@@ -15,12 +17,12 @@ export function OverviewDetails({ api, data }) {
         `/reports/cash-on-hand-history?from=${from}&to=${to}&interval=month`,
         { signal: c.signal },
       )
-      .then(setHistory)
+      .then(result => { if (!c.signal.aborted) setHistory(result); })
       .catch((e) => {
-        if (e.name !== "AbortError") setError(e.message);
+        if (!c.signal.aborted && e.name !== "AbortError") setError(e.message);
       });
     return () => c.abort();
-  }, [api, data.version.head]);
+  }, [api, data]);
   let points = [];
   if (history?.points?.length) {
     const values = history.points.map((p) => {
@@ -53,7 +55,8 @@ export function OverviewDetails({ api, data }) {
       <div className="panel-heading">
         <h2>{t("Cash on Hand over time")}</h2>
       </div>
-      {error && <p className="banner error">{error}</p>}
+      {error && <p className="banner error" role="alert">{error}</p>}
+      {!history && !error && <p className="empty" role="status">{t("Loading…")}</p>}
       {history && (
         <>
           <svg

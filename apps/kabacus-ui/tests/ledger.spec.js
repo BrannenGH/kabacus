@@ -1278,3 +1278,51 @@ test.describe("mobile exploration regressions", () => {
     });
   }
 });
+
+for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
+  test.describe(`stakeholder review at ${viewport.width}px`, () => {
+    test.use({ viewport });
+    test("zero-balance reserves offer a next action", async ({ page }) => {
+      await setup(page);
+      await page.route("**/cash-on-hand?**", route => route.fulfill({ json: {
+        ...cash, funds: cash.funds.map(fund => ({ ...fund, balance: amount("0.00") })),
+      } }));
+      await page.keyboard.press("r");
+      const reserves = page.locator(".overview-reserves");
+      await expect(reserves.getByText("Nothing is set aside yet", { exact: true })).toBeVisible();
+      await reserves.getByRole("button", { name: "Set aside", exact: true }).click();
+      await expect(page.getByRole("dialog")).toBeVisible();
+    });
+    test("activity filters CLI changes and explains an empty filter", async ({ page }) => {
+      await setup(page);
+      await page.route("**/history", route => route.fulfill({ json: [
+        { hash: "43", revision: 43, summary: "Recorded Northwind Logistics", actor: "cli", user: "Dana Okafor", date: "2026-10-24T12:00:00Z" },
+        { hash: "42", revision: 42, summary: "Recorded Maple Market", actor: "app", user: "Dana Okafor", date: "2026-10-23T12:00:00Z" },
+      ] }));
+      await page.keyboard.press("r");
+      if (viewport.width < 600) await page.locator('[data-destination="More"]').click();
+      await page.locator('[data-destination="Activity"]').click();
+      const filter = page.getByRole("combobox", { name: "Activity", exact: true });
+      await filter.selectOption("cli");
+      await expect(page.getByRole("heading", { name: "Recorded Northwind Logistics" })).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Recorded Maple Market" })).toHaveCount(0);
+      await filter.selectOption("mcp");
+      await expect(page.getByText("No changes", { exact: true })).toBeVisible();
+      await filter.selectOption("");
+      await expect(page.getByRole("heading", { name: "Recorded Maple Market" })).toBeVisible();
+    });
+    test("cash trend clears errors after a successful refresh", async ({ page }) => {
+      await setup(page);
+      await page.route("**/reports/cash-on-hand-history?**", route => route.fulfill({ status: 503, json: { message: "History temporarily unavailable" } }));
+      await page.route("**/version", route => route.fulfill({ json: { ...version, head: "43", books: "43" } }));
+      await page.keyboard.press("r");
+      const trend = page.locator(".overview-trend");
+      await expect(trend.locator(".error")).toBeVisible();
+      await page.route("**/reports/cash-on-hand-history?**", route => route.fulfill({ json: { commodity: "USD", points: [{ date: "2026-10-25", cash_on_hand: "4520.75" }] } }));
+      await page.route("**/version", route => route.fulfill({ json: { ...version, head: "43", books: "43" } }));
+      await page.keyboard.press("r");
+      await expect(trend.getByRole("img")).toBeVisible();
+      await expect(trend.locator(".error")).toHaveCount(0);
+    });
+  });
+}

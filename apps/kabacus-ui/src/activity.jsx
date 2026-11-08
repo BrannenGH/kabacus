@@ -20,6 +20,7 @@ export function Activity({ api, data, onOpen }) {
       });
     return () => c.abort();
   }, [api, selected]);
+  const changes = data.history.filter((change) => !actor || change.actor === actor);
   return (
     <section className="panel">
       <div className="filters">
@@ -29,19 +30,18 @@ export function Activity({ api, data, onOpen }) {
             {[
               ["", "All"],
               ["app", "This app"],
+              ["cli", "kabacus-cli"],
               ["mcp", "MCP"],
               ["external", "External edit"],
             ].map(([value, label]) => (
               <option key={value} value={value}>
-                {t(label)}
+                {value === "cli" ? label : t(label)}
               </option>
             ))}
           </select>
         </label>
       </div>
-      {data.history
-        .filter((change) => !actor || change.actor === actor)
-        .map((change) => (
+      {changes.map((change) => (
           <div className="list-row" key={change.hash}>
             <button className="quiet" onClick={() => setSelected(change.hash)}>
               {change.revision}
@@ -74,7 +74,7 @@ export function Activity({ api, data, onOpen }) {
             )}
           </div>
         ))}
-      {!data.history.length && <p className="empty">{t("No changes")}</p>}
+      {!changes.length && <p className="empty">{t("No changes")}</p>}
       {error && (
         <p className="banner error" role="alert">
           {error}
