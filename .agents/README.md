@@ -4,8 +4,9 @@
 # Project skills
 
 The full [upstream skill collection](https://github.com/qa-aman/claude-skills)
-is pinned as a Git submodule in `vendor/claude-skills`. Its MIT license and
-supporting resources stay with it. `skills/` exposes each skill by name;
+and [Ponytail](https://github.com/DietrichGebert/ponytail) are pinned as Git
+submodules in `vendor/claude-skills` and `vendor/ponytail`. Their MIT licenses
+and supporting resources stay with them. `skills/` exposes each skill by name;
 `.claude/skills` points to the same directory. The repository's contribution
 rules and the user's instructions take precedence over skill guidance.
 
@@ -19,7 +20,7 @@ scripts/sync-skills
 To review an upstream update:
 
 ```sh
-git submodule update --init --remote .agents/vendor/claude-skills
+git submodule update --init --remote .agents/vendor/claude-skills .agents/vendor/ponytail
 scripts/sync-skills
 git diff --submodule=log
 ```
@@ -28,3 +29,7 @@ Commit the updated submodule pin and any changed skill links together.
 The sync script requires Python 3 and refuses to overwrite local entries.
 Use a checkout with symbolic-link support; on Windows enable Developer Mode
 and Git's `core.symlinks` before cloning.
+
+Use `ponytail` for small, complete changes, `ponytail-review` for a diff,
+and `ponytail-audit` for a repository review. These are instruction files;
+syncing them installs no lifecycle hooks or background services.
