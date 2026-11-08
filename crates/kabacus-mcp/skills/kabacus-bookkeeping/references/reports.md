@@ -23,17 +23,29 @@ inclusive, `YYYY-MM-DD`; `interval` is `none`, `month`, `quarter` or
 Paying down a loan isn't an expense, but the money is no longer there to
 spend. `income_statement` shows it in its own `equity_conversion` section:
 the drop in what is owed on each `term-liability` account, split into
-`cash` (payments) and `non_cash` (interest accruals and others' shares,
-which add to the debt). `net` is income minus expenses minus that;
+`cash` (principal payments) and `non_cash` (interest accrued onto the
+loan, which adds to the debt). `net` is income minus expenses minus that;
 `net_before_conversion` leaves it out. `conversion_kinds: ["term-liability",
 "non-liquid"]` also counts money moved into investments.
 `equity_conversion: false` leaves the section out.
 
-**Shared loan payments.** A co-owner's or tenant's share of a payment is a
-credit to the loan and a debit to their receivable; their repayment is a
-credit to the receivable and a debit to checking. Never credit an expense
-with it. A 380.00 payment with a 190.00 share leaves 190.00 of conversion
-and 190.00 owed until repaid.
+**Shared loan payments.** The loan account records only what the lender
+actually applied: principal payments reduce the debt, and interest accrued
+onto the loan increases it. Keep it in agreement with the lender's statement
+so `reconcile` can match. Interest paid as part of a payment is an expense,
+not a reduction of principal.
+
+A co-owner's share is a debit to their receivable and a credit to the
+payment's expense category; it does not change the loan. Their repayment
+is a credit to the receivable and a debit to checking. A tenant's rent is
+income: debit checking and credit rental income when received, or debit
+their receivable and credit rental income when booking rent owed, then
+clear the receivable when paid. Rent does not pay down the loan.
+
+For example, a 380.00 principal payment reduces the loan by 380.00 and
+leaves 380.00 of conversion, even if a co-owner owes a 190.00 share. Book
+that share separately as a 190.00 debit to their receivable and a 190.00
+credit to the payment's expense category; it remains owed until repaid.
 
 ## Cash flow
 
