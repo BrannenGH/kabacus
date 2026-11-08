@@ -1164,3 +1164,32 @@ test("desktop split editing previews every posting and preserves the reviewed dr
     { account: split.postings[0].account, status: "", amount: { mantissa: "5000" } },
   ] });
 });
+
+test("remote books reopen in the PWA window after session storage is lost", async ({ page, context }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await setup(page);
+  await page.locator('[data-destination="Register"]').click();
+  await expect(page.getByRole('heading', { name: 'Transactions', exact: true, level: 1 })).toBeVisible();
+  await expect.poll(() => page.evaluate(() => new Promise((resolve, reject) => {
+    const request = indexedDB.open('kabacus-local-books', 1);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      const db = request.result;
+      const query = db.transaction('state').objectStore('state').get('workspace');
+      query.onsuccess = () => { resolve(query.result?.windows?.[0]?.page); db.close(); };
+      query.onerror = () => { reject(query.error); db.close(); };
+    };
+  }))).toBe('Register');
+  await page.evaluate(() => sessionStorage.clear());
+  await page.goto('/app/');
+  await expect(page.getByRole('dialog', { name: 'Pick up where you left off' })).toBeVisible();
+  let navigations = 0;
+  page.on('request', request => { if (request.isNavigationRequest()) navigations++; });
+  await page.getByRole('button', { name: 'Reopen', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Transactions', exact: true, level: 1 })).toBeVisible();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  expect(navigations).toBe(0);
+  expect(context.pages()).toHaveLength(1);
+  await page.reload();
+  await expect(page.getByRole('heading', { name: 'Transactions', exact: true, level: 1 })).toBeVisible();
+});
