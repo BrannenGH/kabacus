@@ -41,3 +41,34 @@ test('local books use the real engine, save a revision, reopen and download a po
  await expect(page.getByText('Cedar Design payroll',{exact:true})).toBeVisible();
  expect(errors).toEqual([]);
 });
+
+test.describe('phone local books', () => {
+ test.use({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ test('a rotated income draft saves exactly and reopens from browser storage', async({page})=>{
+  await page.addInitScript(()=>{window.showSaveFilePicker=undefined;window.showOpenFilePicker=undefined;});
+  await page.route('**/version',route=>route.fulfill({status:404,body:'No server'}));
+  await page.goto('/app/');
+  await page.getByRole('button',{name:'New Books…',exact:true}).tap();
+  await page.getByLabel('Name',{exact:true}).fill('Cedar Household');
+  await page.getByRole('button',{name:'Create books',exact:true}).tap();
+  await expect(page.locator('.overview-layout')).toBeVisible();
+  await page.getByRole('button',{name:'Add',exact:true}).tap();
+  await page.getByRole('button',{name:/^Received/}).tap();
+  await page.getByLabel('Amount (USD)').fill('2184.33');
+  await page.getByLabel('Payee',{exact:true}).fill('Northwind Logistics');
+  await page.setViewportSize({width:844,height:390});
+  await expect(page.getByLabel('Amount (USD)')).toHaveValue('2184.33');
+  await page.setViewportSize({width:390,height:844});
+  await page.getByRole('button',{name:'Review',exact:true}).tap();
+  await expect(page.locator('.preview')).toContainText('USD2184.33');
+  await page.getByRole('button',{name:'Save',exact:true}).tap();
+  await expect(page.locator('.save-toast')).toContainText('Saved as revision 3');
+  await expect(page.locator('.cash-total')).toHaveText('$2,184.33');
+  await page.reload();
+  await expect(page.locator('.cash-total')).toHaveText('$2,184.33');
+  await page.getByRole('navigation').getByRole('button',{name:'Transactions',exact:true}).tap();
+  await page.locator('.account-list button').filter({hasText:'Checking'}).first().tap();
+  await expect(page.locator('.register-row')).toContainText('Northwind Logistics');
+  await expect(page.locator('.register-row')).toContainText('$2,184.33');
+ });
+});

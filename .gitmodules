@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+# SPDX-License-Identifier: CC0-1.0
+
+[submodule ".agents/vendor/claude-skills"]
+	path = .agents/vendor/claude-skills
+	url = https://github.com/qa-aman/claude-skills.git

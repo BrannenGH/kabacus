@@ -15,15 +15,26 @@ export function PhonePicker({ form }) {
   useDialogHistory({ active: !!field, onClose: () => setField(null) });
   useEffect(() => {
     if (!phone || !form.current) return;
+    const inputFor = event => event.pointerType === "touch"
+      ? event.target.closest('select,input[list]:not([name="description"]),input[type="date"]')
+      : null;
+    const preventNative = event => {
+      if (inputFor(event)) event.preventDefault();
+    };
     const pick = event => {
-      const input = event.target.closest('select,input[list]:not([name="description"]),input[type="date"]');
-      if (!input || event.pointerType !== "touch") return;
+      const input = inputFor(event);
+      if (!input) return;
       event.preventDefault();
       setQuery(""); setField(input);
     };
     const node = form.current;
-    node.addEventListener("pointerdown", pick);
-    return () => node.removeEventListener("pointerdown", pick);
+    // Open after the tap finishes so its release cannot choose an option.
+    node.addEventListener("pointerdown", preventNative);
+    node.addEventListener("click", pick);
+    return () => {
+      node.removeEventListener("pointerdown", preventNative);
+      node.removeEventListener("click", pick);
+    };
   }, [phone, form]);
   useEffect(() => { if (field) dialog.current.showModal(); }, [field]);
   if (!field) return null;

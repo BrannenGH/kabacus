@@ -797,7 +797,7 @@ function WriteDialog({
         else field.value = value;
       }
     }
-  }, [preview]);
+  }, [preview, phone]);
   const allocation = kind === "allocation";
   const received = kind === "received";
   const transfer = kind === "transfer";

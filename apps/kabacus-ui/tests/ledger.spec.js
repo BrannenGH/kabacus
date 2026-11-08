@@ -1193,3 +1193,88 @@ test("remote books reopen in the PWA window after session storage is lost", asyn
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Transactions', exact: true, level: 1 })).toBeVisible();
 });
+
+
+test.describe("mobile exploration regressions", () => {
+  test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+
+  test("opening an account picker does not select the option under the finger", async ({ page }) => {
+    await setup(page);
+    await page.getByRole("button", { name: "Add", exact: true }).tap();
+    await page.getByRole("button", { name: /^Spent/ }).tap();
+    const form = page.locator(".bookkeeping-dialog");
+    const from = form.locator('select[name="from"]');
+    await from.tap();
+    const picker = page.locator(".phone-picker");
+    await expect(picker).toBeVisible();
+    await expect(from).toHaveValue("");
+    await picker.getByRole("button", { name: "Checking", exact: true }).tap();
+    await expect(picker).toHaveCount(0);
+    await expect(from).toHaveValue(accounts[0].account);
+    await form.locator('input[name="to"]').tap();
+    await expect(picker).toBeVisible();
+    await page.goBack();
+    await expect(picker).toHaveCount(0);
+    await expect(form).toBeVisible();
+    await expect(from).toHaveValue(accounts[0].account);
+  });
+
+  for (const sheet of ["Add", "Books"]) {
+    test(`browser Back closes the ${sheet} sheet and choosing an action keeps the form open`, async ({ page }) => {
+      await setup(page);
+      const open = async () => sheet === "Add"
+        ? page.getByRole("button", { name: "Add", exact: true }).tap()
+        : page.locator(".phone-books-name").tap();
+      await open();
+      await expect(page.getByRole("dialog")).toBeVisible();
+      await page.goBack();
+      await expect(page.getByRole("dialog")).toHaveCount(0);
+      await expect(page.locator(".overview-layout")).toBeVisible();
+      await expect(page).toHaveURL(/\/app\/\?connect=1$/);
+      await open();
+      if (sheet === "Add") {
+        await page.getByRole("button", { name: /^Received/ }).tap();
+        await expect(page.locator(".bookkeeping-dialog")).toBeVisible();
+        await page.getByLabel("Amount (USD)").fill("48.73");
+        page.once("dialog", dialog => dialog.dismiss());
+        await page.goBack();
+        await expect(page.getByLabel("Amount (USD)")).toHaveValue("48.73");
+        page.once("dialog", dialog => dialog.accept());
+        await page.goBack();
+      } else {
+        await page.getByRole("button", { name: "Connect to a Server…", exact: true }).tap();
+        await expect(page.getByRole("dialog", { name: "Connect to a Server…", exact: true })).toBeVisible();
+        await page.goBack();
+      }
+      await expect(page.getByRole("dialog")).toHaveCount(0);
+      await expect(page.locator(".overview-layout")).toBeVisible();
+    });
+  }
+
+  for (const choice of ["Received", "Card purchase"]) {
+    test(`rotation preserves the ${choice} draft and reviewed amount`, async ({ page }) => {
+      const writes = await setup(page);
+      await page.getByRole("button", { name: "Add", exact: true }).tap();
+      await page.locator(".add-chooser button[data-choice]").filter({ hasText: choice }).tap();
+      const form = page.locator(".bookkeeping-dialog");
+      const amount = form.locator('input[name="amount"]');
+      await amount.fill("48.73");
+      await form.getByLabel("Payee", { exact: true }).fill("Cedar Cafe refund");
+      await form.locator('input[name="date"]').fill("2026-10-25");
+      if (choice === "Card purchase")
+        await form.locator('select[name="card"]').selectOption("liabilities:card:everyday");
+      for (const [width, height] of [[844, 390], [1280, 800], [390, 844]]) {
+        await page.setViewportSize({ width, height });
+        await expect(amount).toHaveValue("48.73");
+        await expect(form.getByLabel("Payee", { exact: true })).toHaveValue("Cedar Cafe refund");
+        await expect(form.locator('input[name="date"]')).toHaveValue("2026-10-25");
+      }
+      await form.getByRole("button", { name: "Review", exact: true }).click();
+      await expect(form.locator(".preview")).toBeVisible();
+      const body = writes.at(-1).body;
+      expect(body.dry_run).toBe(true);
+      if (choice === "Received") expect(body.postings[0].amount).toEqual({ commodity: "USD", mantissa: "4873", places: 2 });
+      else expect(body.amount).toBe("48.73");
+    });
+  }
+});
