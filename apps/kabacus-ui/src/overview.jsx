@@ -9,6 +9,7 @@ function Amount({ value }) { return <span className={`amount ${value?.exact.star
 export function Overview({ data, api, onAccount, onReserve, onCredit, onFix }) {
   const phone = useMedia(phoneQuery);
   const cash = data.cash;
+  const funds = cash.funds.filter(fund => nonzero(fund.balance));
   const amounts=[cash.cash_on_hand,...cash.funds.map(f=>f.balance),...cash.cards.map(c=>c.reserve_balance)].filter(Boolean);
   const places=Math.max(0,...amounts.map(a=>(a.exact.split(".")[1]||"").length));
   const units=a=>{const [whole,fraction=""]=(a?.exact||"0").split(".");const value=BigInt(whole+fraction.padEnd(places,"0"));return value>0n?value:0n;};
@@ -27,7 +28,7 @@ export function Overview({ data, api, onAccount, onReserve, onCredit, onFix }) {
     {phone && cash.warnings.length > 0 && <div className="overview-warnings">{cash.warnings.map((warning, i) => <div className="banner warning" key={i}>{warning.message}<button className="quiet" onClick={() => onFix(warning)}>{t("Fix")}</button></div>)}</div>}
     <section className="panel free-accounts"><h2>{t("Free money by account")}</h2>{cash.homes.filter(h=>nonzero(h.free)).map(home=><button className="overview-row quiet" key={home.account} onClick={()=>onAccount(home.account)}><span>{home.display_name||home.account}</span><Amount value={home.free}/></button>)}{!cash.homes.length&&<p className="empty">{t("No accounts")}</p>}</section>
     <section className="panel overview-credit"><h2>{t("Credit")}</h2>{cash.cards.filter(c=>nonzero(c.owed)).map(card=><button className="overview-row quiet" key={card.card} onClick={onCredit}><span>{card.display_name||card.card}<small>{nonzero(card.difference)?t("Still to reserve"):t("Reserved")}</small></span><Amount value={card.owed}/></button>)}</section>
-    <section className="panel overview-reserves"><h2>{t("Reserves")}</h2>{cash.funds.filter(f=>nonzero(f.balance)).map(fund=><button className="overview-row quiet" key={fund.account} onClick={()=>onReserve(fund)}><span>{fund.display_name||fund.account}</span><Amount value={fund.balance}/></button>)}{!cash.funds.length&&<><p>{t("Nothing is set aside yet")}</p><p className="muted">{t("Reserves hold money for later, like property tax or car repairs. It stays in your bank account.")}</p><button onClick={()=>onReserve(null)}>{t("Set aside")}</button></>}</section>
+    <section className="panel overview-reserves"><h2>{t("Reserves")}</h2>{funds.map(fund=><button className="overview-row quiet" key={fund.account} onClick={()=>onReserve(fund)}><span>{fund.display_name||fund.account}</span><Amount value={fund.balance}/></button>)}{!funds.length&&<><p>{t("Nothing is set aside yet")}</p><p className="muted">{t("Reserves hold money for later, like property tax or car repairs. It stays in your bank account.")}</p><button onClick={()=>onReserve(null)}>{t("Set aside")}</button></>}</section>
     <div className="overview-trend"><OverviewDetails api={api} data={data}/></div>
   </div>;
 }
