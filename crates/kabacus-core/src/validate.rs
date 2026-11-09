@@ -847,15 +847,17 @@ mod tests {
     fn exchange_inference_uses_the_cost_without_changing_wallet_units() {
         let mut crypto = draft("assets:investments:ethereum", 0, AssertionEdit::Keep);
         crypto.amount = Some(Amount::new("ETH", Money::from_decimal(4, 1)));
-        crypto.cost = CostEdit::Set(crate::Cost {
-            kind: crate::CostKind::Total,
-            amount: usd(100000, 2),
-        });
-        let mut cash = draft("assets:bank:checking", 0, AssertionEdit::Keep);
-        cash.amount = None;
-        let amounts = resolve_amounts(&[crypto, cash]).unwrap();
-        assert_eq!(amounts[0], Amount::new("ETH", Money::from_decimal(4, 1)));
-        assert_eq!(amounts[1], usd(-100000, 2));
+        for (kind, amount) in [
+            (crate::CostKind::Total, usd(100000, 2)),
+            (crate::CostKind::Unit, usd(250000, 2)),
+        ] {
+            crypto.cost = CostEdit::Set(crate::Cost { kind, amount });
+            let mut cash = draft("assets:bank:checking", 0, AssertionEdit::Keep);
+            cash.amount = None;
+            let amounts = resolve_amounts(&[crypto.clone(), cash]).unwrap();
+            assert_eq!(amounts[0], Amount::new("ETH", Money::from_decimal(4, 1)));
+            assert_eq!(amounts[1], usd(-100000, 2));
+        }
     }
 
     proptest::proptest! {

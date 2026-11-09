@@ -4,7 +4,8 @@ import { useDialogHistory } from "./phone-history";
 import { PhonePicker } from "./phone-picker";
 import { useMedia, phoneQuery, desktopQuery } from "./form-factor";
 import React, { useEffect, useRef, useState } from "react";
-import { operation, currencies, accountCurrency } from "./operations";
+import { AmountField } from "./amount-field";
+import { operation, accountCurrency } from "./operations";
 import { t } from "./i18n";
 const titles = {
   postings: "Postings",
@@ -190,28 +191,11 @@ export function OperationDialog({
   const localDate = new Date();
   const typeAccount = snapshot.current.accounts.find((a) => a.account === account);
   const date = `${localDate.getFullYear()}-${String(localDate.getMonth() + 1).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}`;
-  const amountField = (
-    !postingEdit && !["fix", "status", "postings", "transfer", "account-type"].includes(kind) && (
-                    <label>
-                      {t("Amount")}
-                      <input
-                        name="amount"
-                        autoFocus={phone}
-                        inputMode="decimal"
-                        required
-                        pattern={
-                          kind === "reconcile"
-                            ? "-?[0-9]+([.][0-9]+)?"
-                            : "[0-9]+([.][0-9]+)?"
-                        }
-                        defaultValue={tx?.postings[0]?.amount.exact.replace(
-                          /^-/,
-                          "",
-                        )}
-                      />
-                    </label>
-                  )
-  );
+  const amountField = !postingEdit && !["fix", "status", "postings", "transfer", "account-type"].includes(kind) &&
+    <AmountField data={data} input={{name:"amount",autoFocus:phone,
+      pattern:kind === "reconcile" ? "-?[0-9]+([.][0-9]+)?" : "[0-9]+([.][0-9]+)?",
+      defaultValue:tx?.postings[0]?.amount.exact.replace(/^-/, "")}}
+      currency={kind === "reconcile" ? {name:"currency",value:currency,onChange:e=>setCurrency(e.target.value)} : null} />;
   return (
     <dialog
       aria-labelledby="operation-title"
@@ -320,22 +304,10 @@ export function OperationDialog({
                               required
                             />
                           </label>
-                          <label>
-                            {t("Amount")}
-                            <input
-                              defaultValue={postingEdit ? tx.postings[row]?.amount.exact : ""}
-                              name={"amount" + row}
-                              inputMode="decimal"
-                              required
-                              pattern={kind === "transfer" ? "[0-9]+([.][0-9]+)?" : "-?[0-9]+([.][0-9]+)?"}
-                            />
-                          </label>
-                          <label>
-                            {t("Currency")}
-                            <select name={"currency" + row} defaultValue={postingEdit ? tx.postings[row]?.amount.commodity : accountCurrency(data, kind === "transfer" && row === 0 ? account : "")}>
-                              {currencies(data).map(c => <option key={c.symbol} value={c.symbol}>{c.symbol}</option>)}
-                            </select>
-                          </label>
+                          <AmountField data={data} input={{name:"amount" + row,
+                            defaultValue:postingEdit ? tx.postings[row]?.amount.exact : "",
+                            pattern:kind === "transfer" ? "[0-9]+([.][0-9]+)?" : "-?[0-9]+([.][0-9]+)?"}}
+                            currency={{name:"currency" + row,defaultValue:postingEdit ? tx.postings[row]?.amount.commodity : accountCurrency(data, kind === "transfer" && row === 0 ? account : "")}} />
                           <label>
                             {t("Details")}
                             <select name={"cost_kind" + row} value={priceKinds[row] || "none"} onChange={e => setPriceKinds({...priceKinds, [row]: e.target.value})}>
@@ -344,16 +316,10 @@ export function OperationDialog({
                               <option value="total">{t("Total price")}</option>
                             </select>
                           </label>
-                          {priceKinds[row] && priceKinds[row] !== "none" && <>
-                            <label>{t(priceKinds[row] === "unit" ? "Unit price" : "Total price")}
-                              <input name={"cost" + row} inputMode="decimal" required pattern="[0-9]+([.][0-9]+)?" defaultValue={tx?.postings[row]?.cost?.amount.exact} />
-                            </label>
-                            <label>{t("Currency")}
-                              <select name={"cost_currency" + row} defaultValue={tx?.postings[row]?.cost?.amount.commodity || data.commodity.symbol}>
-                                {currencies(data).map(c => <option key={c.symbol} value={c.symbol}>{c.symbol}</option>)}
-                              </select>
-                            </label>
-                          </>}
+                          {priceKinds[row] && priceKinds[row] !== "none" &&
+                            <AmountField data={data} label={t(priceKinds[row] === "unit" ? "Unit price" : "Total price")}
+                              input={{name:"cost" + row,pattern:"[0-9]+([.][0-9]+)?",defaultValue:tx?.postings[row]?.cost?.amount.exact}}
+                              currency={{name:"cost_currency" + row,defaultValue:tx?.postings[row]?.cost?.amount.commodity || data.commodity.symbol}} />}
                           {rows.length > 2 && (kind !== "transfer" || row > 1) && (
                             <button
                               type="button"
@@ -598,7 +564,6 @@ export function OperationDialog({
                       </select>
                     </label>
                   )}
-{kind === "reconcile" && <label>{t("Currency")}<select name="currency" value={currency} onChange={e => setCurrency(e.target.value)}>{currencies(data).map(c => <option key={c.symbol} value={c.symbol}>{c.symbol}</option>)}</select></label>}
 {!phone && amountField}
                 </div>
               )}

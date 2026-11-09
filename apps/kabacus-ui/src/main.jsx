@@ -11,6 +11,7 @@ import { Api, exactAmount } from "./api";
 import { initializeAuth } from "./auth";
 import "./style.css";
 import { Reports } from "./reports";
+import { AmountField } from "./amount-field";
 import { accountCurrency, currencies } from "./operations";
 import { OperationDialog } from "./operation-dialog";
 import { Accounts, People } from "./accounts";
@@ -951,19 +952,10 @@ function WriteDialog({
       setBusy(false);
     }
   }
-  const amountField = (
-    <label>
-                  {t("%1 (%2)", t("Amount"), allocation ? data.commodity.symbol : currency)}
-                  <input
-                    name="amount"
-                    autoFocus={phone}
-                    inputMode="decimal"
-                    required
-                    pattern="[0-9]+([.][0-9]+)?"
-                    placeholder="0.00"
-                  />
-                </label>
-  );
+  const amountField = <AmountField data={data}
+    input={{name:"amount", autoFocus:phone, pattern:"[0-9]+([.][0-9]+)?", placeholder:"0.00",
+      "aria-label":t("%1 (%2)", t("Amount"), allocation ? data.commodity.symbol : currency)}}
+    currency={allocation ? null : {name:"currency",value:currency,onChange:e=>setCurrency(e.target.value)}} />;
   return (
     <dialog
       aria-labelledby="dialog-title"
@@ -1100,7 +1092,6 @@ function WriteDialog({
                     ))}
                   </datalist>
                 </label>
-                {!allocation && currencies(data).length > 1 && <label>{t("Currency")}<select name="currency" value={currency} onChange={e => setCurrency(e.target.value)}>{currencies(data).map(c => <option key={c.symbol} value={c.symbol}>{c.symbol}</option>)}</select></label>}
                 {!phone && amountField}
                 {allocation && (
                   <label className="checkbox">

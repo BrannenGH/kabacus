@@ -1346,6 +1346,7 @@ for (const phone of [false, true]) test.describe(`wallets on ${phone ? "phone" :
       const field=page.locator(`[name="${name}"]`);
       if (!phone) return field.selectOption(value);
       await field.tap();
+      if (/^(currency|cost_currency)/.test(name)) await expect(page.locator('.phone-picker').getByRole('heading')).toHaveText('Currency');
       await page.locator('.phone-picker').getByRole('button',{name:label,exact:true}).tap();
     };
     await page.getByRole('button',{name:'Add',exact:true}).click();
@@ -1354,6 +1355,12 @@ for (const phone of [false, true]) test.describe(`wallets on ${phone ? "phone" :
     await page.locator('[name=account0]').fill('assets:investments:ethereum');
     await page.locator('[name=amount0]').fill('0.102500000000000001');
     await select('currency0','ETH');
+    const amountBox = await page.locator('[name=amount0]').boundingBox();
+    const currencyBox = await page.locator('[name=currency0]').boundingBox();
+    expect(currencyBox.x).toBeGreaterThanOrEqual(amountBox.x + amountBox.width - 1);
+    expect(Math.abs(currencyBox.y - amountBox.y)).toBeLessThan(2);
+    if (phone) expect(currencyBox.height).toBeGreaterThanOrEqual(48);
+
     await page.locator('[name=account1]').fill('assets:investments:monero');
     await page.locator('[name=amount1]').fill('1.5');
     await select('currency1','XMR');
