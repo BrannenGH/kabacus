@@ -25,9 +25,11 @@ even when they are absent from the session's available-skills catalog.
 For UI design and accessibility reviews, start with `design-critique` and
 its accessibility guidance, and use `ux-audit` for clarity and flow reviews.
 
-The skill sources are pinned Git submodules in `.agents/vendor/`. If skill
-links are broken or their contents are missing, run
-`git submodule update --init --recursive`, then `scripts/sync-skills`.
+The skill sources are pinned Git submodules in `.agents/vendor/`. At the
+start of a session, check them out (`git submodule update --init --recursive`)
+and run `scripts/sync-skills` if skill links are broken or contents missing.
+Use the `ponytail` skill for all code development, and the `ux-audit` skill
+for anything UI related.
 Use the pinned versions; do not update upstream pins as part of loading skills.
 See `.agents/README.md` for details. The user's instructions and these
 repository rules take precedence over skill guidance.
