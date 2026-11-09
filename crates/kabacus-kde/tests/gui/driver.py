@@ -631,6 +631,10 @@ def main():
             return picker is not None and picker.description == fund
         wait_for(f"To preset to {fund}", lambda: to_is_fund() or None, 10)
 
+        # A phone's form hides the tabs; leave it before navigating.
+        back = find(app(), "Back", pyatspi.ROLE_PUSH_BUTTON)
+        if back:
+            press(back)
         goto("Overview")
         open_list_item(f"{account}'s free money", lambda: pyatspi.findDescendant(
             app(), lambda n: n is not None and n.getRole() == pyatspi.ROLE_LIST_ITEM
