@@ -204,7 +204,7 @@ async function fillTransaction(page) {
   await page.getByRole("button", { name: /^Spent/ }).click();
   await page.getByLabel("Payee").fill("Maple Market");
   await page.getByLabel("From").selectOption(accounts[0].account);
-  await page.getByRole("dialog").getByLabel("To", { exact: true }).fill("expenses:groceries");
+  await page.getByRole("dialog").getByLabel("To").fill("expenses:groceries");
   await page.getByLabel("Amount (USD)").fill("84.25");
   await page.getByRole("button", { name: "Preview" }).click();
   await expect(
