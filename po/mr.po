@@ -2086,6 +2086,16 @@ msgstr "एका कार्डच्या राखीव रकमेच्
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "प्रति एकक किंमत"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "एकूण किंमत"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "अधिक"
 

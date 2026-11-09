@@ -2086,6 +2086,16 @@ msgstr "ஓர் அட்டையில் ஒதுக்கீட்டு 
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "அலகு விலை"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "மொத்த விலை"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "மேலும்"
 

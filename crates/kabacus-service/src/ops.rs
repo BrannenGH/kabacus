@@ -290,29 +290,32 @@ fn build_postings(
         chart.kind_of(account) == AccountKind::Money
     })?;
     let kinds: Vec<PostingKind> = carried.iter().map(|c| c.kind).collect();
-    let amounts = resolve_amounts_by_kind(drafts, &kinds)?;
-    let costs: Vec<Option<kabacus_core::Cost>> = drafts
+    let effective: Vec<DraftPosting> = drafts
         .iter()
-        .map(|d| {
-            original
-                .iter()
-                .find(|p| p.account == d.account && Some(&p.amount) == d.amount.as_ref())
-                .and_then(|p| p.cost.clone())
+        .zip(&carried)
+        .map(|(d, c)| {
+            let mut draft = d.clone();
+            draft.cost = c
+                .cost
+                .clone()
+                .map(kabacus_core::CostEdit::Set)
+                .unwrap_or(kabacus_core::CostEdit::Clear);
+            draft
         })
         .collect();
+    let amounts = resolve_amounts_by_kind(&effective, &kinds)?;
     Ok(drafts
         .iter()
         .zip(amounts)
         .zip(carried)
-        .zip(costs)
-        .map(|(((d, amount), carried), cost)| Posting {
+        .map(|((d, amount), carried)| Posting {
             account: d.account.clone(),
             amount,
             status: d.status,
             kind: carried.kind,
             comment: carried.comment,
             tags: carried.tags,
-            cost,
+            cost: carried.cost,
             balance_assertion: carried.balance_assertion,
         })
         .collect())
@@ -389,6 +392,7 @@ fn add_planned(
                 .postings
                 .into_iter()
                 .map(|(account, money)| DraftPosting {
+                    cost: kabacus_core::CostEdit::Keep,
                     account,
                     amount: Some(Amount::new(&commodity, money)),
                     status: Status::Unmarked,

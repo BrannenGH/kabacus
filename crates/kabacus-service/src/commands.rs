@@ -41,6 +41,12 @@ pub fn to_tags(tags: Vec<TagParam>) -> Vec<(String, String)> {
 
 #[derive(Debug, Clone, Deserialize, schemars::JsonSchema)]
 pub struct DraftPostingParam {
+    /// Conversion price: `unit` (@) or `total` (@@), with an exact amount.
+    #[serde(default)]
+    pub cost: Option<service::CostInput>,
+    /// Remove the existing conversion price on an edit.
+    #[serde(default)]
+    pub clear_cost: bool,
     pub account: String,
     /// A decimal string such as `"-12.34"` (or `{commodity, mantissa,
     /// places}`). Leave at most one posting's amount unset; the server
@@ -64,6 +70,8 @@ pub fn to_postings(postings: Vec<DraftPostingParam>) -> Vec<DraftPostingDto> {
     postings
         .into_iter()
         .map(|p| DraftPostingDto {
+            cost: p.cost,
+            clear_cost: p.clear_cost,
             account: p.account,
             amount: p.amount,
             status: p.status.unwrap_or_default(),

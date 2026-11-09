@@ -2079,6 +2079,16 @@ msgstr "บัตรใบหนึ่งขาดบรรทัดเงิน
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "ราคาต่อหน่วย"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "ราคารวม"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "เพิ่มเติม"
 

@@ -2093,6 +2093,16 @@ msgstr "У карткі няма радкоў рэзерву; яна будзе 
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Цана за адзінку"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Агульная цана"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Яшчэ"
 

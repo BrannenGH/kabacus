@@ -2093,6 +2093,16 @@ msgstr "Unui card îi lipsesc liniile de rezervă; va fi marcat"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Preț unitar"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Preț total"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Mai mult"
 

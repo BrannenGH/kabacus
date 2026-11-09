@@ -2086,6 +2086,16 @@ msgstr "Kortilta puuttuvat varausrivit; se merkitään"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Yksikköhinta"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Kokonaishinta"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Lisää"
 

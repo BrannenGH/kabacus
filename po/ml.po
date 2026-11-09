@@ -2086,6 +2086,16 @@ msgstr "ഒരു കാർഡിന് കരുതൽ വരികളില്
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "യൂണിറ്റ് വില"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "ആകെ വില"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "കൂടുതൽ"
 

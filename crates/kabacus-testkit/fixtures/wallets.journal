@@ -1,0 +1,21 @@
+; SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+; SPDX-License-Identifier: GPL-3.0-or-later
+
+commodity USD1,000.00
+commodity ETH1.000000000000000000
+commodity XMR1.000000000000
+account assets:bank:checking  ; ynab-account:Checking
+account assets:investments:ethereum  ; ynab-account:Ethereum wallet
+account assets:investments:monero  ; ynab-account:Monero wallet
+account expenses:fees:platform  ; ynab-envelope:Platform fees
+account expenses:fees:broker  ; ynab-envelope:Broker fees
+account equity:opening
+
+2026-01-02 Opening balances
+    assets:bank:checking  USD5218.46
+    equity:opening  USD-5218.46
+    assets:investments:ethereum  ETH1.234567890123456789
+    equity:opening  ETH-1.234567890123456789
+    assets:investments:monero  XMR12.345678901234
+    equity:opening  XMR-12.345678901234
+

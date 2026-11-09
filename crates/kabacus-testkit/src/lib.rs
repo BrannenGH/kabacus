@@ -74,6 +74,9 @@ pub fn scratch_journal(extra: &str) -> String {
     )
 }
 
+/// Synthetic USD checking, ETH and XMR wallets with full on-chain precision.
+pub const WALLETS: &str = include_str!("../fixtures/wallets.journal");
+
 /// Import `journal` into `store`'s served ledger (made if missing), as
 /// the server user.
 pub async fn import_journal(store: &kabacus_store::AnyStore, ledger: Option<&str>, journal: &str) {

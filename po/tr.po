@@ -2086,6 +2086,16 @@ msgstr "Bir kartın rezerv satırları eksik; işaretlenecek"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Birim fiyat"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Toplam fiyat"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Daha fazla"
 

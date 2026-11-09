@@ -2079,6 +2079,16 @@ msgstr "Một thẻ thiếu dòng dự phòng; nó sẽ được đánh dấu"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Đơn giá"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Tổng giá"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Thêm nữa"
 

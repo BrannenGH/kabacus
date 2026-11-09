@@ -2086,6 +2086,16 @@ msgstr "A una carta mancano le righe di riserva; sarà segnalata"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Prezzo unitario"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Prezzo totale"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Altro"
 

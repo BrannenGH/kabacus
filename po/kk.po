@@ -2079,6 +2079,16 @@ msgstr "Картада резерв жолдары жоқ; ол белгілен
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Бірлік бағасы"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Жалпы баға"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Тағы"
 

@@ -4,10 +4,11 @@ import { useDialogHistory } from "./phone-history";
 import { PhonePicker } from "./phone-picker";
 import { useMedia, phoneQuery, desktopQuery } from "./form-factor";
 import React, { useEffect, useRef, useState } from "react";
-import { operation } from "./operations";
+import { operation, currencies, accountCurrency } from "./operations";
 import { t } from "./i18n";
 const titles = {
   postings: "Postings",
+  transfer: "Transfer",
   status: "Review",
   edit: "Edit transaction",
   void: "Void",
@@ -53,8 +54,10 @@ export function OperationDialog({
   const presetCard = card || data.cash.cards.find(c => c.card === account)?.card || "";
   const [repairCard, setRepairCard] = useState(presetCard);
   const postingEdit = kind === "edit" && (tx.postings.length !== 2 ||
-    tx.postings.some(p => p.amount.commodity !== data.commodity.symbol));
+    tx.postings.some(p => p.cost || p.amount.commodity !== data.commodity.symbol));
   const [rows, setRows] = useState(postingEdit ? tx.postings.map((_, i) => i) : [0, 1]);
+  const [priceKinds, setPriceKinds] = useState(Object.fromEntries((tx?.postings || []).map((p, i) => [i, p.cost?.kind || ""])));
+  const [currency, setCurrency] = useState(accountCurrency(data, account));
   const nextRow = useRef(postingEdit ? tx.postings.length : 2);
   const snapshot = useRef(data);
   const head = useRef(data.version.head);
@@ -105,6 +108,10 @@ export function OperationDialog({
     timer.current = setTimeout(run, 700);
   }
   function changed(event) {
+    if (["postings", "transfer"].includes(kind) && /^account[0-9]+$/.test(event.target.name)) {
+      const field = event.currentTarget.elements.namedItem("currency" + event.target.name.slice(7));
+      if (field) field.value = accountCurrency(data, event.target.value);
+    }
     setDirty(true);
     event.currentTarget.dataset.dirty = "true";
     setChecked(null);
@@ -184,7 +191,7 @@ export function OperationDialog({
   const typeAccount = snapshot.current.accounts.find((a) => a.account === account);
   const date = `${localDate.getFullYear()}-${String(localDate.getMonth() + 1).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}`;
   const amountField = (
-    !postingEdit && !["fix", "status", "postings", "account-type"].includes(kind) && (
+    !postingEdit && !["fix", "status", "postings", "transfer", "account-type"].includes(kind) && (
                     <label>
                       {t("Amount")}
                       <input
@@ -278,7 +285,7 @@ export function OperationDialog({
                       />
                     </label>
                   )}
-                  {["edit", "purchase", "split", "postings"].includes(kind) && (
+                  {["edit", "purchase", "split", "postings", "transfer"].includes(kind) && (
                     <label>
                       {t("Payee")}
                       <input
@@ -292,7 +299,7 @@ export function OperationDialog({
                       />
                     </label>
                   )}
-                  {(kind === "postings" || postingEdit) && (
+                  {(["postings", "transfer"].includes(kind) || postingEdit) && (
                     <>
                       <datalist id="posting-accounts">
                         {data.accounts.map((a) => (
@@ -303,11 +310,11 @@ export function OperationDialog({
                       </datalist>
                       {rows.map((row, i) => (
                         <fieldset key={row}>
-                          <legend>{t("%1 · %2", t("Postings"), i + 1)}</legend>
+                          <legend>{kind === "transfer" && i < 2 ? t(i === 0 ? "From" : "To") : t("%1 · %2", t("Postings"), i + 1)}</legend>
                           <label>
                             {t("Account")}
                             <input
-                              defaultValue={postingEdit ? tx.postings[row]?.account : ""}
+                              defaultValue={postingEdit ? tx.postings[row]?.account : kind === "transfer" && row === 0 ? account || "" : ""}
                               name={"account" + row}
                               list="posting-accounts"
                               required
@@ -320,15 +327,40 @@ export function OperationDialog({
                               name={"amount" + row}
                               inputMode="decimal"
                               required
-                              pattern="-?[0-9]+([.][0-9]+)?"
+                              pattern={kind === "transfer" ? "[0-9]+([.][0-9]+)?" : "-?[0-9]+([.][0-9]+)?"}
                             />
                           </label>
-                          {rows.length > 2 && (
+                          <label>
+                            {t("Currency")}
+                            <select name={"currency" + row} defaultValue={postingEdit ? tx.postings[row]?.amount.commodity : accountCurrency(data, kind === "transfer" && row === 0 ? account : "")}>
+                              {currencies(data).map(c => <option key={c.symbol} value={c.symbol}>{c.symbol}</option>)}
+                            </select>
+                          </label>
+                          <label>
+                            {t("Details")}
+                            <select name={"cost_kind" + row} value={priceKinds[row] || "none"} onChange={e => setPriceKinds({...priceKinds, [row]: e.target.value})}>
+                              <option value="none">—</option>
+                              <option value="unit">{t("Unit price")}</option>
+                              <option value="total">{t("Total price")}</option>
+                            </select>
+                          </label>
+                          {priceKinds[row] && priceKinds[row] !== "none" && <>
+                            <label>{t(priceKinds[row] === "unit" ? "Unit price" : "Total price")}
+                              <input name={"cost" + row} inputMode="decimal" required pattern="[0-9]+([.][0-9]+)?" defaultValue={tx?.postings[row]?.cost?.amount.exact} />
+                            </label>
+                            <label>{t("Currency")}
+                              <select name={"cost_currency" + row} defaultValue={tx?.postings[row]?.cost?.amount.commodity || data.commodity.symbol}>
+                                {currencies(data).map(c => <option key={c.symbol} value={c.symbol}>{c.symbol}</option>)}
+                              </select>
+                            </label>
+                          </>}
+                          {rows.length > 2 && (kind !== "transfer" || row > 1) && (
                             <button
                               type="button"
                               className="quiet"
                               aria-label={t("%1 · %2", t("Postings"), i + 1)}
                               onClick={() => {
+                                for (const key of ["account", "amount", "currency", "cost_kind", "cost", "cost_currency"]) delete draft.current[key + row];
                                 setRows(rows.filter((r) => r !== row));
                                 setDirty(true);
                                 generation.current++;
@@ -548,7 +580,7 @@ export function OperationDialog({
                   {kind === "reconcile" && (
                     <label>
                       {t("Account")}
-                      <select name="account" defaultValue={account} required>
+                      <select name="account" defaultValue={account} required onChange={e => setCurrency(accountCurrency(data, e.target.value))}>
                         {data.accounts
                           .filter((a) =>
                             [
@@ -566,6 +598,7 @@ export function OperationDialog({
                       </select>
                     </label>
                   )}
+{kind === "reconcile" && <label>{t("Currency")}<select name="currency" value={currency} onChange={e => setCurrency(e.target.value)}>{currencies(data).map(c => <option key={c.symbol} value={c.symbol}>{c.symbol}</option>)}</select></label>}
 {!phone && amountField}
                 </div>
               )}

@@ -77,6 +77,7 @@ fn usd(cents: i128) -> Amount {
 
 fn posting(account: &str, cents: Option<i128>) -> DraftPosting {
     DraftPosting {
+        cost: kabacus_core::CostEdit::Keep,
         account: AccountName::new(account),
         amount: cents.map(usd),
         status: Status::Unmarked,
@@ -292,6 +293,7 @@ async fn an_edit_keeps_the_id_comments_tags_and_virtual_postings() {
             posting("expenses:household", Some(1375)),
             posting("assets:checking", None),
             DraftPosting {
+                cost: kabacus_core::CostEdit::Keep,
                 account: AccountName::new("expenses:household"),
                 amount: Some(usd(100)),
                 ..posting("expenses:household", None)
@@ -339,6 +341,7 @@ async fn an_edit_keeps_balance_assertions_unless_told_otherwise() {
         postings: vec![
             posting("expenses:groceries", Some(2000)),
             DraftPosting {
+                cost: kabacus_core::CostEdit::Keep,
                 balance_assertion: checking,
                 ..posting("assets:checking", Some(-2000))
             },
@@ -711,4 +714,153 @@ async fn paying_a_card_more_than_it_owes_is_accepted() {
         "the purchase only moved free money into the reserve"
     );
     assert_eq!(after.money_on_hand.exact, "3500.00");
+}
+
+const WALLETS: &str = r#"commodity USD1,000.00
+commodity ETH1.000000000000000000
+commodity XMR1.000000000000
+account assets:bank:checking  ; ynab-account:Checking
+account assets:investments:ethereum  ; ynab-account:Ethereum wallet
+account assets:investments:monero  ; ynab-account:Monero wallet
+account expenses:fees:platform  ; ynab-envelope:Platform fees
+account expenses:fees:broker  ; ynab-envelope:Broker fees
+account equity:opening
+
+2026-01-02 Opening balances
+    assets:bank:checking  USD5218.46
+    equity:opening  USD-5218.46
+    assets:investments:ethereum  ETH1.234567890123456789
+    equity:opening  ETH-1.234567890123456789
+    assets:investments:monero  XMR12.345678901234
+    equity:opening  XMR-12.345678901234
+
+"#;
+
+async fn wallet_request(
+    s: &Service,
+    method: &str,
+    path: &str,
+    body: serde_json::Value,
+) -> serde_json::Value {
+    let head = s.store.revision(s.ledger).await.unwrap().to_string();
+    let response = crate::dispatch::dispatch(
+        s,
+        &local(),
+        crate::dispatch::Request {
+            method: method.into(),
+            path: path.into(),
+            head: Some(head),
+            body,
+        },
+    )
+    .await
+    .unwrap_or_else(|e| panic!("{method} {path}: {e}"));
+    serde_json::from_slice(&response.body).unwrap()
+}
+
+#[tokio::test]
+async fn wallet_reporting_currency_follows_cash_and_lists_declared_precision() {
+    let s = state(WALLETS).await;
+    let info = wallet_request(&s, "GET", "/commodity", serde_json::Value::Null).await;
+    assert_eq!(info["symbol"], "USD");
+    assert!(info["commodities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|c| c["symbol"] == "ETH" && c["places"] == 18));
+    let cash = wallet_request(&s, "GET", "/cash-on-hand", serde_json::Value::Null).await;
+    assert_eq!(cash["cash_on_hand"]["exact"], "5218.46");
+}
+
+#[tokio::test]
+async fn wallet_exchanges_keep_costs_fees_and_exact_balances_across_edits() {
+    use serde_json::json;
+    let s = state(WALLETS).await;
+    let mut exchange = json!({"date":"2026-02-01", "description":"Cedar Exchange | Buy ETH", "postings":[
+        {"account":"assets:bank:checking", "amount":"-1025.00"},
+        {"account":"assets:investments:ethereum", "amount":{"commodity":"ETH","mantissa":"400000000000000000","places":18},
+         "cost":{"kind":"total","amount":"1000.00"}},
+        {"account":"expenses:fees:platform", "amount":"15.00"},
+        {"account":"expenses:fees:broker", "amount":"10.00"}
+    ], "dry_run":true});
+    let before = s.store.revision(s.ledger).await.unwrap();
+    wallet_request(&s, "POST", "/transactions", exchange.clone()).await;
+    assert_eq!(s.store.revision(s.ledger).await.unwrap(), before);
+    exchange["dry_run"] = json!(false);
+    let saved = wallet_request(&s, "POST", "/transactions", exchange.clone()).await;
+    let id = saved["id"].as_u64().unwrap();
+    let path = format!("/transactions/{id}");
+    let original = wallet_request(&s, "GET", &path, serde_json::Value::Null).await;
+    assert_eq!(
+        original["postings"][1]["cost"]["amount"]["exact"],
+        "1000.00"
+    );
+    // An ordinary memo edit also preserves a cost omitted by an older client.
+    exchange["description"] = json!("Cedar Exchange | Statement checked");
+    exchange["postings"][1]
+        .as_object_mut()
+        .unwrap()
+        .remove("cost");
+    wallet_request(&s, "PATCH", &path, exchange).await;
+    let edited = wallet_request(&s, "GET", &path, serde_json::Value::Null).await;
+    assert_eq!(edited["postings"], original["postings"]);
+    let register = wallet_request(
+        &s,
+        "GET",
+        "/register/assets%3Ainvestments%3Aethereum",
+        serde_json::Value::Null,
+    )
+    .await;
+    assert_eq!(
+        register.as_array().unwrap().last().unwrap()["balance"]["exact"],
+        "1.634567890123456789"
+    );
+    let fees = wallet_request(
+        &s,
+        "GET",
+        "/reports/categories?from=2026-02-01&to=2026-02-28&depth=3&commodity=USD",
+        serde_json::Value::Null,
+    )
+    .await;
+    assert_eq!(fees["rows"].as_array().unwrap().len(), 2);
+    assert!(kabacus_ledger::check(&s.books_snapshot().await.unwrap().book).is_empty());
+    wallet_request(
+        &s,
+        "POST",
+        &format!("{path}/corrections"),
+        json!({"void":true,"dry_run":false,"today":"2026-02-02"}),
+    )
+    .await;
+    let register = wallet_request(
+        &s,
+        "GET",
+        "/register/assets%3Ainvestments%3Aethereum",
+        serde_json::Value::Null,
+    )
+    .await;
+    assert_eq!(
+        register.as_array().unwrap().last().unwrap()["balance"]["exact"],
+        "1.234567890123456789"
+    );
+}
+
+#[tokio::test]
+async fn wallet_reconciliation_compares_and_asserts_the_selected_commodity() {
+    use serde_json::json;
+    let s = state(WALLETS).await;
+    for (account, commodity, mantissa, places) in [
+        ("assets:bank:checking", "USD", "521846", 2),
+        (
+            "assets:investments:ethereum",
+            "ETH",
+            "1234567890123456789",
+            18,
+        ),
+        ("assets:investments:monero", "XMR", "12345678901234", 12),
+    ] {
+        let result = wallet_request(&s, "POST", "/reconcile", json!({"account":account,"date":"2026-02-01",
+            "balance":{"commodity":commodity,"mantissa":mantissa,"places":places},"mode":"assert","dry_run":false})).await;
+        assert_eq!(result["status"], "matched");
+        assert_eq!(result["commodity"], commodity);
+    }
 }

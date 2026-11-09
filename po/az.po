@@ -2086,6 +2086,16 @@ msgstr "Kartda ehtiyat sətirləri çatışmır; işarələnəcək"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Vahid qiyməti"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Ümumi qiymət"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Daha çox"
 

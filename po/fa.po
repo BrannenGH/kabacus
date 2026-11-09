@@ -2086,6 +2086,16 @@ msgstr "سطرهای ذخیرهٔ یک کارت کم است؛ نشانه‌گذ�
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "قیمت واحد"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "قیمت کل"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "بیشتر"
 

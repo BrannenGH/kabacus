@@ -2100,6 +2100,16 @@ msgstr "Kortelei trūksta rezervo eilučių; ji bus pažymėta"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Vieneto kaina"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Bendra kaina"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Daugiau"
 

@@ -2093,6 +2093,16 @@ msgstr "Karcie brakuje wierszy rezerwy; zostanie oznaczona"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Cena jednostkowa"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Cena całkowita"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Więcej"
 

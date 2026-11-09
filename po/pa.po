@@ -2086,6 +2086,16 @@ msgstr "ਇੱਕ ਕਾਰਡ ਦੀਆਂ ਰਾਖਵੀਂ ਰਕਮ ਵਾ�
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "ਇਕਾਈ ਮੁੱਲ"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "ਕੁੱਲ ਮੁੱਲ"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "ਹੋਰ"
 

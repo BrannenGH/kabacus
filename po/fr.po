@@ -2086,6 +2086,16 @@ msgstr "Il manque à une carte ses lignes de réserve ; elle sera signalée"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Prix unitaire"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Prix total"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Plus"
 

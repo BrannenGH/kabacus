@@ -101,12 +101,22 @@ impl std::fmt::Display for ValidationError {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct DraftPosting {
+    pub cost: CostEdit,
     pub account: AccountName,
     /// `None` means "leave this one for the server/editor to fill in" — at
     /// most one posting in a transaction may be `None`.
     pub amount: Option<Amount>,
     pub status: Status,
     pub balance_assertion: AssertionEdit,
+}
+
+/// Omitted costs survive an edit; clearing one is deliberate.
+#[derive(Debug, Clone, Default, PartialEq)]
+pub enum CostEdit {
+    #[default]
+    Keep,
+    Set(crate::Cost),
+    Clear,
 }
 
 /// What a draft posting does to its balance assertion. Editing a
@@ -125,6 +135,7 @@ pub enum AssertionEdit {
 /// in an edit: everything the editor doesn't show.
 #[derive(Debug, Clone, PartialEq)]
 pub struct CarriedOver {
+    pub cost: Option<crate::Cost>,
     pub kind: PostingKind,
     pub comment: String,
     pub tags: Vec<Tag>,
@@ -182,14 +193,21 @@ pub fn carry_over_with(
                     },
                 }),
             };
+            let cost = match &draft.cost {
+                CostEdit::Keep => matched.and_then(|p| p.cost.clone()),
+                CostEdit::Set(cost) => Some(cost.clone()),
+                CostEdit::Clear => None,
+            };
             match matched {
                 Some(p) => CarriedOver {
+                    cost,
                     kind: p.kind,
                     comment: p.comment.clone(),
                     tags: p.tags.clone(),
                     balance_assertion,
                 },
                 None => CarriedOver {
+                    cost,
                     kind: PostingKind::Real,
                     comment: String::new(),
                     tags: vec![],
@@ -271,8 +289,12 @@ fn balance(postings: &[&DraftPosting]) -> Result<Vec<Amount>, ValidationError> {
     let mut sums: HashMap<String, Money> = HashMap::new();
     for p in postings {
         if let Some(a) = &p.amount {
-            let entry = sums.entry(a.commodity.clone()).or_insert_with(Money::zero);
-            *entry = entry.clone() + a.money.clone();
+            let effective = match &p.cost {
+                CostEdit::Set(cost) => cost.total_for(a),
+                _ => a.clone(),
+            };
+            let entry = sums.entry(effective.commodity).or_insert_with(Money::zero);
+            *entry = entry.clone() + effective.money;
         }
     }
 
@@ -394,12 +416,14 @@ mod tests {
     fn fills_one_missing_amount_as_negation_of_the_rest() {
         let postings = vec![
             DraftPosting {
+                cost: CostEdit::Keep,
                 account: acct("expenses:groceries"),
                 amount: Some(usd(4568, 2)),
                 status: Status::Unmarked,
                 balance_assertion: AssertionEdit::Keep,
             },
             DraftPosting {
+                cost: CostEdit::Keep,
                 account: acct("assets:checking"),
                 amount: None,
                 status: Status::Unmarked,
@@ -413,12 +437,14 @@ mod tests {
     fn more_than_one_missing_amount_is_ambiguous() {
         let postings = vec![
             DraftPosting {
+                cost: CostEdit::Keep,
                 account: acct("a"),
                 amount: None,
                 status: Status::Unmarked,
                 balance_assertion: AssertionEdit::Keep,
             },
             DraftPosting {
+                cost: CostEdit::Keep,
                 account: acct("b"),
                 amount: None,
                 status: Status::Unmarked,
@@ -434,12 +460,14 @@ mod tests {
     fn unbalanced_postings_with_all_amounts_given_is_rejected() {
         let postings = vec![
             DraftPosting {
+                cost: CostEdit::Keep,
                 account: acct("a"),
                 amount: Some(usd(100, 2)),
                 status: Status::Unmarked,
                 balance_assertion: AssertionEdit::Keep,
             },
             DraftPosting {
+                cost: CostEdit::Keep,
                 account: acct("b"),
                 amount: Some(usd(-50, 2)),
                 status: Status::Unmarked,
@@ -457,12 +485,14 @@ mod tests {
     fn balanced_postings_with_all_amounts_given_is_accepted() {
         let postings = vec![
             DraftPosting {
+                cost: CostEdit::Keep,
                 account: acct("a"),
                 amount: Some(usd(100, 2)),
                 status: Status::Unmarked,
                 balance_assertion: AssertionEdit::Keep,
             },
             DraftPosting {
+                cost: CostEdit::Keep,
                 account: acct("b"),
                 amount: Some(usd(-100, 2)),
                 status: Status::Unmarked,
@@ -568,6 +598,7 @@ mod tests {
 
     fn draft(account: &str, cents: i128, edit: AssertionEdit) -> DraftPosting {
         DraftPosting {
+            cost: CostEdit::Keep,
             account: acct(account),
             amount: Some(usd(cents, 2)),
             status: Status::Unmarked,
@@ -765,6 +796,7 @@ mod tests {
     fn virtual_postings_balance_apart_from_real_ones() {
         use PostingKind::{BalancedVirtual, Real, Virtual};
         let blank = |account: &str| DraftPosting {
+            cost: CostEdit::Keep,
             amount: None,
             ..draft(account, 0, AssertionEdit::Keep)
         };
@@ -811,6 +843,48 @@ mod tests {
         );
     }
 
+    #[test]
+    fn exchange_inference_uses_the_cost_without_changing_wallet_units() {
+        let mut crypto = draft("assets:investments:ethereum", 0, AssertionEdit::Keep);
+        crypto.amount = Some(Amount::new("ETH", Money::from_decimal(4, 1)));
+        crypto.cost = CostEdit::Set(crate::Cost {
+            kind: crate::CostKind::Total,
+            amount: usd(100000, 2),
+        });
+        let mut cash = draft("assets:bank:checking", 0, AssertionEdit::Keep);
+        cash.amount = None;
+        let amounts = resolve_amounts(&[crypto, cash]).unwrap();
+        assert_eq!(amounts[0], Amount::new("ETH", Money::from_decimal(4, 1)));
+        assert_eq!(amounts[1], usd(-100000, 2));
+    }
+
+    proptest::proptest! {
+        #[test]
+        fn exchanges_balance_exactly_with_separate_platform_and_broker_fees(
+            principal in 1i64..1_000_000,
+            platform in 0i64..10_000,
+            broker in 0i64..10_000,
+            units in 1i64..1_000_000,
+            reverse in proptest::bool::ANY,
+        ) {
+            let sign = if reverse { -1 } else { 1 };
+            let mut wallet = draft("assets:investments:ethereum", 0, AssertionEdit::Keep);
+            wallet.amount = Some(Amount::new("ETH", Money::from_decimal((units * sign) as i128, 18)));
+            wallet.cost = CostEdit::Set(crate::Cost { kind: crate::CostKind::Total, amount: usd(principal as i128, 2) });
+            let cash = draft("assets:bank:checking", (-(principal + platform + broker) * sign) as i128, AssertionEdit::Keep);
+            let platform_fee = draft("expenses:fees:platform", (platform * sign) as i128, AssertionEdit::Keep);
+            let broker_fee = draft("expenses:fees:broker", (broker * sign) as i128, AssertionEdit::Keep);
+            let postings = vec![wallet, cash, platform_fee, broker_fee];
+            let resolved = resolve_amounts(&postings).unwrap();
+            proptest::prop_assert_eq!(resolved[0].commodity.as_str(), "ETH");
+            let effective: Money = postings.iter().zip(&resolved).map(|(p, a)| match &p.cost {
+                CostEdit::Set(cost) => cost.total_for(a).money,
+                _ => a.money.clone(),
+            }).sum();
+            proptest::prop_assert!(effective.is_zero());
+        }
+    }
+
     proptest::proptest! {
         #[test]
         fn resolved_amounts_always_sum_to_zero_when_one_is_missing(
@@ -818,9 +892,9 @@ mod tests {
             b in -1_000_000i64..1_000_000,
         ) {
             let postings = vec![
-                DraftPosting { account: acct("a"), amount: Some(usd(a as i128, 2)), status: Status::Unmarked, balance_assertion: AssertionEdit::Keep },
-                DraftPosting { account: acct("b"), amount: Some(usd(b as i128, 2)), status: Status::Unmarked, balance_assertion: AssertionEdit::Keep },
-                DraftPosting { account: acct("c"), amount: None, status: Status::Unmarked, balance_assertion: AssertionEdit::Keep },
+                DraftPosting { cost: CostEdit::Keep, account: acct("a"), amount: Some(usd(a as i128, 2)), status: Status::Unmarked, balance_assertion: AssertionEdit::Keep },
+                DraftPosting { cost: CostEdit::Keep, account: acct("b"), amount: Some(usd(b as i128, 2)), status: Status::Unmarked, balance_assertion: AssertionEdit::Keep },
+                DraftPosting { cost: CostEdit::Keep, account: acct("c"), amount: None, status: Status::Unmarked, balance_assertion: AssertionEdit::Keep },
             ];
             let resolved = resolve_amounts(&postings).unwrap();
             let sum: Money = resolved.iter().map(|amt| amt.money.clone()).sum();

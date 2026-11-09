@@ -2086,6 +2086,16 @@ msgstr "Ба корт сатрҳои захира намерасад; он қа�
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Нархи воҳид"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Нархи умумӣ"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Бештар"
 

@@ -2093,6 +2093,16 @@ msgstr "Kartei trūkst rezerves rindu; tā tiks atzīmēta"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Vienības cena"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Kopējā cena"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Vairāk"
 
