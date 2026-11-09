@@ -619,10 +619,11 @@ def main():
         open_list_item("Money on Hand's sum", lambda: find_any("Money on Hand", toggles),
                        lambda: label_starting("− Receivables"))
 
-        wait_for(f"the {fund} fund", lambda: find(app(), fund, pyatspi.ROLE_LIST_ITEM))
-        if find(app(), empty, pyatspi.ROLE_LIST_ITEM):
+        # Find off-screen rows too; open_list_item scrolls before clicking them.
+        wait_for(f"the {fund} fund", lambda: find(app(), fund, pyatspi.ROLE_LIST_ITEM, showing=False))
+        if find(app(), empty, pyatspi.ROLE_LIST_ITEM, showing=False):
             fail(f"the empty {empty} reserve is on the Overview")
-        open_list_item(f"the {fund} reserve", lambda: find(app(), fund, pyatspi.ROLE_LIST_ITEM),
+        open_list_item(f"the {fund} reserve", lambda: find(app(), fund, pyatspi.ROLE_LIST_ITEM, showing=False),
                  lambda: find(app(), "Amount", pyatspi.ROLE_TEXT))
 
         def to_is_fund():
@@ -633,11 +634,11 @@ def main():
         goto("Overview")
         open_list_item(f"{account}'s free money", lambda: pyatspi.findDescendant(
             app(), lambda n: n is not None and n.getRole() == pyatspi.ROLE_LIST_ITEM
-            and n.name.startswith(f"{account} free ") and n.getState().contains(pyatspi.STATE_SHOWING)),
+            and n.name.startswith(f"{account} free ")),
             lambda: row("Opening"))
 
         goto("Overview")
-        wait_for("the Overview", lambda: find(app(), "About Cash on Hand", pyatspi.ROLE_PUSH_BUTTON))
+        wait_for("the Overview", lambda: find(app(), "About Cash on Hand", pyatspi.ROLE_PUSH_BUTTON, showing=False))
         # Qt reports a menu bar's titles as "menu bar".
         menus = {pyatspi.ROLE_MENU_BAR, pyatspi.ROLE_MENU, pyatspi.ROLE_MENU_ITEM, pyatspi.ROLE_PUSH_BUTTON}
         if find_any("More", {pyatspi.ROLE_PAGE_TAB}):
