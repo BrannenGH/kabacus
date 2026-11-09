@@ -2086,6 +2086,16 @@ msgstr "Një karte i mungojnë rreshtat e rezervës; do të shënohet"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Çmimi për njësi"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Çmimi gjithsej"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Më tepër"
 

@@ -86,7 +86,7 @@ const cash = {
   unreserved_count: 0,
   warnings: [],
 };
-async function setup(page, conflict = false, shownTransaction = transaction, suppliedAccounts = accounts) {
+async function setup(page, conflict = false, shownTransaction = transaction, suppliedAccounts = accounts, suppliedCommodity = { symbol: "USD", places: 2 }) {
   const writes = [];
   const currentAccounts = structuredClone(suppliedAccounts);
   const currentVersion = { ...version };
@@ -139,7 +139,7 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
         ["transaction.spent","Spent"],["transaction.received","Received"],["card.purchase","Card purchase"],["transaction.transfer","Transfer"],["reserve.setAside","Set aside"],["card.pay","Pay a card"],["split.record","Split with someone"],["transaction.postings","Postings"]
       ].map(([id,label],i)=>({id,label,key:String(i+1)}))},
       "/version": currentVersion,
-      "/commodity": { symbol: "USD", places: 2 },
+      "/commodity": suppliedCommodity,
       "/cash-on-hand": cash,
       "/reports/cash-on-hand-history": {
         commodity: "USD",
@@ -190,6 +190,7 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
         },
       ],
       "/register/assets%3Abank%3Achecking%3Atravel": [],
+      "/register/assets%3Ainvestments%3Amonero": [],
     };
     if (fixtures[path]) return route.fulfill({ json: fixtures[path] });
     return route.continue();
@@ -529,7 +530,7 @@ test("reconciliation is opened from a register and freezes the reviewed head", a
   ).toBeVisible();
   expect(writes[1]).toMatchObject({
     path: "/reconcile",
-    body: { head: "42", balance: "6200.75", mode: "assert", dry_run: true },
+    body: { head: "42", balance: {commodity:"USD",mantissa:"620075",places:2}, mode: "assert", dry_run: true },
   });
   await page
     .getByRole("dialog")
@@ -1170,16 +1171,17 @@ test("remote books reopen in the PWA window after session storage is lost", asyn
   await setup(page);
   await page.locator('[data-destination="Register"]').click();
   await expect(page.getByRole('heading', { name: 'Transactions', exact: true, level: 1 })).toBeVisible();
-  await expect.poll(() => page.evaluate(() => new Promise((resolve, reject) => {
+  const rememberedPage = () => page.evaluate(() => new Promise((resolve, reject) => {
     const request = indexedDB.open('kabacus-local-books', 1);
     request.onerror = () => reject(request.error);
     request.onsuccess = () => {
       const db = request.result;
       const query = db.transaction('state').objectStore('state').get('workspace');
-      query.onsuccess = () => { resolve(query.result?.windows?.[0]?.page); db.close(); };
+      query.onsuccess = () => { resolve(query.result?.windows?.find(w => w.id === sessionStorage.getItem('kabacus.window'))?.page); db.close(); };
       query.onerror = () => { reject(query.error); db.close(); };
     };
-  }))).toBe('Register');
+  }));
+  await expect.poll(rememberedPage).toBe('Register');
   await page.evaluate(() => sessionStorage.clear());
   await page.goto('/app/');
   await expect(page.getByRole('dialog', { name: 'Pick up where you left off' })).toBeVisible();
@@ -1190,6 +1192,7 @@ test("remote books reopen in the PWA window after session storage is lost", asyn
   await expect(page.getByRole('dialog')).toHaveCount(0);
   expect(navigations).toBe(0);
   expect(context.pages()).toHaveLength(1);
+  await expect.poll(rememberedPage).toBe('Register');
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Transactions', exact: true, level: 1 })).toBeVisible();
 });
@@ -1326,3 +1329,140 @@ for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 
     });
   });
 }
+
+const walletCommodity = { symbol: "USD", places: 2, commodities: [
+  {symbol:"USD",places:2},{symbol:"ETH",places:18},{symbol:"XMR",places:12},
+] };
+const walletAccounts = [
+  {...accounts[0], balances:[amount("4193.46")]},
+  {account:"assets:investments:ethereum",display_name:"Ethereum wallet",kind:"non-liquid",balances:[{commodity:"ETH",exact:"1.634567890123456789",formatted:"ETH 1.634567890123456789"}]},
+  {account:"assets:investments:monero",display_name:"Monero wallet",kind:"non-liquid",balances:[{commodity:"XMR",exact:"12.345678901234",formatted:"XMR 12.345678901234"}]},
+  {account:"expenses:fees:platform",display_name:"Platform fees",kind:"expense"},
+  {account:"expenses:fees:broker",display_name:"Broker fees",kind:"expense"},
+];
+for (const phone of [false, true]) test.describe(`wallets on ${phone ? "phone" : "desktop"}`, () => {
+  test.use({viewport:phone ? {width:390,height:844}:{width:1280,height:800},isMobile:phone,hasTouch:phone});
+  test("transfer records exact wallet units, conversion price and separate fees", async({page}) => {
+    const writes = await setup(page,false,transaction,walletAccounts,walletCommodity);
+    const select = async(name,value,label=value) => {
+      const field=page.locator(`[name="${name}"]`);
+      if (!phone) return field.selectOption(value);
+      await field.tap();
+      if (/^(currency|cost_currency)/.test(name)) await expect(page.locator('.phone-picker').getByRole('heading')).toHaveText('Currency');
+      await page.locator('.phone-picker').getByRole('button',{name:label,exact:true}).tap();
+    };
+    await page.getByRole('button',{name:'Add',exact:true}).click();
+    await page.getByRole('button',{name:/^Transfer/}).click();
+    await page.getByLabel('Payee',{exact:true}).fill('Cedar Exchange | ETH to XMR');
+    await page.locator('[name=account0]').fill('assets:investments:ethereum');
+    await page.locator('[name=amount0]').fill('0.102500000000000001');
+    await select('currency0','ETH');
+    const amountBox = await page.locator('[name=amount0]').boundingBox();
+    const currencyBox = await page.locator('[name=currency0]').boundingBox();
+    expect(currencyBox.x).toBeGreaterThanOrEqual(amountBox.x + amountBox.width - 1);
+    expect(Math.abs(currencyBox.y - amountBox.y)).toBeLessThan(2);
+    if (phone) expect(currencyBox.height).toBeGreaterThanOrEqual(48);
+
+    await page.locator('[name=account1]').fill('assets:investments:monero');
+    await page.locator('[name=amount1]').fill('1.5');
+    await select('currency1','XMR');
+    await select('cost_kind1','total','Total price');
+    await page.locator('[name=cost1]').fill('0.100000000000000001');
+    await select('cost_currency1','ETH');
+    for (const [row,account,value] of [[2,'expenses:fees:platform','0.0015'],[3,'expenses:fees:broker','0.001']]) {
+      await page.getByRole('dialog',{name:'Transfer',exact:true}).getByRole('button',{name:'Add',exact:true}).click();
+      await page.locator(`[name=account${row}]`).fill(account);
+      await page.locator(`[name=amount${row}]`).fill(value);
+      await select(`currency${row}`,'ETH');
+    }
+    if (phone) {
+      await page.setViewportSize({width:844,height:390});
+      await page.setViewportSize({width:390,height:844});
+      await expect(page.locator('[name=amount0]')).toHaveValue('0.102500000000000001');
+    }
+    await page.getByRole('button',{name:phone?'Review':'Preview',exact:true}).click();
+    await expect(page.getByRole('heading',{name:'Review before saving',exact:true})).toBeVisible();
+    const preview = writes.at(-1);
+    expect(preview.body.postings.map(p=>[p.account,p.amount.commodity,p.amount.mantissa])).toEqual([
+      ['assets:investments:ethereum','ETH','-102500000000000001'],
+      ['assets:investments:monero','XMR','15'],
+      ['expenses:fees:platform','ETH','15'],
+      ['expenses:fees:broker','ETH','1'],
+    ]);
+    expect(preview.body.postings[1].cost).toEqual({kind:'total',amount:{commodity:'ETH',mantissa:'100000000000000001',places:18}});
+    expect(preview.body.dry_run).toBe(true);
+    await page.getByRole('button',{name:'Save',exact:true}).click();
+    expect(writes.at(-1).body).toEqual({...preview.body,dry_run:false});
+  });
+  test("opening equity is separate from wallets and shown without a loss colour",async({page})=>{
+    const equity={account:'equity:opening',display_name:'Opening balances',kind:'non-liquid',balance_inclusive:[amount('-5218.46')]};
+    await setup(page,false,transaction,[...walletAccounts,equity],walletCommodity);
+    await page.getByRole('navigation').getByRole('button',{name:'Transactions',exact:true}).click();
+    const group=page.locator('.account-list section').filter({has:page.getByRole('heading',{name:'Other',exact:true})});
+    await expect(group).toContainText('Opening balances');
+    await expect(group).toContainText('$5218.46');
+    await expect(group.locator('.negative')).toHaveCount(0);
+  });
+  test("spending from a wallet uses its currency instead of the reporting currency",async({page})=>{
+    const writes = await setup(page,false,transaction,walletAccounts,walletCommodity);
+    await page.getByRole('button',{name:'Add',exact:true}).click();
+    await page.getByRole('button',{name:/^Spent/}).click();
+    await page.getByLabel('Payee',{exact:true}).fill('Cedar Exchange network fee');
+    await page.getByRole('combobox',{name:'From',exact:true}).selectOption('assets:investments:ethereum');
+    await page.getByRole('combobox',{name:'To',exact:true}).fill('expenses:fees:platform');
+    await page.getByLabel('Amount (ETH)',{exact:true}).fill('0.000000000000000001');
+    await page.getByRole('button',{name:phone?'Review':'Preview',exact:true}).click();
+    await expect.poll(()=>writes.at(-1)?.body.postings[1].amount).toEqual({commodity:'ETH',mantissa:'-1',places:18});
+  });
+  test("editing an exchange keeps every currency and its conversion price",async({page})=>{
+    const tx={...transaction,postings:[
+      {account:'assets:bank:checking',amount:amount('-1025.00')},
+      {account:'assets:investments:ethereum',amount:{commodity:'ETH',exact:'0.4',formatted:'ETH 0.4'},cost:{kind:'total',amount:amount('1000.00')}},
+      {account:'expenses:fees:platform',amount:amount('15.00')},
+      {account:'expenses:fees:broker',amount:amount('10.00')},
+    ]};
+    const writes=await setup(page,false,tx,walletAccounts,walletCommodity);
+    await page.getByRole('navigation').getByRole('button',{name:'Transactions',exact:true}).click();
+    if (phone) {
+      await page.getByRole('button',{name:'All transactions',exact:true}).click();
+      await page.locator('.register-row').filter({hasText:'Maple Market'}).click();
+    }
+    else await page.getByRole('button',{name:'Edit',exact:true}).click();
+    await page.getByLabel('Payee',{exact:true}).fill('Cedar Exchange | Fees checked');
+    await page.getByRole('button',{name:phone?'Review':'Preview',exact:true}).click();
+    await expect.poll(()=>writes.at(-1)?.body.postings[1]).toMatchObject({amount:{commodity:'ETH',mantissa:'4',places:1},cost:{kind:'total',amount:{commodity:'USD',mantissa:'100000',places:2}}});
+    await page.getByRole('button',{name:'Save',exact:true}).click();
+    expect(writes.at(-1).body.dry_run).toBe(false);
+  });
+  test("fee reports keep platform and broker separate in the selected currency",async({page})=>{
+    await setup(page,false,transaction,walletAccounts,walletCommodity);
+    await page.route('**/reports/categories?*',route=>{
+      const query=new URL(route.request().url()).searchParams;
+      expect(query.get('depth')).toBe('99');
+      const currency=query.get('commodity');
+      return route.fulfill({json:{commodity:currency,rows:[
+        {account:'expenses:fees:platform',display_name:'Platform fees',amount:currency==='ETH'?'0.0015':'15.00'},
+        {account:'expenses:fees:broker',display_name:'Broker fees',amount:currency==='ETH'?'0.001':'10.00'},
+      ]}});
+    });
+    if(phone) await page.getByRole('navigation').getByRole('button',{name:'More',exact:true}).click();
+    await page.getByRole('button',{name:'Reports',exact:true}).click();
+    await page.getByRole('combobox',{name:'Reports',exact:true}).selectOption('categories');
+    await expect(page.getByRole('row').filter({hasText:'Platform fees'})).toContainText('USD 15.00');
+    await page.getByRole('combobox',{name:'Currency',exact:true}).selectOption('ETH');
+    await expect(page.getByRole('row').filter({hasText:'Platform fees'})).toContainText('ETH 0.0015');
+    await expect(page.getByRole('row').filter({hasText:'Broker fees'})).toContainText('ETH 0.001');
+  });
+  test("reconciliation sends the wallet currency and full precision",async({page})=>{
+    const writes=await setup(page,false,transaction,walletAccounts,walletCommodity);
+    await page.getByRole('navigation').getByRole('button',{name:'Transactions',exact:true}).click();
+    if(phone) {
+      await page.locator('.account-list button').filter({hasText:'Monero wallet'}).click();
+      await page.locator('.phone-overflow summary').click();
+    } else await page.getByRole('combobox',{name:'Account',exact:true}).selectOption('assets:investments:monero');
+    await page.getByRole('button',{name:'Reconcile…',exact:true}).click();
+    await page.getByLabel('Amount',{exact:true}).fill('12.345678901234');
+    await page.getByRole('button',{name:phone?'Review':'Preview',exact:true}).click();
+    await expect.poll(()=>writes.find(w=>w.path==='/reconcile')?.body.balance).toEqual({commodity:'XMR',mantissa:'12345678901234',places:12});
+  });
+});

@@ -85,6 +85,23 @@ pub fn normalized(mut tx: Transaction) -> Transaction {
     tx
 }
 
+pub fn primary_commodity(book: &kabacus_ledger::Book, chart: &kabacus_core::Chart) -> String {
+    book.transactions
+        .iter()
+        .flat_map(|t| &t.postings)
+        .find(|p| chart.kind_of(&p.account) == kabacus_core::AccountKind::Money)
+        .map(|p| p.amount.commodity.clone())
+        .or_else(|| {
+            book.transactions
+                .iter()
+                .flat_map(|t| &t.postings)
+                .map(|p| p.amount.commodity.clone())
+                .min()
+        })
+        .or_else(|| book.commodities.keys().next().cloned())
+        .unwrap_or_else(|| "USD".to_string())
+}
+
 impl WorkingCopy {
     /// The books at `expected_head`; books that have moved on are a
     /// conflict, for a dry run as for a commit.
@@ -115,14 +132,9 @@ impl WorkingCopy {
         self.book.styles()
     }
 
-    /// The books' commodity: the first the postings use.
+    /// The cash commodity, falling back to the first used symbol.
     pub fn commodity(&self) -> String {
-        self.base
-            .commodities
-            .first()
-            .cloned()
-            .or_else(|| self.book.commodities.keys().next().cloned())
-            .unwrap_or_else(|| "USD".to_string())
+        primary_commodity(&self.book, &self.rules_chart())
     }
 
     /// The decimal places `commodity` shows: its declared places, or the

@@ -272,7 +272,10 @@ async fn finer_amounts_and_json_numbers_beyond_i64_are_refused() {
         })
     };
     let (_, body, _) = server.request("GET", "/commodity", None, None).await;
-    assert_eq!(body, json!({"symbol": "USD", "places": 2}));
+    assert_eq!(
+        body,
+        json!({"symbol": "USD", "places": 2, "commodities":[{"symbol":"USD","places":2}]})
+    );
 
     let (status, body, _) = server
         .request(

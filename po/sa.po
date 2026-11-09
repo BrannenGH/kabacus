@@ -2086,6 +2086,16 @@ msgstr "एकस्य पत्रस्य आरक्षितपङ्क�
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "एककस्य मूल्यम्"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "सम्पूर्णं मूल्यम्"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "अधिकम्"
 

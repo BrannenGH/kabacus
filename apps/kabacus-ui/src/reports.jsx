@@ -1,18 +1,20 @@
 // SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 // SPDX-License-Identifier: GPL-3.0-or-later
 import React, { useEffect, useState } from "react";
+import { currencies } from "./operations";
 import { t } from "./i18n";
 const kinds = {
   "cash-flow": "Cash flow",
   "income-statement": "Income statement",
   categories: "Categories",
 };
-export function Reports({ api }) {
+export function Reports({ api, data }) {
   const [month, setMonth] = useState(
     () =>
       `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}`,
   );
   const [kind, setKind] = useState("cash-flow");
+  const [commodity, setCommodity] = useState(data.commodity.symbol);
   const [principal, setPrincipal] = useState(true);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
@@ -28,6 +30,8 @@ export function Reports({ api }) {
       to: `${month}-${to}`,
       equity_conversion: String(principal),
       compare_previous: "true",
+      commodity,
+      depth: "99",
     });
     api
       .request(`/reports/${kind}?${query}`, { signal: controller.signal })
@@ -36,7 +40,7 @@ export function Reports({ api }) {
         if (e.name !== "AbortError") setError(e.message);
       });
     return () => controller.abort();
-  }, [api, month, kind, principal]);
+  }, [api, month, kind, principal, commodity]);
   const value = (text) => (
     <span className="amount">
       {result?.commodity} {String(text ?? "—")}
@@ -91,6 +95,7 @@ export function Reports({ api }) {
             onChange={(e) => setMonth(e.target.value)}
           />
         </label>
+        {currencies(data).length > 1 && <label>{t("Currency")}<select value={commodity} onChange={e => setCommodity(e.target.value)}>{currencies(data).map(c => <option key={c.symbol} value={c.symbol}>{c.symbol}</option>)}</select></label>}
         {kind === "income-statement" && (
           <label className="checkbox">
             <input

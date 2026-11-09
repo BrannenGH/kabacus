@@ -2086,6 +2086,16 @@ msgstr "Egy kártyáról hiányoznak a tartaléksorai; meg lesz jelölve"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Egységár"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Teljes ár"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Továbbiak"
 

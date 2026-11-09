@@ -11,6 +11,8 @@ import { Api, exactAmount } from "./api";
 import { initializeAuth } from "./auth";
 import "./style.css";
 import { Reports } from "./reports";
+import { AmountField } from "./amount-field";
+import { accountCurrency, currencies } from "./operations";
 import { OperationDialog } from "./operation-dialog";
 import { Accounts, People } from "./accounts";
 import { Settings } from "./settings";
@@ -119,9 +121,9 @@ export function App({ auth, book, onFileAction }) {
   };
   const choose = (command) => {
     setChooser(false);
-    const kind = { "transaction.spent": "transaction", "transaction.received": "received", "transaction.transfer": "transfer", "reserve.setAside": "allocation" }[command.id];
+    const kind = { "transaction.spent": "transaction", "transaction.received": "received", "reserve.setAside": "allocation" }[command.id];
     if (kind) setForm(kind === "received" ? {kind, to: openedAccount} : { kind, from: openedAccount });
-    else setOperationForm({ kind: { "card.purchase": "purchase", "card.pay": "payment", "split.record": "split", "transaction.split": "split", "transaction.postings": "postings" }[command.id], account: openedAccount });
+    else setOperationForm({ kind: { "card.purchase": "purchase", "card.pay": "payment", "split.record": "split", "transaction.split": "split", "transaction.transfer": "transfer", "transaction.postings": "postings" }[command.id], account: openedAccount });
   };
   useEffect(() => { book?.remember?.({ page, account: openedAccount, selected:selectedRow }); }, [page, openedAccount, selectedRow, book?.id]);
   useEffect(() => {
@@ -321,7 +323,7 @@ export function App({ auth, book, onFileAction }) {
                 />
               )}
               {page === "People" && <People api={api} />}
-              {page === "Reports" && <Reports api={api} />}
+              {page === "Reports" && <Reports api={api} data={data} />}
               {page === "Register" && (
                 <div className="transactions-workspace">{(!phone || !registerOpen) && <AccountList data={registerQuery ? {...data, accounts: data.accounts.filter(a => `${a.display_name} ${a.account}`.toLowerCase().includes(registerQuery.toLowerCase()))} : data} selected={openedAccount} onSelect={phone ? openRegister : setOpenedAccount} />}{(!phone || registerOpen) && <Register
                   phone={phone} query={registerQuery}
@@ -769,6 +771,7 @@ function WriteDialog({
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [blocked, setBlocked] = useState(false);
+  const [currency, setCurrency] = useState(accountCurrency(data, defaults.from || defaults.to));
   const headRef = useRef(data.version.head);
   const [conflictDiff, setConflictDiff] = useState("");
   async function previewAgain() {
@@ -791,6 +794,7 @@ function WriteDialog({
   useEffect(() => {
     if (preview) return;
     for (const [name, value] of Object.entries(draft.current)) {
+      if (name === "currency") continue;
       const field = formRef.current?.elements.namedItem(name);
       if (field) {
         if (field.type === "checkbox") field.checked = value === "on";
@@ -802,7 +806,7 @@ function WriteDialog({
   const received = kind === "received";
   const transfer = kind === "transfer";
   const incomeAccounts = data.accounts.filter((a) => a.kind === "income");
-  const moneyAccounts = data.accounts.filter((a) => a.kind === "money");
+  const moneyAccounts = data.accounts.filter((a) => a.kind === "money" || a.kind === "non-liquid" && a.account.startsWith("assets:"));
   function accountPath(value) {
     const typed = value.trim();
     if (data.accounts.some((a) => a.account === typed)) return typed;
@@ -834,10 +838,11 @@ function WriteDialog({
   function recall(value) {
     const known = payees.find((p) => p.payee === value);
     const tx = known?.last;
-    if (!tx || tx.postings.length !== 2) return;
+    if (!tx || tx.postings.length !== 2 || tx.postings.some(p => p.cost) || tx.postings[0].amount.commodity !== tx.postings[1].amount.commodity) return;
     const from = tx.postings.find((p) => p.amount.exact.startsWith("-"));
     const to = tx.postings.find((p) => !p.amount.exact.startsWith("-"));
     if (!from || !to) return;
+    setCurrency(to.amount.commodity);
     for (const [field, value] of Object.entries({
       from: from.account,
       to: to.account,
@@ -902,8 +907,8 @@ function WriteDialog({
         } else {
           const amount = exactAmount(
             fields.amount,
-            data.commodity.symbol,
-            data.commodity.places,
+            currency,
+            currencies(data).find(c => c.symbol === currency)?.places,
           );
           path = "/transactions";
           body = {
@@ -947,19 +952,10 @@ function WriteDialog({
       setBusy(false);
     }
   }
-  const amountField = (
-    <label>
-                  {t("%1 (%2)", t("Amount"), data.commodity.symbol)}
-                  <input
-                    name="amount"
-                    autoFocus={phone}
-                    inputMode="decimal"
-                    required
-                    pattern="[0-9]+([.][0-9]+)?"
-                    placeholder="0.00"
-                  />
-                </label>
-  );
+  const amountField = <AmountField data={data}
+    input={{name:"amount", autoFocus:phone, pattern:"[0-9]+([.][0-9]+)?", placeholder:"0.00",
+      "aria-label":t("%1 (%2)", t("Amount"), allocation ? data.commodity.symbol : currency)}}
+    currency={allocation ? null : {name:"currency",value:currency,onChange:e=>setCurrency(e.target.value)}} />;
   return (
     <dialog
       aria-labelledby="dialog-title"
@@ -1043,6 +1039,7 @@ function WriteDialog({
                   {t("From")}
                   <select
                     name="from"
+                    onChange={e => { if (!received && !allocation) setCurrency(accountCurrency(data, e.target.value)); }}
                     required
                     defaultValue={
                       defaults.from ||
@@ -1064,6 +1061,7 @@ function WriteDialog({
                   {received ? (
                     <select
                       name="to"
+                      onChange={e => setCurrency(accountCurrency(data, e.target.value))}
                       required
                       defaultValue={
                         defaults.to ||

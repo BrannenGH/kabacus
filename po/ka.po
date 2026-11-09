@@ -2086,6 +2086,16 @@ msgstr "ბარათს რეზერვის ხაზები აკლ
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "ერთეულის ფასი"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "სრული ფასი"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "მეტი"
 

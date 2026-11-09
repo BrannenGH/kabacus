@@ -2100,6 +2100,16 @@ msgstr "לכרטיס חסרות שורות רזרבה; הוא יסומן"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "מחיר ליחידה"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "מחיר כולל"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "עוד"
 

@@ -2107,6 +2107,16 @@ msgstr "Tá línte cúlchiste in easnamh ar chárta; marcálfar é"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Praghas aonaid"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Praghas iomlán"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Tuilleadh"
 

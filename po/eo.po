@@ -2086,6 +2086,16 @@ msgstr "Al karto mankas siaj rezervaj linioj; ĝi estos markita"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Unuoprezo"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Totala prezo"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Pli"
 

@@ -2086,6 +2086,16 @@ msgstr "A una carta li mancan sas linhas de reserva ; serà senhalada"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Prètz unitari"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Prètz total"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Mai"
 

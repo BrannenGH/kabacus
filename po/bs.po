@@ -2093,6 +2093,16 @@ msgstr "Kartici nedostaju redovi rezerve; biće označena"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Jedinična cijena"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Ukupna cijena"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Još"
 

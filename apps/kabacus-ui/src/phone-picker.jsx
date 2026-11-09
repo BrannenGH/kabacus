@@ -38,7 +38,7 @@ export function PhonePicker({ form }) {
   }, [phone, form]);
   useEffect(() => { if (field) dialog.current.showModal(); }, [field]);
   if (!field) return null;
-  const label = field.labels?.[0]?.childNodes[0]?.textContent.trim() || t("Account");
+  const label = field.getAttribute("aria-label") || field.labels?.[0]?.childNodes[0]?.textContent.trim() || t("Account");
   const options = [...(field.options || field.list?.options || [])].filter(option => option.value && `${option.textContent} ${option.value}`.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
   function select(value) {
     const prototype = field.tagName === "SELECT" ? HTMLSelectElement.prototype : HTMLInputElement.prototype;

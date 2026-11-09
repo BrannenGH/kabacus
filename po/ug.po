@@ -2079,6 +2079,16 @@ msgstr "بىر كارتىنىڭ زاپاس قۇرلىرى كەم؛ ئۇ بەلگ
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "بىرلىك باھاسى"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "ئومۇمىي باھا"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "تېخىمۇ كۆپ"
 

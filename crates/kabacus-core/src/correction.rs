@@ -17,7 +17,6 @@ fn negate_postings(postings: &[Posting]) -> Vec<Posting> {
         .iter()
         .map(|p| Posting {
             amount: crate::money::Amount::new(p.amount.commodity.clone(), -p.amount.money.clone()),
-            cost: None,
             balance_assertion: None,
             ..p.clone()
         })

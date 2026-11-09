@@ -2086,6 +2086,16 @@ msgstr "Een kaart mist haar reserveregels; ze wordt gemarkeerd"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Eenheidsprijs"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Totale prijs"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Meer"
 

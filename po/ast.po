@@ -2086,6 +2086,16 @@ msgstr "A una tarxeta fálten-y les llinies de reserva; va marcase"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Preciu unitariu"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Preciu total"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Más"
 

@@ -2,6 +2,28 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import { exactAmount } from "./api";
 import { t } from "./i18n";
+export function currencies(data) {
+  return data.commodity.commodities?.length ? data.commodity.commodities : [{ symbol: data.commodity.symbol, places: data.commodity.places }];
+}
+export function accountCurrency(data, account) {
+  const balances = data.accounts?.find(a => a.account === account)?.balances || [];
+  return balances.length === 1 ? balances[0].commodity : data.commodity.symbol;
+}
+function posting(fields, key, data, old, transfer) {
+  const index = key.slice(7);
+  const symbol = fields["currency" + index] || old?.amount.commodity || data.commodity.symbol;
+  const places = currencies(data).find(c => c.symbol === symbol)?.places;
+  const amount = exactAmount(fields["amount" + index], symbol, places);
+  if (transfer && index === "0") amount.mantissa = (-BigInt(amount.mantissa)).toString();
+  const result = { account: fields[key], amount, status: "" };
+  if (old) result.status = old.account === fields[key] ? old.status || "" : "";
+  if (fields["cost" + index]) {
+    const currency = fields["cost_currency" + index] || old?.cost?.amount.commodity || data.commodity.symbol;
+    result.cost = {kind: fields["cost_kind" + index] || old?.cost?.kind || "total",
+      amount: exactAmount(fields["cost" + index], currency, currencies(data).find(c => c.symbol === currency)?.places)};
+  } else if (old?.cost && ["", "none"].includes(fields["cost_kind" + index])) result.clear_cost = true;
+  return result;
+}
 export function operation(kind, fields, data, tx) {
   const amount = (value) =>
     exactAmount(value, data.commodity.symbol, data.commodity.places);
@@ -12,7 +34,7 @@ export function operation(kind, fields, data, tx) {
       path: `/accounts/${encodeURIComponent(fields.account)}/type`,
       body: { synthetic: fields.synthetic === "true" },
     };
-  if (kind === "postings")
+  if (kind === "postings" || kind === "transfer")
     return {
       ...base,
       path: "/transactions",
@@ -21,10 +43,7 @@ export function operation(kind, fields, data, tx) {
         description: fields.description,
         postings: Object.keys(fields)
           .filter((key) => /^account[0-9]+$/.test(key))
-          .map((key) => ({
-            account: fields[key],
-            amount: amount(fields["amount" + key.slice(7)]),
-          })),
+          .map((key) => posting(fields, key, data, null, kind === "transfer")),
         tags: [],
       },
     };
@@ -49,16 +68,7 @@ export function operation(kind, fields, data, tx) {
           date: fields.date,
           description: fields.description,
           tags: tx.tags || [],
-          postings: Object.keys(fields).filter(key => /^account[0-9]+$/.test(key)).map(key => {
-            const index = Number(key.slice(7));
-            const old = tx.postings[index];
-            const account = fields[key];
-            return {
-              account,
-              status: old?.account === account ? old.status || "" : "",
-              amount: exactAmount(fields["amount" + index], old?.amount.commodity || data.commodity.symbol),
-            };
-          }),
+          postings: Object.keys(fields).filter(key => /^account[0-9]+$/.test(key)).map(key => posting(fields, key, data, tx.postings[Number(key.slice(7))])) ,
         },
       };
     }
@@ -137,7 +147,7 @@ export function operation(kind, fields, data, tx) {
     if (!ops.length) throw new Error(t("No unreserved transactions"));
     return { ...base, path: "/batch", body: { head: data.version.head, ops } };
   }
-  amount(fields.amount);
+  if (kind !== "reconcile") amount(fields.amount);
   if (kind === "split") {
     amount(fields.their_share);
     return {
@@ -181,7 +191,7 @@ export function operation(kind, fields, data, tx) {
         head: data.version.head,
         account: fields.account,
         date: fields.date,
-        balance: fields.amount,
+        balance: exactAmount(fields.amount, fields.currency || accountCurrency(data, fields.account)),
         mode: "assert",
       },
     };

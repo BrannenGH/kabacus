@@ -449,3 +449,34 @@ async fn reconcile_adjust_posts_the_difference() {
         cents(result["difference"].as_str().unwrap())
     );
 }
+
+#[tokio::test]
+async fn wallet_exchange_costs_and_fee_currencies_round_trip_through_mcp() {
+    let server = spawn_server_with_journal(kabacus_testkit::WALLETS, |_| {}).await;
+    let client = connect(&server).await;
+    let mut args = json!({"head":head(&client).await,"date":"2026-02-02","description":"Cedar Exchange | ETH to XMR","postings":[
+        {"account":"assets:investments:ethereum","amount":{"commodity":"ETH","mantissa":"-1025","places":4}},
+        {"account":"assets:investments:monero","amount":{"commodity":"XMR","mantissa":"15","places":1},"cost":{"kind":"total","amount":{"commodity":"ETH","mantissa":"1","places":1}}},
+        {"account":"expenses:fees:platform","amount":{"commodity":"ETH","mantissa":"15","places":4}},
+        {"account":"expenses:fees:broker","amount":{"commodity":"ETH","mantissa":"1","places":3}}
+    ]});
+    let before = revision(&server).await;
+    call(&client, "add_transaction", args.clone()).await;
+    assert_eq!(revision(&server).await, before);
+    args["dry_run"] = json!(false);
+    let saved = call(&client, "add_transaction", args).await;
+    let tx = call(&client, "get_transaction", json!({"id":saved["id"]})).await;
+    assert_eq!(tx["postings"][1]["cost"]["kind"], "total");
+    assert_eq!(tx["postings"][1]["cost"]["amount"]["commodity"], "ETH");
+    let fees = call(
+        &client,
+        "category_breakdown",
+        json!({"from":"2026-02-01","to":"2026-02-28","depth":3,"commodity":"ETH"}),
+    )
+    .await;
+    assert_eq!(fees["rows"].as_array().unwrap().len(), 2);
+    let checked = call(&client,"reconcile",json!({"account":"assets:investments:monero","date":"2026-02-28","balance":"13.845678901234","mode":"check"})).await;
+    assert_eq!(checked["commodity"], "XMR");
+    assert_eq!(checked["status"], "matched");
+    assert_checks(&server).await;
+}

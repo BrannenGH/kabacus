@@ -2086,6 +2086,16 @@ msgstr "Txartel bati erreserba-lerroak falta zaizkio; markatu egingo da"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Unitateko prezioa"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Prezio osoa"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Gehiago"
 

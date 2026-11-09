@@ -2086,6 +2086,16 @@ msgstr "Einer Karte fehlen ihre Reservezeilen; sie wird markiert"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Stückpreis"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Gesamtpreis"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Mehr"
 

@@ -2114,6 +2114,16 @@ msgstr "تنقص بطاقة أسطر احتياطيها؛ ستُعلَّم"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "سعر الوحدة"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "السعر الإجمالي"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "المزيد"
 

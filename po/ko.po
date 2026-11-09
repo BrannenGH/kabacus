@@ -2079,6 +2079,16 @@ msgstr "어떤 카드에 준비금 줄이 없습니다. 표시됩니다"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "단가"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "총 가격"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "더 보기"
 

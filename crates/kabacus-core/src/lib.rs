@@ -54,5 +54,5 @@ pub use statement_export::{statement_csv, statement_filename, statement_pdf, Sta
 pub use validate::{
     carry_over, carry_over_with, check_accounts_declared, check_balance_assertions,
     check_description, parse_date, resolve_amounts, resolve_amounts_by_kind, AssertionEdit,
-    BalanceAssertionFailure, CarriedOver, DraftPosting, ValidationError,
+    BalanceAssertionFailure, CarriedOver, CostEdit, DraftPosting, ValidationError,
 };

@@ -2086,6 +2086,16 @@ msgstr "Σε μια κάρτα λείπουν οι γραμμές αποθέμα
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Τιμή μονάδας"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Συνολική τιμή"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Περισσότερα"
 

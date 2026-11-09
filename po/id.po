@@ -2086,6 +2086,16 @@ msgstr "Sebuah kartu kekurangan baris cadangan; kartu itu akan ditandai"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "Harga satuan"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Harga total"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "Lainnya"
 

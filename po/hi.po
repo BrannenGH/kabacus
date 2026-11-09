@@ -2086,6 +2086,16 @@ msgstr "एक कार्ड में आरक्षित पंक्त�
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Unit price"
+msgstr "इकाई मूल्य"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "कुल मूल्य"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "More"
 msgstr "और"
 
