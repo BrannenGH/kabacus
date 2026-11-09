@@ -1235,7 +1235,7 @@ pub struct CashOnHandQuery {
 }
 
 /// Cash on Hand as of the end of `as_of` (every transaction
-/// if `None`), counting every transaction as hledger does.
+/// if `None`), counting every transaction.
 pub async fn cash_on_hand(
     state: &Service,
     principal: &dyn Caller,

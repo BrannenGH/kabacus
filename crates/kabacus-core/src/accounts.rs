@@ -45,7 +45,7 @@ impl AccountDeclaration {
     }
 }
 
-/// hledger comment tags: each `name:value`, the value running to the next
+/// Comment tags: each `name:value`, the value running to the next
 /// comma or the end of the comment.
 pub fn parse_comment_tags(comment: &str) -> Vec<(String, String)> {
     comment
@@ -60,7 +60,7 @@ pub fn parse_comment_tags(comment: &str) -> Vec<(String, String)> {
 
 /// Every `account` directive in `text`, with the tags from its same-line
 /// comment and any indented comment lines under it. The account name ends
-/// at two spaces, a tab, or the line's end, as in hledger.
+/// at two spaces, a tab, or the line's end.
 pub fn parse_account_declarations(text: &str) -> Vec<AccountDeclaration> {
     let mut declarations: Vec<AccountDeclaration> = Vec::new();
     let mut in_directive = false;
@@ -104,7 +104,7 @@ pub fn parse_account_declarations(text: &str) -> Vec<AccountDeclaration> {
 
 /// The `account` directive line declaring `name`, with `tags` in
 /// its comment, or why it can't be declared. The name must be a valid
-/// hledger account name: non-empty colon-separated parts, no double
+/// An account name: non-empty colon-separated parts, no double
 /// spaces, tabs or `;` (which would end the name or start a comment).
 pub fn render_account_declaration(name: &str, tags: &[(String, String)]) -> Result<String, String> {
     if name.trim().is_empty() {

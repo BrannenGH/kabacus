@@ -2632,10 +2632,6 @@ msgstr "حُفظ كمراجعة %1"
 #~ msgstr "صحّح %1: قيد عكسي وبديل، بتاريخ اليوم."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "اجتاز تحقق hledger على نسخة عمل"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · الأسطر %2–%3"

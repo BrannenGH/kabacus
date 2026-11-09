@@ -12,5 +12,5 @@ MimeType=application/x-kabacus;
 Icon=me.hallb.kabacus
 Terminal=false
 Categories=Office;Finance;Qt;KDE;
-Keywords=hledger;ledger;budget;accounts;money;
+Keywords=ledger;budget;accounts;money;
 StartupWMClass=kabacus

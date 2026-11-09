@@ -544,7 +544,7 @@ fn group_accounts(accounts: &[AccountView], coh: &CashOnHandView) -> Vec<Account
         if group == "people" && balance.tone == "zero" {
             continue;
         }
-        // hledger keeps income and equity negative; shown earned
+        // Income and equity balances are negative; shown earned
         // (positive) and neutral, since red reads as "bad".
         let balance = if a.kind == "income" || a.account.starts_with("equity:") {
             earned(balance)

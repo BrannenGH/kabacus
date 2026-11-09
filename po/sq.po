@@ -2604,10 +2604,6 @@ msgstr "U ruajt si rishikimi %1"
 #~ msgstr "Ndreqe %1: një kthim dhe një zëvendësim, me datën e sotme."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "Kontrolli hledger kaloi në një kopje pune"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · rreshtat %2–%3"

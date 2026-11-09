@@ -62,13 +62,6 @@ Hard rules:
   the apps, `kabacus-cli` and the server behave identically. Local and
   remote books are proven equal by one suite run against both.
 
-- **Ledger-engine code is written from the specification only.** Never
-  fetch or read hledger's source or tests (including `hledger-lib`) while
-  writing or reviewing `kabacus-ledger` code; the hledger binary may be run
-  as a black box. Each engine module's header comment names the
-  specification section it implements. Anyone who has read hledger's
-  source works on the specification, not the code.
-
 - **Done means proven by automated tests.** Nothing is done until the
   full CI gate (unit, property, API, MCP, desktop GUI e2e via AT-SPI,
   qmllint, design check, reuse lint) passes. Write the test first; a bug

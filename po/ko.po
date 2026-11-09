@@ -2597,10 +2597,6 @@ msgstr "리비전 %1로 저장됨"
 #~ msgstr "%1 정정: 오늘 날짜의 역분개와 대체 거래."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "작업 사본에서 hledger 검사를 통과함"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · %2–%3행"

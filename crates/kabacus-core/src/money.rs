@@ -2,8 +2,7 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-//! Exact money: amounts are built from hledger's
-//! `aquantity.decimalMantissa` / `decimalPlaces` and are never floating point.
+//! Exact money: integer mantissas and decimal places, never floating point.
 
 use num_bigint::{BigInt, BigUint};
 use num_traits::{Signed, Zero};
@@ -37,8 +36,7 @@ impl Money {
         }
     }
 
-    /// Build directly from hledger's wire representation. This is the only
-    /// sanctioned way to get a `Money` from JSON.
+    /// Build from an integer mantissa and decimal places.
     pub fn from_decimal(mantissa: i128, places: u32) -> Self {
         Money::from_big(BigInt::from(mantissa), places)
     }
@@ -413,7 +411,7 @@ pub mod wire_mantissa {
     }
 }
 
-/// A commodity-tagged amount (hledger's `Amount`, minus the display style and
+/// A commodity-tagged amount (without display style and
 /// cost/price fields we don't need: there's no multi-currency
 /// conversion).
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -555,7 +553,7 @@ mod tests {
 
     #[test]
     fn from_decimal_never_touches_a_float() {
-        // 45.678 as hledger would report it: mantissa 45678, places 3.
+        // 45.678: mantissa 45678, places 3.
         let m = Money::from_decimal(45678, 3);
         assert_eq!(m.to_string(), "45.678");
     }

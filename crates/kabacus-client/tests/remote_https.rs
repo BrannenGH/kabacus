@@ -7,7 +7,7 @@
 //! certificate that chains to a private CA (no pinning).
 //!
 //! The provider is kabacus-testkit's stand-in OIDC provider; the server
-//! itself runs for real (git and hledger).
+//! itself runs against a real scratch store.
 
 use kabacus_client::{ClientError, KabacusClient};
 use kabacus_testkit::spawn_remote_server;

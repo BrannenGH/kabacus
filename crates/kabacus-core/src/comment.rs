@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-//! hledger comments and the tags they declare. A transaction's or posting's
-//! comment, as hledger reports it (`tcomment`/`pcomment`), is the text after
+//! Journal comments and the tags they declare. A transaction's or posting's
+//! comment is the text after
 //! each `;`, one line per comment line, the first being the one on the
 //! transaction's or posting's own line (empty when there is none). Tags are
 //! declared inside that text, so writing an edited transaction back keeps
@@ -19,7 +19,7 @@ struct Declaration {
     span: Range<usize>,
 }
 
-/// hledger's tag syntax (verified against hledger 1.99.4): a tag name is a
+/// Tag syntax: a tag name is a
 /// run of anything but whitespace and `:`, ended by `:`; its value runs to
 /// the next `,` or the end of the line and is trimmed. Other words are
 /// skipped, and an empty name before a `:` is no tag.
@@ -59,7 +59,7 @@ fn declarations(comment: &str) -> Vec<Declaration> {
     found
 }
 
-/// The tags `comment` declares, in order, as hledger reads them.
+/// The tags `comment` declares, in order.
 pub fn declared_tags(comment: &str) -> Vec<Tag> {
     declarations(comment).into_iter().map(|d| d.tag).collect()
 }
@@ -129,10 +129,8 @@ mod tests {
             .collect()
     }
 
-    /// Each case's expected tags are what hledger 1.99.4 reported for the
-    /// same comment (`ttags`).
     #[test]
-    fn reads_tags_the_way_hledger_does() {
+    fn reads_tags_from_comments() {
         let comment = "see http://x.com/a, foo:bar\n\
                        a:1, b:2, c:3\n\
                        tag-novalue:, other: spaced value , x\n\

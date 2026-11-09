@@ -2604,10 +2604,6 @@ msgstr "Konservita kiel revizio %1"
 #~ msgstr "Korekti %1: inversigo kaj anstataŭaĵo, datitaj hodiaŭ."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "hledger-kontrolo sukcesis sur provkopio"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · linioj %2–%3"

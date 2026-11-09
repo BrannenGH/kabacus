@@ -2604,10 +2604,6 @@ msgstr "Als Revision %1 gespeichert"
 #~ msgstr "%1 korrigieren: eine Stornierung und ein Ersatz, mit heutigem Datum."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "hledger-Prüfung auf einer Arbeitskopie bestanden"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · Zeilen %2–%3"

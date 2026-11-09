@@ -29,7 +29,7 @@ The server is deployed from its image, `scripts/build-image`; see
 `container/README.md`.
 
 Tests run in openSUSE Tumbleweed containers (`Containerfile`), which have
-Rust, the pinned hledger and the test tools, so none of that is needed on
+Rust and the test tools, so none of that is needed on
 the host:
 
     scripts/dev cargo test --workspace

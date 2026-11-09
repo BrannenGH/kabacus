@@ -131,7 +131,7 @@ pub fn project<T: Serialize>(
 #[derive(Debug, Clone, Default, Deserialize, schemars::JsonSchema)]
 pub struct SearchQuery {
     /// A plain-text filter matched against payee, memo and posting
-    /// accounts (not hledger's query language).
+    /// accounts.
     #[serde(default)]
     pub query: Option<String>,
     /// `YYYY-MM-DD`, inclusive.

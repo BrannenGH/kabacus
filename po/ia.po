@@ -2604,10 +2604,6 @@ msgstr "Salveguardate como revision %1"
 #~ msgstr "Corrige %1: un inversion e un reimplaciamento, datate hodie."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "Le verification de hledger passava sur un copia de travalio"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · lineas %2–%3"

@@ -2604,10 +2604,6 @@ msgstr "പതിപ്പ് %1 ആയി സംരക്ഷിച്ചു"
 #~ msgstr "%1 തിരുത്തുക: ഒരു വിപരീത എൻട്രിയും ഒരു പകരവും, ഇന്നത്തെ തീയതിയിൽ."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "ഒരു താൽക്കാലിക പകർപ്പിൽ hledger check വിജയിച്ചു"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · വരികൾ %2–%3"

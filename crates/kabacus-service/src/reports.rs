@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 //! The report tools and `reconcile`, over kabacus-core's reports. Every
-//! report counts every transaction, as hledger's balance reports do.
+//! report counts every transaction.
 
 use crate::caller::{Caller, Permission as Role};
 use crate::error::Error as ApiError;
