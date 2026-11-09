@@ -76,31 +76,30 @@ Kirigami.ScrollablePage {
                 contentItem: ColumnLayout {
                     spacing: Kirigami.Units.smallSpacing
                     RowLayout {
-                        Controls.Label { text: i18n("Cash on Hand"); font.bold: true }
+                        Kirigami.Heading { text: i18n("Available to spend"); level: 3; Layout.fillWidth: true; wrapMode: Text.Wrap }
                         InfoButton {
                             text: i18n("About Cash on Hand")
                             topic: i18n("Cash on Hand")
                             explanation: i18n("Free money you can spend right now, after reserves and card reserves.")
-                        }
-                        Item { Layout.fillWidth: true }
-                        Kirigami.Chip {
-                            visible: page.overview !== null && page.overview.change !== null
-                            closable: false
-                            checkable: false
-                            // No arrow when nothing changed.
-                            icon.name: !page.overview || !page.overview.change || page.overview.change.tone === "zero" ? ""
-                                : page.overview.change.tone === "neg" ? "go-down" : "go-up"
-                            text: page.overview && page.overview.change
-                                ? i18nc("%1 is the change in Cash on Hand, %2 a date", "%1 since %2", (page.overview.change.tone === "pos" ? "+" : "") + page.overview.change.text, page.overview.compare_to) : ""
                         }
                     }
                     Money {
                         objectName: "cashOnHand"
                         amount: page.overview ? page.overview.cash_on_hand : null
                         font.pointSize: Kirigami.Theme.defaultFont.pointSize * 2.6
-                        font.weight: Font.Light
+                        font.weight: Font.Medium
+                        colored: false
+                        Layout.fillWidth: true
+                        wrapMode: Text.Wrap
                         horizontalAlignment: Text.AlignLeft
-                        Accessible.name: i18nc("%1 is an amount", "Cash on Hand %1", text)
+                        Accessible.name: i18nc("%1 is an amount", "Available to spend %1", text)
+                    }
+                    Controls.Label {
+                        visible: page.overview !== null && page.overview.change !== null
+                        Layout.fillWidth: true
+                        wrapMode: Text.Wrap
+                        text: page.overview && page.overview.change
+                            ? i18nc("%1 is the change in Cash on Hand, %2 a date", "%1 since %2", (page.overview.change.tone === "pos" ? "+" : "") + page.overview.change.text, page.overview.compare_to) : ""
                     }
                     Kirigami.Separator { Layout.fillWidth: true }
                     // Closed at first, on every form factor: Cash on Hand is
@@ -111,20 +110,20 @@ Kirigami.ScrollablePage {
                             id: breakdown
                             objectName: "moneyOnHand"
                             checkable: true
-                            text: page.app.narrow ? i18n("How it's worked out") : i18n("Money on Hand")
+                            text: i18n("How it's worked out")
                             Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                             icon.name: checked ? "arrow-up" : "arrow-down"
                             display: Controls.AbstractButton.TextBesideIcon
                             Accessible.name: i18n("Money on Hand")
                         }
                         InfoButton {
-                            visible: !page.app.narrow || breakdown.checked
+                            visible: breakdown.checked
                             text: i18n("About Money on Hand")
                             topic: i18n("Money on Hand")
                             explanation: i18n("Everything in your bank accounts, reserves and card reserves included, plus what people owe you. Cash on Hand is what's left once reserves, card reserves and what you're owed are set apart.")
                         }
                         Item { Layout.fillWidth: true }
-                        Money { visible: !page.app.narrow || breakdown.checked; amount: page.overview ? page.overview.money_on_hand : null; colored: false }
+                        Money { visible: breakdown.checked; amount: page.overview ? page.overview.money_on_hand : null; colored: false }
                     }
                     GridLayout {
                         visible: breakdown.checked
@@ -148,7 +147,7 @@ Kirigami.ScrollablePage {
                 Layout.fillHeight: true
                 Layout.alignment: Qt.AlignTop
                 contentItem: ColumnLayout {
-                    Controls.Label { text: i18n("Free money by account"); font.bold: true }
+                    Kirigami.Heading { text: i18n("Available by account"); level: 3; Layout.fillWidth: true; wrapMode: Text.Wrap }
                     Repeater {
                         model: page.overview ? page.overview.homes : []
                         delegate: Controls.ItemDelegate {
@@ -160,7 +159,7 @@ Kirigami.ScrollablePage {
                             onClicked: page.app.showRegister(modelData.account, modelData.name)
                             contentItem: RowLayout {
                                 Controls.Label { text: homeDelegate.modelData.name; elide: Text.ElideRight; Layout.fillWidth: true }
-                                Money { amount: homeDelegate.modelData.free }
+                                Money { amount: homeDelegate.modelData.free; colored: false }
                             }
                         }
                     }
@@ -168,7 +167,6 @@ Kirigami.ScrollablePage {
                         visible: page.overview !== null && page.overview.homes.length === 0
                         text: i18n("No account has free money right now.")
                         wrapMode: Text.Wrap
-                        opacity: 0.7
                         Layout.fillWidth: true
                     }
                     Item { Layout.fillHeight: true }
@@ -210,8 +208,8 @@ Kirigami.ScrollablePage {
                 Layout.alignment: Qt.AlignTop
                 contentItem: ColumnLayout {
                     RowLayout {
-                        Controls.Label { text: page.app.labels.Funds; font.bold: true; Layout.fillWidth: true }
-                        Money { amount: page.overview ? page.overview.funds_total : null; colored: false; opacity: 0.7 }
+                        Kirigami.Heading { text: page.app.labels.Funds; level: 3; Layout.fillWidth: true; wrapMode: Text.Wrap }
+                        Money { amount: page.overview ? page.overview.funds_total : null; colored: false }
                     }
                     Repeater {
                         model: page.overview ? page.overview.funds : []
@@ -225,7 +223,7 @@ Kirigami.ScrollablePage {
                             onClicked: page.app.openForm("set_aside", { from: modelData.home, to: modelData.account })
                             contentItem: RowLayout {
                                 Controls.Label { text: fundDelegate.modelData.name; elide: Text.ElideRight; Layout.fillWidth: true }
-                                Money { amount: fundDelegate.modelData.amount }
+                                Money { amount: fundDelegate.modelData.amount; colored: false }
                             }
                         }
                     }
@@ -233,7 +231,6 @@ Kirigami.ScrollablePage {
                         visible: page.overview !== null && page.overview.funds.length === 0
                         text: i18n("Nothing is set aside in a reserve.")
                         wrapMode: Text.Wrap
-                        opacity: 0.7
                         Layout.fillWidth: true
                     }
                     Item { Layout.fillHeight: true }
@@ -247,7 +244,7 @@ Kirigami.ScrollablePage {
                 Layout.fillHeight: true
                 Layout.alignment: Qt.AlignTop
                 contentItem: ColumnLayout {
-                    Controls.Label { text: page.app.labels.Cards; font.bold: true }
+                    Kirigami.Heading { text: page.app.labels.Cards; level: 3; Layout.fillWidth: true; wrapMode: Text.Wrap }
                     Repeater {
                         model: page.overview ? page.overview.cards : []
                         delegate: Controls.ItemDelegate {
@@ -257,22 +254,31 @@ Kirigami.ScrollablePage {
                             Layout.minimumHeight: page.app.narrow ? 56 : implicitHeight
                             Accessible.name: modelData.name
                             onClicked: page.app.go("Cards", { focusCard: modelData.card })
-                            contentItem: RowLayout {
-                                Controls.Label { text: cardDelegate.modelData.name; elide: Text.ElideRight; Layout.fillWidth: true }
-                                Kirigami.Chip {
-                                    closable: false
-                                    checkable: false
-                                    text: cardDelegate.modelData.covered ? i18nc("a card's reserve covers what it owes", "covered") : i18nc("%1 is an amount", "%1 still to reserve", cardDelegate.modelData.short.text)
-                                    onClicked: page.app.go("Cards", { focusCard: cardDelegate.modelData.card })
+                            contentItem: ColumnLayout {
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    Controls.Label { text: cardDelegate.modelData.name; elide: Text.ElideRight; Layout.fillWidth: true }
+                                    Kirigami.Chip {
+                                        closable: false
+                                        checkable: false
+                                        text: cardDelegate.modelData.covered ? i18nc("a card's reserve covers what it owes", "covered") : i18nc("%1 is an amount", "%1 still to reserve", cardDelegate.modelData.short.text)
+                                        onClicked: page.app.go("Cards", { focusCard: cardDelegate.modelData.card })
+                                    }
                                 }
-                                Money { amount: cardDelegate.modelData.owed; colored: false }
+                                GridLayout {
+                                    columns: 2
+                                    Layout.fillWidth: true
+                                    Controls.Label { text: i18n("Owes"); Layout.fillWidth: true; wrapMode: Text.Wrap }
+                                    Money { amount: cardDelegate.modelData.owed; colored: false }
+                                    Controls.Label { text: i18n("Set Aside for Credit Card Payments"); Layout.fillWidth: true; wrapMode: Text.Wrap }
+                                    Money { amount: cardDelegate.modelData.reserve; colored: false }
+                                }
                             }
                         }
                     }
                     Controls.Label {
                         text: i18n("Each card's reserve should equal what it owes.")
                         wrapMode: Text.Wrap
-                        opacity: 0.7
                         Layout.fillWidth: true
                     }
                     Item { Layout.fillHeight: true }

@@ -328,10 +328,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Озод"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "Захираҳои кортҳо"
+msgid "Set Aside for Credit Card Payments"
+msgstr "Барои пардохтҳои кортҳои қарзӣ ҷудо карда шудааст"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -700,15 +700,20 @@ msgstr "Пули харҷшавандаро бор кардан ғайриимк
 msgid "Loading…"
 msgstr "Бор шуда истодааст…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "Пули харҷшаванда"
+msgid "Available to spend"
+msgstr "Барои харҷ дастрас"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "Дар бораи пули харҷшаванда"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Пули харҷшаванда"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -717,15 +722,15 @@ msgstr "Пули озоде, ки ҳозир метавонед харҷ кун�
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "%1 аз %2"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "Барои харҷ дастрас %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "Пули харҷшаванда %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%1 аз %2"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -759,8 +764,8 @@ msgstr "− Талабот (он чи ба шумо қарздоранд)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "Пули озод аз рӯи ҳисоб"
+msgid "Available by account"
+msgstr "Аз рӯи ҳисоб дастрас"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -768,7 +773,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 озод %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "Ҳоло дар ягон ҳисоб пули озод нест."
@@ -783,6 +788,11 @@ msgstr "Дар ягон захира чизе ҷудо гузошта нашуд
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "пӯшонида шуд"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Қарз"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2086,6 +2096,11 @@ msgstr "Ба корт сатрҳои захира намерасад; он қа�
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "%1 аз %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "Нархи воҳид"
 
@@ -2266,11 +2281,6 @@ msgstr "Ин барнома"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "Қарз"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "Захира"
 
@@ -2391,6 +2401,11 @@ msgstr "Кредит"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "Пули озод аз рӯи ҳисоб"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "Ҳанӯз чизе ҷудо нашудааст"
 
@@ -2418,6 +2433,15 @@ msgstr "Захираҳо пулро барои баъд, масалан андо
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "Ҳамчун таҳрири %1 сабт шуд"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "Пули харҷшаванда %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "Захираҳои кортҳо"
 
 #, kde-format
 #~ msgid "The books changed"

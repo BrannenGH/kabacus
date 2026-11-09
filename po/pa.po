@@ -328,10 +328,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "ਖੁੱਲ੍ਹੇ"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "ਕਾਰਡਾਂ ਦੀਆਂ ਰਾਖਵੀਆਂ ਰਕਮਾਂ"
+msgid "Set Aside for Credit Card Payments"
+msgstr "ਕ੍ਰੈਡਿਟ ਕਾਰਡ ਭੁਗਤਾਨਾਂ ਲਈ ਵੱਖ ਰੱਖੀ ਰਕਮ"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -700,15 +700,20 @@ msgstr "ਹੱਥ ਵਿਚਲੀ ਨਕਦੀ ਲੋਡ ਨਹੀਂ ਹੋ ਸ
 msgid "Loading…"
 msgstr "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "ਹੱਥ ਵਿਚਲੀ ਨਕਦੀ"
+msgid "Available to spend"
+msgstr "ਖਰਚ ਕਰਨ ਲਈ ਉਪਲਬਧ"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "ਹੱਥ ਵਿਚਲੀ ਨਕਦੀ ਬਾਰੇ"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "ਹੱਥ ਵਿਚਲੀ ਨਕਦੀ"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -717,15 +722,15 @@ msgstr "ਰਾਖਵੀਆਂ ਰਕਮਾਂ ਅਤੇ ਕਾਰਡਾਂ ਦ�
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "%2 ਤੋਂ %1"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "ਖਰਚ ਕਰਨ ਲਈ ਉਪਲਬਧ %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "ਹੱਥ ਵਿਚਲੀ ਨਕਦੀ %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%2 ਤੋਂ %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -759,8 +764,8 @@ msgstr "− ਲੈਣਦਾਰੀਆਂ (ਤੁਹਾਨੂੰ ਦੇਣਯੋ�
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "ਖਾਤੇ ਅਨੁਸਾਰ ਖੁੱਲ੍ਹੇ ਪੈਸੇ"
+msgid "Available by account"
+msgstr "ਖਾਤੇ ਅਨੁਸਾਰ ਉਪਲਬਧ"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -768,7 +773,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 ਖੁੱਲ੍ਹੇ %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "ਹੁਣ ਕਿਸੇ ਖਾਤੇ ਵਿੱਚ ਖੁੱਲ੍ਹੇ ਪੈਸੇ ਨਹੀਂ ਹਨ।"
@@ -783,6 +788,11 @@ msgstr "ਕਿਸੇ ਰਾਖਵੀਂ ਰਕਮ ਵਿੱਚ ਕੁਝ ਵੱ�
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "ਪੂਰਾ"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "ਬਕਾਇਆ"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2086,6 +2096,11 @@ msgstr "ਇੱਕ ਕਾਰਡ ਦੀਆਂ ਰਾਖਵੀਂ ਰਕਮ ਵਾ�
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "%2 ਤੋਂ %1"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "ਇਕਾਈ ਮੁੱਲ"
 
@@ -2266,11 +2281,6 @@ msgstr "ਇਹ ਐਪ"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "ਬਕਾਇਆ"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "ਰਾਖਵੀਂ ਰਕਮ"
 
@@ -2391,6 +2401,11 @@ msgstr "ਕ੍ਰੈਡਿਟ"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "ਖਾਤੇ ਅਨੁਸਾਰ ਖੁੱਲ੍ਹੇ ਪੈਸੇ"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "ਹਾਲੇ ਕੁਝ ਵੀ ਪਾਸੇ ਨਹੀਂ ਰੱਖਿਆ"
 
@@ -2418,6 +2433,15 @@ msgstr "ਰਾਖਵੀਂ ਰਕਮ ਬਾਅਦ ਲਈ ਪੈਸੇ ਰੱਖ�
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "ਸੋਧ %1 ਵਜੋਂ ਸੰਭਾਲਿਆ"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "ਹੱਥ ਵਿਚਲੀ ਨਕਦੀ %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "ਕਾਰਡਾਂ ਦੀਆਂ ਰਾਖਵੀਆਂ ਰਕਮਾਂ"
 
 #, kde-format
 #~ msgid "The books changed"

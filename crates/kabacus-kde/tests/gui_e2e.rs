@@ -618,14 +618,25 @@ async fn the_overview_explains_its_figures_and_opens_its_rows() {
     assets:bank:checking  -300.00 USD
 "
     );
-    for (i, size) in [DESKTOP].into_iter().enumerate() {
+    for (i, size) in [DESKTOP, "390x844"].into_iter().enumerate() {
         let name = format!("overview{i}");
         let socket = socket_path(&name);
         let server = kabacus_testkit::spawn_server_with_journal(&journal, |c| {
             c.socket_path = socket.clone()
         })
         .await;
-        let _app = launch_sized(&server.socket_path, &config_dir(&name), size);
+        let config = config_dir(&name);
+        if size != DESKTOP {
+            // KDE's accessibility guidance asks for a different palette and 14pt text.
+            std::fs::write(
+                config.join("kdeglobals"),
+                "[General]\nColorScheme=BreezeDark\nfont=Noto Sans,14,-1,5,50,0,0,0,0,0\n\
+                 [Colors:Window]\nBackgroundNormal=35,38,41\nForegroundNormal=239,240,241\n\
+                 [Colors:View]\nBackgroundNormal=27,30,32\nForegroundNormal=239,240,241\n",
+            )
+            .unwrap();
+        }
+        let _app = launch_sized(&server.socket_path, &config, size);
         drive(&["overview", "Checking", "Insurance", "Gifts"]).await;
     }
 }

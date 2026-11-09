@@ -24,7 +24,6 @@ import { destinations, pageLabels, Icon, Key, AddChooser, AccountList, BooksShee
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
-import "@fontsource/playfair-display/600.css";
 const today = () => {
   const date = new Date();
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -414,7 +413,7 @@ export function App({ auth, book, onFileAction }) {
                   </div>
                   <div className="panel-heading">
                     <div>
-                      <h2>{t("Card reserves")}</h2>
+                      <h2>{t("Set Aside for Credit Card Payments")}</h2>
                       <p>
                         {t("Each card's reserve should equal what it owes.")}
                       </p>

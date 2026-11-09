@@ -328,10 +328,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Libera"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "Kartaj rezervoj"
+msgid "Set Aside for Credit Card Payments"
+msgstr "Rezervita por pagoj de kreditkartoj"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -700,15 +700,20 @@ msgstr "Ne eblas ŝargi la elspezeblan monon"
 msgid "Loading…"
 msgstr "Ŝargante…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
+msgid "Available to spend"
 msgstr "Elspezebla mono"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "Pri elspezebla mono"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Elspezebla mono"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -717,15 +722,15 @@ msgstr "Libera mono, kiun vi povas elspezi nun, post rezervoj kaj kartaj rezervo
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "%1 ekde %2"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "Elspezebla mono %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "Elspezebla mono %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%1 ekde %2"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -759,8 +764,8 @@ msgstr "− Ricevendaĵoj (ŝuldataj al vi)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "Libera mono laŭ konto"
+msgid "Available by account"
+msgstr "Disponebla laŭ konto"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -768,7 +773,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 libera %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "Neniu konto nun havas liberan monon."
@@ -783,6 +788,11 @@ msgstr "Nenio estas flankenmetita en rezervo."
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "kovrita"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Ŝuldas"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2086,6 +2096,11 @@ msgstr "Al karto mankas siaj rezervaj linioj; ĝi estos markita"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "%1 ekde %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "Unuoprezo"
 
@@ -2266,11 +2281,6 @@ msgstr "Ĉi tiu aplikaĵo"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "Ŝuldas"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "Rezervo"
 
@@ -2391,6 +2401,11 @@ msgstr "Kredito"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "Libera mono laŭ konto"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "Nenio estas ankoraŭ flankenmetita"
 
@@ -2418,6 +2433,15 @@ msgstr "Rezervoj tenas monon por poste, kiel por domimposto aŭ aŭtoriparoj. Ĝ
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "Konservita kiel revizio %1"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "Elspezebla mono %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "Kartaj rezervoj"
 
 #, kde-format
 #~ msgid "The books changed"

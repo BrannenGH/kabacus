@@ -68,16 +68,18 @@ Kirigami.ScrollablePage {
                         Rectangle { x: split.width * (split.h.free_share + split.h.funds_share); width: split.width * split.h.reserves_share; height: parent.height; color: page.tokens.splitReserves }
                     }
                     Flow {
+                        id: reserveLegend
                         Layout.fillWidth: true
                         spacing: Kirigami.Units.largeSpacing
                         Repeater {
                             model: [
                                 { label: i18nc("free money", "Free"), amount: card.modelData.home.free, color: page.tokens.splitFree },
                                 { label: page.app.labels.Funds, amount: card.modelData.home.funds, color: page.tokens.splitFunds },
-                                { label: i18n("Card reserves"), amount: card.modelData.home.reserves, color: page.tokens.splitReserves }
+                                { label: i18n("Set Aside for Credit Card Payments"), amount: card.modelData.home.reserves, color: page.tokens.splitReserves }
                             ]
                             delegate: RowLayout {
                                 id: legendDelegate
+                                width: Math.min(implicitWidth, reserveLegend.width)
                                 required property var modelData
                                 Rectangle {
                                     Layout.preferredWidth: Kirigami.Units.smallSpacing * 3
@@ -85,7 +87,7 @@ Kirigami.ScrollablePage {
                                     radius: Kirigami.Units.cornerRadius / 2
                                     color: legendDelegate.modelData.color
                                 }
-                                Controls.Label { text: i18nc("%1 is a label, %2 an amount", "%1 %2", legendDelegate.modelData.label, legendDelegate.modelData.amount.text) }
+                                Controls.Label { text: i18nc("%1 is a label, %2 an amount", "%1 %2", legendDelegate.modelData.label, legendDelegate.modelData.amount.text); Layout.fillWidth: true; wrapMode: Text.Wrap }
                             }
                         }
                     }
@@ -113,7 +115,7 @@ Kirigami.ScrollablePage {
                             }
                         }
                     }
-                    Kirigami.ListSectionHeader { text: i18n("Card reserves"); Layout.fillWidth: true; visible: card.modelData.reserves.length > 0 }
+                    Kirigami.ListSectionHeader { text: i18n("Set Aside for Credit Card Payments"); Layout.fillWidth: true; visible: card.modelData.reserves.length > 0 }
                     Repeater {
                         model: card.modelData.reserves
                         delegate: Controls.ItemDelegate { Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight;

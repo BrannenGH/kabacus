@@ -327,10 +327,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "未分配"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "信用卡准备金"
+msgid "Set Aside for Credit Card Payments"
+msgstr "为信用卡还款预留的资金"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -699,15 +699,20 @@ msgstr "无法加载可用资金"
 msgid "Loading…"
 msgstr "正在加载…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "可用资金"
+msgid "Available to spend"
+msgstr "可支配金额"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "关于可用资金"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "可用资金"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -716,15 +721,15 @@ msgstr "扣除准备金和信用卡准备金后，现在就能花的未分配资
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "自 %2 以来 %1"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "可支配金额 %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "可用资金 %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "自 %2 以来 %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -758,8 +763,8 @@ msgstr "− 应收款（别人欠你的）"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "各账户的未分配资金"
+msgid "Available by account"
+msgstr "各账户可支配金额"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -767,7 +772,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 未分配 %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "目前没有账户有未分配资金。"
@@ -782,6 +787,11 @@ msgstr "还没有在任何准备金中预留资金。"
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "已覆盖"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "欠款"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2079,6 +2089,11 @@ msgstr "某张信用卡缺少准备金分录行；它将被标记"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "自 %2 以来 %1"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "单价"
 
@@ -2259,11 +2274,6 @@ msgstr "本应用"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "欠款"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "准备金"
 
@@ -2384,6 +2394,11 @@ msgstr "信用卡"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "各账户的未分配资金"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "尚未预留任何金额"
 
@@ -2411,6 +2426,15 @@ msgstr "储备金用于以后支付房产税或汽车维修等费用。资金仍
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "已保存为修订 %1"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "可用资金 %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "信用卡准备金"
 
 #, kde-format
 #~ msgid "The books changed"

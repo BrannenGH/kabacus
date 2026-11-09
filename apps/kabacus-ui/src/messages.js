@@ -1,6 +1,10 @@
 // SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 // SPDX-License-Identifier: GPL-3.0-or-later
 export const messages = [
+  "Available to spend",
+  "Available by account",
+  "%1 since %2",
+  "No account has free money right now.",
   "Unit price",
   "Total price",
   "How it's worked out",
@@ -146,7 +150,7 @@ export const messages = [
   "Sign out",
   "Cash on Hand",
   "Free money",
-  "Card reserves",
+  "Set Aside for Credit Card Payments",
   "Date",
   "Postings",
   "Search",

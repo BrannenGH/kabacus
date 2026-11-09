@@ -602,6 +602,8 @@ def main():
         # form; KDE's menu bar is there except on a phone.
         account, fund, empty = args
         goto("Overview")
+        wait_for("available-to-spend heading", lambda: find(app(), "Available to spend"))
+        wait_for("available-by-account heading", lambda: find(app(), "Available by account"))
         meaning = "Free money you can spend right now"
         about = wait_for("Cash on Hand's info button", lambda: find(app(), "About Cash on Hand", pyatspi.ROLE_PUSH_BUTTON))
         if label_starting(meaning):
@@ -617,10 +619,11 @@ def main():
         open_list_item("Money on Hand's sum", lambda: find_any("Money on Hand", toggles),
                        lambda: label_starting("− Receivables"))
 
-        wait_for(f"the {fund} fund", lambda: find(app(), fund, pyatspi.ROLE_LIST_ITEM))
-        if find(app(), empty, pyatspi.ROLE_LIST_ITEM):
+        # Find off-screen rows too; open_list_item scrolls before clicking them.
+        wait_for(f"the {fund} fund", lambda: find(app(), fund, pyatspi.ROLE_LIST_ITEM, showing=False))
+        if find(app(), empty, pyatspi.ROLE_LIST_ITEM, showing=False):
             fail(f"the empty {empty} reserve is on the Overview")
-        open_list_item(f"the {fund} reserve", lambda: find(app(), fund, pyatspi.ROLE_LIST_ITEM),
+        open_list_item(f"the {fund} reserve", lambda: find(app(), fund, pyatspi.ROLE_LIST_ITEM, showing=False),
                  lambda: find(app(), "Amount", pyatspi.ROLE_TEXT))
 
         def to_is_fund():
@@ -628,14 +631,18 @@ def main():
             return picker is not None and picker.description == fund
         wait_for(f"To preset to {fund}", lambda: to_is_fund() or None, 10)
 
+        # A phone's form hides the tabs; leave it before navigating.
+        back = find(app(), "Back", pyatspi.ROLE_PUSH_BUTTON)
+        if back:
+            press(back)
         goto("Overview")
         open_list_item(f"{account}'s free money", lambda: pyatspi.findDescendant(
             app(), lambda n: n is not None and n.getRole() == pyatspi.ROLE_LIST_ITEM
-            and n.name.startswith(f"{account} free ") and n.getState().contains(pyatspi.STATE_SHOWING)),
+            and n.name.startswith(f"{account} free ")),
             lambda: row("Opening"))
 
         goto("Overview")
-        wait_for("the Overview", lambda: find(app(), "About Cash on Hand", pyatspi.ROLE_PUSH_BUTTON))
+        wait_for("the Overview", lambda: find(app(), "About Cash on Hand", pyatspi.ROLE_PUSH_BUTTON, showing=False))
         # Qt reports a menu bar's titles as "menu bar".
         menus = {pyatspi.ROLE_MENU_BAR, pyatspi.ROLE_MENU, pyatspi.ROLE_MENU_ITEM, pyatspi.ROLE_PUSH_BUTTON}
         if find_any("More", {pyatspi.ROLE_PAGE_TAB}):

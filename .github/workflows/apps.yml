@@ -80,7 +80,11 @@ jobs:
           BUNDLES: ${{ matrix.bundles }}
         run: |
           if [ -n "$BUNDLES" ]; then flags="--bundles $BUNDLES"; else flags="--no-bundle"; fi
-          npx tauri build --config "{\"version\":\"$KABACUS_VERSION\"}" $flags -- --locked
+          for attempt in 1 2 3; do
+            if npx tauri build --config "{\"version\":\"$KABACUS_VERSION\"}" $flags -- --locked; then exit 0; fi
+            if [ "$attempt" -lt 3 ]; then sleep 5; fi
+          done
+          exit 1
       - uses: actions/upload-artifact@v4
         with:
           name: kabacus-desktop-${{ matrix.name }}
@@ -167,8 +171,15 @@ jobs:
         run: |
           echo "NDK_HOME=$ANDROID_NDK_LATEST_HOME" >> "$GITHUB_ENV"
           NDK_HOME="$ANDROID_NDK_LATEST_HOME" npx tauri android init --ci
+          echo "networkTimeout=60000" >> src-tauri/gen/android/gradle/wrapper/gradle-wrapper.properties
       - run: npx tauri icon src-tauri/icons/icon.png
-      - run: npx tauri android build --config "{\"version\":\"$KABACUS_VERSION\"}" --ci --debug --apk --target aarch64
+      - name: Build Android APK
+        run: |
+          for attempt in 1 2 3; do
+            if npx tauri android build --config "{\"version\":\"$KABACUS_VERSION\"}" --ci --debug --apk --target aarch64; then exit 0; fi
+            if [ "$attempt" -lt 3 ]; then sleep 5; fi
+          done
+          exit 1
       - uses: actions/upload-artifact@v4
         with:
           name: kabacus-desktop-android

@@ -327,10 +327,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Tự do"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "Dự phòng thẻ"
+msgid "Set Aside for Credit Card Payments"
+msgstr "Để riêng cho các khoản thanh toán thẻ tín dụng"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -699,15 +699,20 @@ msgstr "Không tải được Tiền có thể tiêu"
 msgid "Loading…"
 msgstr "Đang tải…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
+msgid "Available to spend"
 msgstr "Tiền có thể tiêu"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "Về tiền có thể tiêu"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Tiền có thể tiêu"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -716,15 +721,15 @@ msgstr "Tiền tự do bạn có thể tiêu ngay, sau các khoản dự phòng 
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "%1 kể từ %2"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "Tiền có thể tiêu %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "Tiền có thể tiêu %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%1 kể từ %2"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -758,8 +763,8 @@ msgstr "− Khoản phải thu (người khác nợ bạn)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "Tiền tự do theo tài khoản"
+msgid "Available by account"
+msgstr "Có thể tiêu theo tài khoản"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -767,7 +772,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 tự do %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "Hiện không tài khoản nào có tiền tự do."
@@ -782,6 +787,11 @@ msgstr "Chưa để dành gì vào khoản dự phòng nào."
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "đủ"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Đang nợ"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2079,6 +2089,11 @@ msgstr "Một thẻ thiếu dòng dự phòng; nó sẽ được đánh dấu"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "%1 kể từ %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "Đơn giá"
 
@@ -2259,11 +2274,6 @@ msgstr "Ứng dụng này"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "Đang nợ"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "Dự phòng"
 
@@ -2384,6 +2394,11 @@ msgstr "Tín dụng"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "Tiền tự do theo tài khoản"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "Chưa có khoản nào được để dành"
 
@@ -2411,6 +2426,15 @@ msgstr "Khoản dự trữ giữ tiền để dùng sau, như thuế nhà đất
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "Đã lưu thành bản sửa đổi %1"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "Tiền có thể tiêu %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "Dự phòng thẻ"
 
 #, kde-format
 #~ msgid "The books changed"

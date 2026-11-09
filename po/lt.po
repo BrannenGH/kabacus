@@ -330,10 +330,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Laisva"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "Kortelių rezervai"
+msgid "Set Aside for Credit Card Payments"
+msgstr "Atidėta kredito kortelių mokėjimams"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -702,15 +702,20 @@ msgstr "Nepavyksta įkelti išleidžiamų pinigų"
 msgid "Loading…"
 msgstr "Įkeliama…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "Išleidžiami pinigai"
+msgid "Available to spend"
+msgstr "Galima išleisti"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "Apie išleidžiamus pinigus"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Išleidžiami pinigai"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -719,15 +724,15 @@ msgstr "Laisvi pinigai, kuriuos galite išleisti dabar, atėmus rezervus ir kort
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "%1 nuo %2"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "Galima išleisti %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "Išleidžiami pinigai %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%1 nuo %2"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -761,8 +766,8 @@ msgstr "− Gautinos sumos (ką jums skolingi)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "Laisvi pinigai pagal sąskaitas"
+msgid "Available by account"
+msgstr "Galima pagal sąskaitą"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -770,7 +775,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 laisva %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "Šiuo metu jokioje sąskaitoje nėra laisvų pinigų."
@@ -785,6 +790,11 @@ msgstr "Jokiame rezerve nieko neatidėta."
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "padengta"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Skola"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2100,6 +2110,11 @@ msgstr "Kortelei trūksta rezervo eilučių; ji bus pažymėta"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "%1 nuo %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "Vieneto kaina"
 
@@ -2280,11 +2295,6 @@ msgstr "Ši programa"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "Skola"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "Rezervas"
 
@@ -2405,6 +2415,11 @@ msgstr "Kreditas"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "Laisvi pinigai pagal sąskaitas"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "Dar nieko neatidėta"
 
@@ -2432,6 +2447,15 @@ msgstr "Rezervai laiko pinigus vėlesniam laikui, pavyzdžiui, turto mokesčiui 
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "Įrašyta kaip %1 peržiūra"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "Išleidžiami pinigai %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "Kortelių rezervai"
 
 #, kde-format
 #~ msgid "The books changed"

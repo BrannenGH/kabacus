@@ -328,10 +328,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Vrij"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "Kaartreserves"
+msgid "Set Aside for Credit Card Payments"
+msgstr "Opzijgezet voor creditcardbetalingen"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -700,15 +700,20 @@ msgstr "Besteedbaar geld kan niet worden geladen"
 msgid "Loading…"
 msgstr "Laden…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "Besteedbaar geld"
+msgid "Available to spend"
+msgstr "Beschikbaar om uit te geven"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "Over besteedbaar geld"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Besteedbaar geld"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -717,15 +722,15 @@ msgstr "Vrij geld dat u nu kunt uitgeven, na reserves en kaartreserves."
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "%1 sinds %2"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "Beschikbaar om uit te geven %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "Besteedbaar geld %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%1 sinds %2"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -759,8 +764,8 @@ msgstr "− Vorderingen (wat u tegoed hebt)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "Vrij geld per rekening"
+msgid "Available by account"
+msgstr "Beschikbaar per rekening"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -768,7 +773,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 vrij %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "Geen enkele rekening heeft nu vrij geld."
@@ -783,6 +788,11 @@ msgstr "Er is niets opzijgezet in een reserve."
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "gedekt"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Verschuldigd"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2086,6 +2096,11 @@ msgstr "Een kaart mist haar reserveregels; ze wordt gemarkeerd"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "%1 sinds %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "Eenheidsprijs"
 
@@ -2266,11 +2281,6 @@ msgstr "Deze app"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "Verschuldigd"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "Reserve"
 
@@ -2391,6 +2401,11 @@ msgstr "Krediet"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "Vrij geld per rekening"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "Er is nog niets opzijgezet"
 
@@ -2418,6 +2433,15 @@ msgstr "Reserves houden geld apart voor later, zoals onroerendezaakbelasting of 
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "Opgeslagen als revisie %1"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "Besteedbaar geld %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "Kaartreserves"
 
 #, kde-format
 #~ msgid "The books changed"

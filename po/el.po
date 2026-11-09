@@ -328,10 +328,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Ελεύθερα"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "Αποθέματα καρτών"
+msgid "Set Aside for Credit Card Payments"
+msgstr "Στην άκρη για πληρωμές πιστωτικών καρτών"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -700,15 +700,20 @@ msgstr "Δεν είναι δυνατή η φόρτωση των διαθέσιμ
 msgid "Loading…"
 msgstr "Φόρτωση…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "Διαθέσιμα χρήματα"
+msgid "Available to spend"
+msgstr "Διαθέσιμα για δαπάνες"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "Σχετικά με τα διαθέσιμα χρήματα"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Διαθέσιμα χρήματα"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -717,15 +722,15 @@ msgstr "Ελεύθερα χρήματα που μπορείτε να ξοδέψ�
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "%1 από %2"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "Διαθέσιμα για δαπάνες %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "Διαθέσιμα χρήματα %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%1 από %2"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -759,8 +764,8 @@ msgstr "− Απαιτήσεις (όσα σας χρωστούν)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "Ελεύθερα χρήματα ανά λογαριασμό"
+msgid "Available by account"
+msgstr "Διαθέσιμα ανά λογαριασμό"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -768,7 +773,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 ελεύθερα %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "Κανένας λογαριασμός δεν έχει ελεύθερα χρήματα αυτή τη στιγμή."
@@ -783,6 +788,11 @@ msgstr "Τίποτα δεν έχει μπει στην άκρη σε απόθε�
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "καλύπτεται"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Οφειλή"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2086,6 +2096,11 @@ msgstr "Σε μια κάρτα λείπουν οι γραμμές αποθέμα
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "%1 από %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "Τιμή μονάδας"
 
@@ -2266,11 +2281,6 @@ msgstr "Αυτή η εφαρμογή"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "Οφειλή"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "Απόθεμα"
 
@@ -2391,6 +2401,11 @@ msgstr "Πίστωση"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "Ελεύθερα χρήματα ανά λογαριασμό"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "Δεν έχει κρατηθεί τίποτα ακόμη"
 
@@ -2418,6 +2433,15 @@ msgstr "Τα αποθεματικά κρατούν χρήματα για αργ�
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "Αποθηκεύτηκε ως αναθεώρηση %1"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "Διαθέσιμα χρήματα %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "Αποθέματα καρτών"
 
 #, kde-format
 #~ msgid "The books changed"

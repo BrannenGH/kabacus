@@ -204,7 +204,7 @@ async function fillTransaction(page) {
   await page.getByRole("button", { name: /^Spent/ }).click();
   await page.getByLabel("Payee").fill("Maple Market");
   await page.getByLabel("From").selectOption(accounts[0].account);
-  await page.getByLabel("To").fill("expenses:groceries");
+  await page.getByRole("dialog").getByLabel("To").fill("expenses:groceries");
   await page.getByLabel("Amount (USD)").fill("84.25");
   await page.getByRole("button", { name: "Preview" }).click();
   await expect(
@@ -1465,4 +1465,70 @@ for (const phone of [false, true]) test.describe(`wallets on ${phone ? "phone" :
     await page.getByRole('button',{name:phone?'Review':'Preview',exact:true}).click();
     await expect.poll(()=>writes.find(w=>w.path==='/reconcile')?.body.balance).toEqual({commodity:'XMR',mantissa:'12345678901234',places:12});
   });
+});
+
+for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
+  for (const colorScheme of ["light", "dark"]) {
+    test.describe(`spendable overview ${viewport.width}px ${colorScheme}`, () => {
+      test.use({ viewport, colorScheme });
+      test("distinguishes available money from its dated change", async ({ page }) => {
+        await setup(page);
+        await page.route("**/cash-on-hand?**", route => route.fulfill({ json: {
+          ...cash, change: { compare_to: "2026-09-25", cash_on_hand: amount("393.95") },
+        } }));
+        await page.reload();
+        const summary = page.locator(".cash-summary");
+        await expect(summary.getByRole("heading", { name: "Available to spend", exact: true })).toBeVisible();
+        await expect(summary.locator(".cash-total")).toHaveText("$4520.75");
+        await expect(summary.locator(".cash-change")).toHaveText("+$393.95 since 2026-09-25");
+        await expect(page.locator(".page-heading")).not.toContainText(/at a glance/i);
+        await expect(page.getByRole("heading", { name: "Available by account" })).toBeVisible();
+        const typography = await summary.locator(".cash-total").evaluate(node => {
+          const style = getComputedStyle(node);
+          return { family: style.fontFamily, numbers: style.fontVariantNumeric };
+        });
+        expect(typography.family).not.toContain("Playfair");
+        expect(typography.numbers).toContain("lining-nums");
+        expect(typography.numbers).toContain("tabular-nums");
+        const contrasts = await summary.evaluate(panel => {
+          const luminance = color => {
+            const channels = color.match(/[\d.]+/g).slice(0, 3).map(Number).map(c => {
+              const v = c / 255;
+              return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+            });
+            return channels.reduce((sum, c, i) => sum + c * [0.2126, 0.7152, 0.0722][i], 0);
+          };
+          const background = luminance(getComputedStyle(panel).backgroundColor);
+          return [panel.querySelector("h2"), panel.querySelector(".cash-total"), panel.querySelector(".cash-change")].map(node => {
+            const foreground = luminance(getComputedStyle(node).color);
+            return (Math.max(foreground, background) + 0.05) / (Math.min(foreground, background) + 0.05);
+          });
+        });
+        for (const contrast of contrasts) expect(contrast).toBeGreaterThanOrEqual(4.5);
+        await summary.getByText("How it's worked out", { exact: true }).click();
+        await expect(summary.locator("dl")).toBeVisible();
+        await expect(summary.locator(".total-line")).toContainText("Available to spend");
+        await summary.getByLabel("About Cash on Hand", { exact: true }).click();
+        const explanation = summary.locator(".cash-label .info-button p");
+        await expect(explanation).toBeVisible();
+        const bounds = await explanation.boundingBox();
+        expect(bounds.x).toBeGreaterThanOrEqual(0);
+        expect(bounds.x + bounds.width).toBeLessThanOrEqual(viewport.width);
+        await summary.getByLabel("About Cash on Hand", { exact: true }).click();
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+        await page.screenshot({ path: `test-results/spendable-${viewport.width}-${colorScheme}.png`, fullPage: true });
+      });
+    });
+  }
+}
+
+test("spendable changes retain negative and zero meanings", async ({ page }) => {
+  await setup(page);
+  for (const [exact, expected] of [["-93.95", "-$93.95"], ["0.00", "$0.00"]]) {
+    await page.route("**/cash-on-hand?**", route => route.fulfill({ json: {
+      ...cash, change: { compare_to: "2026-09-25", cash_on_hand: amount(exact) },
+    } }));
+    await page.reload();
+    await expect(page.locator(".cash-change")).toHaveText(`${expected} since 2026-09-25`);
+  }
 });

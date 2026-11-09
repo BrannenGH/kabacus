@@ -332,10 +332,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "حرّ"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "احتياطيات البطاقات"
+msgid "Set Aside for Credit Card Payments"
+msgstr "مبالغ مخصصة لسداد بطاقات الائتمان"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -704,15 +704,20 @@ msgstr "تعذّر تحميل المال المتاح"
 msgid "Loading…"
 msgstr "يُحمّل…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "المال المتاح"
+msgid "Available to spend"
+msgstr "المتاح للإنفاق"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "عن المال المتاح"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "المال المتاح"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -721,15 +726,15 @@ msgstr "المال الحر الذي يمكنك إنفاقه الآن، بعد �
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "%1 منذ %2"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "المتاح للإنفاق %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "المال المتاح %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%1 منذ %2"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -763,8 +768,8 @@ msgstr "− المستحقات (ما يُدين به الآخرون لك)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "المال الحر حسب الحساب"
+msgid "Available by account"
+msgstr "المتاح حسب الحساب"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -772,7 +777,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 حرّ %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "لا يوجد حساب فيه مال حر الآن."
@@ -787,6 +792,11 @@ msgstr "لم يُدّخر شيء في أي احتياطي."
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "مُغطّاة"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "المستحق"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2114,6 +2124,11 @@ msgstr "تنقص بطاقة أسطر احتياطيها؛ ستُعلَّم"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "%1 منذ %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "سعر الوحدة"
 
@@ -2294,11 +2309,6 @@ msgstr "هذا التطبيق"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "المستحق"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "الاحتياطي"
 
@@ -2419,6 +2429,11 @@ msgstr "الائتمان"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "المال الحر حسب الحساب"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "لم يُخصّص شيء بعد"
 
@@ -2446,6 +2461,15 @@ msgstr "تحتفظ الاحتياطيات بالمال لوقت لاحق، مث�
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "حُفظ كمراجعة %1"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "المال المتاح %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "احتياطيات البطاقات"
 
 #, kde-format
 #~ msgid "The books changed"
