@@ -2607,10 +2607,6 @@ msgstr "%1 تۈزىتىشى سۈپىتىدە ساقلاندى"
 #~ msgstr "%1 نى تۈزىتىش: بۈگۈنكى چېسلادىكى قايتۇرۇش ۋە ئالماشتۇرۇش."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "hledger تەكشۈرۈشى خىزمەت كۆپەيتىلمىسىدە ئۆتتى"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · %2–%3 قۇرلار"

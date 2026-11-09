@@ -2628,10 +2628,6 @@ msgstr "Įrašyta kaip %1 peržiūra"
 #~ msgstr "Taisyti %1: atšaukimas ir pakeitimas, šiandienos data."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "hledger patikra sėkminga darbinėje kopijoje"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · eilutės %2–%3"

@@ -84,3 +84,13 @@ fn no_rewrite_flag_is_offered_and_conflicts_with_allow_rewrite() {
     let err = String::from_utf8_lossy(&both.stderr);
     assert!(err.contains("cannot be used with"), "{err}");
 }
+
+#[test]
+fn server_rejects_journal_import_command() {
+    let out = Command::new(env!("CARGO_BIN_EXE_kabacus-server"))
+        .args(["import", "books.journal"])
+        .output()
+        .unwrap();
+    assert!(!out.status.success());
+    assert!(String::from_utf8_lossy(&out.stderr).contains("unexpected argument 'import'"));
+}

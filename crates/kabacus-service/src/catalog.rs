@@ -214,11 +214,6 @@ pub const ENDPOINTS: &[Endpoint] = &[
         path: "/register/{account}",
         mcp_tools: &["get_register"],
     },
-    Endpoint {
-        method: "POST",
-        path: "/import",
-        mcp_tools: &["import_journal"],
-    },
     // `.kabacus` files are binary: API only, no MCP tools.
     Endpoint {
         method: "GET",
@@ -375,7 +370,6 @@ fn parameters(tool: &str) -> serde_json::Value {
         "set_account_type" => schema!(SetAccountTypeParams),
         "set_balance_assertion" => schema!(SetBalanceAssertionParams),
         "convert_money_assertions" => schema!(ConvertMoneyAssertionsParams),
-        "import_journal" => schema!(ImportJournalParams),
         "get_transaction" => schema!(GetTransactionParams),
         "get_register" => schema!(GetRegisterParams),
         "list_accounts" => schema!(ListAccountsParams),

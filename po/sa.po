@@ -2614,10 +2614,6 @@ msgstr "%1 संशोधनरूपेण रक्षितम्"
 #~ msgstr "%1 संशोधयतु: एका विपरीतप्रविष्टिः एका प्रतिस्थापना च, अद्यतनदिनाङ्केन।"
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "अस्थायिप्रतिलिप्यां hledger check सफलम्"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · पङ्क्तयः %2–%3"

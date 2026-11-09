@@ -18,7 +18,6 @@ pub mod domain;
 pub mod format;
 pub mod funds;
 pub mod impact;
-pub mod json;
 pub mod kinds;
 pub mod money;
 pub mod payee;

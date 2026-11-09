@@ -149,22 +149,3 @@ pub async fn revision(server: &TestServer) -> i64 {
 pub async fn store_head(server: &TestServer) -> String {
     revision(server).await.to_string()
 }
-
-/// `$KABACUS_HLEDGER` or `hledger` on the `PATH`, for comparing reports
-/// with it; `None` skips the comparison unless `KABACUS_REQUIRE_HLEDGER`
-/// is set.
-pub fn hledger() -> Option<String> {
-    let binary = std::env::var("KABACUS_HLEDGER").unwrap_or_else(|_| "hledger".to_string());
-    let found = std::process::Command::new(&binary)
-        .arg("--version")
-        .output()
-        .is_ok_and(|o| o.status.success());
-    if found {
-        return Some(binary);
-    }
-    if std::env::var_os("KABACUS_REQUIRE_HLEDGER").is_some() {
-        panic!("hledger ({binary}) is required but can't be run");
-    }
-    eprintln!("hledger not found: skipping the comparison with it");
-    None
-}

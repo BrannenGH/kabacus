@@ -2607,10 +2607,6 @@ msgstr "已保存为修订 %1"
 #~ msgstr "更正 %1：一笔冲销和一笔替换，日期均为今天。"
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "hledger 检查已在临时副本上通过"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · 第 %2–%3 行"

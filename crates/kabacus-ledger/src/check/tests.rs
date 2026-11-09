@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 //! The strict-checks and assertions pages' examples, with the engine's
-//! rules where they differ from hledger's.
+//! rules.
 
 use super::*;
 use crate::import::{read, MemorySource};
@@ -216,7 +216,7 @@ fn the_four_operators() {
 
 #[test]
 fn a_total_inclusive_assertion_checks_every_commodity_of_the_subtree() {
-    // Z2, Z3 and V2 pass in hledger; the engine checks every commodity.
+    // The engine checks every commodity.
     let book = "2026-01-01 open\n    assets:a:sub  10.00 USD\n    assets:a  2.00 EUR\n    income:i  -10.00 USD\n    income:i  -2.00 EUR\n\n";
     let f = fails(
         &format!("{book}2026-01-02 c\n    assets:a  0.00 EUR ==* 2.00 EUR\n"),

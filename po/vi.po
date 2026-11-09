@@ -2607,10 +2607,6 @@ msgstr "Đã lưu thành bản sửa đổi %1"
 #~ msgstr "Sửa sai %1: một bút toán đảo và một bút toán thay thế, ghi ngày hôm nay."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "hledger check đã qua trên một bản sao thử"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · dòng %2–%3"

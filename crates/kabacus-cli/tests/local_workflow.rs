@@ -22,16 +22,32 @@ fn json_output(output: Output) -> Value {
     serde_json::from_slice(&output.stdout).unwrap()
 }
 fn seed(dir: &Path) -> std::path::PathBuf {
-    let journal = dir.join("Household.journal");
-    std::fs::write(&journal,"commodity USD1.00\naccount assets:checking\naccount expenses:groceries\naccount equity:opening\n\n2026-01-01 Opening\n    assets:checking  3218.46 USD\n    equity:opening  -3218.46 USD\n").unwrap();
     let books = dir.join("Household.kabacus");
     json_output(cli(&[
-        "import",
+        "new",
         books.to_str().unwrap(),
-        journal.to_str().unwrap(),
-        "--save",
+        "--account",
+        "assets:checking",
         "--json",
     ]));
+    let script = dir.join("opening.json");
+    std::fs::write(&script, json!([
+        {"command":"declare_account", "params":{"account":"expenses:groceries"}},
+        {"command":"transaction.postings", "params":{"date":"2026-01-01", "description":"Opening", "postings":[{"account":"assets:checking", "amount":"3218.46"},{"account":"equity:opening"}]}}
+    ]).to_string()).unwrap();
+    let out = cli(&[
+        "run",
+        script.to_str().unwrap(),
+        "--books",
+        books.to_str().unwrap(),
+        "--save",
+        "--allow-rewrites",
+    ]);
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
     books
 }
 #[test]
@@ -60,7 +76,7 @@ fn scripts_preview_then_save_once_with_named_refs_and_rollback() {
         2
     );
     let before = json_output(cli(&["history", books.to_str().unwrap(), "--json"]));
-    assert_eq!(before.as_array().unwrap().len(), 2);
+    assert_eq!(before.as_array().unwrap().len(), 3);
     let mut save = args.to_vec();
     save.push("--save");
     let saved = cli(&save);
@@ -70,7 +86,7 @@ fn scripts_preview_then_save_once_with_named_refs_and_rollback() {
         String::from_utf8_lossy(&saved.stderr)
     );
     let history = json_output(cli(&["history", books.to_str().unwrap(), "--json"]));
-    assert_eq!(history.as_array().unwrap().len(), 3);
+    assert_eq!(history.as_array().unwrap().len(), 4);
     assert_eq!(history[0]["actor"], "cli");
     std::fs::write(&file,json!([{ "command":"transaction.spent","params":{"date":"2026-11-03","payee":"Cedar Hardware","from":"assets:checking","for":"expenses:groceries","amount":"24.18"}},{"command":"transaction.spent","params":{"date":"2026-11-03","payee":"Cedar Hardware","from":"assets:checking","for":"expenses:undeclared","amount":"8.17"}}]).to_string()).unwrap();
     assert_eq!(cli(&save).status.code(), Some(1));
@@ -156,5 +172,12 @@ async fn stdio_mcp_uses_the_shared_tools_and_honors_read_only() {
     assert!(!names.contains(&"add_transaction"));
     assert!(!names.contains(&"delete_transaction"));
     let version=rpc(&mut stdin,&mut lines,json!({"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"get_version","arguments":{}}})).await;
-    assert_eq!(version["result"]["structuredContent"]["head"], "2");
+    assert_eq!(version["result"]["structuredContent"]["head"], "3");
+}
+
+#[test]
+fn journal_import_command_is_unavailable() {
+    let output = cli(&["import", "Household.kabacus", "Household.journal"]);
+    assert_eq!(output.status.code(), Some(2));
+    assert!(String::from_utf8_lossy(&output.stderr).contains("unrecognized subcommand 'import'"));
 }

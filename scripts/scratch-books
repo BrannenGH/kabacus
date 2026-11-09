@@ -4,38 +4,27 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-# Write throwaway synthetic books (never real books) into DIR as journals
-# for kabacus-server's import: DIR/main.journal plus its includes. DIR must not exist yet or
-# be empty. Used by scripts/scratch-server and the VS Code debug configs.
-#   scripts/scratch-books target/scratch/books
+# Make throwaway synthetic books (never real books) in a new .kabacus file.
+# Used by scripts/dev-server and scripts/scratch-server.
+#   scripts/scratch-books target/scratch/books.kabacus
 set -e
-[ $# -eq 1 ] || { echo "usage: scripts/scratch-books DIR" >&2; exit 2; }
+[ $# -eq 1 ] || { echo "usage: scripts/scratch-books FILE.kabacus" >&2; exit 2; }
 books="$1"
-mkdir -p "$books"
-[ -z "$(ls -A "$books")" ] || { echo "scripts/scratch-books: $books is not empty" >&2; exit 1; }
-cat > "$books/main.journal" <<'J'
-commodity USD1000.00
-include accounts.journal
-include 2026.journal
+[ ! -e "$books" ] || { echo "scripts/scratch-books: $books already exists" >&2; exit 1; }
+mkdir -p "$(dirname "$books")"
+seed=$(mktemp "$(dirname "$books")/scratch-commands.XXXXXX")
+trap 'rm -f "$seed"' EXIT HUP INT TERM
+cat > "$seed" <<'J'
+[
+  {"command":"declare_account","params":{"account":"liabilities:visa"}},
+  {"command":"declare_account","params":{"account":"expenses:groceries"}},
+  {"command":"declare_account","params":{"account":"expenses:household"}},
+  {"command":"declare_account","params":{"account":"income:salary"}},
+  {"command":"transaction.postings","params":{"date":"2026-01-01","description":"Opening","postings":[{"account":"assets:checking","amount":"2500.00"},{"account":"equity:opening"}]}},
+  {"command":"transaction.spent","params":{"date":"2026-01-05","payee":"Corner Market","from":"assets:checking","for":"expenses:groceries","amount":"62.18"}},
+  {"command":"transaction.postings","params":{"date":"2026-01-15","description":"Acme Payroll","postings":[{"account":"assets:checking","amount":"1800.00"},{"account":"income:salary"}]}}
+]
 J
-cat > "$books/accounts.journal" <<'J'
-account assets:checking      ; ynab-account:Everyday Checking
-account liabilities:visa     ; ynab-account:Visa
-account expenses:groceries   ; ynab-envelope:Groceries
-account expenses:household   ; ynab-envelope:Household
-account income:salary
-account equity:opening
-J
-cat > "$books/2026.journal" <<'J'
-2026-01-01 Opening
-    assets:checking  2500.00 USD
-    equity:opening
-
-2026-01-05 Corner Market
-    expenses:groceries  62.18 USD
-    assets:checking
-
-2026-01-15 Acme Payroll
-    assets:checking  1800.00 USD
-    income:salary
-J
+scripts/dev cargo build -p kabacus-cli
+scripts/dev target/dev/debug/kabacus-cli new "$books" --account assets:checking
+scripts/dev target/dev/debug/kabacus-cli run "$seed" --books "$books" --save --allow-rewrites

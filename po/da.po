@@ -2614,10 +2614,6 @@ msgstr "Gemt som revision %1"
 #~ msgstr "Ret %1: en tilbageførsel og en erstatning, dateret i dag."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "hledger-kontrollen bestod på en arbejdskopi"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · linje %2–%3"

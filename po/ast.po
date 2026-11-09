@@ -2614,10 +2614,6 @@ msgstr "Guardáu como revisión %1"
 #~ msgstr "Correxir %1: una reversión y una sustitución, cola data de güei."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "La comprobación de hledger superóse nuna copia de trabayu"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · llinies %2–%3"

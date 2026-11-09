@@ -2614,10 +2614,6 @@ msgstr "As Revischoon %1 sekert"
 #~ msgstr "%1 verbetern: en Storno un en Ersatz, mit dat Datum vun vundaag."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "hledger-Prööv op en Arbeitskopie bestahn"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · Regen %2–%3"

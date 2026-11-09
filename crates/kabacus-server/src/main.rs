@@ -37,23 +37,6 @@ struct Args {
     /// Override the books: the `.kabacus` file to keep them in.
     #[arg(long)]
     database: Option<std::path::PathBuf>,
-
-    #[command(subcommand)]
-    command: Option<Command>,
-}
-
-#[derive(clap::Subcommand, Debug)]
-enum Command {
-    /// Read hledger journals (the main journal and what it includes) into
-    /// an empty ledger, then exit.
-    Import {
-        /// The main journal.
-        journal: std::path::PathBuf,
-        /// The ledger to import into, made if missing; by default the
-        /// server's ledger.
-        #[arg(long)]
-        ledger: Option<String>,
-    },
 }
 
 #[tokio::main]
@@ -87,22 +70,6 @@ async fn main() -> anyhow::Result<()> {
         config.database_url = None;
     }
     config.resolve_store()?;
-
-    // Importing needs only the store, not the listeners' auth settings.
-    if let Some(Command::Import { journal, ledger }) = args.command {
-        let store = kabacus_server::state::open_store(&config).await?;
-        let ledger = ledger.or(config.ledger.clone());
-        let (id, revision, outcome) =
-            kabacus_server::import::import_from_files(&store, ledger.as_deref(), &journal).await?;
-        println!(
-            "imported {} into ledger {id} at revision {revision}",
-            journal.display()
-        );
-        for line in kabacus_server::import::summary(&outcome) {
-            println!("  {line}");
-        }
-        return Ok(());
-    }
 
     config.validate()?;
 

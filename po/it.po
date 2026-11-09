@@ -2614,10 +2614,6 @@ msgstr "Salvato come revisione %1"
 #~ msgstr "Correggi %1: uno storno e una sostituzione, con la data di oggi."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "Controllo di hledger superato su una copia di prova"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · righe %2–%3"

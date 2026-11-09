@@ -2628,10 +2628,6 @@ msgstr "Сохранено как ревизия %1"
 #~ msgstr "Исправить %1: сторно и замена, датированные сегодняшним днём."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "Проверка hledger пройдена на рабочей копии"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · строки %2–%3"

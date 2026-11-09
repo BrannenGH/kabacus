@@ -2635,10 +2635,6 @@ msgstr "Sábháilte mar leasú %1"
 #~ msgstr "Ceartaigh %1: aisiompú agus ionadaí, le dáta an lae inniu."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "D'éirigh le seiceáil hledger ar chóip oibre"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · línte %2–%3"

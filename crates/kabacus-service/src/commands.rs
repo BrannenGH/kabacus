@@ -592,16 +592,6 @@ impl SetBalanceAssertionParams {
 }
 
 #[derive(Debug, Deserialize, schemars::JsonSchema)]
-pub struct ImportJournalParams {
-    /// The main journal's name among `files`.
-    pub main: String,
-    /// Each journal's text, by its name (as `include` names it).
-    pub files: std::collections::BTreeMap<String, String>,
-    /// Defaults to true: read and check, import nothing.
-    pub dry_run: Option<bool>,
-}
-
-#[derive(Debug, Deserialize, schemars::JsonSchema)]
 pub struct ConvertMoneyAssertionsParams {
     pub head: String,
     /// Defaults to true: validate and return the preview, change nothing.

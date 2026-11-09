@@ -4,7 +4,7 @@
 
 //! The client-side validation rules, run live as the user types so
 //! the editor can show errors before the round trip to the server. The
-//! server's `hledger check -s` on a scratch copy always has the final say
+//! shared ledger engine always has the final say
 //! — these rules exist to give fast, precise feedback, not
 //! to replace it.
 
@@ -229,8 +229,8 @@ pub fn carry_over_with(
     Ok(carried)
 }
 
-/// [`resolve_amounts`] for postings of the given kinds, balanced the way
-/// hledger balances them: real postings among themselves, balanced virtual
+/// [`resolve_amounts`] for postings of the given kinds. Real postings
+/// balance among themselves, balanced virtual
 /// (`[account]`) postings among themselves, and virtual (`(account)`)
 /// postings not at all, so each of those needs its amount.
 pub fn resolve_amounts_by_kind(
@@ -368,7 +368,7 @@ pub fn parse_date(s: &str) -> Result<NaiveDate, ValidationError> {
 
 /// Replay every posting's balance assertion in date order and confirm the
 /// running balance matches. `transactions` must already be in the
-/// order hledger would apply them (date, then source index).
+/// order they are applied (date, then source index).
 pub fn check_balance_assertions(transactions: &[Transaction]) -> Vec<ValidationError> {
     let mut running: HashMap<(AccountName, String), Money> = HashMap::new();
     let mut errors = Vec::new();
@@ -790,7 +790,7 @@ mod tests {
         );
     }
 
-    /// As in hledger, real postings balance among themselves, `[balanced
+    /// Real postings balance among themselves, `[balanced
     /// virtual]` ones among themselves, and `(virtual)` ones not at all.
     #[test]
     fn virtual_postings_balance_apart_from_real_ones() {

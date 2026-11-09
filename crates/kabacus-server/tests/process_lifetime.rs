@@ -9,15 +9,17 @@ use std::path::Path;
 use std::process::{Child, Command};
 use std::time::{Duration, Instant};
 
-/// Synthetic books imported into a `.kabacus` file by the binary's own
-/// `import`, and a config serving them on `socket`.
+/// Synthetic books in a scratch store and a config serving them on `socket`.
 fn write_books(dir: &Path, socket: &Path) -> std::path::PathBuf {
-    std::fs::write(
-        dir.join("main.journal"),
-        "commodity USD1000.00\naccount assets:checking\naccount equity:opening\n\n\
-         2026-01-01 Opening\n    assets:checking  10.00 USD\n    equity:opening\n",
-    )
-    .unwrap();
+    let runtime = tokio::runtime::Runtime::new().unwrap();
+    runtime.block_on(async {
+        let store = kabacus_store::AnyStore::Sqlite(
+            kabacus_store::SqliteStore::open(&dir.join("books.kabacus")).unwrap(),
+        );
+        kabacus_testkit::import_journal(&store, None,
+            "commodity USD1000.00\naccount assets:checking\naccount equity:opening\n\n2026-01-01 Opening\n    assets:checking  10.00 USD\n    equity:opening\n",
+        ).await;
+    });
     let config = dir.join("kabacus.toml");
     std::fs::write(
         &config,
@@ -28,14 +30,6 @@ fn write_books(dir: &Path, socket: &Path) -> std::path::PathBuf {
         ),
     )
     .unwrap();
-    assert!(Command::new(env!("CARGO_BIN_EXE_kabacus-server"))
-        .arg("--config")
-        .arg(&config)
-        .arg("import")
-        .arg(dir.join("main.journal"))
-        .status()
-        .unwrap()
-        .success());
     config
 }
 

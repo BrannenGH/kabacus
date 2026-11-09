@@ -874,3 +874,34 @@ async fn get_skill_guide_serves_skill_md_then_only_the_files_it_links() {
     assert!(err.contains("references/budget.md"), "{err}");
     client.cancel().await.unwrap();
 }
+
+#[tokio::test]
+async fn journal_import_is_not_exposed() {
+    use tower::ServiceExt as _;
+    let server = spawn_rewrite_server().await;
+    let client = connect(&server).await;
+    assert!(!tool_names(&client)
+        .await
+        .iter()
+        .any(|name| name == "import_journal"));
+    assert!(try_call(
+        &client,
+        "import_journal",
+        json!({"main": "books.journal", "files": {}})
+    )
+    .await
+    .is_err());
+    assert!(!ENDPOINTS.iter().any(|endpoint| endpoint.path == "/import"));
+    let request = axum::http::Request::builder()
+        .method("POST")
+        .uri("/import")
+        .header("content-type", "application/json")
+        .body(axum::body::Body::from("{}"))
+        .unwrap();
+    let response = kabacus_server::api::router(server.state.clone())
+        .oneshot(request)
+        .await
+        .unwrap();
+    assert_eq!(response.status(), axum::http::StatusCode::NOT_FOUND);
+    client.cancel().await.unwrap();
+}

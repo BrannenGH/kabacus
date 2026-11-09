@@ -9,7 +9,7 @@ const amount = (exact) => ({
 const version = {
   server_version: "0.2.12",
   commit: "7a9fce322640ecba4268aa2edf2c8013e8f33329",
-  source_url: "https://github.com/BrannenGH/khledger",
+  source_url: "https://github.com/BrannenGH/kabacus",
   head: "42",
   books: "42",
   auth: { mode: "none" },
