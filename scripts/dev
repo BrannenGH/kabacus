@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # Run a command in Kabacus's openSUSE Tumbleweed test container: Rust plus
-# the pinned hledger and git (Containerfile, stage dev), so none
+# git (Containerfile, stage dev), so none
 # of them are needed on the host.
 #   scripts/dev cargo test --workspace
 #   scripts/dev --gui ...   the gui stage: also Qt 6, Kirigami, Xvfb, AT-SPI

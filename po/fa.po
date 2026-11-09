@@ -2604,10 +2604,6 @@ msgstr "به‌عنوان بازبینی %1 ذخیره شد"
 #~ msgstr "اصلاح %1: یک برگشتی و یک جایگزین، با تاریخ امروز."
 
 #, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "بررسی hledger روی یک رونوشت کاری گذشت"
-
-#, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"
 #~ msgid "%1 · lines %2–%3"
 #~ msgstr "%1 · سطرهای %2–%3"

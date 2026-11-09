@@ -7,7 +7,7 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 # Kabacus
 
 Double-entry bookkeeping from a KDE app, a web interface or an MCP client. The books live in
-a SQLite `.kabacus` file or PostgreSQL, and hledger journals can be imported.
+a SQLite `.kabacus` file or PostgreSQL.
 
 - `kabacus-service` provides shared reads, reports and validated writes
   over `kabacus-store` ([README](crates/kabacus-service/README.md)).

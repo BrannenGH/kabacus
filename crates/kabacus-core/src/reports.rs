@@ -424,8 +424,7 @@ fn rows_from(
         .collect()
 }
 
-/// Income and expenses by period, as hledger's
-/// `bal income expenses` sums them, with the equity conversion section.
+/// Income and expenses by period, with the equity conversion section.
 pub fn income_statement(
     chart: &Chart,
     transactions: &[Transaction],
@@ -554,7 +553,7 @@ pub enum Side {
     Liability,
 }
 
-/// hledger's own inference from the top-level name (`assets`,
+/// Inference from the top-level name (`assets`,
 /// `liabilities`, `debts`), else from the account's kind.
 pub fn side_of(chart: &Chart, account: &AccountName) -> Option<Side> {
     let top = account

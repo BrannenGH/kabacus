@@ -9,8 +9,8 @@
 //! the only I/O is reading journals through an [`ImportSource`].
 //!
 //! Implements the engine implementation specification, section 2. Every
-//! module is written from the specification's ledger-spec pages only, never
-//! from hledger's source or tests; its header names what it implements.
+//! module is written from the specification's ledger-spec pages; its header
+//! names what it implements.
 
 pub mod amount;
 pub mod balance;

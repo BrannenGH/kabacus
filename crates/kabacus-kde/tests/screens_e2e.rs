@@ -952,7 +952,7 @@ async fn an_edit_keeps_the_transactions_number() {
 }
 
 /// Income and equity show what was earned or put in, positive and
-/// without sign colour, not hledger's negative credit balance.
+/// without sign colour.
 #[tokio::test]
 async fn income_and_equity_show_positive_and_neutral() {
     let journal = format!(

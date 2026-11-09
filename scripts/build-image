@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # Build the redistributable kabacus-server image (Containerfile, stage
-# server): openSUSE Tumbleweed with kabacus-server and the pinned hledger.
+# server): openSUSE Tumbleweed with kabacus-server.
 # It holds no paths, users or settings from this machine;
 # see container/README.md for how to run it.
 #

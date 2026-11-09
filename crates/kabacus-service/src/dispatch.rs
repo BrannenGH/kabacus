@@ -283,7 +283,6 @@ pub async fn dispatch(
         ("GET", ["reports", "receivables"]) => {
             result!(reports::receivables_activity(state, caller, &query(qs)?))
         }
-        ("POST", ["import"]) => result!(crate::import::import_journal(state, caller, parse(body)?)),
         ("GET", ["ledgers", id, "export"]) => {
             let id = id
                 .parse()

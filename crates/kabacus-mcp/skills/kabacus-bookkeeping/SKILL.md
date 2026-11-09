@@ -5,7 +5,7 @@ description: How to read and change a household's books through Kabacus's tools 
 
 # Kabacus bookkeeping
 
-Kabacus keeps a household's books (double-entry, in hledger's terms)
+Kabacus keeps a household's books (double-entry)
 behind one server. Every tool here goes through that server: it checks
 every write strictly, makes each write one new revision of the books, and
 records that the change came from you (actor `mcp`). Nothing you do is

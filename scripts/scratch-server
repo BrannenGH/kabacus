@@ -11,17 +11,16 @@
 # (To run a build from this checkout, use scripts/dev-server.)
 set -e
 cd "$(dirname "$0")/.."
-books=$(mktemp -d "${TMPDIR:-/tmp}/kabacus-scratch.XXXXXX")
+mkdir -p target
+books=$(mktemp -d "$PWD/target/scratch-server.XXXXXX")
 socket="${XDG_RUNTIME_DIR:-/tmp}/kabacus/scratch.sock"
-scripts/scratch-books "$books/journals"
+scripts/scratch-books "$books/books.kabacus"
 echo "scratch books: $books/books.kabacus"
 echo "socket: $socket"
 mkdir -p "$(dirname "$socket")"
 podman image exists localhost/kabacus-server:latest || scripts/build-image
 # The image's volumes: the database at /data, the socket directory at
 # /run/kabacus (see container/README.md).
-podman run --rm --userns=keep-id --security-opt label=disable --network none \
-  -v "$books:/data" localhost/kabacus-server:latest import /data/journals/main.journal
 exec podman run --rm --init --userns=keep-id --security-opt label=disable --network none \
   -e RUST_LOG="${RUST_LOG:-info}" \
   --read-only --tmpfs /tmp \

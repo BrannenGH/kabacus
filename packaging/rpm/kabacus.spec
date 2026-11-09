@@ -6,8 +6,7 @@
 # own Qt 6 and Kirigami: one spec for Fedora, EL (CentOS Stream, AlmaLinux)
 # and openSUSE. packaging/rpm/build-rpm builds it in a container of each
 # distribution; the specification's supported platforms say where it
-# builds and why not elsewhere. kabacus-server isn't packaged: it ships as a container image,
-# with the hledger it was tested against.
+# builds and why not elsewhere. kabacus-server isn't packaged: it ships as a container image.
 #
 # Defines:
 #   pkg_version  scripts/package-version (<major>.<minor>.<commit count>)
@@ -32,7 +31,7 @@
 Name:           kabacus
 Version:        %{pkg_version}
 Release:        %{pkg_release}%{?dist}
-Summary:        Manage hledger books
+Summary:        Manage double-entry books
 License:        GPL-3.0-or-later
 URL:            https://github.com/BrannenGH/kabacus
 VCS:            git+%{pkg_source_url}.git#%{pkg_commit}
@@ -83,7 +82,7 @@ Recommends:     kf6-qqc2-desktop-style
 Requires:       hicolor-icon-theme
 
 %description
-A Kirigami app for hledger books: one convergent UI for phone, tablet
+A Kirigami app for double-entry books: one convergent UI for phone, tablet
 and desktop. The shared engine validates and versions every change in local or remote books.
 
 Source: %{pkg_source_url}/tree/%{pkg_commit}

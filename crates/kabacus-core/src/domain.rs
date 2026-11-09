@@ -7,7 +7,7 @@
 use crate::money::Amount;
 use chrono::NaiveDate;
 
-/// hledger's posting/transaction status mark: unmarked, pending (`!`) or
+/// Posting/transaction status mark: unmarked, pending (`!`) or
 /// cleared (`*`). The migrated books carry YNAB's cleared flags as posting
 /// marks.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
@@ -87,7 +87,7 @@ pub struct Posting {
     pub amount: Amount,
     pub status: Status,
     pub kind: PostingKind,
-    /// hledger's `pcomment`: the text of the posting's comment lines, tag
+    /// The text of the posting's comment lines, tag
     /// declarations included.
     pub comment: String,
     /// The posting's own tags, the ones its comment declares (not those it
@@ -134,7 +134,7 @@ impl Cost {
     }
 }
 
-/// A posting's balance assertion: `= 100.00 USD`, or one of hledger's
+/// A posting's balance assertion: `= 100.00 USD`, or one of the
 /// stricter forms (`==` total, `=*` inclusive of subaccounts, `==*`).
 #[derive(Debug, Clone, PartialEq)]
 pub struct BalanceAssertion {
@@ -155,7 +155,7 @@ impl BalanceAssertion {
         }
     }
 
-    /// The operator as hledger writes it: `=`, `==`, `=*` or `==*`.
+    /// The operator: `=`, `==`, `=*` or `==*`.
     pub fn operator(&self) -> &'static str {
         match (self.total, self.inclusive) {
             (false, false) => "=",
@@ -183,7 +183,7 @@ pub struct Transaction {
     pub date: NaiveDate,
     pub status: Status,
     pub code: String,
-    /// hledger's raw `Payee | memo` description, unsplit.
+    /// The raw `Payee | memo` description, unsplit.
     pub description: String,
     pub comment: String,
     /// The tags written in `comment`. They mean nothing to the books.
@@ -192,7 +192,7 @@ pub struct Transaction {
 }
 
 impl Transaction {
-    /// hledger's `Payee | memo` convention: split on the first
+    /// The `Payee | memo` convention: split on the first
     /// ` | `, trimming both sides. With no separator the whole description
     /// is the payee and the memo is empty.
     pub fn payee(&self) -> &str {

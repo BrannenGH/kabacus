@@ -75,12 +75,6 @@ pub fn router(state: Arc<AppState>) -> Router {
         .route("/reports/receivables", get(receivables_activity))
         .route("/payees", get(list_payees))
         .route("/register/{account}", get(get_register))
-        .route(
-            "/import",
-            post(import_journal).layer(axum::extract::DefaultBodyLimit::max(
-                state.config.import_max_bytes,
-            )),
-        )
         .route("/ledgers/{id}/export", get(export_ledger))
         .route(
             "/ledgers/import",
@@ -884,17 +878,6 @@ async fn remove_account(
 }
 
 // --- import and export -------------------------------------------------------
-
-async fn import_journal(
-    State(state): State<Arc<AppState>>,
-    headers: HeaderMap,
-    Json(body): Json<crate::import::JournalImportBody>,
-) -> Result<Response, ApiError> {
-    let principal = authenticate(&state, &headers).await?;
-    let status = created_unless_dry_run(body.dry_run);
-    let result = crate::import::import_journal(&state, &principal, body).await?;
-    Ok((status, Json(result)).into_response())
-}
 
 async fn export_ledger(
     State(state): State<Arc<AppState>>,

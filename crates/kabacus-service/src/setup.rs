@@ -20,5 +20,5 @@ pub fn initial_book(currency: &str, account: &str) -> Result<kabacus_ledger::Boo
         kabacus_ledger::MemorySource(std::collections::BTreeMap::from([(main.into(), journal)]));
     kabacus_ledger::import(&source, main)
         .map(|outcome| outcome.book)
-        .map_err(crate::import::import_error)
+        .map_err(|error| invalid("initial_book", error.to_string()))
 }
