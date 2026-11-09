@@ -1171,16 +1171,17 @@ test("remote books reopen in the PWA window after session storage is lost", asyn
   await setup(page);
   await page.locator('[data-destination="Register"]').click();
   await expect(page.getByRole('heading', { name: 'Transactions', exact: true, level: 1 })).toBeVisible();
-  await expect.poll(() => page.evaluate(() => new Promise((resolve, reject) => {
+  const rememberedPage = () => page.evaluate(() => new Promise((resolve, reject) => {
     const request = indexedDB.open('kabacus-local-books', 1);
     request.onerror = () => reject(request.error);
     request.onsuccess = () => {
       const db = request.result;
       const query = db.transaction('state').objectStore('state').get('workspace');
-      query.onsuccess = () => { resolve(query.result?.windows?.[0]?.page); db.close(); };
+      query.onsuccess = () => { resolve(query.result?.windows?.find(w => w.id === sessionStorage.getItem('kabacus.window'))?.page); db.close(); };
       query.onerror = () => { reject(query.error); db.close(); };
     };
-  }))).toBe('Register');
+  }));
+  await expect.poll(rememberedPage).toBe('Register');
   await page.evaluate(() => sessionStorage.clear());
   await page.goto('/app/');
   await expect(page.getByRole('dialog', { name: 'Pick up where you left off' })).toBeVisible();
@@ -1191,6 +1192,7 @@ test("remote books reopen in the PWA window after session storage is lost", asyn
   await expect(page.getByRole('dialog')).toHaveCount(0);
   expect(navigations).toBe(0);
   expect(context.pages()).toHaveLength(1);
+  await expect.poll(rememberedPage).toBe('Register');
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Transactions', exact: true, level: 1 })).toBeVisible();
 });
