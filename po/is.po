@@ -328,10 +328,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Frjálst"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "Forðar korta"
+msgid "Set Aside for Credit Card Payments"
+msgstr "Lagt til hliðar fyrir kreditkortagreiðslur"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -700,15 +700,20 @@ msgstr "Ekki tókst að hlaða ráðstöfunarfé"
 msgid "Loading…"
 msgstr "Hleð…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "Ráðstöfunarfé"
+msgid "Available to spend"
+msgstr "Til ráðstöfunar"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "Um ráðstöfunarfé"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Ráðstöfunarfé"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -717,15 +722,15 @@ msgstr "Frjálst fé sem þú getur eytt núna, eftir forða og forða korta."
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "%1 síðan %2"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "Til ráðstöfunar %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "Ráðstöfunarfé %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%1 síðan %2"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -759,8 +764,8 @@ msgstr "− Útistandandi kröfur (það sem þú átt inni)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "Frjálst fé eftir reikningum"
+msgid "Available by account"
+msgstr "Til ráðstöfunar eftir reikningi"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -768,7 +773,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 frjálst %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "Enginn reikningur er með frjálst fé núna."
@@ -783,6 +788,11 @@ msgstr "Ekkert hefur verið lagt til hliðar í forða."
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "dekkað"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Skuld"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2086,6 +2096,11 @@ msgstr "Kort vantar forðalínur sínar; það verður merkt"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "%1 síðan %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "Einingarverð"
 
@@ -2266,11 +2281,6 @@ msgstr "Þetta forrit"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "Skuld"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "Forði"
 
@@ -2391,6 +2401,11 @@ msgstr "Kredit"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "Frjálst fé eftir reikningum"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "Ekkert hefur verið lagt til hliðar enn"
 
@@ -2418,6 +2433,15 @@ msgstr "Varasjóðir geyma fé fyrir síðari útgjöld, svo sem fasteignagjöld
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "Vistað sem útgáfa %1"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "Ráðstöfunarfé %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "Forðar korta"
 
 #, kde-format
 #~ msgid "The books changed"

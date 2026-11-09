@@ -58,7 +58,7 @@ def create(name, path):
     driver.set_text(name_field, name)
     driver.click(driver.find(welcome, 'Create books', pyatspi.ROLE_PUSH_BUTTON))
     result = driver.wait_for(name, lambda: frame(name + ' — Kabacus'))
-    driver.wait_for('Overview balance', lambda: driver.find(result, 'Cash on Hand'))
+    driver.wait_for('Overview balance', lambda: driver.find(result, 'Available to spend'))
     assert path.is_file(), path
     return result
 

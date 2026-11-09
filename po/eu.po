@@ -328,10 +328,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Librea"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "Txartelen erreserbak"
+msgid "Set Aside for Credit Card Payments"
+msgstr "Kreditu-txartelen ordainketetarako gordeta"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -700,15 +700,20 @@ msgstr "Ezin da diru erabilgarria zamatu"
 msgid "Loading…"
 msgstr "Zamatzen…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "Diru erabilgarria"
+msgid "Available to spend"
+msgstr "Gastatzeko erabilgarri"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "Diru erabilgarriari buruz"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Diru erabilgarria"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -717,15 +722,15 @@ msgstr "Orain gasta dezakezun diru librea, erreserbak eta txartelen erreserbak k
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "%1 %2 ezkero"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "Gastatzeko erabilgarri %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "Diru erabilgarria %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%1 %2 ezkero"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -759,8 +764,8 @@ msgstr "− Kobratzekoak (zor dizutena)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "Diru librea kontuka"
+msgid "Available by account"
+msgstr "Kontu bakoitzean erabilgarri"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -768,7 +773,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 librea %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "Orain ez dago diru librea duen konturik."
@@ -783,6 +788,11 @@ msgstr "Ez dago ezer alde batera utzita erreserbaren batean."
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "estalita"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Zorra"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2086,6 +2096,11 @@ msgstr "Txartel bati erreserba-lerroak falta zaizkio; markatu egingo da"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "%1 %2 ezkero"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "Unitateko prezioa"
 
@@ -2266,11 +2281,6 @@ msgstr "Aplikazio hau"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "Zorra"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "Erreserba"
 
@@ -2391,6 +2401,11 @@ msgstr "Kreditua"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "Diru librea kontuka"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "Oraindik ez da ezer gorde gerorako"
 
@@ -2418,6 +2433,15 @@ msgstr "Erreserbek dirua gerorako gordetzen dute, adibidez etxebizitzaren zergak
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "%1 berrikuspen gisa gorde da"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "Diru erabilgarria %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "Txartelen erreserbak"
 
 #, kde-format
 #~ msgid "The books changed"

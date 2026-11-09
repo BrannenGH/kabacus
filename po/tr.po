@@ -328,10 +328,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Serbest"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "Kart rezervleri"
+msgid "Set Aside for Credit Card Payments"
+msgstr "Kredi kartı ödemeleri için ayrılan"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -700,15 +700,20 @@ msgstr "Harcanabilir para yüklenemiyor"
 msgid "Loading…"
 msgstr "Yükleniyor…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "Harcanabilir para"
+msgid "Available to spend"
+msgstr "Harcanabilir tutar"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "Harcanabilir para hakkında"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Harcanabilir para"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -717,15 +722,15 @@ msgstr "Rezervler ve kart rezervlerinden sonra hemen harcayabileceğiniz serbest
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "%2 tarihinden beri %1"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "Harcanabilir tutar %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "Harcanabilir para %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%2 tarihinden beri %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -759,8 +764,8 @@ msgstr "− Alacaklar (size borçlu olunan)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "Hesaplara göre serbest para"
+msgid "Available by account"
+msgstr "Hesaba göre kullanılabilir tutar"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -768,7 +773,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 serbest %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "Şu anda hiçbir hesapta serbest para yok."
@@ -783,6 +788,11 @@ msgstr "Hiçbir rezerve bir şey ayrılmadı."
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "karşılanıyor"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Borç"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2086,6 +2096,11 @@ msgstr "Bir kartın rezerv satırları eksik; işaretlenecek"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "%2 tarihinden beri %1"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "Birim fiyat"
 
@@ -2266,11 +2281,6 @@ msgstr "Bu uygulama"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "Borç"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "Rezerv"
 
@@ -2391,6 +2401,11 @@ msgstr "Kredi"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "Hesaplara göre serbest para"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "Henüz bir şey ayrılmadı"
 
@@ -2418,6 +2433,15 @@ msgstr "Rezervler emlak vergisi veya araç onarımı gibi sonraki harcamalar iç
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "%1 numaralı revizyon olarak kaydedildi"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "Harcanabilir para %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "Kart rezervleri"
 
 #, kde-format
 #~ msgid "The books changed"

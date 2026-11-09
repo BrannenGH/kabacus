@@ -330,10 +330,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "פנוי"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "רזרבות הכרטיסים"
+msgid "Set Aside for Credit Card Payments"
+msgstr "כסף שהוקצה לתשלומי כרטיסי אשראי"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -702,15 +702,20 @@ msgstr "אי אפשר לטעון את הכסף הזמין"
 msgid "Loading…"
 msgstr "בטעינה…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
+msgid "Available to spend"
 msgstr "כסף זמין"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "על כסף זמין"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "כסף זמין"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -719,15 +724,15 @@ msgstr "כסף פנוי שאפשר להוציא עכשיו, אחרי הרזרב�
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "%1 מאז %2"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "כסף זמין %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "כסף זמין %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%1 מאז %2"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -761,8 +766,8 @@ msgstr "− חובות לגבייה (מה שחייבים לך)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "כסף פנוי לפי חשבון"
+msgid "Available by account"
+msgstr "זמין לפי חשבון"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -770,7 +775,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 פנוי %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "לאף חשבון אין כרגע כסף פנוי."
@@ -785,6 +790,11 @@ msgstr "שום דבר לא הופרש לרזרבה."
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "מכוסה"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "חוב"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2100,6 +2110,11 @@ msgstr "לכרטיס חסרות שורות רזרבה; הוא יסומן"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "%1 מאז %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "מחיר ליחידה"
 
@@ -2280,11 +2295,6 @@ msgstr "היישום הזה"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "חוב"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "רזרבה"
 
@@ -2405,6 +2415,11 @@ msgstr "אשראי"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "כסף פנוי לפי חשבון"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "עדיין לא הוקצה דבר"
 
@@ -2432,6 +2447,15 @@ msgstr "עתודות שומרות כסף להמשך, למשל למס רכוש א
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "נשמר כמהדורה %1"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "כסף זמין %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "רזרבות הכרטיסים"
 
 #, kde-format
 #~ msgid "The books changed"

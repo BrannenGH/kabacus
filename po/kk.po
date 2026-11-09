@@ -327,10 +327,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Бос"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "Карта резервтері"
+msgid "Set Aside for Credit Card Payments"
+msgstr "Кредиттік карта төлемдеріне бөлінген қаражат"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -699,15 +699,20 @@ msgstr "Жұмсауға болатын ақшаны жүктеу мүмкін �
 msgid "Loading…"
 msgstr "Жүктелуде…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "Жұмсауға болатын ақша"
+msgid "Available to spend"
+msgstr "Жұмсауға қолжетімді"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "Жұмсауға болатын ақша туралы"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Жұмсауға болатын ақша"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -716,15 +721,15 @@ msgstr "Резервтер мен карта резервтерінен кейі
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "%2 бастап %1"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "Жұмсауға қолжетімді %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "Жұмсауға болатын ақша %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%2 бастап %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -758,8 +763,8 @@ msgstr "− Дебиторлық берешек (сізге қарыздар)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "Шоттар бойынша бос ақша"
+msgid "Available by account"
+msgstr "Шот бойынша қолжетімді"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -767,7 +772,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 бос %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "Қазір ешбір шотта бос ақша жоқ."
@@ -782,6 +787,11 @@ msgstr "Ешбір резервке ештеңе бөлініп қойылмағ
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "жабылған"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Қарыз"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2079,6 +2089,11 @@ msgstr "Картада резерв жолдары жоқ; ол белгілен
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "%2 бастап %1"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "Бірлік бағасы"
 
@@ -2259,11 +2274,6 @@ msgstr "Осы қолданба"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "Қарыз"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "Резерв"
 
@@ -2384,6 +2394,11 @@ msgstr "Несие"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "Шоттар бойынша бос ақша"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "Әзірше ештеңе бөлінбеді"
 
@@ -2411,6 +2426,15 @@ msgstr "Резервтер мүлік салығы не көлік жөндеу 
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "%1 ревизиясы ретінде сақталды"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "Жұмсауға болатын ақша %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "Карта резервтері"
 
 #, kde-format
 #~ msgid "The books changed"

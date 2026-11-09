@@ -331,10 +331,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Saor"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "Cúlchistí na gcártaí"
+msgid "Set Aside for Credit Card Payments"
+msgstr "Curtha ar leataobh le haghaidh íocaíochtaí cártaí creidmheasa"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -703,15 +703,20 @@ msgstr "Ní féidir an t-airgead le caitheamh a lódáil"
 msgid "Loading…"
 msgstr "Á lódáil…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "Airgead le caitheamh"
+msgid "Available to spend"
+msgstr "Ar fáil le caitheamh"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "Maidir le hairgead le caitheamh"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Airgead le caitheamh"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -720,15 +725,15 @@ msgstr "Airgead saor is féidir leat a chaitheamh anois, tar éis cúlchistí ag
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "%1 ó %2"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "Ar fáil le caitheamh %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "Airgead le caitheamh %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%1 ó %2"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -762,8 +767,8 @@ msgstr "− Infhaighteachtaí (a bhfuil daoine i bhfiacha leat)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "Airgead saor de réir cuntais"
+msgid "Available by account"
+msgstr "Ar fáil de réir cuntais"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -771,7 +776,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 saor %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "Níl airgead saor ag cuntas ar bith faoi láthair."
@@ -786,6 +791,11 @@ msgstr "Níl aon rud curtha i leataobh i gcúlchiste."
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "clúdaithe"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Dlite"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2107,6 +2117,11 @@ msgstr "Tá línte cúlchiste in easnamh ar chárta; marcálfar é"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "%1 ó %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "Praghas aonaid"
 
@@ -2287,11 +2302,6 @@ msgstr "An feidhmchlár seo"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "Dlite"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "Cúlchiste"
 
@@ -2412,6 +2422,11 @@ msgstr "Creidmheas"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "Airgead saor de réir cuntais"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "Níl rud ar bith curtha ar leataobh fós"
 
@@ -2439,6 +2454,15 @@ msgstr "Coinníonn cúlchistí airgead don todhchaí, mar cháin mhaoine nó dei
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "Sábháilte mar leasú %1"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "Airgead le caitheamh %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "Cúlchistí na gcártaí"
 
 #, kde-format
 #~ msgid "The books changed"

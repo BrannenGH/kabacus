@@ -329,10 +329,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Brīvs"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "Karšu rezerves"
+msgid "Set Aside for Credit Card Payments"
+msgstr "Atlikts kredītkaršu maksājumiem"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -701,15 +701,20 @@ msgstr "Nevar ielādēt tērējamo naudu"
 msgid "Loading…"
 msgstr "Ielādē…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "Tērējamā nauda"
+msgid "Available to spend"
+msgstr "Pieejams tēriņiem"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "Par tērējamo naudu"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Tērējamā nauda"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -718,15 +723,15 @@ msgstr "Brīvā nauda, ko varat tērēt tūlīt, pēc rezervēm un karšu rezerv
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "%1 kopš %2"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "Pieejams tēriņiem %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "Tērējamā nauda %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%1 kopš %2"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -760,8 +765,8 @@ msgstr "− Debitoru parādi (ko esat parādā jums)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "Brīvā nauda pa kontiem"
+msgid "Available by account"
+msgstr "Pieejams pa kontiem"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -769,7 +774,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 brīvs %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "Nevienā kontā pašlaik nav brīvas naudas."
@@ -784,6 +789,11 @@ msgstr "Nevienā rezervē nekas nav atlikts."
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "segts"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Parāds"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2093,6 +2103,11 @@ msgstr "Kartei trūkst rezerves rindu; tā tiks atzīmēta"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "%1 kopš %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "Vienības cena"
 
@@ -2273,11 +2288,6 @@ msgstr "Šī lietotne"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "Parāds"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "Rezerve"
 
@@ -2398,6 +2408,11 @@ msgstr "Kredīts"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "Brīvā nauda pa kontiem"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "Vēl nekas nav atlikts"
 
@@ -2425,6 +2440,15 @@ msgstr "Rezerves glabā naudu vēlākam laikam, piemēram, īpašuma nodoklim va
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "Saglabāts kā %1 redakcija"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "Tērējamā nauda %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "Karšu rezerves"
 
 #, kde-format
 #~ msgid "The books changed"

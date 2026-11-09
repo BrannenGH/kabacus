@@ -602,6 +602,8 @@ def main():
         # form; KDE's menu bar is there except on a phone.
         account, fund, empty = args
         goto("Overview")
+        wait_for("available-to-spend heading", lambda: find(app(), "Available to spend"))
+        wait_for("available-by-account heading", lambda: find(app(), "Available by account"))
         meaning = "Free money you can spend right now"
         about = wait_for("Cash on Hand's info button", lambda: find(app(), "About Cash on Hand", pyatspi.ROLE_PUSH_BUTTON))
         if label_starting(meaning):

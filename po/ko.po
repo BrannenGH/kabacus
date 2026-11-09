@@ -327,10 +327,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "자유"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "카드 준비금"
+msgid "Set Aside for Credit Card Payments"
+msgstr "신용카드 결제를 위해 따로 둔 금액"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -699,15 +699,20 @@ msgstr "쓸 수 있는 돈을 불러올 수 없음"
 msgid "Loading…"
 msgstr "불러오는 중…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "쓸 수 있는 돈"
+msgid "Available to spend"
+msgstr "사용 가능한 금액"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "쓸 수 있는 돈 정보"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "쓸 수 있는 돈"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -716,15 +721,15 @@ msgstr "준비금과 카드 준비금을 뺀, 지금 바로 쓸 수 있는 자�
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
-msgstr "%2 이후 %1"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "사용 가능한 금액 %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "쓸 수 있는 돈 %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
+msgstr "%2 이후 %1"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -758,8 +763,8 @@ msgstr "− 받을 돈(남이 나에게 빚진 돈)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "계좌별 자유 자금"
+msgid "Available by account"
+msgstr "계좌별 사용 가능한 금액"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -767,7 +772,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 자유 %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "지금은 자유 자금이 있는 계좌가 없습니다."
@@ -782,6 +787,11 @@ msgstr "준비금에 적립된 것이 없습니다."
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "충당됨"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "결제할 금액"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2079,6 +2089,11 @@ msgstr "어떤 카드에 준비금 줄이 없습니다. 표시됩니다"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr "%2 이후 %1"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr "단가"
 
@@ -2259,11 +2274,6 @@ msgstr "이 앱"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "결제할 금액"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "준비금"
 
@@ -2384,6 +2394,11 @@ msgstr "신용카드"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Free money by account"
+msgstr "계좌별 자유 자금"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Nothing is set aside yet"
 msgstr "아직 따로 마련한 금액이 없습니다"
 
@@ -2411,6 +2426,15 @@ msgstr "준비금은 재산세나 자동차 수리처럼 나중에 쓸 돈을 �
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "리비전 %1로 저장됨"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "쓸 수 있는 돈 %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "카드 준비금"
 
 #, kde-format
 #~ msgid "The books changed"

@@ -326,9 +326,9 @@ msgctxt "free money"
 msgid "Free"
 msgstr ""
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
+msgid "Set Aside for Credit Card Payments"
 msgstr ""
 
 #: crates/kabacus-kde/qml/FundsPage.qml
@@ -698,14 +698,19 @@ msgstr ""
 msgid "Loading…"
 msgstr ""
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
+msgid "Available to spend"
 msgstr ""
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
+msgstr ""
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
 msgstr ""
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
@@ -715,14 +720,14 @@ msgstr ""
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is the change in Cash on Hand, %2 a date"
-msgid "%1 since %2"
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
 msgstr ""
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
+msgctxt "%1 is the change in Cash on Hand, %2 a date"
+msgid "%1 since %2"
 msgstr ""
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
@@ -757,7 +762,7 @@ msgstr ""
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
+msgid "Available by account"
 msgstr ""
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
@@ -766,7 +771,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr ""
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr ""
@@ -780,6 +785,11 @@ msgstr ""
 #, kde-format
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
+msgstr ""
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
 msgstr ""
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
@@ -2084,6 +2094,11 @@ msgstr ""
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "%1 since %2"
+msgstr ""
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Unit price"
 msgstr ""
 
@@ -2264,11 +2279,6 @@ msgstr ""
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr ""
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr ""
 
@@ -2385,6 +2395,11 @@ msgstr ""
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Credit"
+msgstr ""
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Free money by account"
 msgstr ""
 
 #: apps/kabacus-ui/src/messages.js

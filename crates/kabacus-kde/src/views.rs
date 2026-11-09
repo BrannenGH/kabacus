@@ -1117,7 +1117,7 @@ fn flow_name(group: &str, display_name: &str) -> String {
         "income" => i18nc!("accounts group", "Income"),
         "expense" => i18nc!("accounts group", "Spending"),
         "pre-allocation" => i18n!("Set aside in reserves"),
-        "debt-reserve" => i18n!("Card reserves"),
+        "debt-reserve" => i18n!("Set Aside for Credit Card Payments"),
         "equity_conversion" | "term-liability" => i18n!("Loan principal"),
         "receivable" => i18n!("Fronted for others"),
         "payable" => i18n!("Owed to others"),
