@@ -167,7 +167,6 @@ Kirigami.ScrollablePage {
                         visible: page.overview !== null && page.overview.homes.length === 0
                         text: i18n("No account has free money right now.")
                         wrapMode: Text.Wrap
-                        opacity: 0.7
                         Layout.fillWidth: true
                     }
                     Item { Layout.fillHeight: true }
@@ -232,7 +231,6 @@ Kirigami.ScrollablePage {
                         visible: page.overview !== null && page.overview.funds.length === 0
                         text: i18n("Nothing is set aside in a reserve.")
                         wrapMode: Text.Wrap
-                        opacity: 0.7
                         Layout.fillWidth: true
                     }
                     Item { Layout.fillHeight: true }
@@ -281,7 +279,6 @@ Kirigami.ScrollablePage {
                     Controls.Label {
                         text: i18n("Each card's reserve should equal what it owes.")
                         wrapMode: Text.Wrap
-                        opacity: 0.7
                         Layout.fillWidth: true
                     }
                     Item { Layout.fillHeight: true }

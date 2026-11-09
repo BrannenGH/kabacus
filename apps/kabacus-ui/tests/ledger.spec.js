@@ -1508,6 +1508,13 @@ for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 
         await summary.getByText("How it's worked out", { exact: true }).click();
         await expect(summary.locator("dl")).toBeVisible();
         await expect(summary.locator(".total-line")).toContainText("Available to spend");
+        await summary.getByLabel("About Cash on Hand", { exact: true }).click();
+        const explanation = summary.locator(".cash-label .info-button p");
+        await expect(explanation).toBeVisible();
+        const bounds = await explanation.boundingBox();
+        expect(bounds.x).toBeGreaterThanOrEqual(0);
+        expect(bounds.x + bounds.width).toBeLessThanOrEqual(viewport.width);
+        await summary.getByLabel("About Cash on Hand", { exact: true }).click();
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
         await page.screenshot({ path: `test-results/spendable-${viewport.width}-${colorScheme}.png`, fullPage: true });
       });

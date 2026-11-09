@@ -988,7 +988,7 @@ th { background: #efead8; color: var(--muted); font-size: 11px; }
 @media (--compact) { aside { width: 200px; } .workspace { margin-inline-start: 200px; width: calc(100% - 200px); } .transactions-workspace { grid-template-columns: 1fr; } }
 @media (--phone) { aside { position: static; width: 100%; } .shell { display: block; } .workspace { margin: 0; width: 100%; } .choice-grid { grid-template-columns: 1fr; } }
 .overview-layout { display:grid; grid-template-columns: 1.3fr 1fr; grid-template-areas: "cash free" "warnings warnings" "reserves credit" "trend trend"; gap:16px; align-items:start; }
-.cash-summary { grid-area:cash; padding:22px; }
+.cash-summary { grid-area:cash; padding:22px; position:relative; overflow:visible; }
 .free-accounts { grid-area:free; padding:20px; }
 .overview-credit { grid-area:credit; padding:20px; }
 .overview-reserves { grid-area:reserves; padding:20px; }
@@ -1171,7 +1171,8 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
 .overview-layout .muted { font-size:14px; }
 .overview-warnings { display:grid; gap:8px; }
 .cash-summary .info-button summary { display:grid; place-items:center; min-width:44px; min-height:44px; }
-.cash-summary .info-button p { inset-inline-start:auto; inset-inline-end:0; width:min(280px,65vw); }
+.cash-summary .info-button { position:static; }
+.cash-summary .info-button p { inset-inline:16px; width:auto; }
 
 .overview-layout .panel { margin-bottom:0; }
 .cash-summary dt,.cash-summary dd { font-size:14px; margin:0; }
