@@ -121,7 +121,10 @@ async fn amounts_finer_than_the_commodity_are_refused() {
     let head = head(&client).await;
 
     let commodity = call(&client, "get_commodity", json!({})).await;
-    assert_eq!(commodity, json!({"symbol": "USD", "places": 2}));
+    assert_eq!(
+        commodity,
+        json!({"symbol": "USD", "places": 2, "commodities":[{"symbol":"USD","places":2}]})
+    );
 
     let error = fail(
         &client,

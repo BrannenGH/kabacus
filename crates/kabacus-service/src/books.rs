@@ -90,8 +90,14 @@ pub fn primary_commodity(book: &kabacus_ledger::Book, chart: &kabacus_core::Char
         .iter()
         .flat_map(|t| &t.postings)
         .find(|p| chart.kind_of(&p.account) == kabacus_core::AccountKind::Money)
-        .or_else(|| book.transactions.iter().flat_map(|t| &t.postings).next())
         .map(|p| p.amount.commodity.clone())
+        .or_else(|| {
+            book.transactions
+                .iter()
+                .flat_map(|t| &t.postings)
+                .map(|p| p.amount.commodity.clone())
+                .min()
+        })
         .or_else(|| book.commodities.keys().next().cloned())
         .unwrap_or_else(|| "USD".to_string())
 }
@@ -126,7 +132,7 @@ impl WorkingCopy {
         self.book.styles()
     }
 
-    /// The cash commodity, falling back to the first posting commodity.
+    /// The cash commodity, falling back to the first used symbol.
     pub fn commodity(&self) -> String {
         primary_commodity(&self.book, &self.rules_chart())
     }
