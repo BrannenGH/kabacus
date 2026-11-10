@@ -138,16 +138,6 @@ msgstr "收入或退款"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card purchase"
-msgstr "刷卡消费"
-
-#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "自动为你添加准备金分录行"
-
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Transfer"
 msgstr "转账"
 
@@ -185,6 +175,16 @@ msgstr "与他人分摊"
 #, kde-format
 msgid "They owe you, or you owe them"
 msgstr "别人欠你，或你欠别人"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settle up with someone"
+msgstr "与某人结清"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money you paid them or they paid you"
+msgstr "你付给对方或对方付给你的钱"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1231,6 +1231,11 @@ msgstr "今年没有"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Card purchase"
+msgstr "刷卡消费"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Set money aside"
 msgstr "预留资金"
 
@@ -1315,6 +1320,16 @@ msgctxt "a credit card"
 msgid "Card"
 msgstr "信用卡"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This is a card purchase: its reserve lines are added for you."
+msgstr "这是信用卡消费：其备用金行会自动添加。"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch to Spent"
+msgstr "切换为支出"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label what a shared cost was for"
@@ -1397,6 +1412,21 @@ msgstr "一项准备金"
 msgctxt "money set aside"
 msgid "Reserve"
 msgstr "准备金"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Direction"
+msgstr "方向"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "I paid them"
+msgstr "我付给了对方"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "They paid me"
+msgstr "对方付给了我"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1999,6 +2029,18 @@ msgstr "%1：用 %3 支付 %2；其中 %4 欠 %5。"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "You paid %2 %1 from %3."
+msgstr "你从 %3 向 %2 支付了 %1。"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "%2 paid you %1 into %3."
+msgstr "%2 向 %3 支付给你 %1。"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a payee"
 msgid "Edit %1 in place. History keeps the old version."
 msgstr "就地编辑 %1。历史记录会保留旧版本。"
@@ -2050,9 +2092,19 @@ msgstr "%1 没有准备金账户"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgid "A payment to you can't go onto a card"
+msgstr "付给你的款项不能记到信用卡上"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a transaction's payee"
 msgid "%1 isn't missing reserve lines"
 msgstr "%1 并不缺少准备金分录行"
+
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settled up with %1"
+msgstr "已与 %1 结清"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
@@ -2356,6 +2408,11 @@ msgstr "账户"
 #, kde-format
 msgid "Add — what happened?"
 msgstr "添加 — 发生了什么？"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "自动为你添加准备金分录行"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

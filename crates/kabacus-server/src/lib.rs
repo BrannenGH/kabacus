@@ -20,6 +20,7 @@ pub mod remote;
 pub mod reports;
 pub mod search;
 pub mod service;
+pub mod settle;
 pub mod split;
 pub mod state;
 pub mod web;

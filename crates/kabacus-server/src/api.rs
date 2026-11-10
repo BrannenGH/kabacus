@@ -24,6 +24,7 @@ pub use kabacus_service::catalog::{Endpoint, ENDPOINTS};
 pub fn router(state: Arc<AppState>) -> Router {
     Router::new()
         .route("/splits", post(record_shared_expense))
+        .route("/settlements", post(settle_up))
         .route("/version", get(get_version))
         .route("/commands", get(get_commands))
         .route("/commodity", get(get_commodity))
@@ -787,6 +788,18 @@ async fn record_shared_expense(
     let head = if_match_header(&headers)?;
     let status = created_unless_dry_run(body.dry_run);
     let result = crate::split::record(&state, &principal, body, &head).await?;
+    Ok((status, Json(result)).into_response())
+}
+
+async fn settle_up(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+    Json(body): Json<crate::settle::SettleBody>,
+) -> Result<Response, ApiError> {
+    let principal = authenticate(&state, &headers).await?;
+    let head = if_match_header(&headers)?;
+    let status = created_unless_dry_run(body.dry_run);
+    let result = crate::settle::record(&state, &principal, body, &head).await?;
     Ok((status, Json(result)).into_response())
 }
 

@@ -138,16 +138,6 @@ msgstr "ਆਮਦਨ ਜਾਂ ਰਿਫੰਡ"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card purchase"
-msgstr "ਕਾਰਡ ਨਾਲ ਖ਼ਰੀਦ"
-
-#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "ਤੁਹਾਡੇ ਲਈ ਰਾਖਵੀਂ ਰਕਮ ਦੀਆਂ ਲਾਈਨਾਂ ਜੋੜਦਾ ਹੈ"
-
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Transfer"
 msgstr "ਤਬਾਦਲਾ"
 
@@ -185,6 +175,16 @@ msgstr "ਕਿਸੇ ਨਾਲ ਵੰਡੋ"
 #, kde-format
 msgid "They owe you, or you owe them"
 msgstr "ਉਹ ਤੁਹਾਡੇ ਦੇਣਦਾਰ ਹਨ, ਜਾਂ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settle up with someone"
+msgstr "ਕਿਸੇ ਨਾਲ ਹਿਸਾਬ ਚੁਕਤਾ ਕਰੋ"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money you paid them or they paid you"
+msgstr "ਪੈਸੇ ਜੋ ਤੁਸੀਂ ਉਨ੍ਹਾਂ ਨੂੰ ਦਿੱਤੇ ਜਾਂ ਉਨ੍ਹਾਂ ਨੇ ਤੁਹਾਨੂੰ ਦਿੱਤੇ"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1232,6 +1232,11 @@ msgstr "ਇਸ ਸਾਲ ਕੁਝ ਨਹੀਂ"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Card purchase"
+msgstr "ਕਾਰਡ ਨਾਲ ਖ਼ਰੀਦ"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Set money aside"
 msgstr "ਪੈਸੇ ਵੱਖ ਰੱਖੋ"
 
@@ -1316,6 +1321,16 @@ msgctxt "a credit card"
 msgid "Card"
 msgstr "ਕਾਰਡ"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This is a card purchase: its reserve lines are added for you."
+msgstr "ਇਹ ਕਾਰਡ ਖਰੀਦ ਹੈ: ਇਸ ਦੀਆਂ ਰਾਖਵੀਆਂ ਲਾਈਨਾਂ ਤੁਹਾਡੇ ਲਈ ਜੋੜ ਦਿੱਤੀਆਂ ਜਾਂਦੀਆਂ ਹਨ।"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch to Spent"
+msgstr "ਖਰਚ ਤੇ ਜਾਓ"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label what a shared cost was for"
@@ -1398,6 +1413,21 @@ msgstr "ਇੱਕ ਰਾਖਵੀਂ ਰਕਮ"
 msgctxt "money set aside"
 msgid "Reserve"
 msgstr "ਰਾਖਵੀਂ ਰਕਮ"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Direction"
+msgstr "ਦਿਸ਼ਾ"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "I paid them"
+msgstr "ਮੈਂ ਉਨ੍ਹਾਂ ਨੂੰ ਭੁਗਤਾਨ ਕੀਤਾ"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "They paid me"
+msgstr "ਉਨ੍ਹਾਂ ਨੇ ਮੈਨੂੰ ਭੁਗਤਾਨ ਕੀਤਾ"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -2005,6 +2035,18 @@ msgstr "%1: %3 ਨਾਲ %2 ਦਾ ਭੁਗਤਾਨ; ਇਸ ਵਿੱਚੋਂ
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "You paid %2 %1 from %3."
+msgstr "ਤੁਸੀਂ %3 ਤੋਂ %2 ਨੂੰ %1 ਦਾ ਭੁਗਤਾਨ ਕੀਤਾ।"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "%2 paid you %1 into %3."
+msgstr "%2 ਨੇ ਤੁਹਾਨੂੰ %3 ਵਿੱਚ %1 ਦਾ ਭੁਗਤਾਨ ਕੀਤਾ।"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a payee"
 msgid "Edit %1 in place. History keeps the old version."
 msgstr "%1 ਨੂੰ ਥਾਂ ’ਤੇ ਸੋਧੋ। ਇਤਿਹਾਸ ਪੁਰਾਣਾ ਸੰਸਕਰਣ ਸੰਭਾਲ ਕੇ ਰੱਖਦਾ ਹੈ।"
@@ -2057,9 +2099,19 @@ msgstr "%1 ਦਾ ਕੋਈ ਰਾਖਵਾਂ ਖਾਤਾ ਨਹੀਂ ਹੈ"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgid "A payment to you can't go onto a card"
+msgstr "ਤੁਹਾਨੂੰ ਕੀਤਾ ਭੁਗਤਾਨ ਕਾਰਡ ਵਿੱਚ ਨਹੀਂ ਜਾ ਸਕਦਾ"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a transaction's payee"
 msgid "%1 isn't missing reserve lines"
 msgstr "%1 ਵਿੱਚ ਰਾਖਵੀਂ ਰਕਮ ਦੀਆਂ ਲਾਈਨਾਂ ਘੱਟ ਨਹੀਂ ਹਨ"
+
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settled up with %1"
+msgstr "%1 ਨਾਲ ਹਿਸਾਬ ਚੁਕਤਾ ਹੋਇਆ"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
@@ -2363,6 +2415,11 @@ msgstr "ਖਾਤੇ"
 #, kde-format
 msgid "Add — what happened?"
 msgstr "ਜੋੜੋ — ਕੀ ਹੋਇਆ?"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "ਤੁਹਾਡੇ ਲਈ ਰਾਖਵੀਂ ਰਕਮ ਦੀਆਂ ਲਾਈਨਾਂ ਜੋੜਦਾ ਹੈ"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

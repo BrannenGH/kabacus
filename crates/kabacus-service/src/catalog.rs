@@ -25,6 +25,11 @@ pub const ENDPOINTS: &[Endpoint] = &[
         mcp_tools: &["record_shared_expense"],
     },
     Endpoint {
+        method: "POST",
+        path: "/settlements",
+        mcp_tools: &["settle_up"],
+    },
+    Endpoint {
         method: "GET",
         path: "/version",
         mcp_tools: &["get_version"],
@@ -255,20 +260,12 @@ pub const ADD_COMMANDS: &[Command] = &[
         key: "2",
     },
     Command {
-        id: "card.purchase",
-        label: "Card purchase",
-        method: "POST",
-        path: "/cards/purchases",
-        tool: "record_card_purchase",
-        key: "3",
-    },
-    Command {
         id: "transaction.transfer",
         label: "Transfer",
         method: "POST",
         path: "/transactions",
         tool: "add_transaction",
-        key: "4",
+        key: "3",
     },
     Command {
         id: "reserve.setAside",
@@ -276,7 +273,7 @@ pub const ADD_COMMANDS: &[Command] = &[
         method: "POST",
         path: "/allocations",
         tool: "allocate",
-        key: "5",
+        key: "4",
     },
     Command {
         id: "card.pay",
@@ -284,7 +281,7 @@ pub const ADD_COMMANDS: &[Command] = &[
         method: "POST",
         path: "/cards/payments",
         tool: "pay_card",
-        key: "6",
+        key: "5",
     },
     Command {
         id: "split.record",
@@ -292,6 +289,14 @@ pub const ADD_COMMANDS: &[Command] = &[
         method: "POST",
         path: "/splits",
         tool: "record_shared_expense",
+        key: "6",
+    },
+    Command {
+        id: "settle.record",
+        label: "Settle up with someone",
+        method: "POST",
+        path: "/settlements",
+        tool: "settle_up",
         key: "7",
     },
     Command {
@@ -317,6 +322,7 @@ pub fn commands() -> serde_json::Value {
                 "pay_card" => "card.pay",
                 "record_card_purchase" => "card.purchase",
                 "record_shared_expense" => "split.record",
+                "settle_up" => "settle.record",
                 "reconcile" => "reconcile.finish",
                 other => other,
             };
@@ -359,6 +365,7 @@ fn parameters(tool: &str) -> serde_json::Value {
         "record_card_purchase" => schema!(RecordCardPurchaseParams),
         "pay_card" => schema!(PayCardParams),
         "record_shared_expense" => schema!(crate::split::SplitBody),
+        "settle_up" => schema!(crate::settle::SettleBody),
         "reconcile" => schema!(crate::reports::ReconcileParams),
         "batch" => schema!(crate::batch::BatchBody),
         "search_transactions" => schema!(crate::search::SearchQuery),
@@ -406,6 +413,7 @@ pub fn command_tool(id: &str) -> &str {
         "card.purchase" => "record_card_purchase",
         "card.pay" => "pay_card",
         "split.record" => "record_shared_expense",
+        "settle.record" => "settle_up",
         "reconcile.finish" => "reconcile",
         other => other,
     }

@@ -106,9 +106,9 @@ ColumnLayout {
         id: combo
         implicitHeight: picker.phone ? 48 : Math.max(contentItem.implicitHeight + topPadding + bottomPadding, background ? background.implicitHeight : 0)
         font.pixelSize: picker.phone ? 16 : Kirigami.Theme.defaultFont.pixelSize
+        // A click browses the groups; typing (keyboard) edits the field.
         MouseArea {
             anchors.fill: parent
-            enabled: picker.phone
             z: 1
             onClicked: accountSheet.open()
         }
@@ -140,12 +140,15 @@ ColumnLayout {
         title: picker.label
         parent: Controls.Overlay.overlay
         modal: true
-        x: 0; y: 0
-        width: parent ? parent.width : 0
-        height: parent ? parent.height : 0
+        // Full screen on a phone, else a dialog in the middle.
+        x: parent && !picker.phone ? Math.round((parent.width - width) / 2) : 0
+        y: parent && !picker.phone ? Math.round((parent.height - height) / 2) : 0
+        width: parent ? (picker.phone ? parent.width : Math.min(parent.width - 32, Kirigami.Units.gridUnit * 28)) : 0
+        height: parent ? (picker.phone ? parent.height : Math.min(parent.height - 64, Kirigami.Units.gridUnit * 36)) : 0
         padding: 16
         onOpened: {
             accountSearch.text = ""
+            accountSearch.forceActiveFocus()
             picker.sheetPath = picker.accounts.some(a => a.account === picker.value)
                 ? picker.value.split(":").slice(0, -1) : []
         }

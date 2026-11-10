@@ -138,16 +138,6 @@ msgstr "Thu nhập hoặc hoàn tiền"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card purchase"
-msgstr "Mua bằng thẻ"
-
-#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Tự thêm các dòng dự phòng cho bạn"
-
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Transfer"
 msgstr "Chuyển khoản"
 
@@ -185,6 +175,16 @@ msgstr "Chia với người khác"
 #, kde-format
 msgid "They owe you, or you owe them"
 msgstr "Họ nợ bạn, hoặc bạn nợ họ"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settle up with someone"
+msgstr "Thanh toán với ai đó"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money you paid them or they paid you"
+msgstr "Tiền bạn đã trả cho họ hoặc họ đã trả cho bạn"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1231,6 +1231,11 @@ msgstr "Không có gì trong năm nay"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Card purchase"
+msgstr "Mua bằng thẻ"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Set money aside"
 msgstr "Để dành tiền"
 
@@ -1315,6 +1320,16 @@ msgctxt "a credit card"
 msgid "Card"
 msgstr "Thẻ"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This is a card purchase: its reserve lines are added for you."
+msgstr "Đây là giao dịch mua bằng thẻ: các dòng dự phòng được thêm cho bạn."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch to Spent"
+msgstr "Chuyển sang Chi tiêu"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label what a shared cost was for"
@@ -1397,6 +1412,21 @@ msgstr "Một khoản dự phòng"
 msgctxt "money set aside"
 msgid "Reserve"
 msgstr "Dự phòng"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Direction"
+msgstr "Hướng"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "I paid them"
+msgstr "Tôi đã trả cho họ"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "They paid me"
+msgstr "Họ đã trả cho tôi"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1999,6 +2029,18 @@ msgstr "%1: %2 trả bằng %3; %4 nợ %5 trong số đó."
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "You paid %2 %1 from %3."
+msgstr "Bạn đã trả %2 %1 từ %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "%2 paid you %1 into %3."
+msgstr "%2 đã trả cho bạn %1 vào %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a payee"
 msgid "Edit %1 in place. History keeps the old version."
 msgstr "Sửa %1 tại chỗ. Lịch sử giữ lại phiên bản cũ."
@@ -2050,9 +2092,19 @@ msgstr "%1 không có tài khoản dự phòng"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgid "A payment to you can't go onto a card"
+msgstr "Khoản thanh toán cho bạn không thể vào thẻ"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a transaction's payee"
 msgid "%1 isn't missing reserve lines"
 msgstr "%1 không thiếu dòng dự phòng"
+
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settled up with %1"
+msgstr "Đã thanh toán với %1"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
@@ -2356,6 +2408,11 @@ msgstr "Tài khoản"
 #, kde-format
 msgid "Add — what happened?"
 msgstr "Thêm — chuyện gì đã xảy ra?"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "Tự thêm các dòng dự phòng cho bạn"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

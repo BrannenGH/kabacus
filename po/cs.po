@@ -138,16 +138,6 @@ msgstr "Příjem nebo vrácení peněz"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card purchase"
-msgstr "Nákup kartou"
-
-#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Přidá řádky rezervy za vás"
-
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Transfer"
 msgstr "Převod"
 
@@ -185,6 +175,16 @@ msgstr "Rozdělit s někým"
 #, kde-format
 msgid "They owe you, or you owe them"
 msgstr "Dluží vám, nebo jim dlužíte vy"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settle up with someone"
+msgstr "Vyrovnat se s někým"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money you paid them or they paid you"
+msgstr "Peníze, které jste zaplatili vy jim nebo oni vám"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1233,6 +1233,11 @@ msgstr "Letos nic"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Card purchase"
+msgstr "Nákup kartou"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Set money aside"
 msgstr "Odložit peníze"
 
@@ -1317,6 +1322,16 @@ msgctxt "a credit card"
 msgid "Card"
 msgstr "Karta"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This is a card purchase: its reserve lines are added for you."
+msgstr "Toto je nákup kartou: řádky rezervy se přidají samy."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch to Spent"
+msgstr "Přepnout na Výdaj"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label what a shared cost was for"
@@ -1399,6 +1414,21 @@ msgstr "Rezerva"
 msgctxt "money set aside"
 msgid "Reserve"
 msgstr "Rezerva"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Direction"
+msgstr "Směr"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "I paid them"
+msgstr "Zaplatil(a) jsem jim"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "They paid me"
+msgstr "Zaplatili mi"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -2011,6 +2041,18 @@ msgstr "%1: %2 zaplaceno z %3; %4 z toho dluží %5."
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "You paid %2 %1 from %3."
+msgstr "Zaplatili jste %2 částku %1 z účtu %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "%2 paid you %1 into %3."
+msgstr "%2 vám zaplatil(a) %1 na účet %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a payee"
 msgid "Edit %1 in place. History keeps the old version."
 msgstr "Upravit %1 na místě. Historie si ponechá starou verzi."
@@ -2064,9 +2106,19 @@ msgstr "%1 nemá účet rezervy"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgid "A payment to you can't go onto a card"
+msgstr "Platba vám nemůže jít na kartu"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a transaction's payee"
 msgid "%1 isn't missing reserve lines"
 msgstr "%1 nechybí řádky rezervy"
+
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settled up with %1"
+msgstr "Vyrovnání s osobou %1"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
@@ -2370,6 +2422,11 @@ msgstr "Účty"
 #, kde-format
 msgid "Add — what happened?"
 msgstr "Přidat — co se stalo?"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "Přidá řádky rezervy za vás"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

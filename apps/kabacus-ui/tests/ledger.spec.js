@@ -136,7 +136,7 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
     }
     const fixtures = {
       "/commands": {add: [
-        ["transaction.spent","Spent"],["transaction.received","Received"],["card.purchase","Card purchase"],["transaction.transfer","Transfer"],["reserve.setAside","Set aside"],["card.pay","Pay a card"],["split.record","Split with someone"],["transaction.postings","Postings"]
+        ["transaction.spent","Spent"],["transaction.received","Received"],["transaction.transfer","Transfer"],["reserve.setAside","Set aside"],["card.pay","Pay a card"],["split.record","Split with someone"],["settle.record","Settle up with someone"],["transaction.postings","Postings"]
       ].map(([id,label],i)=>({id,label,key:String(i+1)}))},
       "/version": currentVersion,
       "/commodity": suppliedCommodity,
@@ -1075,7 +1075,7 @@ test.describe("phone layout", () => {
     ["Rainy day savings", "Spent", "from", "assets:bank:savings"],
     ["Rainy day savings", "Received", "to", "assets:bank:savings"],
     ["Rainy day savings", "Split with someone", "paid_with", "assets:bank:savings"],
-    ["Everyday card", "Card purchase", "card", "liabilities:card:everyday"],
+    ["Everyday card", "Spent", "card", "liabilities:card:everyday"],
     ["Everyday card", "Pay a card", "card", "liabilities:card:everyday"],
   ]) test(`register preset: ${kind} from ${label}`, async ({ page }) => {
     await setup(page, false, transaction, [...accounts,
@@ -1292,9 +1292,12 @@ test.describe("mobile exploration regressions", () => {
 
   for (const choice of ["Received", "Card purchase"]) {
     test(`rotation preserves the ${choice} draft and reviewed amount`, async ({ page }) => {
-      const writes = await setup(page);
+      const writes = await setup(page, false, transaction, [...accounts,
+        { account: "liabilities:card:everyday", display_name: "Everyday card", kind: "revolving-debt" },
+      ]);
       await page.getByRole("button", { name: "Add", exact: true }).tap();
-      await page.locator(".add-chooser button[data-choice]").filter({ hasText: choice }).tap();
+      await page.locator(".add-chooser button[data-choice]").filter({ hasText: choice === "Card purchase" ? "Spent" : choice }).tap();
+      if (choice === "Card purchase") await page.locator('.bookkeeping-dialog select[name="from"]').selectOption("liabilities:card:everyday");
       const form = page.locator(".bookkeeping-dialog");
       const amount = form.locator('input[name="amount"]');
       await amount.fill("48.73");
@@ -1586,6 +1589,44 @@ for (const phone of [false, true]) test(`a category typed in that doesn't exist 
   await expect(form.locator(".preview")).toBeVisible();
   expect(writes.at(-1).body.new_accounts).toEqual(["expenses:pet-care"]);
   expect(writes.at(-1).body.postings[0].account).toBe("expenses:pet-care");
+});
+for (const phone of [false, true]) test(`choosing a card turns Spent into a card purchase, and back, on ${phone ? "phone" : "desktop"}`, async ({ page }) => {
+  await page.setViewportSize(phone ? { width: 390, height: 844 } : { width: 1280, height: 800 });
+  await setup(page, false, transaction, [...accounts,
+    { account: "liabilities:card:everyday", display_name: "Everyday card", kind: "revolving-debt" },
+  ]);
+  await page.getByRole("button", { name: "Add", exact: true }).click();
+  await page.getByRole("button", { name: /^Spent/ }).click();
+  const form = page.locator(".bookkeeping-dialog");
+  await form.getByLabel("Payee", { exact: true }).fill("Corner Market");
+  await form.getByLabel("Amount (USD)").fill("42.18");
+  await form.locator('select[name="from"]').selectOption("liabilities:card:everyday");
+  await expect(form.getByText("This is a card purchase")).toBeVisible();
+  await expect(form.locator('select[name="card"]')).toHaveValue("liabilities:card:everyday");
+  await expect(form.getByLabel("Payee", { exact: true })).toHaveValue("Corner Market");
+  await expect(form.locator('input[name="amount"]')).toHaveValue("42.18");
+  await form.getByRole("button", { name: "Switch to Spent" }).click();
+  await expect(form.getByText("This is a card purchase")).toHaveCount(0);
+  await expect(form.locator('select[name="from"]')).toHaveValue("liabilities:card:everyday");
+  await expect(form.getByLabel("Payee", { exact: true })).toHaveValue("Corner Market");
+  await expect(form.locator('input[name="amount"]')).toHaveValue("42.18");
+});
+for (const phone of [false, true]) test(`settling up posts the direction and person on ${phone ? "phone" : "desktop"}`, async ({ page }) => {
+  await page.setViewportSize(phone ? { width: 390, height: 844 } : { width: 1280, height: 800 });
+  const writes = await setup(page, false, transaction, [...accounts,
+    { account: "assets:receivable:jordan", display_name: "Jordan", kind: "receivable" },
+  ]);
+  await page.getByRole("button", { name: "Add", exact: true }).click();
+  await page.locator(".add-chooser button[data-choice]").filter({ hasText: "Settle up with someone" }).click();
+  const form = page.locator(".bookkeeping-dialog");
+  await form.locator('select[name="direction"]').selectOption("received");
+  await form.locator('select[name="account"]').selectOption(accounts[0].account);
+  await form.getByLabel("Amount", { exact: true }).fill("20.00");
+  if (phone) await form.getByRole("button", { name: "Review", exact: true }).click();
+  await expect(form.locator(".preview")).toBeVisible();
+  expect(writes.at(-1).path).toBe("/settlements");
+  expect(writes.at(-1).body).toMatchObject({ person: "jordan", direction: "received", account: accounts[0].account, amount: "20.00", dry_run: true });
+  expect(writes.at(-1).body.description).toBe("Settled up with Jordan");
 });
 test("on desktop a click browses account groups and typing searches them all", async ({ page }) => {
   await setup(page);

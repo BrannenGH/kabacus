@@ -138,16 +138,6 @@ msgstr "வருமானம் அல்லது பணத்திருப�
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card purchase"
-msgstr "அட்டை வாங்குதல்"
-
-#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "ஒதுக்கீட்டு வரிகளை உங்களுக்காகச் சேர்க்கிறது"
-
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Transfer"
 msgstr "பரிமாற்றம்"
 
@@ -185,6 +175,16 @@ msgstr "ஒருவருடன் பகிர்"
 #, kde-format
 msgid "They owe you, or you owe them"
 msgstr "அவர்கள் உங்களுக்குக் கடன்பட்டுள்ளனர், அல்லது நீங்கள் அவர்களுக்கு"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settle up with someone"
+msgstr "ஒருவருடன் கணக்கைத் தீர்க்கவும்"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money you paid them or they paid you"
+msgstr "நீங்கள் அவர்களுக்கு அல்லது அவர்கள் உங்களுக்கு செலுத்திய பணம்"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1232,6 +1232,11 @@ msgstr "இந்த ஆண்டு எதுவும் இல்லை"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Card purchase"
+msgstr "அட்டை வாங்குதல்"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Set money aside"
 msgstr "பணத்தை ஒதுக்கி வை"
 
@@ -1316,6 +1321,16 @@ msgctxt "a credit card"
 msgid "Card"
 msgstr "அட்டை"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This is a card purchase: its reserve lines are added for you."
+msgstr "இது அட்டை கொள்முதல்: அதன் இருப்பு வரிகள் உங்களுக்காகச் சேர்க்கப்படும்."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch to Spent"
+msgstr "செலவுக்கு மாறவும்"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label what a shared cost was for"
@@ -1398,6 +1413,21 @@ msgstr "ஓர் ஒதுக்கீடு"
 msgctxt "money set aside"
 msgid "Reserve"
 msgstr "ஒதுக்கீடு"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Direction"
+msgstr "திசை"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "I paid them"
+msgstr "நான் அவர்களுக்குச் செலுத்தினேன்"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "They paid me"
+msgstr "அவர்கள் எனக்குச் செலுத்தினர்"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -2005,6 +2035,18 @@ msgstr "%1: %3 மூலம் %2 செலுத்தப்பட்டது;
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "You paid %2 %1 from %3."
+msgstr "நீங்கள் %3 இலிருந்து %2 க்கு %1 செலுத்தினீர்கள்."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "%2 paid you %1 into %3."
+msgstr "%2 உங்களுக்கு %3 இல் %1 செலுத்தினார்."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a payee"
 msgid "Edit %1 in place. History keeps the old version."
 msgstr "%1 ஐ இருந்த இடத்திலேயே திருத்து. பழைய பதிப்பை வரலாறு வைத்திருக்கும்."
@@ -2057,9 +2099,19 @@ msgstr "%1 க்கு ஒதுக்கீட்டுக் கணக்க�
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgid "A payment to you can't go onto a card"
+msgstr "உங்களுக்கான கட்டணத்தை அட்டையில் சேர்க்க முடியாது"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a transaction's payee"
 msgid "%1 isn't missing reserve lines"
 msgstr "%1 இல் ஒதுக்கீட்டு வரிகள் விடுபடவில்லை"
+
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settled up with %1"
+msgstr "%1 உடன் கணக்கு தீர்க்கப்பட்டது"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
@@ -2363,6 +2415,11 @@ msgstr "கணக்குகள்"
 #, kde-format
 msgid "Add — what happened?"
 msgstr "சேர் — என்ன நடந்தது?"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "ஒதுக்கீட்டு வரிகளை உங்களுக்காகச் சேர்க்கிறது"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

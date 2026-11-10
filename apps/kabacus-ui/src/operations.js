@@ -164,6 +164,21 @@ export function operation(kind, fields, data, tx) {
       },
     };
   }
+  if (kind === "settle") {
+    const person = fields.person.trim();
+    return {
+      ...base,
+      path: "/settlements",
+      body: {
+        date: fields.date,
+        description: t("Settled up with %1", person.charAt(0).toUpperCase() + person.slice(1)),
+        account: fields.account,
+        person,
+        amount: fields.amount,
+        direction: fields.direction,
+      },
+    };
+  }
   if (kind === "purchase")
     return {
       ...base,

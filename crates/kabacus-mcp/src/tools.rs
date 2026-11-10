@@ -96,6 +96,13 @@ pub struct SharedExpenseParams {
     pub body: kabacus_service::split::SplitBody,
 }
 
+#[derive(Debug, Deserialize, schemars::JsonSchema)]
+pub struct SettleUpParams {
+    pub head: String,
+    #[serde(flatten)]
+    pub body: kabacus_service::settle::SettleBody,
+}
+
 // --- shared params ---------------------------------------------------------
 
 pub use kabacus_service::commands::*;
@@ -734,6 +741,22 @@ impl KabacusMcp {
     ) -> Result<CallToolResult, McpError> {
         write_result(
             kabacus_service::split::record(&self.state, principal(&parts)?, p.body, &p.head)
+                .await
+                .map_err(to_mcp_error)?,
+        )
+    }
+
+    #[tool(
+        description = "Settle up with a person: you paid them or they paid you. A payment nets against what's already owed first (what you owe them when you pay, what they owe you when they pay), then builds the other side. Requires current head; dry_run previews without writing.",
+        annotations(read_only_hint = false, destructive_hint = false)
+    )]
+    async fn settle_up(
+        &self,
+        Extension(parts): Extension<Parts>,
+        Parameters(p): Parameters<SettleUpParams>,
+    ) -> Result<CallToolResult, McpError> {
+        write_result(
+            kabacus_service::settle::record(&self.state, principal(&parts)?, p.body, &p.head)
                 .await
                 .map_err(to_mcp_error)?,
         )

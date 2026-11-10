@@ -138,16 +138,6 @@ msgstr "دخل أو استرداد"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card purchase"
-msgstr "شراء بالبطاقة"
-
-#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "يضيف أسطر الاحتياطي نيابةً عنك"
-
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Transfer"
 msgstr "تحويل"
 
@@ -185,6 +175,16 @@ msgstr "قسّم مع شخص"
 #, kde-format
 msgid "They owe you, or you owe them"
 msgstr "هم مدينون لك، أو أنت مدين لهم"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settle up with someone"
+msgstr "سوِّ الحساب مع شخص"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money you paid them or they paid you"
+msgstr "مبلغ دفعته لهم أو دفعوه لك"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1236,6 +1236,11 @@ msgstr "لا شيء هذا العام"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Card purchase"
+msgstr "شراء بالبطاقة"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Set money aside"
 msgstr "ادّخر مالًا جانبًا"
 
@@ -1320,6 +1325,16 @@ msgctxt "a credit card"
 msgid "Card"
 msgstr "البطاقة"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This is a card purchase: its reserve lines are added for you."
+msgstr "هذه عملية شراء ببطاقة: تُضاف سطور احتياطيها تلقائيًا."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch to Spent"
+msgstr "التبديل إلى الإنفاق"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label what a shared cost was for"
@@ -1402,6 +1417,21 @@ msgstr "احتياطي"
 msgctxt "money set aside"
 msgid "Reserve"
 msgstr "الاحتياطي"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Direction"
+msgstr "الاتجاه"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "I paid them"
+msgstr "دفعتُ لهم"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "They paid me"
+msgstr "دفعوا لي"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -2029,6 +2059,18 @@ msgstr "%1: %2 دُفع بـ%3؛ %4 مدين بـ%5 منه."
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "You paid %2 %1 from %3."
+msgstr "دفعتَ %1 إلى %2 من %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "%2 paid you %1 into %3."
+msgstr "دفع %2 لك %1 إلى %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a payee"
 msgid "Edit %1 in place. History keeps the old version."
 msgstr "حرّر %1 في مكانه. يحتفظ السجل بالنسخة القديمة."
@@ -2085,9 +2127,19 @@ msgstr "ليس لـ%1 حساب احتياطي"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgid "A payment to you can't go onto a card"
+msgstr "لا يمكن إيداع دفعة لك في بطاقة"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a transaction's payee"
 msgid "%1 isn't missing reserve lines"
 msgstr "لا تنقص %1 أسطرُ احتياطي"
+
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settled up with %1"
+msgstr "تمت التسوية مع %1"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
@@ -2391,6 +2443,11 @@ msgstr "الحسابات"
 #, kde-format
 msgid "Add — what happened?"
 msgstr "أضف — ماذا حدث؟"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "يضيف أسطر الاحتياطي نيابةً عنك"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
