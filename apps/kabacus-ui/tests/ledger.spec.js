@@ -1092,6 +1092,18 @@ test.describe("phone layout", () => {
     await picker.getByRole("button", { name: "Back", exact: true }).tap();
     await expect(picker).toHaveCount(0);
   });
+  test("typing in a picker lists matches from every group with where each lives", async ({ page }) => {
+    await setup(page);
+    await page.getByRole("button", { name: "Add", exact: true }).tap();
+    await page.getByRole("button", { name: /^Spent/ }).tap();
+    await page.locator('.bookkeeping-dialog input[name="to"]').tap();
+    const picker = page.locator(".phone-picker");
+    await picker.getByRole("searchbox", { name: "Search" }).fill("groc");
+    await expect(picker.getByRole("button", { name: "Groceries", exact: true })).toContainText("Expenses");
+    await expect(picker.getByRole("button", { name: "Income ›" })).toHaveCount(0);
+    await picker.getByRole("button", { name: "Groceries", exact: true }).tap();
+    await expect(page.locator('.bookkeeping-dialog input[name="to"]')).toHaveValue("Groceries");
+  });
   test("Add sheet, Amount first, Review and Save above the tabs", async ({ page }) => {
     const writes = await setup(page);
     await page.getByRole("button", { name: "Add", exact: true }).click();
@@ -1211,6 +1223,7 @@ test.describe("mobile exploration regressions", () => {
     const picker = page.locator(".phone-picker");
     await expect(picker).toBeVisible();
     await expect(from).toHaveValue("");
+    for (const group of ["Assets ›", "Bank ›"]) await picker.getByRole("button", { name: group, exact: true }).tap();
     await picker.getByRole("button", { name: "Checking", exact: true }).tap();
     await expect(picker).toHaveCount(0);
     await expect(from).toHaveValue(accounts[0].account);
@@ -1531,4 +1544,24 @@ test("spendable changes retain negative and zero meanings", async ({ page }) => 
     await page.reload();
     await expect(page.locator(".cash-change")).toHaveText(`${expected} since 2026-09-25`);
   }
+});
+
+test("on desktop a click browses account groups and typing searches them all", async ({ page }) => {
+  await setup(page);
+  await page.getByRole("button", { name: "Add", exact: true }).click();
+  await page.getByRole("button", { name: /^Spent/ }).click();
+  const form = page.locator(".bookkeeping-dialog");
+  const picker = page.locator(".phone-picker");
+  await form.locator('select[name="from"]').click();
+  await expect(picker).toBeVisible();
+  await expect(picker.getByRole("button")).toContainText(["Back", "Search", "Assets ›", "Expenses ›", "Income ›"].slice(2));
+  await picker.getByRole("button", { name: "Assets ›", exact: true }).click();
+  await picker.getByRole("button", { name: "Bank ›", exact: true }).click();
+  await picker.getByRole("button", { name: "Checking", exact: true }).click();
+  await expect(picker).toHaveCount(0);
+  await expect(form.locator('select[name="from"]')).toHaveValue("assets:bank:checking");
+  await form.locator('input[name="to"]').click();
+  await page.keyboard.type("groc");
+  await picker.getByRole("button", { name: "Groceries", exact: true }).click();
+  await expect(form.locator('input[name="to"]')).toHaveValue("Groceries");
 });

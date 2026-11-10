@@ -1028,6 +1028,18 @@ async fn phone_navigation_sheets_and_register_back() {
 
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn phone_account_picker_browses_groups_then_searches() {
+    let server = books("phone-account-browse").await;
+    let _app = launch_sized(
+        &server.socket_path,
+        &config_dir("phone-account-browse"),
+        "390x844",
+    );
+    drive(&["phone-account-browse"]).await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
 async fn desktop_split_postings_can_be_edited() {
     let socket = socket_path("edit-split");
     let journal = format!("{BOOKS}\n2026-09-12 Harbor Cafe\n    expenses:dining  12.00 USD\n    expenses:dining  8.00 USD\n    assets:bank:checking  -20.00 USD\n");

@@ -1125,6 +1125,11 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
 .phone-picker .dialog-heading { padding:0 0 16px; gap:16px; justify-content:start; }
 .picker-options { display:grid; gap:8px; margin-top:16px; }
 .picker-options button { text-align:start; width:100%; border-bottom:1px solid var(--border); }
+.picker-options small { display:block; opacity:.7; }
+.picker-path { display:flex; flex-wrap:wrap; gap:4px; margin-top:12px; }
+@media (min-width:600px) {
+  .phone-picker[open] { inset:auto; top:12vh; left:50%; transform:translateX(-50%); width:min(480px,92vw); height:auto; max-height:76vh; overflow:auto; border:1px solid var(--border); border-radius:12px; }
+}
 
 .overview-warnings { grid-area:warnings; }
 .cash-breakdown { border-top:1px solid var(--border); }
