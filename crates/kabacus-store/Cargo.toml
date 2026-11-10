@@ -18,7 +18,6 @@ serde_json = { workspace = true }
 thiserror = { workspace = true }
 chrono = { workspace = true }
 num-bigint = { workspace = true }
-tracing = { workspace = true }
 # The local and self-hosted store, and the .kabacus file (bundled, so no
 # system SQLite is needed).
 rusqlite = { version = "0.40.1", features = ["backup", "serialize", "fallible_uint"] }
@@ -39,7 +38,6 @@ testing = []
 
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 kabacus-store = { path = ".", features = ["testing"] }
-proptest = { workspace = true }
 serde_json = { workspace = true }
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]

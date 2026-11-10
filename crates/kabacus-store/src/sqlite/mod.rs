@@ -8,9 +8,7 @@
 
 pub mod schema;
 
-use crate::rows::{
-    account_row, commodity_row, AccountRow, CommodityRow, PostingRow, Row, RowChange, TxRow,
-};
+use crate::rows::{AccountRow, CommodityRow, PostingRow, Row, RowChange, TxRow};
 use crate::{
     now, AuditPayload, AuditRow, BookStore, ChangeInfo, ChangeRecord, ChangeSet, LedgerDump,
     LedgerId, LedgerInfo, Loaded, Result, Revision, Role, StoreError, UserId, Who,
@@ -656,8 +654,13 @@ fn dump(conn: &mut Connection, ledger: LedgerId) -> Result<LedgerDump> {
     Ok(out)
 }
 
-fn restore(conn: &mut Connection, dump: &LedgerDump, owner: UserId) -> Result<LedgerId> {
-    let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
+/// The ledger of `dump` and everything in it, its audit rows pointing at
+/// `users` (the dump's user ids to this store's).
+fn insert_ledger(
+    tx: &SqlTx,
+    dump: &LedgerDump,
+    users: &BTreeMap<UserId, UserId>,
+) -> Result<LedgerId> {
     tx.execute(
         "INSERT INTO ledgers (name, revision, created_at, next_transaction_id)
          VALUES (?1, ?2, ?3, ?4)",
@@ -669,6 +672,33 @@ fn restore(conn: &mut Connection, dump: &LedgerDump, owner: UserId) -> Result<Le
         ],
     )?;
     let ledger = tx.last_insert_rowid();
+    for a in &dump.accounts {
+        insert_account(tx, ledger, a)?;
+    }
+    for c in &dump.commodities {
+        upsert_commodity(tx, ledger, c, true)?;
+    }
+    for (t, created, changed) in &dump.transactions {
+        insert_transaction(tx, ledger, t, *created, *changed)?;
+    }
+    for row in &dump.audit {
+        let user = *users
+            .get(&row.user)
+            .ok_or_else(|| StoreError::Invalid(format!("audit user {} is missing", row.user)))?;
+        insert_audit(
+            tx,
+            ledger,
+            &AuditRow {
+                user,
+                ..row.clone()
+            },
+        )?;
+    }
+    Ok(ledger)
+}
+
+fn restore(conn: &mut Connection, dump: &LedgerDump, owner: UserId) -> Result<LedgerId> {
+    let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
     let at = now();
     let mut users = BTreeMap::new();
     for (old, name) in &dump.users {
@@ -678,32 +708,11 @@ fn restore(conn: &mut Connection, dump: &LedgerDump, owner: UserId) -> Result<Le
         )?;
         users.insert(*old, tx.last_insert_rowid());
     }
+    let ledger = insert_ledger(&tx, dump, &users)?;
     tx.execute(
         "INSERT INTO memberships (ledger_id, user_id, role) VALUES (?1, ?2, 'rewrite')",
         params![ledger, owner],
     )?;
-    for a in &dump.accounts {
-        insert_account(&tx, ledger, a)?;
-    }
-    for c in &dump.commodities {
-        upsert_commodity(&tx, ledger, c, true)?;
-    }
-    for (t, created, changed) in &dump.transactions {
-        insert_transaction(&tx, ledger, t, *created, *changed)?;
-    }
-    for row in &dump.audit {
-        let user = *users
-            .get(&row.user)
-            .ok_or_else(|| StoreError::Invalid(format!("audit user {} is missing", row.user)))?;
-        insert_audit(
-            &tx,
-            ledger,
-            &AuditRow {
-                user,
-                ..row.clone()
-            },
-        )?;
-    }
     tx.commit()?;
     Ok(ledger)
 }
@@ -943,37 +952,7 @@ pub(crate) fn write_dump(conn: &mut Connection, dump: &LedgerDump) -> Result<Led
     // The users are the file's own; the ledger keeps their ids.
     let identity: BTreeMap<UserId, UserId> = dump.users.iter().map(|(id, _)| (*id, *id)).collect();
     let tx = conn.transaction()?;
-    tx.execute(
-        "INSERT INTO ledgers (name, revision, created_at, next_transaction_id)
-         VALUES (?1, ?2, ?3, ?4)",
-        params![
-            dump.name,
-            dump.revision,
-            dump.created_at,
-            dump.next_transaction_id as i64
-        ],
-    )?;
-    let ledger = tx.last_insert_rowid();
-    for a in &dump.accounts {
-        insert_account(&tx, ledger, a)?;
-    }
-    for c in &dump.commodities {
-        upsert_commodity(&tx, ledger, c, true)?;
-    }
-    for (t, created, changed) in &dump.transactions {
-        insert_transaction(&tx, ledger, t, *created, *changed)?;
-    }
-    for row in &dump.audit {
-        let user = identity[&row.user];
-        insert_audit(
-            &tx,
-            ledger,
-            &AuditRow {
-                user,
-                ..row.clone()
-            },
-        )?;
-    }
+    let ledger = insert_ledger(&tx, dump, &identity)?;
     tx.commit()?;
     Ok(ledger)
 }
@@ -989,13 +968,4 @@ pub(crate) fn read_dumps(conn: &mut Connection) -> Result<Vec<LedgerDump>> {
         ids
     };
     ids.into_iter().map(|id| dump(conn, id)).collect()
-}
-
-/// The rows a book would be stored as, for comparing a replay.
-pub fn rows_of(book: &Book) -> (Vec<AccountRow>, Vec<CommodityRow>, Vec<TxRow>) {
-    (
-        book.accounts.values().map(account_row).collect(),
-        book.commodities.values().map(commodity_row).collect(),
-        book.transactions.iter().map(crate::rows::tx_row).collect(),
-    )
 }

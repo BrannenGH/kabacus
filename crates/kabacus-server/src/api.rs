@@ -150,47 +150,16 @@ fn etag(head: &str) -> String {
 
 // --- errors ------------------------------------------------------------
 
+/// What a request can fail with: the sign-in and role checks only the
+/// server makes, or the shared operations' own error.
 #[derive(Debug)]
 pub enum ApiError {
     Auth(AuthError),
     MissingRole(Role),
-    NotFound(String),
-    Conflict {
-        expected: String,
-        current: String,
-    },
-    Invalid {
-        rule: String,
-        message: String,
-        /// The strict check's failures, when it refused.
-        failures: Vec<kabacus_ledger::CheckFailure>,
-    },
-    Internal(anyhow::Error),
-    /// The first rewrite gate: the server bans rewrites (`--no-rewrite`).
-    RewriteDisabled,
-    /// An amount that isn't a decimal string or an exact object.
-    AmountFormat {
-        path: String,
-        message: String,
-    },
-    /// The account is still referred to.
-    AccountInUse {
-        account: String,
-        counts: std::collections::BTreeMap<String, usize>,
-    },
-    /// Over the batch limits.
-    BatchTooLarge(String),
-    /// `assert` refused because the balances differ.
-    ReconcileMismatch(serde_json::Value),
-    /// A batch refused in atomic mode, naming the operation.
-    BatchFailed {
-        index: Option<usize>,
-        client_ref: Option<String>,
-        error: Box<ApiError>,
-    },
+    Service(Error),
 }
 
-pub use kabacus_service::error::ErrorBody;
+pub use kabacus_service::error::{failures_json, Error, ErrorBody};
 
 impl ApiError {
     /// The stable error code clients match on.
@@ -198,153 +167,43 @@ impl ApiError {
         match self {
             ApiError::Auth(_) => "unauthorized",
             ApiError::MissingRole(_) => "role_required",
-            ApiError::NotFound(_) => "not_found",
-            ApiError::Conflict { .. } => "head_conflict",
-            ApiError::Invalid { .. } => "validation_failed",
-            ApiError::Internal(_) => "internal",
-            ApiError::RewriteDisabled => "rewrite_disabled",
-            ApiError::AmountFormat { .. } => "amount_format",
-            ApiError::AccountInUse { .. } => "account_in_use",
-            ApiError::BatchTooLarge(_) => "batch_too_large",
-            ApiError::ReconcileMismatch(_) => "reconcile_mismatch",
-            ApiError::BatchFailed { error, .. } => error.code(),
+            ApiError::Service(e) => e.code(),
         }
     }
 
     pub fn body(&self) -> ErrorBody {
-        let (message, path, details) = match self {
-            ApiError::Auth(e) => (e.to_string(), None, None),
+        let (message, details) = match self {
+            ApiError::Auth(e) => (e.to_string(), None),
             ApiError::MissingRole(role) => (
                 format!("your sign-in doesn't have the {} role", role.name()),
-                None,
                 Some(serde_json::json!({ "role": role.name() })),
             ),
-            ApiError::NotFound(id) => (
-                format!("{id} was not found"),
-                None,
-                Some(serde_json::json!({ "id": id })),
-            ),
-            ApiError::Conflict { expected, current } => (
-                format!("the books changed since head {expected} (now {current}); re-read and retry with the new head"),
-                None,
-                Some(serde_json::json!({ "expected": expected, "current_head": current })),
-            ),
-            ApiError::Invalid { rule, message, failures } => {
-                let mut details = serde_json::json!({ "rule": rule });
-                if !failures.is_empty() {
-                    details["failures"] = failures_json(failures);
-                }
-                if let Some(a) = failures
-                    .iter()
-                    .find(|f| f.kind == kabacus_ledger::FailureKind::Assertion)
-                {
-                    if let kabacus_ledger::Position::Transaction { id, posting } = &a.position {
-                        details["transaction"] = serde_json::json!(id);
-                        details["posting"] = serde_json::json!(posting);
-                    }
-                    details["fix_tool"] = serde_json::json!("set_balance_assertion");
-                }
-                (format!("{message} (rule: {rule})"), None, Some(details))
-            }
-            ApiError::Internal(e) => (e.to_string(), None, None),
-            ApiError::RewriteDisabled => (
-                "rewrites are disabled: the server was started with --no-rewrite or allow_rewrite = false".to_string(),
-                None,
-                None,
-            ),
-            ApiError::AmountFormat { path, message } => (message.clone(), Some(path.clone()), None),
-            ApiError::AccountInUse { account, counts } => (
-                format!(
-                    "{account} is still in use ({}); move or remove those first",
-                    counts
-                        .iter()
-                        .filter(|(_, n)| **n > 0)
-                        .map(|(k, n)| format!("{n} {k}"))
-                        .collect::<Vec<_>>()
-                        .join(", ")
-                ),
-                None,
-                Some(serde_json::json!({ "account": account, "counts": counts })),
-            ),
-            ApiError::BatchTooLarge(message) => (message.clone(), None, None),
-            ApiError::ReconcileMismatch(result) => (
-                "the ledger balance doesn't match the statement; nothing was written".to_string(),
-                None,
-                Some(result.clone()),
-            ),
-            ApiError::BatchFailed { index, client_ref, error } => {
-                let inner = error.body();
-                let mut details = inner.details.unwrap_or_else(|| serde_json::json!({}));
-                details["index"] = serde_json::json!(index);
-                details["client_ref"] = serde_json::json!(client_ref);
-                let at = match (index, client_ref) {
-                    (Some(i), Some(r)) => format!("operation {i} ({r}): "),
-                    (Some(i), None) => format!("operation {i}: "),
-                    _ => String::new(),
-                };
-                (
-                    format!("{at}{}; nothing was written", inner.message),
-                    Some(match (index, inner.path) {
-                        (Some(i), Some(p)) => format!("ops[{i}].args.{p}"),
-                        (Some(i), None) => format!("ops[{i}]"),
-                        (None, p) => p.unwrap_or_default(),
-                    }),
-                    Some(details),
-                )
-            }
+            ApiError::Service(e) => return e.body(),
         };
         ErrorBody {
             code: self.code().to_string(),
             message,
-            path,
+            path: None,
             details,
         }
     }
 }
 
-pub use kabacus_service::error::failures_json;
-
 impl From<OpError> for ApiError {
     fn from(error: OpError) -> Self {
-        kabacus_service::error::Error::from(error).into()
+        Error::from(error).into()
     }
 }
 
-impl From<kabacus_service::error::Error> for ApiError {
-    fn from(error: kabacus_service::error::Error) -> Self {
-        use kabacus_service::error::Error;
+impl From<Error> for ApiError {
+    fn from(error: Error) -> Self {
         match error {
             Error::Denied { permission, .. } => ApiError::MissingRole(match permission {
                 kabacus_service::caller::Permission::Read => Role::Read,
                 kabacus_service::caller::Permission::Write => Role::Write,
                 kabacus_service::caller::Permission::Rewrite => Role::Rewrite,
             }),
-            Error::NotFound(v) => ApiError::NotFound(v),
-            Error::Conflict { expected, current } => ApiError::Conflict { expected, current },
-            Error::Invalid {
-                rule,
-                message,
-                failures,
-            } => ApiError::Invalid {
-                rule,
-                message,
-                failures,
-            },
-            Error::Internal(v) => ApiError::Internal(v),
-            Error::RewriteDisabled => ApiError::RewriteDisabled,
-            Error::AmountFormat { path, message } => ApiError::AmountFormat { path, message },
-            Error::AccountInUse { account, counts } => ApiError::AccountInUse { account, counts },
-            Error::BatchTooLarge(v) => ApiError::BatchTooLarge(v),
-            Error::ReconcileMismatch(v) => ApiError::ReconcileMismatch(v),
-            Error::BatchFailed {
-                index,
-                client_ref,
-                error,
-            } => ApiError::BatchFailed {
-                index,
-                client_ref,
-                error: Box::new((*error).into()),
-            },
+            other => ApiError::Service(other),
         }
     }
 }
@@ -369,18 +228,20 @@ impl IntoResponse for ApiError {
             ApiError::MissingRole(role) => {
                 serde_json::json!({"error": "missing role", "role": role.name()})
             }
-            ApiError::NotFound(id) => serde_json::json!({"error": "not found", "id": id}),
-            ApiError::Conflict { expected, current } => {
+            ApiError::Service(Error::NotFound(id)) => {
+                serde_json::json!({"error": "not found", "id": id})
+            }
+            ApiError::Service(Error::Conflict { expected, current }) => {
                 serde_json::json!({"error": "conflict", "expected": expected, "current": current})
             }
-            ApiError::Invalid {
+            ApiError::Service(Error::Invalid {
                 rule,
                 message,
                 failures,
-            } => {
+            }) => {
                 serde_json::json!({"rule": rule, "message": message, "failures": failures_json(failures)})
             }
-            ApiError::Internal(e) => serde_json::json!({"error": e.to_string()}),
+            ApiError::Service(Error::Internal(e)) => serde_json::json!({"error": e.to_string()}),
             _ => {
                 let mut json = serde_json::to_value(&body).unwrap_or_default();
                 json["error"] = serde_json::json!(body.message);
@@ -396,18 +257,23 @@ impl IntoResponse for ApiError {
         }
         let status = match &self {
             ApiError::Auth(_) => StatusCode::UNAUTHORIZED,
-            ApiError::MissingRole(_) | ApiError::RewriteDisabled => StatusCode::FORBIDDEN,
-            ApiError::NotFound(_) => StatusCode::NOT_FOUND,
-            ApiError::Conflict { .. } => StatusCode::CONFLICT,
-            ApiError::Internal(_) => StatusCode::INTERNAL_SERVER_ERROR,
-            ApiError::BatchTooLarge(_) => StatusCode::PAYLOAD_TOO_LARGE,
-            ApiError::AccountInUse { .. } | ApiError::ReconcileMismatch(_) => StatusCode::CONFLICT,
-            ApiError::BatchFailed { error, .. } => match error.code() {
-                "head_conflict" => StatusCode::CONFLICT,
-                "not_found" => StatusCode::NOT_FOUND,
-                _ => StatusCode::UNPROCESSABLE_ENTITY,
+            ApiError::MissingRole(_) => StatusCode::FORBIDDEN,
+            ApiError::Service(e) => match e {
+                Error::Denied { .. } | Error::RewriteDisabled => StatusCode::FORBIDDEN,
+                Error::NotFound(_) => StatusCode::NOT_FOUND,
+                Error::Conflict { .. } => StatusCode::CONFLICT,
+                Error::Internal(_) => StatusCode::INTERNAL_SERVER_ERROR,
+                Error::BatchTooLarge(_) => StatusCode::PAYLOAD_TOO_LARGE,
+                Error::AccountInUse { .. } | Error::ReconcileMismatch(_) => StatusCode::CONFLICT,
+                Error::BatchFailed { error, .. } => match error.code() {
+                    "head_conflict" => StatusCode::CONFLICT,
+                    "not_found" => StatusCode::NOT_FOUND,
+                    _ => StatusCode::UNPROCESSABLE_ENTITY,
+                },
+                Error::Invalid { .. } | Error::AmountFormat { .. } => {
+                    StatusCode::UNPROCESSABLE_ENTITY
+                }
             },
-            _ => StatusCode::UNPROCESSABLE_ENTITY,
         };
         (status, Json(json)).into_response()
     }

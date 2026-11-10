@@ -1450,19 +1450,15 @@ dependencies = [
 name = "kabacus-client"
 version = "0.2.0"
 dependencies = [
- "axum",
  "base64 0.22.1",
  "chrono",
  "kabacus-core",
- "kabacus-ledger",
  "kabacus-mcp",
- "kabacus-server",
  "kabacus-service",
  "kabacus-store",
  "kabacus-testkit",
  "log",
  "num-bigint",
- "num-traits",
  "reqwest",
  "ring",
  "rmcp",
@@ -1471,7 +1467,6 @@ dependencies = [
  "tempfile",
  "thiserror 1.0.69",
  "tokio",
- "uuid",
 ]
 
 [[package]]
@@ -1485,7 +1480,6 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror 1.0.69",
- "uuid",
 ]
 
 [[package]]
@@ -1524,8 +1518,6 @@ dependencies = [
  "num-bigint",
  "num-traits",
  "proptest",
- "serde_json",
- "tempfile",
  "thiserror 1.0.69",
 ]
 
@@ -1550,7 +1542,6 @@ version = "0.2.0"
 dependencies = [
  "anyhow",
  "axum",
- "base64 0.22.1",
  "bytes",
  "chrono",
  "clap",
@@ -1593,8 +1584,6 @@ dependencies = [
  "kabacus-core",
  "kabacus-ledger",
  "kabacus-store",
- "num-bigint",
- "num-traits",
  "percent-encoding",
  "regex",
  "schemars",
@@ -1615,7 +1604,6 @@ dependencies = [
  "kabacus-ledger",
  "kabacus-store",
  "num-bigint",
- "proptest",
  "rusqlite",
  "serde",
  "serde_json",
@@ -1623,7 +1611,6 @@ dependencies = [
  "thiserror 1.0.69",
  "tokio",
  "tokio-postgres",
- "tracing",
  "wasm-bindgen-test",
 ]
 
@@ -1651,7 +1638,6 @@ name = "kabacus-wasm"
 version = "0.2.0"
 dependencies = [
  "kabacus-core",
- "kabacus-ledger",
  "kabacus-service",
  "kabacus-store",
  "serde_json",

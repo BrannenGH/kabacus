@@ -5,6 +5,10 @@ import { phoneQuery, useMedia } from "./form-factor";
 import { t } from "./i18n";
 const dialogs = [];
 
+// An edited form is open and the person chose to keep it.
+export const keepsUnsavedChange = () =>
+  !!document.querySelector('.bookkeeping-dialog form[data-dirty="true"]') && !window.confirm(t("Discard this change?"));
+
 export function useDialogHistory({ active = true, onClose, preview, setPreview, dirty, busy }) {
   const phone = useMedia(phoneQuery);
   const id = useRef(crypto.randomUUID());
@@ -45,4 +49,13 @@ export function useDialogHistory({ active = true, onClose, preview, setPreview, 
     if (preview && !history.state.review) history.pushState({ ...history.state, review: true }, "");
     else if (!preview && history.state.review) history.back();
   }, [phone, active, !!preview]);
+  useEffect(() => {
+    if (!dirty) return;
+    const leave = (event) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", leave);
+    return () => window.removeEventListener("beforeunload", leave);
+  }, [dirty]);
 }

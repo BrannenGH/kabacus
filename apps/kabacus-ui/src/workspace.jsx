@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import React,{useEffect,useRef,useState} from "react";
 import { t } from "./i18n";
-import { useDialogHistory } from "./phone-history";
+import { useDialogHistory, keepsUnsavedChange } from "./phone-history";
 import { Api } from "./api";
 import { BrowserApi, NativeApi, importFile, stored } from "./local-books";
 import icon from "./icon.svg";
@@ -78,19 +78,18 @@ export function Workspace({Application,hosted}){
    if(!native()&&target){sessionStorage.removeItem("kabacus.return");location.assign(target);return;}
    setBook(null);sessionStorage.removeItem("kabacus.connect");return;
   }
-  if(["new","open","recent","connect","close"].includes(id)&&document.querySelector('.bookkeeping-dialog form[data-dirty="true"]')&&!window.confirm(t("Discard this change?")))return;
+  if(["new","open","recent","connect","close"].includes(id)&&keepsUnsavedChange())return;
   if(id==="new-window"){if(native())await invoke("new_window");else window.open(location.pathname,"_blank");}
   else if(id==="new")await chooseFile(true);
   else if(id==="open")await chooseFile();
   else if(id==="recent"||id==="connect")setDialog({kind:id});
   else if(id==="save-copy"){if(native())await invoke("save_copy");else await book.api.saveCopy();}
-  else if(id==="close"){if(native())await invoke("close_window");else{const state=await stored("state","get","workspace")||{reopen:true,windows:[]};state.windows=(state.windows||[]).filter(w=>w.id!==windowId.current);await stored("state","put","workspace",state);setBook(null);document.title="Kabacus";if(window.opener)window.close();}}
-  else if(id==="quit"){if(native())await invoke("quit");else{const state=await stored("state","get","workspace")||{reopen:true,windows:[]};state.windows=(state.windows||[]).filter(w=>w.id!==windowId.current);await stored("state","put","workspace",state);setBook(null);document.title="Kabacus";if(window.opener)window.close();}}
+  else if(id==="close"||id==="quit"){if(native())await invoke(id==="close"?"close_window":"quit");else{const state=await stored("state","get","workspace")||{reopen:true,windows:[]};state.windows=(state.windows||[]).filter(w=>w.id!==windowId.current);await stored("state","put","workspace",state);setBook(null);document.title="Kabacus";if(window.opener)window.close();}}
  }
  useEffect(()=>{
    if(!native())return;
    invoke("configure_menu",{labels:Object.fromEntries([["file","File"],["new-window","New Window"],["new","New Books…"],["open","Open Books…"],["recent","Open Recent"],["save-copy","Save a Copy As…"],["close","Close Window"],["connect","Connect to a Server…"],["quit","Quit"]].map(([id,label])=>[id,t(label)]))}).catch(()=>{});
-   const action=e=>fileAction(e.detail).catch(e=>setError(String(e.message||e)));const quit=()=>{const dirty=document.querySelector('.bookkeeping-dialog form[data-dirty="true"]');invoke("approve_quit",{approved:!dirty||window.confirm(t("Discard this change?"))}).catch(e=>setError(String(e.message||e)));};window.addEventListener("kabacus-file-action",action);window.addEventListener("kabacus-quit-check",quit);return()=>{window.removeEventListener("kabacus-file-action",action);window.removeEventListener("kabacus-quit-check",quit);};
+   const action=e=>fileAction(e.detail).catch(e=>setError(String(e.message||e)));const quit=()=>{invoke("approve_quit",{approved:!keepsUnsavedChange()}).catch(e=>setError(String(e.message||e)));};window.addEventListener("kabacus-file-action",action);window.addEventListener("kabacus-quit-check",quit);return()=>{window.removeEventListener("kabacus-file-action",action);window.removeEventListener("kabacus-quit-check",quit);};
  },[book]);
  useEffect(()=>{const keyboard=e=>{if(!(e.ctrlKey||e.metaKey))return;const key=e.key.toLowerCase();let action;if(key==="o")action="open";if(e.shiftKey&&key==="n")action="new-window";if(e.shiftKey&&key==="s")action="save-copy";if(e.shiftKey&&key==="w")action="close";if(key==="q")action="quit";if(action){e.preventDefault();fileAction(action).catch(e=>setError(String(e.message||e)));}};window.addEventListener("keydown",keyboard);return()=>window.removeEventListener("keydown",keyboard);},[book]);
  async function setup(event){event.preventDefault();const form=Object.fromEntries(new FormData(event.currentTarget));setBusy(true);setError("");try{

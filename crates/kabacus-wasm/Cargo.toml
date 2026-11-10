@@ -14,7 +14,6 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 kabacus-core = { path = "../kabacus-core" }
-kabacus-ledger = { path = "../kabacus-ledger" }
 kabacus-store = { path = "../kabacus-store" }
 kabacus-service = { path = "../kabacus-service" }
 serde_json.workspace = true
