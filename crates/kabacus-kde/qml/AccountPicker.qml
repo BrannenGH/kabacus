@@ -192,6 +192,7 @@ ColumnLayout {
                 spacing: 8
                 model: picker.sheetRows(accountSearch.text, picker.sheetPath)
                 delegate: Controls.ItemDelegate {
+                    id: row
                     required property var modelData
                     width: ListView.view.width
                     implicitHeight: modelData.sub !== "" ? 64 : 48
@@ -199,8 +200,8 @@ ColumnLayout {
                     Accessible.name: modelData.name
                     contentItem: ColumnLayout {
                         spacing: 0
-                        Controls.Label { text: modelData.name; elide: Text.ElideRight; Layout.fillWidth: true }
-                        Controls.Label { visible: modelData.sub !== ""; text: modelData.sub; opacity: 0.7; font: Kirigami.Theme.smallFont; elide: Text.ElideRight; Layout.fillWidth: true }
+                        Controls.Label { text: row.modelData.name; elide: Text.ElideRight; Layout.fillWidth: true }
+                        Controls.Label { visible: row.modelData.sub !== ""; text: row.modelData.sub; opacity: 0.7; font: Kirigami.Theme.smallFont; elide: Text.ElideRight; Layout.fillWidth: true }
                     }
                     onClicked: {
                         if (modelData.group.length > 0) { picker.sheetPath = modelData.group; return }
