@@ -35,6 +35,36 @@ ColumnLayout {
     // its error and suggestion under it.
     Kirigami.FormData.buddyFor: combo
 
+    // The group the full-screen picker is browsing, as path segments.
+    property var sheetPath: []
+
+    function words(segment) {
+        const w = segment.replace(/-/g, " ")
+        return w.charAt(0).toUpperCase() + w.slice(1)
+    }
+
+    // Browsing: the accounts in a group and the groups below it. Typing:
+    // matches from every group, each with the group it lives in.
+    function sheetRows(query, path) {
+        const q = query.trim().toLowerCase()
+        if (q !== "")
+            return accounts.filter(a => (a.name + " " + a.account).toLowerCase().includes(q))
+                .map(a => ({ account: a.account, name: a.name, sub: a.account.split(":").slice(0, -1).map(words).join(" › "), group: [] }))
+        const rows = []
+        const seen = {}
+        for (const a of accounts) {
+            const p = a.account.split(":")
+            if (p.length <= path.length || path.some((s, i) => p[i] !== s)) continue
+            const next = p[path.length]
+            if (p.length === path.length + 1) rows.push({ account: a.account, name: a.name, sub: "", group: [] })
+            else if (!seen[next]) {
+                seen[next] = true
+                rows.push({ account: "", name: words(next) + " ›", sub: "", group: path.concat([next]) })
+            }
+        }
+        return rows
+    }
+
     function nameOf(account) {
         const a = accounts.find(x => x.account === account)
         return a ? a.name : account
@@ -114,7 +144,11 @@ ColumnLayout {
         width: parent ? parent.width : 0
         height: parent ? parent.height : 0
         padding: 16
-        onOpened: accountSearch.text = ""
+        onOpened: {
+            accountSearch.text = ""
+            picker.sheetPath = picker.accounts.some(a => a.account === picker.value)
+                ? picker.value.split(":").slice(0, -1) : []
+        }
         header: Controls.ToolBar {
             RowLayout {
                 anchors.fill: parent
@@ -133,18 +167,45 @@ ColumnLayout {
                 Layout.minimumHeight: 48
                 font.pixelSize: 16
             }
+            Flow {
+                Layout.fillWidth: true
+                spacing: 4
+                visible: accountSearch.text.trim() === "" && picker.accounts.some(a => a.account.includes(":"))
+                Repeater {
+                    model: [picker.label].concat(picker.sheetPath.map(s => picker.words(s)))
+                    delegate: Controls.Button {
+                        required property string modelData
+                        required property int index
+                        flat: true
+                        text: modelData
+                        implicitHeight: 48
+                        enabled: index < picker.sheetPath.length
+                        Accessible.name: modelData
+                        onClicked: picker.sheetPath = picker.sheetPath.slice(0, index)
+                    }
+                }
+            }
             ListView {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 clip: true
                 spacing: 8
-                model: picker.accounts.filter(a => (a.name + " " + a.account).toLowerCase().includes(accountSearch.text.toLowerCase()))
+                model: picker.sheetRows(accountSearch.text, picker.sheetPath)
                 delegate: Controls.ItemDelegate {
                     required property var modelData
                     width: ListView.view.width
-                    implicitHeight: 48
+                    implicitHeight: modelData.sub !== "" ? 64 : 48
                     text: modelData.name
-                    onClicked: { picker.set(modelData.account); picker.edited(); accountSheet.close() }
+                    Accessible.name: modelData.name
+                    contentItem: ColumnLayout {
+                        spacing: 0
+                        Controls.Label { text: modelData.name; elide: Text.ElideRight; Layout.fillWidth: true }
+                        Controls.Label { visible: modelData.sub !== ""; text: modelData.sub; opacity: 0.7; font: Kirigami.Theme.smallFont; elide: Text.ElideRight; Layout.fillWidth: true }
+                    }
+                    onClicked: {
+                        if (modelData.group.length > 0) { picker.sheetPath = modelData.group; return }
+                        picker.set(modelData.account); picker.edited(); accountSheet.close()
+                    }
                 }
             }
             Controls.Button {

@@ -330,6 +330,20 @@ def main():
         wait_for("accounts after Back", lambda: find(app(), "Everyday Checking", pyatspi.ROLE_LIST_ITEM))
         print("ok")
         return
+    if command == "phone-account-browse":
+        # The picker browses groups, then lists matches from every group.
+        open_add("Spent")
+        click(wait_for("the Category field", lambda: find(app(), "Category", pyatspi.ROLE_COMBO_BOX)))
+        wait_for("the full-screen account picker", lambda: find(app(), "Search", pyatspi.ROLE_TEXT))
+        click(wait_for("the Expenses group", lambda: find(app(), "Expenses ›", pyatspi.ROLE_LIST_ITEM)))
+        click(wait_for("the Dining choice", lambda: find(app(), "Dining", pyatspi.ROLE_LIST_ITEM)))
+        wait_for("the picker to close", lambda: not find(app(), "Search", pyatspi.ROLE_TEXT))
+        wait_for("Dining chosen", lambda: find(app(), "Category", pyatspi.ROLE_COMBO_BOX).description == "Dining")
+        click(find(app(), "Category", pyatspi.ROLE_COMBO_BOX))
+        set_text(wait_for("Search", lambda: find(app(), "Search", pyatspi.ROLE_TEXT)), "visa")
+        wait_for("Visa among the matches", lambda: find(app(), "Visa", pyatspi.ROLE_LIST_ITEM))
+        print("ok")
+        return
     if command == "about":
         version, source_url = args
         books_loaded()
