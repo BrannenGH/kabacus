@@ -54,7 +54,8 @@ export function OperationDialog({
   const [checked, setChecked] = useState(null);
   const presetCard = card || data.cash.cards.find(c => c.card === account)?.card || "";
   const [repairCard, setRepairCard] = useState(presetCard);
-  const postingEdit = kind === "edit" && (tx.postings.length !== 2 ||
+  const [raw, setRaw] = useState(false);
+  const postingEdit = kind === "edit" && (raw || tx.postings.length !== 2 ||
     tx.postings.some(p => p.cost || p.amount.commodity !== data.commodity.symbol));
   const [rows, setRows] = useState(postingEdit ? tx.postings.map((_, i) => i) : [0, 1]);
   const [priceKinds, setPriceKinds] = useState(Object.fromEntries((tx?.postings || []).map((p, i) => [i, p.cost?.kind || ""])));
@@ -79,6 +80,15 @@ export function OperationDialog({
       }
     }
   }, [preview, phone]);
+  function viewRaw() {
+    if (dirty && !window.confirm(t("Discard this change?"))) return;
+    draft.current = {};
+    setDirty(false);
+    setPreview(null);
+    setRows(tx.postings.map((_, i) => i));
+    nextRow.current = tx.postings.length;
+    setRaw(true);
+  }
   const close = () => {
     if (!busy && (!dirty || window.confirm(t("Discard this change?"))))
       onClose();
@@ -200,7 +210,8 @@ export function OperationDialog({
       <form ref={formRef} onSubmit={submit} onChange={changed}>
         <div className="dialog-heading">
           <h2 id="operation-title">{phone && preview ? t("Review") : t(titles[kind])}</h2>
-          {phone && kind === "edit" && <details className="operation-overflow"><summary aria-label={t("More")}>⋮</summary><button type="button" className="quiet" onClick={() => {setKind("void"); setPreview(null); setDirty(true);}}>{t("Void")}</button></details>}
+          {phone && kind === "edit" && <details className="operation-overflow"><summary aria-label={t("More")}>⋮</summary><div>{!postingEdit && <button type="button" className="quiet" onClick={viewRaw}>{t("View as raw postings")}</button>}<button type="button" className="quiet" onClick={() => {setKind("void"); setPreview(null); setDirty(true);}}>{t("Void")}</button></div></details>}
+          {!phone && kind === "edit" && !postingEdit && <button type="button" className="quiet" onClick={viewRaw} disabled={busy}>{t("View as raw postings")}</button>}
           <button
             type="button"
             className="quiet"

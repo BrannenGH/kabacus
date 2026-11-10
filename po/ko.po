@@ -1250,6 +1250,11 @@ msgctxt "the payee a transfer is given"
 msgid "Transfer"
 msgstr "이체"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "View as raw postings"
+msgstr "원시 분개로 보기"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@option cancel a transaction with a reversal"
