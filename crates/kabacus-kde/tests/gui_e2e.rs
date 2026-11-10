@@ -527,7 +527,7 @@ async fn add_from_a_register_presets_its_account() {
             &config_dir(&format!("regadd{i}")),
             size,
         );
-        drive(&["register-add", "Visa", "Spent", "From", "Visa"]).await;
+        drive(&["register-add", "Visa", "Spent", "Card", "Visa"]).await;
     }
 }
 
