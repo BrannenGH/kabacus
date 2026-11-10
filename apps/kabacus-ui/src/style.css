@@ -1154,7 +1154,8 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
 
 .operation-overflow { position:relative; }
 .operation-overflow summary { list-style:none; font-size:24px; text-align:center; }
-.operation-overflow button { position:absolute; inset-inline-end:0; top:100%; z-index:5; min-width:100px; background:var(--surface); border:1px solid var(--border); }
+.operation-overflow div { position:absolute; inset-inline-end:0; top:100%; z-index:5; display:grid; min-width:100px; background:var(--surface); border:1px solid var(--border); }
+.operation-overflow button { text-align:start; white-space:nowrap; }
 
 .amount-entry { display:flex; align-items:stretch; width:100%; min-width:0; }
 .amount-entry > input { flex:1; width:0; min-width:0; border-start-end-radius:0; border-end-end-radius:0; }

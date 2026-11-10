@@ -757,6 +757,14 @@ async fn an_unchanged_edit_has_nothing_to_save() {
     }
 }
 
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn an_edit_can_be_viewed_as_raw_postings() {
+    let server = books("edit-raw").await;
+    let _app = launch(&server.socket_path, &config_dir("edit-raw"));
+    drive(&["edit-raw", "Visa", "Coffee Roasters", "2026-09-10"]).await;
+}
+
 // A recorded transaction is edited in place or
 // voided, and an edit keeps its Date editable.
 #[tokio::test(flavor = "multi_thread")]

@@ -612,33 +612,36 @@ impl qobject::Ledger {
     }
 
     fn edit_draft(&self, id: &QString) -> QString {
-        if let Ok(tx) = runtime().block_on(model::find_transaction(
-            &self.rust().client,
-            &id.to_string(),
-        )) {
+        let found = runtime()
+            .block_on(model::find_transaction(
+                &self.rust().client,
+                &id.to_string(),
+            ))
+            .ok();
+        let postings: Vec<_> = found
+            .iter()
+            .flat_map(|tx| tx.postings.iter().enumerate())
+            .map(|(i, p)| {
+                serde_json::json!({ "account": p.account, "amount": p.amount.exact,
+                "commodity": p.amount.commodity, "original": i })
+            })
+            .collect();
+        if let Some(tx) = &found {
             if tx.postings.len() != 2
                 || tx
                     .postings
                     .windows(2)
                     .any(|p| p[0].amount.commodity != p[1].amount.commodity)
             {
-                let postings: Vec<_> = tx
-                    .postings
-                    .iter()
-                    .enumerate()
-                    .map(|(i, p)| {
-                        serde_json::json!({ "account": p.account, "amount": p.amount.exact,
-                        "commodity": p.amount.commodity, "original": i })
-                    })
-                    .collect();
                 return json(&serde_json::json!({ "date": tx.date, "payee": tx.payee,
-                    "memo": tx.memo, "postings": postings }));
+                    "memo": tx.memo, "postings": postings, "complex": true }));
             }
         }
         match runtime().block_on(model::edit_draft(&self.rust().client, &id.to_string())) {
             Ok(d) => json(&serde_json::json!({
                 "date": d.date, "payee": d.payee, "memo": d.memo,
                 "from": d.from_account, "to": d.to_account, "amount": d.amount,
+                "postings": postings,
             })),
             Err(e) => json(&serde_json::json!({ "error": e.user_message(&self.rust().server()) })),
         }

@@ -632,6 +632,19 @@ test("returning from preview keeps a changed transaction draft", async ({
   );
 });
 
+test("an edit can be viewed as raw postings", async ({ page }) => {
+  await setup(page);
+  await page.getByRole("navigation").getByRole("button", { name: "Transactions", exact: true }).click();
+  await page.getByRole("button", { name: "Edit", exact: true }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByRole("button", { name: "View as raw postings", exact: true }).click();
+  const amounts = dialog.getByLabel("Amount", { exact: true });
+  await expect(amounts).toHaveCount(2);
+  await expect(amounts.nth(0)).toHaveValue("84.25");
+  await expect(amounts.nth(1)).toHaveValue("-84.25");
+  await expect(dialog.getByRole("button", { name: "View as raw postings" })).toHaveCount(0);
+});
+
 test("known payees recall account choices, exact amount, and memo", async ({
   page,
 }) => {
@@ -1103,6 +1116,16 @@ test.describe("phone layout", () => {
     await expect(picker.getByRole("button", { name: "Income ›" })).toHaveCount(0);
     await picker.getByRole("button", { name: "Groceries", exact: true }).tap();
     await expect(page.locator('.bookkeeping-dialog input[name="to"]')).toHaveValue("Groceries");
+  });
+  test("the overflow menu views an edit as raw postings", async ({ page }) => {
+    await setup(page);
+    await page.getByRole("navigation", { name: "Go" }).getByRole("button", { name: "Transactions", exact: true }).tap();
+    await page.getByRole("button", { name: "All transactions", exact: true }).tap();
+    await page.locator(".register-row").filter({ hasText: "Maple Market" }).tap();
+    const dialog = page.getByRole("dialog");
+    await dialog.getByLabel("More", { exact: true }).tap();
+    await dialog.getByRole("button", { name: "View as raw postings", exact: true }).tap();
+    await expect(dialog.getByLabel("Amount", { exact: true })).toHaveCount(2);
   });
   test("Add sheet, Amount first, Review and Save above the tabs", async ({ page }) => {
     const writes = await setup(page);

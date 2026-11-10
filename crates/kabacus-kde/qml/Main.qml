@@ -248,14 +248,15 @@ Kirigami.ApplicationWindow {
 
     // Clicking a transaction edits it in place; the form offers
     // void too.
-    function openEdit(id, mode) {
+    function openEdit(id, mode, raw) {
         const d = JSON.parse(ledger.editDraft(id))
         if (d.error) {
             showPassiveNotification(d.error)
             return
         }
         openForm("edit", { id: id, mode: mode || "edit", date: d.date, payee: d.payee,
-            memo: d.memo, from: d.from, to: d.to, amount: d.amount, postings: d.postings })
+            memo: d.memo, from: d.from, to: d.to, amount: d.amount, postings: d.postings,
+            raw: raw === true || d.complex === true })
     }
 
     // The preview's Save: commit against the preview's head, off the GUI
