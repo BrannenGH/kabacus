@@ -47,7 +47,6 @@ jsonwebtoken = "9"
 toml = "0.8"
 clap = { version = "4", features = ["derive"] }
 tempfile = "3"
-base64 = "0.22"
 # The MCP endpoint at /mcp (streamable HTTP).
 rmcp = { version = "3", default-features = false, features = ["server", "macros", "transport-streamable-http-server"] }
 

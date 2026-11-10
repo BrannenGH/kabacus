@@ -79,15 +79,6 @@ export function OperationDialog({
       }
     }
   }, [preview, phone]);
-  useEffect(() => {
-    if (!dirty) return;
-    const leave = (e) => {
-      e.preventDefault();
-      e.returnValue = "";
-    };
-    window.addEventListener("beforeunload", leave);
-    return () => window.removeEventListener("beforeunload", leave);
-  }, [dirty]);
   const close = () => {
     if (!busy && (!dirty || window.confirm(t("Discard this change?"))))
       onClose();

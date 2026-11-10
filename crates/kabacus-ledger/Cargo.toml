@@ -19,7 +19,4 @@ thiserror = { workspace = true }
 glob = "0.3"
 
 [dev-dependencies]
-num-bigint = { workspace = true }
 proptest = { workspace = true }
-tempfile = "3"
-serde_json = { workspace = true }

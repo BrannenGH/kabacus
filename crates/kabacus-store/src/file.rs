@@ -29,31 +29,7 @@ pub fn write(dumps: &[LedgerDump], to: &Path) -> Result<()> {
         let mut conn = Connection::open(scratch.path())?;
         conn.pragma_update(None, "journal_mode", "delete")?;
         schema::migrate(&mut conn)?;
-        let mut next_user = 1;
-        for dump in dumps {
-            // User ids are the file's own: renumber each ledger's.
-            let mut renumbered = dump.clone();
-            let map: std::collections::BTreeMap<i64, i64> = dump
-                .users
-                .iter()
-                .map(|(old, _)| {
-                    let new = next_user;
-                    next_user += 1;
-                    (*old, new)
-                })
-                .collect();
-            renumbered.users = dump
-                .users
-                .iter()
-                .map(|(old, n)| (map[old], n.clone()))
-                .collect();
-            for row in &mut renumbered.audit {
-                row.user = *map.get(&row.user).ok_or_else(|| {
-                    StoreError::Invalid(format!("audit user {} is missing", row.user))
-                })?;
-            }
-            crate::sqlite::write_dump(&mut conn, &renumbered)?;
-        }
+        write_dumps(&mut conn, dumps)?;
     }
     scratch.persist_noclobber(to).map_err(|e| e.error)?;
     Ok(())
@@ -190,9 +166,7 @@ pub fn check_dump(dump: &LedgerDump) -> Result<()> {
     Ok(())
 }
 
-/// A self-contained SQLite file, with the same schema and audit records as native export.
-pub fn write_bytes(dumps: &[LedgerDump]) -> Result<Vec<u8>> {
-    let mut conn = schema::open_in_memory()?;
+fn write_dumps(conn: &mut Connection, dumps: &[LedgerDump]) -> Result<()> {
     let mut next_user = 1;
     for dump in dumps {
         // User ids are the file's own: renumber each ledger's.
@@ -216,8 +190,15 @@ pub fn write_bytes(dumps: &[LedgerDump]) -> Result<Vec<u8>> {
                 StoreError::Invalid(format!("audit user {} is missing", row.user))
             })?;
         }
-        crate::sqlite::write_dump(&mut conn, &renumbered)?;
+        crate::sqlite::write_dump(conn, &renumbered)?;
     }
+    Ok(())
+}
+
+/// A self-contained SQLite file, with the same schema and audit records as native export.
+pub fn write_bytes(dumps: &[LedgerDump]) -> Result<Vec<u8>> {
+    let mut conn = schema::open_in_memory()?;
+    write_dumps(&mut conn, dumps)?;
     Ok(conn.serialize("main")?.to_vec())
 }
 

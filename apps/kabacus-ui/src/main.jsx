@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import { t, initializeLocale } from "./i18n";
 import { Workspace } from "./workspace";
-import { useDialogHistory } from "./phone-history";
+import { useDialogHistory, keepsUnsavedChange } from "./phone-history";
 import { PhonePicker } from "./phone-picker";
 import { useMedia, phoneQuery, desktopQuery } from "./form-factor";
 import React, { useEffect, useRef, useState } from "react";
@@ -66,7 +66,7 @@ export function App({ auth, book, onFileAction }) {
     history.replaceState(state, "");
     const back = (event) => {
       if (!event.state?.kabacus) return;
-      if (document.querySelector('.bookkeeping-dialog form[data-dirty="true"]') && !window.confirm(t("Discard this change?"))) {
+      if (keepsUnsavedChange()) {
         history.pushState(state, ""); return;
       }
       setForm(null); setOperationForm(null); setChooser(false); setBookMenu(false);
@@ -111,11 +111,11 @@ export function App({ auth, book, onFileAction }) {
   latestRefresh.current = refresh;
   useEffect(()=>{if(book?.activity?.expires_at)latestRefresh.current();},[book?.activity?.expires_at]);
   const go = (destination) => {
-    if (document.querySelector('.bookkeeping-dialog form[data-dirty="true"]') && !window.confirm(t("Discard this change?"))) return;
+    if (keepsUnsavedChange()) return;
     setForm(null); setOperationForm(null); navigate(destination, phone ? "" : openedAccount);
   };
   const beginAdd=()=>{
-    if(document.querySelector('.bookkeeping-dialog form[data-dirty="true"]')&&!window.confirm(t("Discard this change?")))return;
+    if(keepsUnsavedChange())return;
     setForm(null);setOperationForm(null);setChooser(true);
   };
   const choose = (command) => {
@@ -825,15 +825,6 @@ function WriteDialog({
       .catch(() => {});
     return () => c.abort();
   }, [api, allocation]);
-  useEffect(() => {
-    if (!dirty) return;
-    const leave = (event) => {
-      event.preventDefault();
-      event.returnValue = "";
-    };
-    window.addEventListener("beforeunload", leave);
-    return () => window.removeEventListener("beforeunload", leave);
-  }, [dirty]);
   function recall(value) {
     const known = payees.find((p) => p.payee === value);
     const tx = known?.last;
