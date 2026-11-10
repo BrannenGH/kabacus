@@ -35,6 +35,9 @@ pub enum Draft {
         from: String,
         to: String,
         amount: String,
+        /// `to` is a category typed in that doesn't exist yet; saving makes it.
+        #[serde(default)]
+        new_category: bool,
     },
     /// With its reserve lines. `source` is `free` or a fund.
     CardPurchase {
@@ -396,6 +399,24 @@ impl Books {
         Ok((fund.clone(), self.get(&fund).is_none()))
     }
 
+    /// The account a category typed as `typed` becomes: a path as typed,
+    /// else a name under expenses, lower case with dashes.
+    fn category_path(&self, typed: &str) -> String {
+        let typed = typed.trim();
+        if typed.contains(':') {
+            typed.to_string()
+        } else {
+            format!(
+                "expenses:{}",
+                typed
+                    .to_lowercase()
+                    .split_whitespace()
+                    .collect::<Vec<_>>()
+                    .join("-")
+            )
+        }
+    }
+
     /// A field naming an account the books don't declare.
     fn known(&self, name: &str, account: &str) -> Result<(), WriteError> {
         if self.get(account).is_some() {
@@ -600,7 +621,16 @@ fn validate(draft: &Draft, books: &Books) -> Result<(), WriteError> {
             )?;
             required("to", to, &i18nc!("the account money goes to", "To"))?;
             books.known("from", from)?;
-            books.known("to", to)?;
+            if !matches!(
+                draft,
+                Draft::Simple {
+                    new_category: true,
+                    ..
+                }
+            ) || books.get(to).is_some()
+            {
+                books.known("to", to)?;
+            }
             if from == to {
                 return Err(field("to", i18n!("From and To must differ")));
             }
@@ -897,14 +927,22 @@ async fn send(
             from,
             to,
             amount,
+            new_category,
         } => {
+            let fresh = (*new_category && books.get(to).is_none()).then(|| books.category_path(to));
             client
                 .add_transaction(
                     head,
                     AddTransactionBody {
+                        new_accounts: fresh.iter().cloned().collect(),
                         date: date.trim().to_string(),
                         description: description(payee, memo),
-                        postings: simple_postings(from, to, amount, books)?,
+                        postings: simple_postings(
+                            from,
+                            fresh.as_deref().unwrap_or(to),
+                            amount,
+                            books,
+                        )?,
                         tags: vec![],
                         dry_run,
                     },
@@ -996,6 +1034,7 @@ async fn send(
                 .add_transaction(
                     head,
                     AddTransactionBody {
+                        new_accounts: vec![],
                         date: date.trim().to_string(),
                         description: description(payee, memo),
                         postings,
@@ -1034,6 +1073,7 @@ async fn send(
                     crate::model::transaction_id(id)?,
                     head,
                     AddTransactionBody {
+                        new_accounts: vec![],
                         date: date.trim().to_string(),
                         description: description(payee, memo),
                         postings,
@@ -1074,6 +1114,7 @@ async fn send(
                     crate::model::transaction_id(id)?,
                     head,
                     AddTransactionBody {
+                        new_accounts: vec![],
                         date: date.trim().into(),
                         description: description(payee, memo),
                         postings,
@@ -1471,6 +1512,13 @@ mod tests {
         spawnable(async move { commit(&client, &draft, "4c67c22").await });
     }
 
+    #[test]
+    fn a_typed_category_becomes_an_expense_account_unless_it_is_a_path() {
+        let b = books();
+        assert_eq!(b.category_path("  Pet   Care "), "expenses:pet-care");
+        assert_eq!(b.category_path("expenses:pets:vet"), "expenses:pets:vet");
+    }
+
     fn books() -> Books {
         let account = |account: &str, name: &str, kind: &str, home: &str| {
             serde_json::from_value::<AccountView>(serde_json::json!({
@@ -1544,6 +1592,7 @@ mod tests {
             from: "assets:bank:checking".into(),
             to: "expenses:grocerys".into(),
             amount: "12.40".into(),
+            new_category: false,
         };
         match explain_sync(
             refused("account expenses:grocerys is not declared"),

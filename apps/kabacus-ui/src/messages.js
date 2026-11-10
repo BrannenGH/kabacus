@@ -138,6 +138,7 @@ export const messages = [
   "From",
   "To",
   "Name the new reserve",
+  "%1 is a new category. Check the spelling; it will be created.",
   "Checking with the server…",
   "Save",
   "Preview",

@@ -673,6 +673,7 @@ async fn a_split_pays_down_what_you_owe_them_first() {
             from: "liabilities:payable:jordan".into(),
             to: "expenses:dining".into(),
             amount: "30.00".into(),
+            new_category: false,
         },
     )
     .await;
@@ -843,6 +844,7 @@ async fn a_broken_balance_check_is_explained() {
         from: CHECKING.into(),
         to: "expenses:dining".into(),
         amount: "40.00".into(),
+        new_category: false,
     };
     match writes::preview(&client, &draft).await {
         Err(WriteError::Assertion {

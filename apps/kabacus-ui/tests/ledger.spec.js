@@ -1546,6 +1546,24 @@ test("spendable changes retain negative and zero meanings", async ({ page }) => 
   }
 });
 
+for (const phone of [false, true]) test(`a category typed in that doesn't exist yet warns and is made by the write on ${phone ? "phone" : "desktop"}`, async ({ page }) => {
+  await page.setViewportSize(phone ? { width: 390, height: 844 } : { width: 1280, height: 800 });
+  const writes = await setup(page);
+  await page.getByRole("button", { name: "Add", exact: true }).click();
+  await page.getByRole("button", { name: /^Spent/ }).click();
+  const form = page.locator(".bookkeeping-dialog");
+  await form.getByLabel("Amount (USD)").fill("42.50");
+  await form.getByLabel("Payee", { exact: true }).fill("Corner Vet");
+  await form.locator('select[name="from"]').selectOption(accounts[0].account);
+  await form.locator('input[name="to"]').fill("Groceries");
+  await expect(form.getByText("is a new category")).toHaveCount(0);
+  await form.locator('input[name="to"]').fill("Pet care");
+  await expect(form.getByText("Pet care is a new category. Check the spelling; it will be created.")).toBeVisible();
+  if (phone) await form.getByRole("button", { name: "Review", exact: true }).click();
+  await expect(form.locator(".preview")).toBeVisible();
+  expect(writes.at(-1).body.new_accounts).toEqual(["expenses:pet-care"]);
+  expect(writes.at(-1).body.postings[0].account).toBe("expenses:pet-care");
+});
 test("on desktop a click browses account groups and typing searches them all", async ({ page }) => {
   await setup(page);
   await page.getByRole("button", { name: "Add", exact: true }).click();

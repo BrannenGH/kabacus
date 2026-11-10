@@ -42,6 +42,7 @@ async fn correction_dry_run_shows_both_transactions_and_balance_changes() {
         .add_transaction(
             &head,
             AddTransactionBody {
+                new_accounts: vec![],
                 date: "2026-02-01".to_string(),
                 description: "Grocery Store".to_string(),
                 postings: vec![
@@ -120,6 +121,7 @@ async fn a_void_dry_run_shows_the_balances_it_restores() {
         .add_transaction(
             &head,
             AddTransactionBody {
+                new_accounts: vec![],
                 date: "2026-02-01".to_string(),
                 description: "Grocery Store".to_string(),
                 postings: vec![

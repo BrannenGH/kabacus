@@ -429,6 +429,14 @@ def main():
         fill_fields(Date=date, Payee=payee, Amount=amount)
         choose("To", to_name)
         save()
+    elif command == "new-category":
+        # A category typed in is made by saving, after a warning to check it.
+        payee, amount, category = args
+        open_add("Spent")
+        fill_fields(Payee=payee, Amount=amount)
+        choose("Category", category)
+        wait_for("the new category warning", lambda: label_starting(f"{category} is a new category"), 10)
+        save()
     elif command == "edit-split":
         account, payee, date = args
         click(wait_for(f"the {account} account", lambda: find(app(), account, pyatspi.ROLE_LIST_ITEM)))

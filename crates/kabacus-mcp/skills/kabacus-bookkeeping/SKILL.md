@@ -62,7 +62,7 @@ before retrying.
 
 | Mistake | Instead |
 |---|---|
-| Inventing an account name | Use one from `list_accounts`; undeclared accounts are refused. |
+| Inventing an account name | Use one from `list_accounts`; undeclared accounts are refused. The one exception is a new expense or income category: name it in `add_transaction`'s `new_accounts` and the same write declares it. |
 | Amounts as JSON numbers | Decimal strings: `"45.68"`, `"-0.04"`. A number like `45.68` is refused (`amount_format`). |
 | More decimal places than the commodity has (`12.345` USD) by mistake | `get_commodity` gives its `places`; an amount with more is refused. |
 | Many writes one call at a time | `batch`: up to 100 operations, one check, one revision. |

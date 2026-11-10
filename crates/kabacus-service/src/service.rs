@@ -663,6 +663,10 @@ pub struct AddTransactionBody {
     pub postings: Vec<DraftPostingDto>,
     #[serde(default)]
     pub tags: Vec<(String, String)>,
+    /// New expense or income accounts the postings use; this write
+    /// declares them.
+    #[serde(default)]
+    pub new_accounts: Vec<String>,
     #[serde(default)]
     pub dry_run: bool,
     #[serde(default)]
@@ -675,6 +679,7 @@ pub fn add_op(body: AddTransactionBody, commodity: &str) -> Result<ops::WriteOp,
         description: body.description,
         postings: to_draft_postings(body.postings, commodity)?,
         tags: body.tags,
+        new_accounts: body.new_accounts,
     }))
 }
 

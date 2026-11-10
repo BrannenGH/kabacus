@@ -782,6 +782,7 @@ function WriteDialog({
   const draft = useRef({});
   const [payees, setPayees] = useState([]);
   const [dirty, setDirty] = useState(false);
+  const [typedTo, setTypedTo] = useState(defaults.to || "");
   useDialogHistory({ onClose, preview, setPreview, dirty, busy });
   const close = () => {
     if (!busy && (!dirty || window.confirm(t("Discard this change?"))))
@@ -806,6 +807,16 @@ function WriteDialog({
   const transfer = kind === "transfer";
   const incomeAccounts = data.accounts.filter((a) => a.kind === "income");
   const moneyAccounts = data.accounts.filter((a) => a.kind === "money" || a.kind === "non-liquid" && a.account.startsWith("assets:"));
+  const spending = !allocation && !received && !transfer;
+  // A category typed that doesn't exist yet: this write creates it.
+  function newCategory(value) {
+    const typed = value.trim();
+    if (!spending || !typed || accountPath(typed) !== typed) return "";
+    if (data.accounts.some((a) => a.account === typed)) return "";
+    return typed.includes(":")
+      ? typed
+      : "expenses:" + typed.toLowerCase().split(/\s+/).join("-");
+  }
   function accountPath(value) {
     const typed = value.trim();
     if (data.accounts.some((a) => a.account === typed)) return typed;
@@ -861,6 +872,7 @@ function WriteDialog({
     setDirty(true);
     event.currentTarget.dataset.dirty = "true";
     draft.current = Object.fromEntries(new FormData(event.currentTarget));
+    setTypedTo(draft.current.to || "");
     generation.current++;
     setPreview(null);
     setError("");
@@ -901,14 +913,16 @@ function WriteDialog({
             currencies(data).find(c => c.symbol === currency)?.places,
           );
           path = "/transactions";
+          const fresh = newCategory(fields.to);
           body = {
             date: fields.date,
             description:
               fields.description +
               (fields.memo?.trim() ? " | " + fields.memo.trim() : ""),
+            ...(fresh && { new_accounts: [fresh] }),
             postings: [
               {
-                account: accountPath(fields.to),
+                account: fresh || accountPath(fields.to),
                 amount,
               },
               {
@@ -1082,6 +1096,11 @@ function WriteDialog({
                     ))}
                   </datalist>
                 </label>
+                {newCategory(typedTo) && (
+                  <p className="banner warning" role="status">
+                    {t("%1 is a new category. Check the spelling; it will be created.", typedTo.trim())}
+                  </p>
+                )}
                 {!phone && amountField}
                 {allocation && (
                   <label className="checkbox">

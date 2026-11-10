@@ -115,9 +115,13 @@ Kirigami.ScrollablePage {
             return { kind: "reconcile", account: preset.account, date: preset.date, balance: preset.balance }
         default:
             return Object.assign(base, { kind: "simple", payee: payee.text, memo: memo.text,
-                from: fromPicker.value, to: toPicker.value })
+                from: fromPicker.value, to: toPicker.value, new_category: newCategory })
         }
     }
+
+    // A category typed in that isn't one yet: saving makes it.
+    readonly property bool newCategory: kind === "spent" && toPicker.value.trim() !== ""
+        && !page.categories.some(a => a.account === toPicker.value)
 
     // A form error: under its field when it has one, else above.
     function showError(err) {
@@ -536,6 +540,15 @@ Kirigami.ScrollablePage {
                     wrapMode: Text.Wrap
                     // Wraps under the picker rather than widening the form
                     // (a wider form stacks its labels above the fields).
+                    Layout.maximumWidth: toPicker.width
+                    Layout.fillWidth: true
+                    Accessible.name: text
+                }
+                Controls.Label {
+                    visible: page.newCategory
+                    text: i18n("%1 is a new category. Check the spelling; it will be created.",
+                        toPicker.value.trim().split(/\s+/).join(" "))
+                    wrapMode: Text.Wrap
                     Layout.maximumWidth: toPicker.width
                     Layout.fillWidth: true
                     Accessible.name: text
