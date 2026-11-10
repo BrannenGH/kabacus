@@ -12,6 +12,7 @@ use kabacus_testkit::spawn_server;
 
 fn body(date: &str, expense: &str, cents: i128, dry_run: bool) -> AddTransactionBody {
     AddTransactionBody {
+        new_accounts: vec![],
         date: date.to_string(),
         description: "Corner Market".to_string(),
         postings: vec![

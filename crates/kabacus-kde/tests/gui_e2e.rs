@@ -1048,6 +1048,28 @@ async fn phone_account_picker_browses_groups_then_searches() {
 
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn a_new_category_typed_into_spent_is_made_by_saving() {
+    let server = books("new-category").await;
+    let client = KabacusClient::connect_unix(&server.socket_path);
+    let _app = launch(&server.socket_path, &config_dir("new-category"));
+    drive(&["new-category", "Corner Vet", "25.00", "Pet care"]).await;
+    let accounts = client.list_accounts(None).await.unwrap();
+    assert!(accounts.iter().any(|a| a.account == "expenses:pet-care"));
+    let saved = client
+        .list_transactions()
+        .await
+        .unwrap()
+        .into_iter()
+        .find(|t| t.payee == "Corner Vet")
+        .unwrap();
+    assert!(saved
+        .postings
+        .iter()
+        .any(|p| p.account == "expenses:pet-care"));
+}
+
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
 async fn desktop_split_postings_can_be_edited() {
     let socket = socket_path("edit-split");
     let journal = format!("{BOOKS}\n2026-09-12 Harbor Cafe\n    expenses:dining  12.00 USD\n    expenses:dining  8.00 USD\n    assets:bank:checking  -20.00 USD\n");

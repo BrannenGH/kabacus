@@ -40,10 +40,11 @@ pub use domain::{
 };
 pub use format::format_money;
 pub use funds::{
-    card_reserves, cash_on_hand, check_new_fund, new_fund_account, plan_allocation,
-    plan_card_payment, plan_card_purchase, unreserved_flags, validation_warnings, Balances,
-    CardLine, CardReserve, CashOnHand, Chart, FundsError, MissingReserve, PlannedTransaction,
-    PurchaseSource, ReserveSource, Warning, DEFAULT_RESERVE_TEMPLATE, RESERVE_SPLIT_RULE,
+    card_reserves, cash_on_hand, check_new_category, check_new_fund, new_fund_account,
+    plan_allocation, plan_card_payment, plan_card_purchase, unreserved_flags, validation_warnings,
+    Balances, CardLine, CardReserve, CashOnHand, Chart, FundsError, MissingReserve,
+    PlannedTransaction, PurchaseSource, ReserveSource, Warning, DEFAULT_RESERVE_TEMPLATE,
+    RESERVE_SPLIT_RULE,
 };
 pub use impact::{balance_impact, BalanceChange};
 pub use kinds::{check_kind_rules, default_kind_rules, AccountKind, ClassifiedAccount, KindRule};

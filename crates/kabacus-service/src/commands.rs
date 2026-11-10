@@ -211,6 +211,10 @@ pub struct AddTransactionParams {
     pub description: String,
     pub postings: Vec<DraftPostingParam>,
     pub tags: Option<Vec<TagParam>>,
+    /// New expense or income accounts the postings use, e.g.
+    /// `["expenses:pets:vet"]`: declared by this write, no rewrite needed.
+    /// Any other account must already exist.
+    pub new_accounts: Option<Vec<String>>,
     /// The books' current head (their revision), from a prior read
     /// (`get_history`, `get_version`): required, so a write made on a
     /// stale view is refused as a conflict.
@@ -230,6 +234,7 @@ impl AddTransactionParams {
                 description: self.description,
                 postings: to_postings(self.postings),
                 tags: to_tags(self.tags.unwrap_or_default()),
+                new_accounts: self.new_accounts.unwrap_or_default(),
                 dry_run: false,
                 include_diff: false,
             },

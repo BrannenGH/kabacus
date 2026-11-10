@@ -1372,6 +1372,11 @@ msgctxt "%1 is a new reserve's name, %2 the account it goes in"
 msgid "%1 isn't a reserve yet. Saving creates it in %2."
 msgstr "Το %1 δεν είναι ακόμη απόθεμα. Η αποθήκευση το δημιουργεί στο %2."
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 is a new category. Check the spelling; it will be created."
+msgstr "Το %1 είναι νέα κατηγορία. Ελέγξτε την ορθογραφία· θα δημιουργηθεί."
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"

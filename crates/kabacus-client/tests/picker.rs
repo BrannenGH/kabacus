@@ -21,6 +21,7 @@ async fn add(client: &KabacusClient, date: &str, description: &str, account: &st
         .add_transaction(
             &head,
             AddTransactionBody {
+                new_accounts: vec![],
                 date: date.to_string(),
                 description: description.to_string(),
                 postings: vec![

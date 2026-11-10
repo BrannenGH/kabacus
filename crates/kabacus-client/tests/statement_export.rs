@@ -36,6 +36,7 @@ async fn add(
         .add_transaction(
             &head,
             AddTransactionBody {
+                new_accounts: vec![],
                 date: date.to_string(),
                 description: description.to_string(),
                 postings,

@@ -98,6 +98,7 @@ fn groceries(cents: i128) -> AddRequest {
             posting("assets:checking", None),
         ],
         tags: Vec::new(),
+        new_accounts: Vec::new(),
     }
 }
 
@@ -257,6 +258,43 @@ async fn an_undeclared_account_is_refused() {
         matches!(error, OpError::Validation(_) | OpError::ValidationMany(_)),
         "{error:?}"
     );
+}
+
+#[tokio::test]
+async fn a_new_expense_category_is_declared_by_the_write_that_uses_it() {
+    let state = state("").await;
+    let mut req = groceries(4250);
+    req.postings[0].account = AccountName::new("expenses:pets:vet");
+    req.new_accounts = vec!["expenses:pets:vet".to_string()];
+    let before = head(&state).await.parse::<i64>().unwrap();
+    let (_, after) = add(&state, req).await;
+    assert_eq!(after.parse::<i64>().unwrap(), before + 1);
+    assert!(books(&state)
+        .await
+        .accounts
+        .contains_key("expenses:pets:vet"));
+}
+
+#[tokio::test]
+async fn only_an_expense_or_income_account_is_made_inline() {
+    let state = state("").await;
+    let mut req = groceries(100);
+    req.postings[1].account = AccountName::new("assets:bank:savings");
+    req.new_accounts = vec!["assets:bank:savings".to_string()];
+    let error = write(
+        &state,
+        &local(),
+        WriteOp::Add(req),
+        &head(&state).await,
+        true,
+    )
+    .await
+    .unwrap_err();
+    assert!(matches!(error, OpError::Invalid { .. }), "{error:?}");
+    assert!(!books(&state)
+        .await
+        .accounts
+        .contains_key("assets:bank:savings"));
 }
 
 #[tokio::test]

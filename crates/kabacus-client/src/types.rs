@@ -115,6 +115,9 @@ pub struct AddTransactionBody {
     pub postings: Vec<DraftPostingBody>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub tags: Vec<(String, String)>,
+    /// New expense or income accounts the postings use.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub new_accounts: Vec<String>,
     pub dry_run: bool,
 }
 

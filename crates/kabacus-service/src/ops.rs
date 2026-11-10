@@ -118,6 +118,8 @@ pub struct AddRequest {
     pub description: String,
     pub postings: Vec<DraftPosting>,
     pub tags: Vec<(String, String)>,
+    /// New expense or income accounts this write declares first.
+    pub new_accounts: Vec<String>,
 }
 
 pub struct EditRequest {
@@ -365,6 +367,9 @@ fn added(wc: &mut WorkingCopy, tx: Transaction, applied: &mut Applied) -> Result
 }
 
 fn add_one(wc: &mut WorkingCopy, req: AddRequest, kind: &'static str) -> Result<Applied, OpError> {
+    for account in &req.new_accounts {
+        declare_new_category(wc, account)?;
+    }
     let postings = build_postings(wc, &req.postings, &[])?;
     check_description(&req.description)?;
     check_declared(wc, &req.postings)?;
@@ -400,6 +405,7 @@ fn add_planned(
                 })
                 .collect(),
             tags,
+            new_accounts: vec![],
         },
         "add",
     )
@@ -514,6 +520,23 @@ fn declare_new_fund(wc: &mut WorkingCopy, from: &str, fund: &str) -> Result<(), 
     kabacus_core::render_account_declaration(fund, &[])
         .map_err(|message| OpError::invalid("account", message))?;
     wc.declare(fund, "");
+    Ok(())
+}
+
+/// Declare a new expense or income account in the write that first uses
+/// it. Not a rewrite: see `check_new_category`.
+fn declare_new_category(wc: &mut WorkingCopy, account: &str) -> Result<(), OpError> {
+    kabacus_core::check_new_category(&wc.chart(), account)
+        .map_err(|message| OpError::invalid("account", message))?;
+    kabacus_core::render_account_declaration(account, &[])
+        .map_err(|message| OpError::invalid("account", message))?;
+    if wc.is_declared(account) {
+        return Err(OpError::invalid(
+            "account",
+            format!("{account} already exists"),
+        ));
+    }
+    wc.declare(account, "");
     Ok(())
 }
 

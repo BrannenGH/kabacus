@@ -96,6 +96,7 @@ pub fn draft(
         description: body.description,
         postings,
         tags: vec![],
+        new_accounts: vec![],
         dry_run: body.dry_run,
         include_diff: false,
     })
