@@ -162,6 +162,9 @@ pub async fn dispatch(
             result!(s::record_card_purchase(state, caller, parse(body)?, head))
         }
         ("POST", ["cards", "payments"]) => result!(s::pay_card(state, caller, parse(body)?, head)),
+        ("POST", ["settlements"]) => {
+            result!(crate::settle::record(state, caller, parse(body)?, head))
+        }
         ("POST", ["splits"]) => result!(crate::split::record(state, caller, parse(body)?, head)),
         ("POST", ["batch"]) => result!(crate::batch::batch(state, caller, parse(body)?)),
         ("POST", ["reconcile"]) => {

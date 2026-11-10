@@ -71,6 +71,7 @@ before retrying.
 | Voiding to fix a typo | Use `edit_transaction`; see changing-transactions.md. |
 | Setting money aside with `add_transaction` | Use `allocate`, which checks it stays inside one account. |
 | A card purchase or payment without its reserve lines | Use `record_card_purchase` and `pay_card`; flagged `unreserved` otherwise. |
+| Recording a payment to or from a person with `add_transaction` | Use `settle_up` (`paid` or `received`); it nets against what is already owed, then builds the other side. |
 | Committing without a preview | Always dry-run first and show the user. |
 
 ## Reference files

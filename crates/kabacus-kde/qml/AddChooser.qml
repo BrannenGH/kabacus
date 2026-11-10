@@ -52,11 +52,11 @@ Item {
     readonly property var allKinds: [
         { id: "transaction.spent", kind: "spent", title: i18nc("@action what happened", "Spent"), detail: i18n("Money left an account"), icon: "go-up" },
         { id: "transaction.received", kind: "received", title: i18nc("@action what happened", "Received"), detail: i18n("Income or a refund"), icon: "go-down" },
-        { id: "card.purchase", kind: "card_purchase", title: i18n("Card purchase"), detail: i18n("Adds the reserve lines for you"), icon: "view-credit-card" },
         { id: "transaction.transfer", kind: "transfer", title: i18n("Transfer"), detail: i18n("Between two bank accounts"), icon: "exchange-positions" },
         { id: "reserve.setAside", kind: "set_aside", title: i18n("Set aside"), detail: i18n("Into a reserve, out, or between reserves"), icon: "folder-text" },
         { id: "card.pay", kind: "pay_card", title: i18n("Pay a card"), detail: i18n("From its reserve"), icon: "view-credit-card" },
         { id: "split.record", kind: "split", title: i18n("Split with someone"), detail: i18n("They owe you, or you owe them"), icon: "system-users" },
+        { id: "settle.record", kind: "settle", title: i18n("Settle up with someone"), detail: i18n("Money you paid them or they paid you"), icon: "emblem-money" },
         { id: "transaction.postings", kind: "postings", title: i18n("Postings"), detail: i18n("Any two accounts"), icon: "view-list-details" }
     ]
 

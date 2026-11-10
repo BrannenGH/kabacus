@@ -79,6 +79,18 @@ pub enum Draft {
         total: String,
         their_share: String,
     },
+    /// Money paid to or by a person, netted against what's owed.
+    Settle {
+        date: String,
+        #[serde(default)]
+        memo: String,
+        /// The money account the payment left or reached.
+        account: String,
+        person: String,
+        amount: String,
+        /// You paid them (else they paid you).
+        paid: bool,
+    },
     /// Edit a simple transaction in place.
     Edit {
         id: String,
@@ -563,6 +575,31 @@ fn summary(draft: &Draft, books: &Books) -> String {
             person,
             their_share
         ),
+        Draft::Settle {
+            account,
+            person,
+            amount,
+            paid,
+            ..
+        } => {
+            if *paid {
+                i18nc!(
+                    "%1 is an amount, %2 a person, %3 an account",
+                    "You paid %2 %1 from %3.",
+                    amount,
+                    person,
+                    n(account)
+                )
+            } else {
+                i18nc!(
+                    "%1 is an amount, %2 a person, %3 an account",
+                    "%2 paid you %1 into %3.",
+                    amount,
+                    person,
+                    n(account)
+                )
+            }
+        }
         Draft::Edit { payee, .. } | Draft::EditPostings { payee, .. } => {
             i18nc!(
                 "%1 is a payee",
@@ -689,6 +726,26 @@ fn validate(draft: &Draft, books: &Books) -> Result<(), WriteError> {
         Draft::PayCard { date, card, amount } => {
             check_date(date)?;
             books.known("card", card)?;
+            check_amount("amount", amount, books.places, true)?;
+        }
+        Draft::Settle {
+            date,
+            account,
+            person,
+            amount,
+            ..
+        } => {
+            check_date(date)?;
+            books.known("account", account)?;
+            required(
+                "person",
+                person,
+                &i18nc!("the person a cost is split with", "Who"),
+            )?;
+            books.known(
+                "person",
+                &format!("assets:receivable:{}", person.trim().to_lowercase()),
+            )?;
             check_amount("amount", amount, books.places, true)?;
         }
         Draft::Split {
@@ -827,6 +884,75 @@ async fn split_postings(
         postings.push(posting(&reserve, c, total));
     }
     let _ = client;
+    Ok(postings)
+}
+
+/// A settlement's postings: the payment netted against what's owed (what
+/// you owe them when you pay, what they owe you when they pay), then
+/// the other side; on a card, its reserve lines.
+fn settle_postings(
+    books: &Books,
+    account: &str,
+    person: &str,
+    amount: &str,
+    paid: bool,
+) -> Result<Vec<DraftPostingBody>, WriteError> {
+    let c = &books.commodity;
+    let amount = check_amount("amount", amount, books.places, true)?;
+    let person = person.trim().to_lowercase();
+    let receivable = format!("assets:receivable:{person}");
+    let payable = format!("liabilities:payable:{person}");
+    books.known("person", &receivable)?;
+    let balance = |account: &str| {
+        books
+            .get(account)
+            .and_then(|a| a.balances.first())
+            .and_then(|b| b.money())
+            .unwrap_or_else(Money::zero)
+    };
+    let card = books.kind(account) == "revolving-debt";
+    if card && !paid {
+        return Err(WriteError::Field {
+            field: "account".to_string(),
+            message: i18n!("A payment to you can't go onto a card"),
+            suggestion: String::new(),
+        });
+    }
+    let sides = kabacus_core::select_counterparty_sides(
+        balance(&receivable).max(Money::zero()),
+        balance(&payable).min(Money::zero()),
+        amount.clone(),
+        if paid {
+            kabacus_core::FlowDirection::ToPerson
+        } else {
+            kabacus_core::FlowDirection::FromPerson
+        },
+    );
+    let mut postings = vec![];
+    if !sides.receivable_delta.is_zero() {
+        postings.push(posting(&receivable, c, sides.receivable_delta));
+    }
+    if !sides.payable_delta.is_zero() {
+        books.known("person", &payable)?;
+        postings.push(posting(&payable, c, sides.payable_delta));
+    }
+    let signed = if paid {
+        -amount.clone()
+    } else {
+        amount.clone()
+    };
+    postings.push(posting(account, c, signed));
+    if card {
+        let (reserve, home) = books.reserve_of(account).ok_or_else(|| WriteError::Other {
+            message: i18nc!(
+                "%1 is a card",
+                "%1 has no reserve account",
+                books.name(account)
+            ),
+        })?;
+        postings.push(posting(&home, c, -amount.clone()));
+        postings.push(posting(&reserve, c, amount));
+    }
     Ok(postings)
 }
 
@@ -1005,6 +1131,35 @@ async fn send(
                         card: card.clone(),
                         amount: amount_str(amount),
                         date: date.trim().to_string(),
+                        dry_run,
+                    },
+                )
+                .await
+        }
+        Draft::Settle {
+            date,
+            memo,
+            account,
+            person,
+            amount,
+            paid,
+        } => {
+            let who = person.trim();
+            let name = who
+                .chars()
+                .next()
+                .map(|c| c.to_uppercase().collect::<String>() + &who[c.len_utf8()..])
+                .unwrap_or_default();
+            let postings = settle_postings(books, account, person, amount, *paid)?;
+            client
+                .add_transaction(
+                    head,
+                    AddTransactionBody {
+                        new_accounts: vec![],
+                        date: date.trim().to_string(),
+                        description: description(&i18n!("Settled up with %1", name), memo),
+                        postings,
+                        tags: vec![],
                         dry_run,
                     },
                 )
@@ -1282,6 +1437,7 @@ fn draft_field_with(draft: &Draft, account: &str) -> Option<&'static str> {
         }
         Draft::CardPurchase { card, category, .. } => vec![("card", card), ("category", category)],
         Draft::SetAside { from, to, .. } => vec![("from", from), ("to", to)],
+        Draft::Settle { account, .. } => vec![("account", account)],
         Draft::PayCard { card, .. } => vec![("card", card)],
         Draft::Split {
             paid_with,
@@ -1404,7 +1560,8 @@ pub async fn preview(client: &KabacusClient, draft: &Draft) -> Result<Preview, W
     if let Draft::CardPurchase { card, .. }
     | Draft::Split {
         paid_with: card, ..
-    } = draft
+    }
+    | Draft::Settle { account: card, .. } = draft
     {
         if books.kind(card) == "revolving-debt" && !result.unreserved {
             notes.push(i18nc!(
@@ -1510,6 +1667,47 @@ mod tests {
         let (c, d) = (client.clone(), draft.clone());
         spawnable(async move { preview(&c, &d).await });
         spawnable(async move { commit(&client, &draft, "4c67c22").await });
+    }
+
+    #[test]
+    fn settling_up_pays_down_what_you_owe_before_what_they_owe() {
+        let account = |account: &str, kind: &str, balance: &str| {
+            serde_json::from_value::<AccountView>(serde_json::json!({
+                "account": account, "display_name": "", "kind": kind, "home": "",
+                "balances": if balance.is_empty() { serde_json::json!([]) } else {
+                    serde_json::json!([{"commodity": "USD", "exact": balance, "formatted": balance}]) },
+            }))
+            .unwrap()
+        };
+        let b = Books {
+            accounts: vec![
+                account("assets:bank:checking", "money", ""),
+                account("assets:receivable:jordan", "receivable", "0.00"),
+                account("liabilities:payable:jordan", "payable", "-12.13"),
+            ],
+            commodity: "USD".to_string(),
+            places: 2,
+        };
+        let shown = |paid| {
+            settle_postings(&b, "assets:bank:checking", "Jordan", "20.00", paid)
+                .unwrap()
+                .iter()
+                .map(|p| {
+                    (
+                        p.account.clone(),
+                        p.amount.as_ref().unwrap().mantissa.to_string(),
+                    )
+                })
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(
+            shown(true),
+            vec![
+                ("assets:receivable:jordan".to_string(), "787".to_string()),
+                ("liabilities:payable:jordan".to_string(), "1213".to_string()),
+                ("assets:bank:checking".to_string(), "-2000".to_string()),
+            ]
+        );
     }
 
     #[test]

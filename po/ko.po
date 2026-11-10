@@ -138,16 +138,6 @@ msgstr "수입 또는 환불"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card purchase"
-msgstr "카드 결제"
-
-#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "준비금 줄을 대신 추가해 줌"
-
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Transfer"
 msgstr "이체"
 
@@ -185,6 +175,16 @@ msgstr "다른 사람과 나누기"
 #, kde-format
 msgid "They owe you, or you owe them"
 msgstr "상대가 빚졌거나, 내가 빚졌음"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settle up with someone"
+msgstr "상대와 정산"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money you paid them or they paid you"
+msgstr "내가 상대에게 지불했거나 상대가 나에게 지불한 돈"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1231,6 +1231,11 @@ msgstr "올해는 없음"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Card purchase"
+msgstr "카드 결제"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Set money aside"
 msgstr "돈 적립"
 
@@ -1315,6 +1320,16 @@ msgctxt "a credit card"
 msgid "Card"
 msgstr "카드"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This is a card purchase: its reserve lines are added for you."
+msgstr "카드 구매입니다. 예비금 줄이 자동으로 추가됩니다."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch to Spent"
+msgstr "지출로 전환"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label what a shared cost was for"
@@ -1397,6 +1412,21 @@ msgstr "준비금"
 msgctxt "money set aside"
 msgid "Reserve"
 msgstr "준비금"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Direction"
+msgstr "방향"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "I paid them"
+msgstr "내가 지불함"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "They paid me"
+msgstr "상대가 지불함"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1999,6 +2029,18 @@ msgstr "%1: %3(으)로 %2 결제; 그중 %5은(는) %4의 부담."
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "You paid %2 %1 from %3."
+msgstr "%3에서 %2에게 %1을(를) 지불했습니다."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "%2 paid you %1 into %3."
+msgstr "%2이(가) %3로 %1을(를) 지불했습니다."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a payee"
 msgid "Edit %1 in place. History keeps the old version."
 msgstr "%1을(를) 제자리에서 편집합니다. 이전 버전은 기록에 남습니다."
@@ -2050,9 +2092,19 @@ msgstr "%1에는 준비금 계좌가 없습니다"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgid "A payment to you can't go onto a card"
+msgstr "나에게 온 지불은 카드로 들어갈 수 없습니다"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a transaction's payee"
 msgid "%1 isn't missing reserve lines"
 msgstr "%1에는 빠진 준비금 줄이 없습니다"
+
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settled up with %1"
+msgstr "%1과(와) 정산함"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
@@ -2356,6 +2408,11 @@ msgstr "계좌"
 #, kde-format
 msgid "Add — what happened?"
 msgstr "추가 — 무슨 일이 있었나요?"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "준비금 줄을 대신 추가해 줌"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

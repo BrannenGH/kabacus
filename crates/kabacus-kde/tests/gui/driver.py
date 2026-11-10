@@ -276,6 +276,14 @@ def open_add(kind):
     wait_for("the form", lambda: find(app(), "Amount", pyatspi.ROLE_TEXT))
 
 
+def open_card_purchase(card):
+    """Spent, then a card: the form turns into a card purchase."""
+    open_add("Spent")
+    _, _, width, _ = app().queryComponent().getExtents(pyatspi.DESKTOP_COORDS)
+    (choose_phone if width < 600 else choose)("From", card)
+    wait_for("the card purchase view", lambda: label_starting("This is a card purchase"))
+
+
 def save():
     """Save from the form: directly where the preview is live (wide),
     else through Review before saving."""
@@ -330,7 +338,7 @@ def main():
         wait_for("accounts after Back", lambda: find(app(), "Everyday Checking", pyatspi.ROLE_LIST_ITEM))
         print("ok")
         return
-    if command == "phone-account-browse":
+    if command == "account-browse":
         # The picker browses groups, then lists matches from every group.
         open_add("Spent")
         click(wait_for("the Category field", lambda: find(app(), "Category", pyatspi.ROLE_COMBO_BOX)))
@@ -740,12 +748,24 @@ def main():
         save()
     elif command == "card-purchase":
         payee, amount, card, category = args
-        open_add("Card purchase")
+        open_card_purchase(card)
         _, _, width, _ = app().queryComponent().getExtents(pyatspi.DESKTOP_COORDS)
         pick = choose_phone if width < 600 else choose
-        pick("Card", card)
         fill_fields(Payee=payee, Amount=amount)
         pick("Category", category)
+        save()
+    elif command == "card-to-spent":
+        # A card makes Spent a card purchase; Switch to Spent goes back.
+        (card,) = args
+        open_card_purchase(card)
+        click(wait_for("Switch to Spent", lambda: find(app(), "Switch to Spent")))
+        wait_for("the card warning", lambda: label_starting("That's a card"))
+    elif command == "settle-up":
+        # You paid them: it nets against what you owe them, then builds what they owe.
+        (amount,) = args
+        open_add("Settle up with someone")
+        wait_for("the direction", lambda: find(app(), "I paid them", pyatspi.ROLE_RADIO_BUTTON))
+        fill_fields(Amount=amount)
         save()
     elif command == "set-aside":
         fund, amount = args
@@ -762,8 +782,7 @@ def main():
     elif command == "conflict":
         # The books change between the preview and Save.
         payee, amount, card, category, sync = args
-        open_add("Card purchase")
-        choose("Card", card)
+        open_card_purchase(card)
         fill_fields(Payee=payee, Amount=amount)
         choose("Category", category)
         # On the desktop the preview is live beside the form.

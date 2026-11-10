@@ -138,16 +138,6 @@ msgstr "Дохід або повернення"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card purchase"
-msgstr "Купівля карткою"
-
-#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Додає рядки резерву за вас"
-
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Transfer"
 msgstr "Переказ"
 
@@ -185,6 +175,16 @@ msgstr "Розділити з кимось"
 #, kde-format
 msgid "They owe you, or you owe them"
 msgstr "Вам винні або ви винні"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settle up with someone"
+msgstr "Розрахуватися з кимось"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money you paid them or they paid you"
+msgstr "Гроші, які ви заплатили їм або вони вам"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1234,6 +1234,11 @@ msgstr "Цього року нічого"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Card purchase"
+msgstr "Купівля карткою"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Set money aside"
 msgstr "Відкласти гроші"
 
@@ -1318,6 +1323,16 @@ msgctxt "a credit card"
 msgid "Card"
 msgstr "Картка"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This is a card purchase: its reserve lines are added for you."
+msgstr "Це покупка карткою: рядки її резерву додаються автоматично."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch to Spent"
+msgstr "Перемкнути на «Витрата»"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label what a shared cost was for"
@@ -1400,6 +1415,21 @@ msgstr "Резерв"
 msgctxt "money set aside"
 msgid "Reserve"
 msgstr "Резерв"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Direction"
+msgstr "Напрямок"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "I paid them"
+msgstr "Я заплатив(-ла) їм"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "They paid me"
+msgstr "Вони заплатили мені"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -2017,6 +2047,18 @@ msgstr "%1: %2 сплачено з %3; %4 винен %5 із цього."
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "You paid %2 %1 from %3."
+msgstr "Ви заплатили %2 %1 з рахунку %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "%2 paid you %1 into %3."
+msgstr "%2 заплатив(-ла) вам %1 на рахунок %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a payee"
 msgid "Edit %1 in place. History keeps the old version."
 msgstr "Змінити %1 на місці. Історія зберігає стару версію."
@@ -2071,9 +2113,19 @@ msgstr "У %1 немає рахунку резерву"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgid "A payment to you can't go onto a card"
+msgstr "Платіж вам не можна зарахувати на картку"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a transaction's payee"
 msgid "%1 isn't missing reserve lines"
 msgstr "У %1 не бракує рядків резерву"
+
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settled up with %1"
+msgstr "Розрахунок із %1"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
@@ -2377,6 +2429,11 @@ msgstr "Рахунки"
 #, kde-format
 msgid "Add — what happened?"
 msgstr "Додати — що сталося?"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "Додає рядки резерву за вас"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

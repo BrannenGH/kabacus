@@ -122,7 +122,7 @@ export function App({ auth, book, onFileAction }) {
     setChooser(false);
     const kind = { "transaction.spent": "transaction", "transaction.received": "received", "reserve.setAside": "allocation" }[command.id];
     if (kind) setForm(kind === "received" ? {kind, to: openedAccount} : { kind, from: openedAccount });
-    else setOperationForm({ kind: { "card.purchase": "purchase", "card.pay": "payment", "split.record": "split", "transaction.split": "split", "transaction.transfer": "transfer", "transaction.postings": "postings" }[command.id], account: openedAccount });
+    else setOperationForm({ kind: { "settle.record": "settle", "card.pay": "payment", "split.record": "split", "transaction.split": "split", "transaction.transfer": "transfer", "transaction.postings": "postings" }[command.id], account: openedAccount });
   };
   useEffect(() => { book?.remember?.({ page, account: openedAccount, selected:selectedRow }); }, [page, openedAccount, selectedRow, book?.id]);
   useEffect(() => {
@@ -477,6 +477,10 @@ export function App({ auth, book, onFileAction }) {
           api={api}
           onClose={() => setOperationForm(null)}
           onSaved={(result) => { setOperationForm(null); saved(result); }}
+          onSwitch={(values) => {
+            setOperationForm(null);
+            setForm({ kind: "transaction", keepSpent: true, from: values.card, to: values.category, description: values.description, memo: values.memo, amount: values.amount });
+          }}
         />
       )}
       {form && (
@@ -488,6 +492,10 @@ export function App({ auth, book, onFileAction }) {
           api={api}
           onClose={() => setForm(null)}
           onSaved={(result) => { setForm(null); saved(result); }}
+          onSwitch={(values) => {
+            setForm(null);
+            setOperationForm({ kind: "purchase", card: values.card, prefill: values });
+          }}
         />
       )}
     </div>
@@ -759,6 +767,7 @@ function WriteDialog({
   api,
   onClose,
   onSaved,
+  onSwitch,
 }) {
   const wide = useMedia(desktopQuery);
   const phone = useMedia(phoneQuery);
@@ -790,6 +799,10 @@ function WriteDialog({
   };
   useEffect(() => {
     dialog.current.show();
+    // Spent from a card (a card's register) is a card purchase, unless the
+    // person switched back to Spent.
+    if (kind === "transaction" && !defaults.keepSpent && data.cash.cards.some((c) => c.card === defaults.from))
+      onSwitch?.({ card: defaults.from, description: defaults.description, memo: defaults.memo, amount: defaults.amount, category: defaults.to || "" });
   }, []);
   useEffect(() => {
     if (preview) return;
@@ -957,7 +970,7 @@ function WriteDialog({
     }
   }
   const amountField = <AmountField data={data}
-    input={{name:"amount", autoFocus:phone, pattern:"[0-9]+([.][0-9]+)?", placeholder:"0.00",
+    input={{name:"amount", autoFocus:phone, pattern:"[0-9]+([.][0-9]+)?", placeholder:"0.00", defaultValue:defaults.amount,
       "aria-label":t("%1 (%2)", t("Amount"), allocation ? data.commodity.symbol : currency)}}
     currency={allocation ? null : {name:"currency",value:currency,onChange:e=>setCurrency(e.target.value)}} />;
   return (
@@ -1021,6 +1034,7 @@ function WriteDialog({
                     <input
                       name="description"
                       list="known-payees"
+                      defaultValue={defaults.description}
                       onChange={(e) => recall(e.target.value)}
                       required
                       autoFocus={!phone}
@@ -1036,14 +1050,27 @@ function WriteDialog({
                 {!allocation && (
                   <label>
                     {t("Memo")}
-                    <input name="memo" />
+                    <input name="memo" defaultValue={defaults.memo} />
                   </label>
                 )}
                 <label>
                   {t("From")}
                   <select
                     name="from"
-                    onChange={e => { if (!received && !allocation) setCurrency(accountCurrency(data, e.target.value)); }}
+                    onChange={e => {
+                      if (!received && !allocation) setCurrency(accountCurrency(data, e.target.value));
+                      if (spending && data.cash.cards.some((c) => c.card === e.target.value)) {
+                        const fields = Object.fromEntries(new FormData(formRef.current));
+                        const category = accountPath(fields.to || "");
+                        onSwitch?.({
+                          card: e.target.value,
+                          description: fields.description,
+                          memo: fields.memo,
+                          amount: fields.amount,
+                          category: data.accounts.some((a) => a.account === category && a.kind === "expense") ? category : "",
+                        });
+                      }
+                    }}
                     required
                     defaultValue={
                       defaults.from ||

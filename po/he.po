@@ -138,16 +138,6 @@ msgstr "הכנסה או החזר"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card purchase"
-msgstr "קנייה בכרטיס"
-
-#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "מוסיף בשבילך את שורות הרזרבה"
-
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Transfer"
 msgstr "העברה"
 
@@ -185,6 +175,16 @@ msgstr "חלוקה עם מישהו"
 #, kde-format
 msgid "They owe you, or you owe them"
 msgstr "הם חייבים לך, או שאת/ה חייב/ת להם"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settle up with someone"
+msgstr "התחשבנות עם מישהו"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money you paid them or they paid you"
+msgstr "כסף ששילמתם להם או ששילמו לכם"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1234,6 +1234,11 @@ msgstr "שום דבר השנה"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Card purchase"
+msgstr "קנייה בכרטיס"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Set money aside"
 msgstr "הפרשת כסף"
 
@@ -1318,6 +1323,16 @@ msgctxt "a credit card"
 msgid "Card"
 msgstr "כרטיס"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This is a card purchase: its reserve lines are added for you."
+msgstr "זו רכישה בכרטיס: שורות הרזרבה שלה מתווספות עבורכם."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch to Spent"
+msgstr "מעבר להוצאה"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label what a shared cost was for"
@@ -1400,6 +1415,21 @@ msgstr "רזרבה"
 msgctxt "money set aside"
 msgid "Reserve"
 msgstr "רזרבה"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Direction"
+msgstr "כיוון"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "I paid them"
+msgstr "שילמתי להם"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "They paid me"
+msgstr "הם שילמו לי"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -2017,6 +2047,18 @@ msgstr "%1: %2 שולם באמצעות %3; %4 חייב/ת %5 מזה."
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "You paid %2 %1 from %3."
+msgstr "שילמתם ל%2 סך %1 מ%3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "%2 paid you %1 into %3."
+msgstr "%2 שילם לכם %1 אל %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a payee"
 msgid "Edit %1 in place. History keeps the old version."
 msgstr "עריכת %1 במקום. ההיסטוריה שומרת את הגרסה הישנה."
@@ -2071,9 +2113,19 @@ msgstr "ל־%1 אין חשבון רזרבה"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgid "A payment to you can't go onto a card"
+msgstr "תשלום אליכם לא יכול להיכנס לכרטיס"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a transaction's payee"
 msgid "%1 isn't missing reserve lines"
 msgstr "ל־%1 לא חסרות שורות רזרבה"
+
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settled up with %1"
+msgstr "בוצעה התחשבנות עם %1"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
@@ -2377,6 +2429,11 @@ msgstr "חשבונות"
 #, kde-format
 msgid "Add — what happened?"
 msgstr "הוספה — מה קרה?"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "מוסיף בשבילך את שורות הרזרבה"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

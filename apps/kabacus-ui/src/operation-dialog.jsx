@@ -18,6 +18,7 @@ const titles = {
   reconcile: "Reconcile",
   fix: "Fix reserve lines",
   split: "Split with someone",
+  settle: "Settle up with someone",
   "account-type": "Account type",
 };
 export function OperationDialog({
@@ -28,9 +29,11 @@ export function OperationDialog({
   tx,
   card,
   account,
+  prefill,
   onClose,
   onSaved,
   onInspect,
+  onSwitch,
 }) {
   const [kind, setKind] = useState(initialKind);
   const wide = useMedia(desktopQuery);
@@ -195,7 +198,7 @@ export function OperationDialog({
   const amountField = !postingEdit && !["fix", "status", "postings", "transfer", "account-type"].includes(kind) &&
     <AmountField data={data} input={{name:"amount",autoFocus:phone,
       pattern:kind === "reconcile" ? "-?[0-9]+([.][0-9]+)?" : "[0-9]+([.][0-9]+)?",
-      defaultValue:tx?.postings[0]?.amount.exact.replace(/^-/, "")}}
+      defaultValue:tx?.postings[0]?.amount.exact.replace(/^-/, "") || prefill?.amount}}
       currency={kind === "reconcile" ? {name:"currency",value:currency,onChange:e=>setCurrency(e.target.value)} : null} />;
   return (
     <dialog
@@ -280,7 +283,7 @@ export function OperationDialog({
                         defaultValue={
                           tx
                             ? [tx.payee, tx.memo].filter(Boolean).join(" | ")
-                            : ""
+                            : [prefill?.description, prefill?.memo].filter(Boolean).join(" | ")
                         }
                       />
                     </label>
@@ -402,6 +405,21 @@ export function OperationDialog({
                         </select>
                       </label>
                     ))}
+                  {kind === "purchase" && (
+                    <p className="banner">
+                      {t("This is a card purchase: its reserve lines are added for you.")}{" "}
+                      <button
+                        type="button"
+                        className="quiet"
+                        onClick={() => {
+                          const fields = Object.fromEntries(new FormData(formRef.current));
+                          onSwitch?.({ card: fields.card, description: fields.description, amount: fields.amount, category: fields.category });
+                        }}
+                      >
+                        {t("Switch to Spent")}
+                      </button>
+                    </p>
+                  )}
                   {["purchase", "payment", "fix"].includes(kind) && (
                     <label>
                       {t("Card")}
@@ -419,6 +437,51 @@ export function OperationDialog({
                         ))}
                       </select>
                     </label>
+                  )}
+                  {kind === "settle" && (
+                    <>
+                      <label>
+                        {t("Direction")}
+                        <select name="direction" required>
+                          <option value="paid">{t("I paid them")}</option>
+                          <option value="received">{t("They paid me")}</option>
+                        </select>
+                      </label>
+                      <label>
+                        {t("Account")}
+                        <select name="account" defaultValue={account || ""} required>
+                          {data.accounts
+                            .filter((a) => ["money", "revolving-debt"].includes(a.kind))
+                            .map((a) => (
+                              <option key={a.account} value={a.account}>
+                                {a.display_name || a.account}
+                              </option>
+                            ))}
+                        </select>
+                      </label>
+                      <label>
+                        {t("Who")}
+                        <input
+                          name="person"
+                          list="settle-people"
+                          required
+                          defaultValue={
+                            data.accounts
+                              .find((a) => a.kind === "receivable")
+                              ?.account.replace(/^assets:receivable:/, "") || ""
+                          }
+                        />
+                        <datalist id="settle-people">
+                          {data.accounts
+                            .filter((a) => a.kind === "receivable")
+                            .map((a) => (
+                              <option key={a.account} value={a.account.replace(/^assets:receivable:/, "")}>
+                                {a.display_name || a.account}
+                              </option>
+                            ))}
+                        </datalist>
+                      </label>
+                    </>
                   )}
                   {kind === "split" && (
                     <>
@@ -493,7 +556,7 @@ export function OperationDialog({
                     <>
                       <label>
                         {t("Category")}
-                        <select name="category" required>
+                        <select name="category" required defaultValue={prefill?.category || undefined}>
                           {data.accounts
                             .filter((a) => a.kind === "expense")
                             .map((a) => (

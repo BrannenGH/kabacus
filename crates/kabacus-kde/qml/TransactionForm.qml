@@ -50,13 +50,15 @@ Kirigami.ScrollablePage {
     property string mode: preset.mode || (kind === "set_aside" ? "aside" : kind === "edit" ? "edit" : "")
     // Free money or a fund.
     property string source: "free"
+    // Settling up: you paid them (else they paid you).
+    property bool settlePaid: true
 
     readonly property bool live: app.wide
     readonly property var titles: ({
         spent: i18nc("@action what happened", "Spent"), received: i18nc("@action what happened", "Received"),
         transfer: i18n("Transfer"), postings: i18n("Postings"),
         card_purchase: i18n("Card purchase"), set_aside: i18n("Set money aside"), pay_card: i18n("Pay a card"),
-        split: i18n("Split with someone"), edit: i18n("Edit transaction"), fix_reserves: i18n("Fix reserve lines"),
+        split: i18n("Split with someone"), settle: i18n("Settle up with someone"), edit: i18n("Edit transaction"), fix_reserves: i18n("Fix reserve lines"),
         reconcile: i18n("Reconcile"), account_type: i18n("Account type")
     })
     title: titles[kind] || i18n("Add")
@@ -98,6 +100,9 @@ Kirigami.ScrollablePage {
             return Object.assign(base, { kind: "set_aside", from: fromPicker.value, to: toPicker.value, description: memo.text })
         case "pay_card":
             return Object.assign(base, { kind: "pay_card", card: cardPicker.value })
+        case "settle":
+            return Object.assign(base, { kind: "settle", memo: memo.text, account: fromPicker.value,
+                person: personPicker.value.split(":").pop(), paid: settlePaid })
         case "split":
             return { kind: "split", date: date.text, payee: payee.text, memo: memo.text, paid_with: fromPicker.value,
                 category: toPicker.value, person: personPicker.value.split(":").pop(), total: amount.text,
@@ -135,7 +140,7 @@ Kirigami.ScrollablePage {
         if (err.kind === "field") {
             errors[err.field] = err.message
             const picker = ({ from: fromPicker, to: toPicker, category: toPicker, card: cardPicker,
-                paid_with: fromPicker, source: fundPicker, person: personPicker })[err.field]
+                paid_with: fromPicker, account: fromPicker, source: fundPicker, person: personPicker })[err.field]
             if (picker) {
                 picker.error = err.message
                 picker.suggestion = err.suggestion || ""
@@ -275,16 +280,26 @@ Kirigami.ScrollablePage {
         const fill = (picker, account) => { if (picker.value === "") picker.set(account) }
         const p = preset
         if (p.from) fill(fromPicker, p.from)
-        else if (["spent", "transfer", "split", "postings"].includes(kind) && money.length > 0) fill(fromPicker, money[0].account)
+        else if (["spent", "transfer", "split", "settle", "postings"].includes(kind) && money.length > 0) fill(fromPicker, money[0].account)
         else if (kind === "set_aside" && asideFrom.length > 0) fill(fromPicker, asideFrom[0].account)
         if (p.to) fill(toPicker, p.to)
         else if (kind === "received" && money.length > 0) fill(toPicker, money[0].account)
         if (p.card) fill(cardPicker, p.card)
         else if (cards.length > 0) fill(cardPicker, cards[0].account)
         if (funds.length > 0) fill(fundPicker, funds[0].account)
+        cardSwitch()
         if (people.length > 0) fill(personPicker, people[0].account)
         presetting = false
         if (kind === "fix_reserves" || kind === "reconcile") runPreview()
+    }
+
+    // Choosing a card for a Spent entry makes it a card purchase; Switch to
+    // Spent goes back, keeping what was typed.
+    function cardSwitch() {
+        if (kind === "spent" && cards.some(c => c.account === fromPicker.value)) {
+            kind = "card_purchase"
+            cardPicker.set(fromPicker.value)
+        }
     }
 
     actions: [
@@ -470,11 +485,26 @@ Kirigami.ScrollablePage {
                     accounts: page.cards
                     onEdited: page.edited()
                 }
+                Kirigami.InlineMessage {
+                    Layout.fillWidth: true
+                    visible: page.kind === "card_purchase"
+                    type: Kirigami.MessageType.Information
+                    text: i18n("This is a card purchase: its reserve lines are added for you.")
+                    actions: [
+                        Kirigami.Action {
+                            text: i18n("Switch to Spent")
+                            onTriggered: {
+                                page.kind = "spent"
+                                fromPicker.set(cardPicker.value)
+                            }
+                        }
+                    ]
+                }
                 Controls.TextField {
                     font.pixelSize: page.app.narrow ? 16 : Kirigami.Theme.defaultFont.pixelSize
                     Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                     id: payee
-                    visible: !["set_aside", "pay_card", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
+                    visible: !["set_aside", "pay_card", "settle", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     Kirigami.FormData.label: page.kind === "split" ? i18nc("@label what a shared cost was for", "What:") : i18nc("@label", "Payee:")
                     Accessible.name: i18n("Payee")
                     onTextEdited: {
@@ -509,10 +539,14 @@ Kirigami.ScrollablePage {
                 AccountPicker {
                     id: fromPicker
                     visible: !page.postingEdit && !["card_purchase", "pay_card", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
-                    label: page.kind === "split" ? i18n("Paid with") : i18nc("the account money comes from", "From")
+                    label: page.kind === "split" ? i18n("Paid with") : page.kind === "settle" ? i18n("Account") : i18nc("the account money comes from", "From")
                     accounts: page.kind === "set_aside" ? page.asideFrom
-                        : page.kind === "received" ? page.incomes : page.moneyAndCards
-                    onEdited: page.edited()
+                        : page.kind === "received" ? page.incomes
+                        : page.kind === "settle" && !page.settlePaid ? page.ordered(["money"]) : page.moneyAndCards
+                    onEdited: {
+                        page.cardSwitch()
+                        page.edited()
+                    }
                 }
                 Kirigami.InlineMessage {
                     Layout.fillWidth: true
@@ -531,7 +565,7 @@ Kirigami.ScrollablePage {
                 }
                 AccountPicker {
                     id: toPicker
-                    visible: !page.postingEdit && !["pay_card", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
+                    visible: !page.postingEdit && !["pay_card", "settle", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     label: ["spent", "card_purchase", "split"].includes(page.kind) ? i18n("Category") : i18nc("the account money goes to", "To")
                     accounts: page.kind === "set_aside" ? page.asideTo
                         : ["spent", "card_purchase", "split"].includes(page.kind) ? page.categories
@@ -590,9 +624,28 @@ Kirigami.ScrollablePage {
                     accounts: page.funds
                     onEdited: page.edited()
                 }
+                RowLayout {
+                    visible: page.kind === "settle"
+                    Kirigami.FormData.label: i18n("Direction")
+                    Controls.ButtonGroup { id: settleGroup }
+                    Controls.RadioButton {
+                        Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
+                        text: i18n("I paid them")
+                        checked: page.settlePaid
+                        Controls.ButtonGroup.group: settleGroup
+                        onToggled: { page.settlePaid = true; page.edited() }
+                    }
+                    Controls.RadioButton {
+                        Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
+                        text: i18n("They paid me")
+                        checked: !page.settlePaid
+                        Controls.ButtonGroup.group: settleGroup
+                        onToggled: { page.settlePaid = false; page.edited() }
+                    }
+                }
                 AccountPicker {
                     id: personPicker
-                    visible: page.kind === "split"
+                    visible: page.kind === "split" || page.kind === "settle"
                     label: i18nc("the person a cost is split with", "With")
                     accounts: page.people
                     onEdited: page.edited()

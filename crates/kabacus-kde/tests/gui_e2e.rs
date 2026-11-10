@@ -527,7 +527,7 @@ async fn add_from_a_register_presets_its_account() {
             &config_dir(&format!("regadd{i}")),
             size,
         );
-        drive(&["register-add", "Visa", "Spent", "From", "Visa"]).await;
+        drive(&["register-add", "Visa", "Spent", "Card", "Visa"]).await;
     }
 }
 
@@ -1037,13 +1037,13 @@ async fn phone_navigation_sheets_and_register_back() {
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
 async fn phone_account_picker_browses_groups_then_searches() {
-    let server = books("phone-account-browse").await;
+    let server = books("account-browse").await;
     let _app = launch_sized(
         &server.socket_path,
-        &config_dir("phone-account-browse"),
+        &config_dir("account-browse"),
         "390x844",
     );
-    drive(&["phone-account-browse"]).await;
+    drive(&["account-browse"]).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
@@ -1066,6 +1066,56 @@ async fn a_new_category_typed_into_spent_is_made_by_saving() {
         .postings
         .iter()
         .any(|p| p.account == "expenses:pet-care"));
+}
+
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn choosing_a_card_makes_spent_a_card_purchase_and_back() {
+    let server = books("card-to-spent").await;
+    let _app = launch(&server.socket_path, &config_dir("card-to-spent"));
+    drive(&["card-to-spent", "Visa"]).await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn settling_up_nets_against_what_you_owe() {
+    let socket = socket_path("settle-up");
+    let journal = format!("{BOOKS}\naccount assets:receivable:jordan\naccount liabilities:payable:jordan\n2026-09-12 Jordan paid for supplies\n    expenses:dining  12.13 USD\n    liabilities:payable:jordan  -12.13 USD\n");
+    let server =
+        kabacus_testkit::spawn_server_with_journal(&journal, |c| c.socket_path = socket.clone())
+            .await;
+    let client = KabacusClient::connect_unix(&server.socket_path);
+    let _app = launch(&server.socket_path, &config_dir("settle-up"));
+    drive(&["settle-up", "20.00"]).await;
+    let saved = client
+        .list_transactions()
+        .await
+        .unwrap()
+        .into_iter()
+        .find(|t| t.payee == "Settled up with Jordan")
+        .unwrap();
+    let mut lines = saved
+        .postings
+        .iter()
+        .map(|p| (p.account.as_str(), p.amount.exact.as_str()))
+        .collect::<Vec<_>>();
+    lines.sort();
+    assert_eq!(
+        lines,
+        vec![
+            ("assets:bank:checking", "-20.00"),
+            ("assets:receivable:jordan", "7.87"),
+            ("liabilities:payable:jordan", "12.13"),
+        ]
+    );
+}
+
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn desktop_account_picker_browses_groups_then_searches() {
+    let server = books("account-browse-desktop").await;
+    let _app = launch(&server.socket_path, &config_dir("account-browse-desktop"));
+    drive(&["account-browse"]).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
