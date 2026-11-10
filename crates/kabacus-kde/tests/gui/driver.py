@@ -445,6 +445,17 @@ def main():
         for name, value in (("Amount 1", "15.00"), ("Amount 2", "5.00"), ("Amount 3", "-20.00")):
             set_text(wait_for(name, lambda: find(app(), name, pyatspi.ROLE_TEXT, showing=False)), value)
         save()
+    elif command == "edit-raw":
+        # An ordinary edit can be viewed as its raw postings.
+        account, payee, date = args
+        click(wait_for(f"the {account} account", lambda: find(app(), account, pyatspi.ROLE_LIST_ITEM)))
+        click(wait_for(f"the {payee!r} row", lambda: row(payee, date)))
+        wait_for("the edit form", lambda: label_starting("Edit transaction"))
+        press(wait_for("View as raw postings", lambda: find(app(), "View as raw postings", pyatspi.ROLE_PUSH_BUTTON)))
+        for name in ("Amount 1", "Amount 2"):
+            wait_for(name, lambda name=name: find(app(), name, pyatspi.ROLE_TEXT, showing=False))
+        if find(app(), "View as raw postings", pyatspi.ROLE_PUSH_BUTTON):
+            fail("the raw postings offer to view as raw postings again")
     elif command == "edit-prefill":
         # The edit form shows the transaction's own accounts, and
         # keeps them when the pickers' account list is reloaded.

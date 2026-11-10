@@ -8,6 +8,7 @@ export const messages = [
   "Unit price",
   "Total price",
   "How it's worked out",
+  "View as raw postings",
   "Back", "Books", "Switch Books…", "More",
   "Sign in to %1",
   "Back to my books",

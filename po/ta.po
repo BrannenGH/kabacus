@@ -1251,6 +1251,11 @@ msgctxt "the payee a transfer is given"
 msgid "Transfer"
 msgstr "பரிமாற்றம்"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "View as raw postings"
+msgstr "மூலப் பதிவுகளாகக் காண்க"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@option cancel a transaction with a reversal"

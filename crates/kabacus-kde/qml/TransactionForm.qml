@@ -24,7 +24,7 @@ Kirigami.ScrollablePage {
 
     globalToolBarStyle: app.narrow ? Kirigami.ApplicationHeaderStyle.None : Kirigami.ApplicationHeaderStyle.ToolBar
     property var postingRows: preset.postings || []
-    readonly property bool postingEdit: kind === "edit" && preset.postings !== undefined
+    readonly property bool postingEdit: kind === "edit" && preset.raw === true
 
     required property var app
     readonly property var ledger: app.ledger
@@ -290,6 +290,16 @@ Kirigami.ScrollablePage {
     actions: [
         // Not while saving: the save closes the form when it's done.
         Kirigami.Action { text: i18n("Cancel"); icon.name: "dialog-cancel"; enabled: !page.saving; onTriggered: page.app.runFileAction(function() { page.app.pageStack.layers.pop() }) },
+        Kirigami.Action {
+            text: i18n("View as raw postings")
+            icon.name: "view-list-details"
+            visible: page.kind === "edit" && !page.postingEdit && page.mode !== "void"
+            enabled: !page.saving
+            onTriggered: page.app.runFileAction(function() {
+                page.app.pageStack.layers.pop()
+                page.app.openEdit(page.preset.id, page.mode, true)
+            })
+        },
         Kirigami.Action {
             text: i18nc("@option cancel a transaction with a reversal", "Void")
             icon.name: "edit-delete"
