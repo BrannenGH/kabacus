@@ -5,7 +5,7 @@
 //! Receivable/payable side selection for counterparty entry, and netted
 //! counterparty statements.
 //!
-//! Sign convention (hledger's natural one for these account types): a
+//! Sign convention: a
 //! receivable (`assets:receivable:<name>`) is an asset and its balance
 //! stays >= 0; a payable (`liabilities:payable:<name>`) is a liability and
 //! its balance stays <= 0. "Owed to me" is the positive net; "I owe them" is

@@ -179,6 +179,18 @@ def choose(combo_name, item_name):
     pyatspi.Registry.generateKeyboardEvent(0xFF09, None, pyatspi.KEY_SYM)  # Tab
 
 
+def choose_phone(combo_name, item_name):
+    click(wait_for(f"the {combo_name} field", lambda: find(app(), combo_name, pyatspi.ROLE_COMBO_BOX)))
+    search = wait_for("the full-screen account picker", lambda: find(app(), "Search", pyatspi.ROLE_TEXT))
+    set_text(search, item_name)
+    item = wait_for(f"the {item_name} choice", lambda: find(app(), item_name, pyatspi.ROLE_LIST_ITEM))
+    _, _, width, height = item.queryComponent().getExtents(pyatspi.DESKTOP_COORDS)
+    if width < 48 or height < 48:
+        fail(f"the {item_name} picker target is only {width} by {height}")
+    click(item)
+    wait_for("the picker to close", lambda: not find(app(), "Search", pyatspi.ROLE_TEXT))
+
+
 def row(payee, date=None):
     name = f"{payee} {date}" if date else None
     return pyatspi.findDescendant(
@@ -237,7 +249,7 @@ def mirroring(first, second):
 
 
 def goto(name):
-    """A destination: a bottom tab on a phone (Credit, Loans, Reports,
+    """A destination: a bottom tab on a phone (People, Loans, Reports,
     Activity and Settings are under More there), else the drawer."""
     if find_any("More", {pyatspi.ROLE_PAGE_TAB}):
         tab = find_any(name, {pyatspi.ROLE_PAGE_TAB})
@@ -264,13 +276,21 @@ def open_add(kind):
     wait_for("the form", lambda: find(app(), "Amount", pyatspi.ROLE_TEXT))
 
 
+def open_card_purchase(card):
+    """Spent, then a card: the form turns into a card purchase."""
+    open_add("Spent")
+    _, _, width, _ = app().queryComponent().getExtents(pyatspi.DESKTOP_COORDS)
+    (choose_phone if width < 600 else choose)("From", card)
+    wait_for("the card purchase view", lambda: label_starting("This is a card purchase"))
+
+
 def save():
     """Save from the form: directly where the preview is live (wide),
     else through Review before saving."""
     review = find(app(), "Review", pyatspi.ROLE_PUSH_BUTTON)
     if review is not None:
         press(review)
-        wait_for("the review page", lambda: label_starting("Review before saving"), 90)
+        wait_for("the review page", lambda: label_starting("Review before saving") or find(app(), "Save", pyatspi.ROLE_PUSH_BUTTON), 90)
     press(wait_for("the Save button", lambda: find(app(), "Save", pyatspi.ROLE_PUSH_BUTTON)))
     wait_for("the saved notification", lambda: label_starting("Saved as revision"), 90)
 
@@ -292,6 +312,46 @@ def fill_fields(**fields):
 def main():
     command, args = sys.argv[1], sys.argv[2:]
     wait_for("the Kabacus window", app)
+    if command == "phone-navigation":
+        labels = ["Overview", "Transactions", "Reserves", "Credit", "More"]
+        tabs = [wait_for(f"the {label} tab", lambda label=label: find_any(label, {pyatspi.ROLE_PAGE_TAB})) for label in labels]
+        bounds = [tab.queryComponent().getExtents(pyatspi.DESKTOP_COORDS) for tab in tabs]
+        if [b.x for b in bounds] != sorted(b.x for b in bounds):
+            fail("phone tabs are out of order")
+        if any(b.width < 48 or b.height < 48 for b in bounds):
+            fail(f"a phone tab is smaller than 48 px: {bounds}")
+        goto("More")
+        for label in ["Loans", "People", "Reports", "Activity", "Settings"]:
+            wait_for(f"{label} under More", lambda label=label: find_any(label, {pyatspi.ROLE_LIST_ITEM}))
+        click(wait_for("Switch Books", lambda: find(app(), "Switch Books…")))
+        for label in ["New Books…", "Open Books…", "Save a Copy As…", "Connect to a Server…"]:
+            wait_for(label, lambda label=label: find(app(), label))
+        for label in ["New Window", "Close Window", "Quit"]:
+            if find(app(), label):
+                fail(f"{label} offered in phone Books sheet")
+        click(wait_for("close Books", lambda: find(app(), "Close", pyatspi.ROLE_PUSH_BUTTON)))
+        wait_for("the Books sheet to close", lambda: not find(app(), "New Books…"))
+        books_loaded()
+        click(wait_for("the account", lambda: find(app(), "Everyday Checking", pyatspi.ROLE_LIST_ITEM)))
+        wait_for("the register", lambda: find(app(), "Everyday Checking", pyatspi.ROLE_LABEL))
+        press(wait_for("Back", lambda: find(app(), "Back", pyatspi.ROLE_PUSH_BUTTON)))
+        wait_for("accounts after Back", lambda: find(app(), "Everyday Checking", pyatspi.ROLE_LIST_ITEM))
+        print("ok")
+        return
+    if command == "account-browse":
+        # The picker browses groups, then lists matches from every group.
+        open_add("Spent")
+        click(wait_for("the Category field", lambda: find(app(), "Category", pyatspi.ROLE_COMBO_BOX)))
+        wait_for("the full-screen account picker", lambda: find(app(), "Search", pyatspi.ROLE_TEXT))
+        click(wait_for("the Expenses group", lambda: find(app(), "Expenses ›", pyatspi.ROLE_LIST_ITEM)))
+        click(wait_for("the Dining choice", lambda: find(app(), "Dining", pyatspi.ROLE_LIST_ITEM)))
+        wait_for("the picker to close", lambda: not find(app(), "Search", pyatspi.ROLE_TEXT))
+        wait_for("Dining chosen", lambda: find(app(), "Category", pyatspi.ROLE_COMBO_BOX).description == "Dining")
+        click(find(app(), "Category", pyatspi.ROLE_COMBO_BOX))
+        set_text(wait_for("Search", lambda: find(app(), "Search", pyatspi.ROLE_TEXT)), "visa")
+        wait_for("Visa among the matches", lambda: find(app(), "Visa", pyatspi.ROLE_LIST_ITEM))
+        print("ok")
+        return
     if command == "about":
         version, source_url = args
         books_loaded()
@@ -377,6 +437,14 @@ def main():
         fill_fields(Date=date, Payee=payee, Amount=amount)
         choose("To", to_name)
         save()
+    elif command == "new-category":
+        # A category typed in is made by saving, after a warning to check it.
+        payee, amount, category = args
+        open_add("Spent")
+        fill_fields(Payee=payee, Amount=amount)
+        choose("Category", category)
+        wait_for("the new category warning", lambda: label_starting(f"{category} is a new category"), 10)
+        save()
     elif command == "edit-split":
         account, payee, date = args
         click(wait_for(f"the {account} account", lambda: find(app(), account, pyatspi.ROLE_LIST_ITEM)))
@@ -385,6 +453,17 @@ def main():
         for name, value in (("Amount 1", "15.00"), ("Amount 2", "5.00"), ("Amount 3", "-20.00")):
             set_text(wait_for(name, lambda: find(app(), name, pyatspi.ROLE_TEXT, showing=False)), value)
         save()
+    elif command == "edit-raw":
+        # An ordinary edit can be viewed as its raw postings.
+        account, payee, date = args
+        click(wait_for(f"the {account} account", lambda: find(app(), account, pyatspi.ROLE_LIST_ITEM)))
+        click(wait_for(f"the {payee!r} row", lambda: row(payee, date)))
+        wait_for("the edit form", lambda: label_starting("Edit transaction"))
+        press(wait_for("View as raw postings", lambda: find(app(), "View as raw postings", pyatspi.ROLE_PUSH_BUTTON)))
+        for name in ("Amount 1", "Amount 2"):
+            wait_for(name, lambda name=name: find(app(), name, pyatspi.ROLE_TEXT, showing=False))
+        if find(app(), "View as raw postings", pyatspi.ROLE_PUSH_BUTTON):
+            fail("the raw postings offer to view as raw postings again")
     elif command == "edit-prefill":
         # The edit form shows the transaction's own accounts, and
         # keeps them when the pickers' account list is reloaded.
@@ -493,7 +572,7 @@ def main():
                          or find(app(), "Preview", pyatspi.ROLE_HEADING))
         if ready.getRole() == pyatspi.ROLE_PUSH_BUTTON:
             press(ready)
-            wait_for("the review page", lambda: label_starting("Review before saving"), 90)
+            wait_for("the review page", lambda: label_starting("Review before saving") or find(app(), "Save", pyatspi.ROLE_PUSH_BUTTON), 90)
         wait_for("nothing to save", lambda: label_starting("Nothing to save"), 30)
         save_button = wait_for("the Save button", lambda: find(app(), "Save", pyatspi.ROLE_PUSH_BUTTON))
         if save_button.getState().contains(pyatspi.STATE_ENABLED):
@@ -569,6 +648,8 @@ def main():
         # form; KDE's menu bar is there except on a phone.
         account, fund, empty = args
         goto("Overview")
+        wait_for("available-to-spend heading", lambda: find(app(), "Available to spend"))
+        wait_for("available-by-account heading", lambda: find(app(), "Available by account"))
         meaning = "Free money you can spend right now"
         about = wait_for("Cash on Hand's info button", lambda: find(app(), "About Cash on Hand", pyatspi.ROLE_PUSH_BUTTON))
         if label_starting(meaning):
@@ -581,13 +662,14 @@ def main():
         toggles = {pyatspi.ROLE_TOGGLE_BUTTON, pyatspi.ROLE_PUSH_BUTTON, pyatspi.ROLE_CHECK_BOX}
         if label_starting("− Receivables"):
             fail("Money on Hand's sum is open before it's asked for")
-        press(wait_for("the Money on Hand button", lambda: find_any("Money on Hand", toggles)))
-        wait_for("Money on Hand's sum", lambda: label_starting("− Receivables"), 10)
+        open_list_item("Money on Hand's sum", lambda: find_any("Money on Hand", toggles),
+                       lambda: label_starting("− Receivables"))
 
-        wait_for(f"the {fund} fund", lambda: find(app(), fund, pyatspi.ROLE_LIST_ITEM))
-        if find(app(), empty, pyatspi.ROLE_LIST_ITEM):
+        # Find off-screen rows too; open_list_item scrolls before clicking them.
+        wait_for(f"the {fund} fund", lambda: find(app(), fund, pyatspi.ROLE_LIST_ITEM, showing=False))
+        if find(app(), empty, pyatspi.ROLE_LIST_ITEM, showing=False):
             fail(f"the empty {empty} reserve is on the Overview")
-        open_list_item(f"the {fund} reserve", lambda: find(app(), fund, pyatspi.ROLE_LIST_ITEM),
+        open_list_item(f"the {fund} reserve", lambda: find(app(), fund, pyatspi.ROLE_LIST_ITEM, showing=False),
                  lambda: find(app(), "Amount", pyatspi.ROLE_TEXT))
 
         def to_is_fund():
@@ -595,14 +677,18 @@ def main():
             return picker is not None and picker.description == fund
         wait_for(f"To preset to {fund}", lambda: to_is_fund() or None, 10)
 
+        # A phone's form hides the tabs; leave it before navigating.
+        back = find(app(), "Back", pyatspi.ROLE_PUSH_BUTTON)
+        if back:
+            press(back)
         goto("Overview")
         open_list_item(f"{account}'s free money", lambda: pyatspi.findDescendant(
             app(), lambda n: n is not None and n.getRole() == pyatspi.ROLE_LIST_ITEM
-            and n.name.startswith(f"{account} free ") and n.getState().contains(pyatspi.STATE_SHOWING)),
+            and n.name.startswith(f"{account} free ")),
             lambda: row("Opening"))
 
         goto("Overview")
-        wait_for("the Overview", lambda: find(app(), "About Cash on Hand", pyatspi.ROLE_PUSH_BUTTON))
+        wait_for("the Overview", lambda: find(app(), "About Cash on Hand", pyatspi.ROLE_PUSH_BUTTON, showing=False))
         # Qt reports a menu bar's titles as "menu bar".
         menus = {pyatspi.ROLE_MENU_BAR, pyatspi.ROLE_MENU, pyatspi.ROLE_MENU_ITEM, pyatspi.ROLE_PUSH_BUTTON}
         if find_any("More", {pyatspi.ROLE_PAGE_TAB}):
@@ -667,10 +753,24 @@ def main():
         save()
     elif command == "card-purchase":
         payee, amount, card, category = args
-        open_add("Card purchase")
-        choose("Card", card)
+        open_card_purchase(card)
+        _, _, width, _ = app().queryComponent().getExtents(pyatspi.DESKTOP_COORDS)
+        pick = choose_phone if width < 600 else choose
         fill_fields(Payee=payee, Amount=amount)
-        choose("Category", category)
+        pick("Category", category)
+        save()
+    elif command == "card-to-spent":
+        # A card makes Spent a card purchase; Switch to Spent goes back.
+        (card,) = args
+        open_card_purchase(card)
+        click(wait_for("Switch to Spent", lambda: find(app(), "Switch to Spent")))
+        wait_for("the card warning", lambda: label_starting("That's a card"))
+    elif command == "settle-up":
+        # You paid them: it nets against what you owe them, then builds what they owe.
+        (amount,) = args
+        open_add("Settle up with someone")
+        wait_for("the direction", lambda: find(app(), "I paid them", pyatspi.ROLE_RADIO_BUTTON))
+        fill_fields(Amount=amount)
         save()
     elif command == "set-aside":
         fund, amount = args
@@ -687,8 +787,7 @@ def main():
     elif command == "conflict":
         # The books change between the preview and Save.
         payee, amount, card, category, sync = args
-        open_add("Card purchase")
-        choose("Card", card)
+        open_card_purchase(card)
         fill_fields(Payee=payee, Amount=amount)
         choose("Category", category)
         # On the desktop the preview is live beside the form.

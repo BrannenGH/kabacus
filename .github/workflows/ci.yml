@@ -9,8 +9,7 @@ name: CI
 # publish them (tests don't gate publishing).
 # Everything runs in the openSUSE Tumbleweed test containers from the
 # Containerfile (scripts/dev), the same ones used locally, with the
-# runner's podman. They carry the pinned hledger (for the comparison tests)
-# and the test tools.
+# runner's podman. They carry Rust and the test tools.
 on:
   pull_request:
   workflow_dispatch:
@@ -78,7 +77,7 @@ jobs:
       - uses: ./.github/actions/free-disk-space
 
       - name: Build the openSUSE test image
-        run: scripts/dev hledger --version
+        run: scripts/dev rustc --version
 
       - name: cargo fmt --check
         run: scripts/dev cargo fmt --all --check
@@ -87,13 +86,12 @@ jobs:
         run: scripts/dev cargo clippy --workspace --all-targets -- -D warnings
 
       # Unit, integration and MCP e2e all run under plain `cargo test` in
-      # this workspace, on SQLite stores. The image has the pinned hledger
-      # and a PostgreSQL server, so the comparison with hledger and the
-      # store suite on PostgreSQL must run. Line tables only: backtraces
+      # this workspace, on SQLite stores. The image has a PostgreSQL server,
+      # so the store suite on PostgreSQL must run. Line tables only: backtraces
       # keep file and line, and each test binary is under half the size.
       - name: cargo test --workspace
         run: >-
-          scripts/dev env CARGO_PROFILE_DEV_DEBUG=line-tables-only KABACUS_REQUIRE_HLEDGER=1 KABACUS_REQUIRE_POSTGRES=1
+          scripts/dev env CARGO_PROFILE_DEV_DEBUG=line-tables-only KABACUS_REQUIRE_POSTGRES=1
           cargo test --workspace
 
       # Fails if po/ is out of date with the app's messages, or a

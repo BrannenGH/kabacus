@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import React, { useEffect, useRef } from "react";
 import { t } from "./i18n";
+import { useDialogHistory } from "./phone-history";
 
 export const destinations = ["Overview", "Register", "Funds", "Cards", "Loans", "People", "Reports", "Activity"];
 export const pageLabels = { Overview: "Overview", Register: "Transactions", Funds: "Reserves", Cards: "Credit", Loans: "Loans", People: "People", Reports: "Reports", Activity: "Activity", Settings: "Settings" };
@@ -15,11 +16,13 @@ const paths = {
   Reports: "M4 3v18h17M8 16v-5M13 16V7M18 16V4",
   Activity: "M3 12a9 9 0 1 0 3-7M3 3v5h5M12 7v5l3 2",
   Settings: "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8M8 3l1 2h6l1-2 4 4-2 1v8l2 1-4 4-1-2H9l-1 2-4-4 2-1V8L4 7z",
+  More: "M4 12h1M11 12h1M18 12h1",
   Add: "M12 4v16M4 12h16", Refresh: "M20 7v5h-5M4 17v-5h5M5 8a8 8 0 0 1 13-3l2 2M4 17l2 2a8 8 0 0 0 13-3",
 };
 export function Icon({ name }) { return <svg className="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name] || paths.Register} /></svg>; }
 export function Key({ children }) { return <kbd>{children}</kbd>; }
 export function AddChooser({ commands, onChoose, onClose }) {
+  useDialogHistory({ onClose });
   const ref = useRef();
   useEffect(() => { ref.current.showModal(); ref.current.querySelector("button[data-choice]")?.focus(); }, []);
   return <dialog ref={ref} className="add-chooser" aria-labelledby="add-title" onCancel={(e) => { e.preventDefault(); onClose(); }} onKeyDown={(e) => {
@@ -35,16 +38,32 @@ export function AddChooser({ commands, onChoose, onClose }) {
 
 export function AccountList({ data, selected, onSelect }) {
   const groups = [["money", "Bank & cash"], ["revolving-debt", "Credit"], ["term-liability", "Loans"], ["receivable", "People"], ["payable", "People"], ["expense", "Spending"], ["income", "Income"], ["non-liquid", "Investments"], ["unclassified", "Other"]];
-  const amount = (account) => (account.balance_inclusive || account.balances || []).map((b) => b.formatted).join(" / ");
+  const neutral = account => account.kind === "income" || account.account.startsWith("equity:");
+  const amount = (account) => (account.balance_inclusive || account.balances || []).map((b) => neutral(account) && b.exact.startsWith("-") ? b.formatted.replace(/^-/, "") : b.formatted).join(" / ");
   return <div className="account-list panel" aria-label={t("Accounts")}>
     <button className={!selected ? "selected quiet" : "quiet"} onClick={() => onSelect("")}>{t("All transactions")}</button>
     {groups.map(([kind, label]) => {
-      const accounts = data.accounts.filter((a) => a.kind === kind);
+      const accounts = data.accounts.filter((a) => (a.account.startsWith("equity:") ? "unclassified" : a.kind) === kind);
       if (!accounts.length) return null;
       return <section key={kind}><h3>{t(label)}</h3>{accounts.map((a) => <React.Fragment key={a.account}>
-        <button className={selected === a.account ? "selected" : ""} onClick={() => onSelect(a.account)}><span>{a.display_name || a.account}</span><span className={(a.balance_inclusive || []).some((b) => b.exact.startsWith("-")) ? "amount negative" : "amount"}>{amount(a)}</span></button>
+        <button className={selected === a.account ? "selected" : ""} onClick={() => onSelect(a.account)}><span>{a.display_name || a.account}</span><span className={!neutral(a) && (a.balance_inclusive || []).some((b) => b.exact.startsWith("-")) ? "amount negative" : "amount"}>{amount(a)}</span></button>
         {data.accounts.filter((c) => c.home === a.account && c.account !== a.account).map((c) => <button key={c.account} className={`account-child ${selected === c.account ? "selected" : ""}`} onClick={() => onSelect(c.account)}><span>{c.display_name || c.account}</span><span className="amount">{amount(c)}</span></button>)}
       </React.Fragment>)}</section>;
     })}
   </div>;
+}
+
+
+export function BooksSheet({ book, onClose, onAction }) {
+  useDialogHistory({ onClose });
+  const ref = useRef();
+  useEffect(() => { ref.current.showModal(); }, []);
+  return <dialog ref={ref} className="books-sheet" aria-labelledby="books-title" onCancel={e => {e.preventDefault(); onClose();}}>
+    <div className="dialog-heading"><h2 id="books-title">{t("Books")}</h2><button className="quiet" onClick={onClose}>{t("Close")}</button></div>
+    <div className="location"><strong>{book?.name || "Kabacus"}</strong><small>{book?.local ? t("On this computer") : location.host} · {book?.location || ""}</small></div>
+    <h3>{t("Open Recent")}</h3>
+    {(book?.recent || []).map((source, i) => <button key={i} className="quiet" onClick={() => {onClose(); book.openRecent(source);}}>{source.name || source.filename || source.url || source.path}</button>)}
+    {[["new", "New Books…"], ["open", "Open Books…"], ["save-copy", "Save a Copy As…"], ["connect", "Connect to a Server…"]].map(([id, label]) => <button key={id} className="quiet" onClick={() => onAction(id)}>{t(label)}</button>)}
+  </dialog>;
+
 }

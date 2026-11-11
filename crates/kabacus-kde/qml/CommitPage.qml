@@ -25,6 +25,8 @@ Kirigami.ScrollablePage {
     readonly property var lines: fetch.value || []
     readonly property string problem: fetch.problem
 
+    globalToolBarStyle: app.narrow ? Kirigami.ApplicationHeaderStyle.None : Kirigami.ApplicationHeaderStyle.ToolBar
+
     required property var app
     readonly property var ledger: app.ledger
     readonly property bool hasTransaction: commit !== null && commit.transaction_id !== ""

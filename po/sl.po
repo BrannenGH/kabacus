@@ -17,6 +17,16 @@ msgctxt "@label a form field's name"
 msgid "%1:"
 msgstr "%1:"
 
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Back"
+msgstr "Nazaj"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Search"
+msgstr "Iskanje"
+
 #: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "%1 is the field, %2 what's wrong with it"
@@ -128,16 +138,6 @@ msgstr "Prihodek ali vračilo"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card purchase"
-msgstr "Nakup s kartico"
-
-#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Doda vrstice rezerve namesto vas"
-
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Transfer"
 msgstr "Prenos"
 
@@ -175,6 +175,16 @@ msgstr "Razdeli z nekom"
 #, kde-format
 msgid "They owe you, or you owe them"
 msgstr "Oni dolgujejo vam ali vi njim"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settle up with someone"
+msgstr "Poravnaj z nekom"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money you paid them or they paid you"
+msgstr "Denar, ki ste ga plačali vi njim ali oni vam"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -320,10 +330,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Prosto"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "Rezerve kartic"
+msgid "Set Aside for Credit Card Payments"
+msgstr "Prihranjeno za plačila kreditnih kartic"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -429,7 +439,7 @@ msgstr "Poglej"
 msgid "Settings"
 msgstr "Nastavitve"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "On this computer"
 msgstr "Na tem računalniku"
@@ -480,7 +490,7 @@ msgstr "Shrani kopijo kot…"
 msgid "Close Window"
 msgstr "Zapri okno"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect to a Server…"
 msgstr "Poveži se s strežnikom…"
@@ -622,6 +632,16 @@ msgstr "Poglej njihovo spremembo"
 msgid "Preview again"
 msgstr "Znova predogled"
 
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Books"
+msgstr "Knjige"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Close"
+msgstr "Zapri"
+
 #: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -662,6 +682,11 @@ msgstr "Preizkusi povezavo"
 msgid "Connect"
 msgstr "Poveži se"
 
+#: crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch Books…"
+msgstr "Preklopi knjige…"
+
 #: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Refresh"
@@ -677,15 +702,20 @@ msgstr "Razpoložljivega denarja ni mogoče naložiti"
 msgid "Loading…"
 msgstr "Nalaganje…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "Razpoložljiv denar"
+msgid "Available to spend"
+msgstr "Na voljo za porabo"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "O razpoložljivem denarju"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Razpoložljiv denar"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -694,15 +724,20 @@ msgstr "Prosti denar, ki ga lahko porabite zdaj, po rezervah in rezervah kartic.
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "Na voljo za porabo %1"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
 msgctxt "%1 is the change in Cash on Hand, %2 a date"
 msgid "%1 since %2"
 msgstr "%1 od %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "Razpoložljiv denar %1"
+msgid "How it's worked out"
+msgstr "Kako se izračuna"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -731,8 +766,8 @@ msgstr "− Terjatve (kar vam dolgujejo)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "Prosti denar po računih"
+msgid "Available by account"
+msgstr "Na voljo po računih"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -740,7 +775,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 prosto %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "Trenutno noben račun nima prostega denarja."
@@ -755,6 +790,11 @@ msgstr "V nobeni rezervi ni ničesar odloženega."
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "pokrito"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Dolguje"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -920,11 +960,6 @@ msgstr "Uskladi…"
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Search"
-msgstr "Iskanje"
-
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Search payee, memo, account"
 msgstr "Išči prejemnika, opombo, račun"
 
@@ -1084,6 +1119,12 @@ msgctxt "%1 is a month and year"
 msgid "No spending in %1"
 msgstr "Ni porabe v obdobju %1"
 
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Review"
+msgstr "Preglej"
+
 #: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
@@ -1193,6 +1234,11 @@ msgstr "Letos nič"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Card purchase"
+msgstr "Nakup s kartico"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Set money aside"
 msgstr "Odloži denar"
 
@@ -1212,11 +1258,16 @@ msgctxt "the payee a transfer is given"
 msgid "Transfer"
 msgstr "Prenos"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "View as raw postings"
+msgstr "Prikaži kot surova knjiženja"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
-msgctxt "@action:button"
-msgid "Review"
-msgstr "Preglej"
+msgctxt "@option cancel a transaction with a reversal"
+msgid "Void"
+msgstr "Razveljavi"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1234,16 +1285,27 @@ msgstr "Uredi na mestu"
 msgid "Changes it where it is. History keeps the old version."
 msgstr "Spremeni jo tam, kjer je. Zgodovina ohrani staro različico."
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@option cancel a transaction with a reversal"
-msgid "Void"
-msgstr "Razveljavi"
-
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Only the reversal: it didn't happen."
 msgstr "Samo storno: se ni zgodilo."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Total:"
+msgstr "Skupaj:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Amount:"
+msgstr "Znesek:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Znesek"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1260,6 +1322,16 @@ msgstr "Sintetični račun"
 msgctxt "a credit card"
 msgid "Card"
 msgstr "Kartica"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This is a card purchase: its reserve lines are added for you."
+msgstr "To je nakup s kartico: vrstice njene rezerve se dodajo namesto vas."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch to Spent"
+msgstr "Preklopi na Strošek"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1317,6 +1389,11 @@ msgctxt "%1 is a new reserve's name, %2 the account it goes in"
 msgid "%1 isn't a reserve yet. Saving creates it in %2."
 msgstr "%1 še ni rezerva. Shranjevanje jo ustvari v %2."
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 is a new category. Check the spelling; it will be created."
+msgstr "%1 je nova kategorija. Preverite črkovanje; ustvarjena bo."
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1339,28 +1416,26 @@ msgctxt "money set aside"
 msgid "Reserve"
 msgstr "Rezerva"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Direction"
+msgstr "Smer"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "I paid them"
+msgstr "Plačal sem jim"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "They paid me"
+msgstr "Plačali so mi"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "S kom"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Znesek"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@label"
-msgid "Total:"
-msgstr "Skupaj:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@label"
-msgid "Amount:"
-msgstr "Znesek:"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1972,6 +2047,18 @@ msgstr "%1: %2 plačano z %3; %4 dolguje %5 od tega."
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "You paid %2 %1 from %3."
+msgstr "Plačali ste %2 %1 z računa %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "%2 paid you %1 into %3."
+msgstr "%2 vam je plačal %1 na račun %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a payee"
 msgid "Edit %1 in place. History keeps the old version."
 msgstr "Uredi %1 na mestu. Zgodovina ohrani staro različico."
@@ -2026,9 +2113,19 @@ msgstr "%1 nima računa rezerve"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgid "A payment to you can't go onto a card"
+msgstr "Plačilo vam ne more iti na kartico"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a transaction's payee"
 msgid "%1 isn't missing reserve lines"
 msgstr "%1 ne manjkajo vrstice rezerve"
+
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settled up with %1"
+msgstr "Poravnano z osebo %1"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
@@ -2072,6 +2169,26 @@ msgstr "%1 ostaja pokrita z rezervo"
 #, kde-format
 msgid "A card is missing its reserve lines; it will be flagged"
 msgstr "Kartici manjkajo vrstice rezerve; označena bo"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 since %2"
+msgstr "%1 od %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Unit price"
+msgstr "Cena na enoto"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Skupna cena"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "More"
+msgstr "Več"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2240,11 +2357,6 @@ msgstr "Ta program"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "Dolguje"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "Rezerva"
 
@@ -2320,6 +2432,11 @@ msgstr "Dodaj — kaj se je zgodilo?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "Doda vrstice rezerve namesto vas"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Allow editing again"
 msgstr "Znova dovoli urejanje"
 
@@ -2355,11 +2472,6 @@ msgstr "Izberite, kaj se je zgodilo. Obrazec izpolni knjižbe; spremembe vidite 
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Close"
-msgstr "Zapri"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Connected"
 msgstr "Povezano"
 
@@ -2367,6 +2479,11 @@ msgstr "Povezano"
 #, kde-format
 msgid "Credit"
 msgstr "Kredit"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Free money by account"
+msgstr "Prosti denar po računih"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2397,6 +2514,15 @@ msgstr "Rezerve hranijo denar za pozneje, na primer za davek na nepremičnine al
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "Shranjeno kot revizija %1"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "Razpoložljiv denar %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "Rezerve kartic"
 
 #, kde-format
 #~ msgid "The books changed"
@@ -2591,10 +2717,6 @@ msgstr "Shranjeno kot revizija %1"
 #~ msgctxt "%1 is a payee"
 #~ msgid "Correct %1: a reversal and a replacement, dated today."
 #~ msgstr "Popravi %1: storno in nadomestilo z današnjim datumom."
-
-#, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "Preverjanje hledger je uspelo na delovni kopiji"
 
 #, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"

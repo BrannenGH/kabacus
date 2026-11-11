@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import React,{useEffect,useRef,useState} from "react";
 import { t } from "./i18n";
+import { useDialogHistory, keepsUnsavedChange } from "./phone-history";
 import { Api } from "./api";
 import { BrowserApi, NativeApi, importFile, stored } from "./local-books";
 import icon from "./icon.svg";
@@ -10,6 +11,7 @@ const invoke=(command,args)=>window.__TAURI_INTERNALS__.invoke(command,args);
 const localAuth={signedIn:true,identity:"",token:async()=>null};
 export function Workspace({Application,hosted}){
  const [book,setBook]=useState(null),[recent,setRecent]=useState([]),[dialog,setDialog]=useState(null),[error,setError]=useState(""),[busy,setBusy]=useState(false),[settings,setSettings]=useState({reopen:true,automation:false,control_port:7979}),[activity,setActivity]=useState(null);
+ useDialogHistory({ active: !!dialog, busy, onClose: () => { setDialog(null); setError(""); } });
  const [nativeSignedIn,setNativeSignedIn]=useState(true);
  const previous=useRef(null);
  const input=useRef(),windowId=useRef(window.__KABACUS_WINDOW_ID__||((window.opener&&performance.getEntriesByType("navigation")[0]?.type!=="reload")?crypto.randomUUID():sessionStorage.getItem("kabacus.window"))||crypto.randomUUID());
@@ -31,7 +33,13 @@ export function Workspace({Application,hosted}){
  async function open(source,state){
   setBusy(true);setError("");try{
    if(native()){const metadata=await invoke("open_books",{source});if(metadata.focused)return;current(metadata,new NativeApi(),state);}
-   else{if(source?.kind==="remote"){location.assign(`${source.url}/app/`);return;}const record=typeof source==="string"?await stored("books","get",source):source;if(await focusExisting(record.id))return;const api=await BrowserApi.open(record);current({id:record.id,name:record.name,filename:record.filename,local:true,location:record.handle?record.filename:t("Browser storage"),source:{kind:"browser",id:record.id}},api,state);}
+   else if(source?.kind==="remote"){
+    const url=new URL(source.url);
+    if(hosted&&url.origin===location.origin){
+     current({id:location.origin,name:location.host,filename:location.host,location:hosted.identity,local:false,source:{...source,url:url.origin}},new Api(hosted.token),state);
+    }else{location.assign(`${url.origin}/app/?connect=1`);return;}
+   }
+   else{const record=typeof source==="string"?await stored("books","get",source):source;if(await focusExisting(record.id))return;const api=await BrowserApi.open(record);current({id:record.id,name:record.name,filename:record.filename,local:true,location:record.handle?record.filename:t("Browser storage"),source:{kind:"browser",id:record.id}},api,state);}
    await list();
   }catch(e){setError(String(e.message||e));}finally{setBusy(false);}
  }
@@ -70,19 +78,18 @@ export function Workspace({Application,hosted}){
    if(!native()&&target){sessionStorage.removeItem("kabacus.return");location.assign(target);return;}
    setBook(null);sessionStorage.removeItem("kabacus.connect");return;
   }
-  if(["new","open","recent","connect","close"].includes(id)&&document.querySelector('.bookkeeping-dialog form[data-dirty="true"]')&&!window.confirm(t("Discard this change?")))return;
+  if(["new","open","recent","connect","close"].includes(id)&&keepsUnsavedChange())return;
   if(id==="new-window"){if(native())await invoke("new_window");else window.open(location.pathname,"_blank");}
   else if(id==="new")await chooseFile(true);
   else if(id==="open")await chooseFile();
   else if(id==="recent"||id==="connect")setDialog({kind:id});
   else if(id==="save-copy"){if(native())await invoke("save_copy");else await book.api.saveCopy();}
-  else if(id==="close"){if(native())await invoke("close_window");else{const state=await stored("state","get","workspace")||{reopen:true,windows:[]};state.windows=(state.windows||[]).filter(w=>w.id!==windowId.current);await stored("state","put","workspace",state);setBook(null);document.title="Kabacus";if(window.opener)window.close();}}
-  else if(id==="quit"){if(native())await invoke("quit");else{const state=await stored("state","get","workspace")||{reopen:true,windows:[]};state.windows=(state.windows||[]).filter(w=>w.id!==windowId.current);await stored("state","put","workspace",state);setBook(null);document.title="Kabacus";if(window.opener)window.close();}}
+  else if(id==="close"||id==="quit"){if(native())await invoke(id==="close"?"close_window":"quit");else{const state=await stored("state","get","workspace")||{reopen:true,windows:[]};state.windows=(state.windows||[]).filter(w=>w.id!==windowId.current);await stored("state","put","workspace",state);setBook(null);document.title="Kabacus";if(window.opener)window.close();}}
  }
  useEffect(()=>{
    if(!native())return;
    invoke("configure_menu",{labels:Object.fromEntries([["file","File"],["new-window","New Window"],["new","New Books…"],["open","Open Books…"],["recent","Open Recent"],["save-copy","Save a Copy As…"],["close","Close Window"],["connect","Connect to a Server…"],["quit","Quit"]].map(([id,label])=>[id,t(label)]))}).catch(()=>{});
-   const action=e=>fileAction(e.detail).catch(e=>setError(String(e.message||e)));const quit=()=>{const dirty=document.querySelector('.bookkeeping-dialog form[data-dirty="true"]');invoke("approve_quit",{approved:!dirty||window.confirm(t("Discard this change?"))}).catch(e=>setError(String(e.message||e)));};window.addEventListener("kabacus-file-action",action);window.addEventListener("kabacus-quit-check",quit);return()=>{window.removeEventListener("kabacus-file-action",action);window.removeEventListener("kabacus-quit-check",quit);};
+   const action=e=>fileAction(e.detail).catch(e=>setError(String(e.message||e)));const quit=()=>{invoke("approve_quit",{approved:!keepsUnsavedChange()}).catch(e=>setError(String(e.message||e)));};window.addEventListener("kabacus-file-action",action);window.addEventListener("kabacus-quit-check",quit);return()=>{window.removeEventListener("kabacus-file-action",action);window.removeEventListener("kabacus-quit-check",quit);};
  },[book]);
  useEffect(()=>{const keyboard=e=>{if(!(e.ctrlKey||e.metaKey))return;const key=e.key.toLowerCase();let action;if(key==="o")action="open";if(e.shiftKey&&key==="n")action="new-window";if(e.shiftKey&&key==="s")action="save-copy";if(e.shiftKey&&key==="w")action="close";if(key==="q")action="quit";if(action){e.preventDefault();fileAction(action).catch(e=>setError(String(e.message||e)));}};window.addEventListener("keydown",keyboard);return()=>window.removeEventListener("keydown",keyboard);},[book]);
  async function setup(event){event.preventDefault();const form=Object.fromEntries(new FormData(event.currentTarget));setBusy(true);setError("");try{
@@ -97,12 +104,12 @@ export function Workspace({Application,hosted}){
  }catch(e){setError(String(e.message||e));}}
  return <>
   <input ref={input} hidden type="file" accept=".kabacus" onChange={async e=>{const file=e.target.files[0];e.target.value="";if(file)try{const api=await importFile(file);await open(api.record);}catch(e){setError(String(e.message||e));}}}/>
-  {book?<Application key={book.id||book.name} auth={!book.local&&hosted?hosted:!book.local&&native()?{...localAuth,signedIn:nativeSignedIn,identity:book.location,signOut:book.oauth===false?undefined:async()=>{await invoke("sign_out");setNativeSignedIn(false);},signIn:async()=>{const source=book.source;const metadata=await invoke("connect_server",{origin:source.url,privateCa:source.private_ca||""});current(metadata,new NativeApi(),book.state);}}:localAuth} book={{...book,activity,settings,onSettings:async change=>{const state={...settings,...change};if(native())await invoke("save_workspace_settings",{settings:state});else await stored("state","put","workspace",state);setSettings(state);}}} onFileAction={id=>fileAction(id).catch(e=>setError(String(e.message||e)))}/>:<main className="welcome"><img src={icon} alt=""/><h1>{t("Welcome to Kabacus")}</h1><p>{t("Your books, on this computer. Every change is saved.")}</p><div className="welcome-actions"><button onClick={()=>chooseFile(true)} disabled={busy}>{t("New Books…")}</button><button className="secondary" onClick={()=>chooseFile()} disabled={busy}>{t("Open Books…")}</button><button className="quiet" onClick={()=>setDialog({kind:"connect"})}>{t("Connect to a Server…")}</button></div><h2>{t("Open Recent")}</h2>{recent.map((source,i)=><div className="recent-row" key={source.id||i}><button className="quiet" onClick={()=>open(source)}>{source.name||source.filename||source.url||source.path}</button><button className="quiet" aria-label={t("New Window")} onClick={()=>native()?invoke("new_window",{source}):window.open(`?books=${source.id}`,`kabacus-${source.id}`)}>↗</button></div>)}</main>}
+  {book?<Application key={book.id||book.name} auth={!book.local&&hosted?hosted:!book.local&&native()?{...localAuth,signedIn:nativeSignedIn,identity:book.location,signOut:book.oauth===false?undefined:async()=>{await invoke("sign_out");setNativeSignedIn(false);},signIn:async()=>{const source=book.source;const metadata=await invoke("connect_server",{origin:source.url,privateCa:source.private_ca||""});current(metadata,new NativeApi(),book.state);}}:localAuth} book={{...book,activity,recent,openRecent:open,settings,onSettings:async change=>{const state={...settings,...change};if(native())await invoke("save_workspace_settings",{settings:state});else await stored("state","put","workspace",state);setSettings(state);}}} onFileAction={id=>fileAction(id).catch(e=>setError(String(e.message||e)))}/>:<main className="welcome"><img src={icon} alt=""/><h1>{t("Welcome to Kabacus")}</h1><p>{t("Your books, on this computer. Every change is saved.")}</p><div className="welcome-actions"><button onClick={()=>chooseFile(true)} disabled={busy}>{t("New Books…")}</button><button className="secondary" onClick={()=>chooseFile()} disabled={busy}>{t("Open Books…")}</button><button className="quiet" onClick={()=>setDialog({kind:"connect"})}>{t("Connect to a Server…")}</button></div><h2>{t("Open Recent")}</h2>{recent.map((source,i)=><div className="recent-row" key={source.id||i}><button className="quiet" onClick={()=>open(source)}>{source.name||source.filename||source.url||source.path}</button><button className="quiet" aria-label={t("New Window")} onClick={()=>native()?invoke("new_window",{source}):window.open(`?books=${source.id}`,`kabacus-${source.id}`)}>↗</button></div>)}</main>}
   {dialog&&<div className="workspace-dialog" role="dialog" aria-modal="true" aria-labelledby="workspace-dialog-title"><div className="workspace-dialog-body"><button className="quiet close-dialog" onClick={()=>{setDialog(null);setError("");}}>{t("Cancel")} Esc</button>
    {dialog.kind==="new"&&<><h2 id="workspace-dialog-title">{t("New Books…")}</h2><form onSubmit={setup}><label>{t("Name")}<input name="name" defaultValue="Household" required autoFocus/></label><label>{t("Currency")}<input name="currency" defaultValue="USD" required pattern="[A-Za-z0-9]+"/></label><label>{t("First account")}<input name="account" defaultValue="assets:bank:checking" required/></label><button disabled={busy}>{t("Create books")}</button></form></>}
    {dialog.kind==="connect"&&<><h2 id="workspace-dialog-title">{t("Connect to a Server…")}</h2><form onSubmit={connect}><label>{t("Server address")}<input name="url" type="url" placeholder="https://books.example.org" required autoFocus/></label>{native()&&<label>{t("Private CA")}<input name="ca"/></label>}<button>{t("Connect")}</button><button type="button" className="secondary" onClick={async(e)=>{const form=e.currentTarget.form;try{if(native())await invoke("test_server",{origin:form.elements.url.value,privateCa:form.elements.ca?.value||""});else{const response=await fetch(`${new URL(form.elements.url.value).origin}/version`,{signal:AbortSignal.timeout(10000)});if(!response.ok)throw new Error(response.statusText);}setError(t("Connected"));}catch(e){setError(String(e.message||e));}}}>{t("Test connection")}</button></form></>}
    {dialog.kind==="recent"&&<><h2 id="workspace-dialog-title">{t("Open Recent")}</h2>{recent.map((source,i)=><button key={i} className="recent-row quiet" onClick={()=>open(source)}>{source.name||source.filename||source.path||source.url}</button>)}</>}
-   {dialog.kind==="reopen"&&<><h2 id="workspace-dialog-title">{t("Pick up where you left off")}</h2><p>{t("Allow editing again")}</p><button onClick={async()=>{const windows=dialog.windows;for(let i=0;i<windows.length;i++){const item=windows[i];if(item.source?.kind==="remote")window.open(`${item.source.url}/app/`,`kabacus-${item.source.url}`);else if(i===0)await open(item.bookId,item);else window.open(`?books=${item.bookId}`,`kabacus-${item.bookId}`);}}}>{t("Reopen")}</button></>}
+   {dialog.kind==="reopen"&&<><h2 id="workspace-dialog-title">{t("Pick up where you left off")}</h2><p>{t("Allow editing again")}</p><button onClick={async()=>{const windows=dialog.windows;for(let i=0;i<windows.length;i++){const item=windows[i];if(i===0)await open(item.source?.kind==="remote"?item.source:item.bookId,item);else if(item.source?.kind==="remote")window.open(`${item.source.url}/app/?connect=1`,`kabacus-${item.source.url}`);else window.open(`?books=${item.bookId}`,`kabacus-${item.bookId}`);}}}>{t("Reopen")}</button></>}
    {error&&<p role="alert" className="banner error">{error}</p>}
   </div></div>}
   {error&&!dialog&&<div className="save-toast" role="alert">{error}<button className="quiet" onClick={()=>setError("")}>{t("Close")}</button></div>}

@@ -11,7 +11,7 @@ use crate::views::{diff_lines, DiffLine, Shown};
 use crate::{i18n, i18nc, i18ncp, i18np};
 use kabacus_client::types::{
     AccountView, AddTransactionBody, AllocateBody, BatchOpBody, CardPaymentBody, CardPurchaseBody,
-    DraftAmount, DraftPostingBody, TransactionView, WriteResultView,
+    DraftAmount, DraftPostingBody, PostingView, TransactionView, WriteResultView,
 };
 use kabacus_client::{ClientError, KabacusClient};
 use kabacus_core::Money;
@@ -35,9 +35,15 @@ pub enum Draft {
         from: String,
         to: String,
         amount: String,
+        /// `to` is a category typed in that doesn't exist yet; saving makes it.
+        #[serde(default)]
+        new_category: bool,
     },
-    /// With its reserve lines. `source` is `free` or a fund.
+    /// With its reserve lines. `source` is `free` or a fund. With an `id`,
+    /// the purchase recorded as that transaction is edited in place.
     CardPurchase {
+        #[serde(default)]
+        id: Option<String>,
         date: String,
         payee: String,
         #[serde(default)]
@@ -75,6 +81,18 @@ pub enum Draft {
         person: String,
         total: String,
         their_share: String,
+    },
+    /// Money paid to or by a person, netted against what's owed.
+    Settle {
+        date: String,
+        #[serde(default)]
+        memo: String,
+        /// The money account the payment left or reached.
+        account: String,
+        person: String,
+        amount: String,
+        /// You paid them (else they paid you).
+        paid: bool,
     },
     /// Edit a simple transaction in place.
     Edit {
@@ -396,6 +414,24 @@ impl Books {
         Ok((fund.clone(), self.get(&fund).is_none()))
     }
 
+    /// The account a category typed as `typed` becomes: a path as typed,
+    /// else a name under expenses, lower case with dashes.
+    fn category_path(&self, typed: &str) -> String {
+        let typed = typed.trim();
+        if typed.contains(':') {
+            typed.to_string()
+        } else {
+            format!(
+                "expenses:{}",
+                typed
+                    .to_lowercase()
+                    .split_whitespace()
+                    .collect::<Vec<_>>()
+                    .join("-")
+            )
+        }
+    }
+
     /// A field naming an account the books don't declare.
     fn known(&self, name: &str, account: &str) -> Result<(), WriteError> {
         if self.get(account).is_some() {
@@ -424,12 +460,64 @@ impl Books {
 
     /// A card's reserve and the money account holding it.
     fn reserve_of(&self, card: &str) -> Option<(String, String)> {
-        let leaf = card.rsplit(':').next()?;
-        self.accounts
-            .iter()
-            .find(|a| a.kind == "debt-reserve" && a.account.ends_with(&format!("card-{leaf}")))
-            .map(|r| (r.account.clone(), r.home.clone()))
+        reserve_in(&self.accounts, card)
     }
+}
+
+fn reserve_in(accounts: &[AccountView], card: &str) -> Option<(String, String)> {
+    let leaf = card.rsplit(':').next()?;
+    accounts
+        .iter()
+        .find(|a| a.kind == "debt-reserve" && a.account.ends_with(&format!("card-{leaf}")))
+        .map(|r| (r.account.clone(), r.home.clone()))
+}
+
+/// A recorded card purchase, as the card purchase form shows it: the card,
+/// the expense category and where the reserve came from (`free` or a fund).
+/// None for anything but the expense, card, source and reserve lines.
+pub fn card_purchase_of(
+    tx: &TransactionView,
+    accounts: &[AccountView],
+) -> Option<(String, String, String)> {
+    let kind = |account: &str| {
+        accounts
+            .iter()
+            .find(|a| a.account == account)
+            .map(|a| a.kind.as_str())
+    };
+    let [first, rest @ ..] = tx.postings.as_slice() else {
+        return None;
+    };
+    if rest.len() != 3
+        || tx.postings.iter().any(|p| {
+            p.amount.commodity != first.amount.commodity
+                || p.amount.exact.trim_start_matches('-')
+                    != first.amount.exact.trim_start_matches('-')
+        })
+    {
+        return None;
+    }
+    let find = |want: &dyn Fn(&PostingView) -> bool| {
+        let mut hits = tx.postings.iter().filter(|p| want(p));
+        hits.next().filter(|_| hits.next().is_none())
+    };
+    let card = find(&|p| kind(&p.account) == Some("revolving-debt"))?;
+    let (reserve, home) = reserve_in(accounts, &card.account)?;
+    let reserve = find(&|p| p.account == reserve)?;
+    let expense = find(&|p| kind(&p.account) == Some("expense"))?;
+    let source = find(&|p| {
+        p.account != card.account && p.account != reserve.account && p.account != expense.account
+    })?;
+    let negative = |p: &PostingView| p.amount.exact.starts_with('-');
+    if negative(expense) || negative(reserve) || !negative(card) || !negative(source) {
+        return None;
+    }
+    let source = if source.account == home {
+        "free".to_string()
+    } else {
+        source.account.clone()
+    };
+    Some((card.account.clone(), expense.account.clone(), source))
 }
 
 /// The current head; every preview is checked against it.
@@ -472,6 +560,7 @@ fn summary(draft: &Draft, books: &Books) -> String {
             date
         ),
         Draft::CardPurchase {
+            id: None,
             payee,
             amount,
             card,
@@ -542,7 +631,36 @@ fn summary(draft: &Draft, books: &Books) -> String {
             person,
             their_share
         ),
-        Draft::Edit { payee, .. } | Draft::EditPostings { payee, .. } => {
+        Draft::Settle {
+            account,
+            person,
+            amount,
+            paid,
+            ..
+        } => {
+            if *paid {
+                i18nc!(
+                    "%1 is an amount, %2 a person, %3 an account",
+                    "You paid %2 %1 from %3.",
+                    amount,
+                    person,
+                    n(account)
+                )
+            } else {
+                i18nc!(
+                    "%1 is an amount, %2 a person, %3 an account",
+                    "%2 paid you %1 into %3.",
+                    amount,
+                    person,
+                    n(account)
+                )
+            }
+        }
+        Draft::Edit { payee, .. }
+        | Draft::EditPostings { payee, .. }
+        | Draft::CardPurchase {
+            id: Some(_), payee, ..
+        } => {
             i18nc!(
                 "%1 is a payee",
                 "Edit %1 in place. History keeps the old version.",
@@ -600,7 +718,16 @@ fn validate(draft: &Draft, books: &Books) -> Result<(), WriteError> {
             )?;
             required("to", to, &i18nc!("the account money goes to", "To"))?;
             books.known("from", from)?;
-            books.known("to", to)?;
+            if !matches!(
+                draft,
+                Draft::Simple {
+                    new_category: true,
+                    ..
+                }
+            ) || books.get(to).is_some()
+            {
+                books.known("to", to)?;
+            }
             if from == to {
                 return Err(field("to", i18n!("From and To must differ")));
             }
@@ -659,6 +786,26 @@ fn validate(draft: &Draft, books: &Books) -> Result<(), WriteError> {
         Draft::PayCard { date, card, amount } => {
             check_date(date)?;
             books.known("card", card)?;
+            check_amount("amount", amount, books.places, true)?;
+        }
+        Draft::Settle {
+            date,
+            account,
+            person,
+            amount,
+            ..
+        } => {
+            check_date(date)?;
+            books.known("account", account)?;
+            required(
+                "person",
+                person,
+                &i18nc!("the person a cost is split with", "Who"),
+            )?;
+            books.known(
+                "person",
+                &format!("assets:receivable:{}", person.trim().to_lowercase()),
+            )?;
             check_amount("amount", amount, books.places, true)?;
         }
         Draft::Split {
@@ -800,6 +947,75 @@ async fn split_postings(
     Ok(postings)
 }
 
+/// A settlement's postings: the payment netted against what's owed (what
+/// you owe them when you pay, what they owe you when they pay), then
+/// the other side; on a card, its reserve lines.
+fn settle_postings(
+    books: &Books,
+    account: &str,
+    person: &str,
+    amount: &str,
+    paid: bool,
+) -> Result<Vec<DraftPostingBody>, WriteError> {
+    let c = &books.commodity;
+    let amount = check_amount("amount", amount, books.places, true)?;
+    let person = person.trim().to_lowercase();
+    let receivable = format!("assets:receivable:{person}");
+    let payable = format!("liabilities:payable:{person}");
+    books.known("person", &receivable)?;
+    let balance = |account: &str| {
+        books
+            .get(account)
+            .and_then(|a| a.balances.first())
+            .and_then(|b| b.money())
+            .unwrap_or_else(Money::zero)
+    };
+    let card = books.kind(account) == "revolving-debt";
+    if card && !paid {
+        return Err(WriteError::Field {
+            field: "account".to_string(),
+            message: i18n!("A payment to you can't go onto a card"),
+            suggestion: String::new(),
+        });
+    }
+    let sides = kabacus_core::select_counterparty_sides(
+        balance(&receivable).max(Money::zero()),
+        balance(&payable).min(Money::zero()),
+        amount.clone(),
+        if paid {
+            kabacus_core::FlowDirection::ToPerson
+        } else {
+            kabacus_core::FlowDirection::FromPerson
+        },
+    );
+    let mut postings = vec![];
+    if !sides.receivable_delta.is_zero() {
+        postings.push(posting(&receivable, c, sides.receivable_delta));
+    }
+    if !sides.payable_delta.is_zero() {
+        books.known("person", &payable)?;
+        postings.push(posting(&payable, c, sides.payable_delta));
+    }
+    let signed = if paid {
+        -amount.clone()
+    } else {
+        amount.clone()
+    };
+    postings.push(posting(account, c, signed));
+    if card {
+        let (reserve, home) = books.reserve_of(account).ok_or_else(|| WriteError::Other {
+            message: i18nc!(
+                "%1 is a card",
+                "%1 has no reserve account",
+                books.name(account)
+            ),
+        })?;
+        postings.push(posting(&home, c, -amount.clone()));
+        postings.push(posting(&reserve, c, amount));
+    }
+    Ok(postings)
+}
+
 /// The edit_transaction batch ops that add each transaction's missing
 /// reserve lines.
 async fn reserve_fixes(
@@ -897,14 +1113,22 @@ async fn send(
             from,
             to,
             amount,
+            new_category,
         } => {
+            let fresh = (*new_category && books.get(to).is_none()).then(|| books.category_path(to));
             client
                 .add_transaction(
                     head,
                     AddTransactionBody {
+                        new_accounts: fresh.iter().cloned().collect(),
                         date: date.trim().to_string(),
                         description: description(payee, memo),
-                        postings: simple_postings(from, to, amount, books)?,
+                        postings: simple_postings(
+                            from,
+                            fresh.as_deref().unwrap_or(to),
+                            amount,
+                            books,
+                        )?,
                         tags: vec![],
                         dry_run,
                     },
@@ -912,6 +1136,58 @@ async fn send(
                 .await
         }
         Draft::CardPurchase {
+            id: Some(id),
+            date,
+            payee,
+            memo,
+            card,
+            category,
+            source,
+            amount,
+        } => {
+            let tx = transaction(client, id).await?;
+            let (reserve, home) = books.reserve_of(card).ok_or_else(|| WriteError::Other {
+                message: i18nc!(
+                    "%1 is a card",
+                    "%1 has no reserve account",
+                    books.name(card)
+                ),
+            })?;
+            let source = if source == "free" {
+                home
+            } else {
+                source.clone()
+            };
+            let m = check_amount("amount", amount, books.places, true)?;
+            let c = &books.commodity;
+            let mut postings = vec![
+                posting(category, c, m.clone()),
+                posting(card, c, -m.clone()),
+                posting(&source, c, -m.clone()),
+                posting(&reserve, c, m),
+            ];
+            for p in &mut postings {
+                if let Some(old) = tx.postings.iter().find(|o| o.account == p.account) {
+                    p.status = old.status.clone();
+                }
+            }
+            client
+                .edit_transaction(
+                    crate::model::transaction_id(id)?,
+                    head,
+                    AddTransactionBody {
+                        new_accounts: vec![],
+                        date: date.trim().to_string(),
+                        description: description(payee, memo),
+                        postings,
+                        tags: tx.tags,
+                        dry_run,
+                    },
+                )
+                .await
+        }
+        Draft::CardPurchase {
+            id: None,
             date,
             payee,
             memo,
@@ -972,6 +1248,35 @@ async fn send(
                 )
                 .await
         }
+        Draft::Settle {
+            date,
+            memo,
+            account,
+            person,
+            amount,
+            paid,
+        } => {
+            let who = person.trim();
+            let name = who
+                .chars()
+                .next()
+                .map(|c| c.to_uppercase().collect::<String>() + &who[c.len_utf8()..])
+                .unwrap_or_default();
+            let postings = settle_postings(books, account, person, amount, *paid)?;
+            client
+                .add_transaction(
+                    head,
+                    AddTransactionBody {
+                        new_accounts: vec![],
+                        date: date.trim().to_string(),
+                        description: description(&i18n!("Settled up with %1", name), memo),
+                        postings,
+                        tags: vec![],
+                        dry_run,
+                    },
+                )
+                .await
+        }
         Draft::Split {
             date,
             payee,
@@ -996,6 +1301,7 @@ async fn send(
                 .add_transaction(
                     head,
                     AddTransactionBody {
+                        new_accounts: vec![],
                         date: date.trim().to_string(),
                         description: description(payee, memo),
                         postings,
@@ -1034,6 +1340,7 @@ async fn send(
                     crate::model::transaction_id(id)?,
                     head,
                     AddTransactionBody {
+                        new_accounts: vec![],
                         date: date.trim().to_string(),
                         description: description(payee, memo),
                         postings,
@@ -1074,6 +1381,7 @@ async fn send(
                     crate::model::transaction_id(id)?,
                     head,
                     AddTransactionBody {
+                        new_accounts: vec![],
                         date: date.trim().into(),
                         description: description(payee, memo),
                         postings,
@@ -1241,6 +1549,7 @@ fn draft_field_with(draft: &Draft, account: &str) -> Option<&'static str> {
         }
         Draft::CardPurchase { card, category, .. } => vec![("card", card), ("category", category)],
         Draft::SetAside { from, to, .. } => vec![("from", from), ("to", to)],
+        Draft::Settle { account, .. } => vec![("account", account)],
         Draft::PayCard { card, .. } => vec![("card", card)],
         Draft::Split {
             paid_with,
@@ -1363,7 +1672,8 @@ pub async fn preview(client: &KabacusClient, draft: &Draft) -> Result<Preview, W
     if let Draft::CardPurchase { card, .. }
     | Draft::Split {
         paid_with: card, ..
-    } = draft
+    }
+    | Draft::Settle { account: card, .. } = draft
     {
         if books.kind(card) == "revolving-debt" && !result.unreserved {
             notes.push(i18nc!(
@@ -1444,6 +1754,55 @@ mod tests {
         assert!(matches!(d, Draft::CardPurchase { ref source, .. } if source == "free"));
     }
     #[test]
+    fn a_recorded_card_purchase_is_found_among_its_four_lines() {
+        let account = |account: &str, kind: &str, home: &str| {
+            serde_json::from_value::<AccountView>(serde_json::json!({
+                "account": account, "kind": kind, "home": home, "balances": [],
+            }))
+            .unwrap()
+        };
+        let accounts = vec![
+            account("assets:bank:checking", "money", ""),
+            account(
+                "assets:bank:checking:card-visa",
+                "debt-reserve",
+                "assets:bank:checking",
+            ),
+            account("liabilities:credit-card:visa", "revolving-debt", ""),
+            account("expenses:groceries", "expense", ""),
+        ];
+        let tx = |lines: &[(&str, &str)]| -> TransactionView {
+            serde_json::from_value(serde_json::json!({
+                "id": 7, "date": "2026-10-03", "payee": "Corner Market", "memo": "",
+                "status": "", "tags": [],
+                "postings": lines.iter().map(|(a, m)| serde_json::json!({
+                    "account": a, "status": "",
+                    "amount": {"commodity": "USD", "exact": m, "formatted": m},
+                })).collect::<Vec<_>>(),
+            }))
+            .unwrap()
+        };
+        let purchase = tx(&[
+            ("expenses:groceries", "42.18"),
+            ("liabilities:credit-card:visa", "-42.18"),
+            ("assets:bank:checking", "-42.18"),
+            ("assets:bank:checking:card-visa", "42.18"),
+        ]);
+        assert_eq!(
+            card_purchase_of(&purchase, &accounts),
+            Some((
+                "liabilities:credit-card:visa".into(),
+                "expenses:groceries".into(),
+                "free".into()
+            ))
+        );
+        let plain = tx(&[
+            ("expenses:groceries", "42.18"),
+            ("assets:bank:checking", "-42.18"),
+        ]);
+        assert_eq!(card_purchase_of(&plain, &accounts), None);
+    }
+    #[test]
     fn amounts_use_cores_grammar_at_the_commodity_precision() {
         let problem = |text| amount_problem(text, 2, true);
         assert_eq!(problem("42.18"), "");
@@ -1469,6 +1828,54 @@ mod tests {
         let (c, d) = (client.clone(), draft.clone());
         spawnable(async move { preview(&c, &d).await });
         spawnable(async move { commit(&client, &draft, "4c67c22").await });
+    }
+
+    #[test]
+    fn settling_up_pays_down_what_you_owe_before_what_they_owe() {
+        let account = |account: &str, kind: &str, balance: &str| {
+            serde_json::from_value::<AccountView>(serde_json::json!({
+                "account": account, "display_name": "", "kind": kind, "home": "",
+                "balances": if balance.is_empty() { serde_json::json!([]) } else {
+                    serde_json::json!([{"commodity": "USD", "exact": balance, "formatted": balance}]) },
+            }))
+            .unwrap()
+        };
+        let b = Books {
+            accounts: vec![
+                account("assets:bank:checking", "money", ""),
+                account("assets:receivable:jordan", "receivable", "0.00"),
+                account("liabilities:payable:jordan", "payable", "-12.13"),
+            ],
+            commodity: "USD".to_string(),
+            places: 2,
+        };
+        let shown = |paid| {
+            settle_postings(&b, "assets:bank:checking", "Jordan", "20.00", paid)
+                .unwrap()
+                .iter()
+                .map(|p| {
+                    (
+                        p.account.clone(),
+                        p.amount.as_ref().unwrap().mantissa.to_string(),
+                    )
+                })
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(
+            shown(true),
+            vec![
+                ("assets:receivable:jordan".to_string(), "787".to_string()),
+                ("liabilities:payable:jordan".to_string(), "1213".to_string()),
+                ("assets:bank:checking".to_string(), "-2000".to_string()),
+            ]
+        );
+    }
+
+    #[test]
+    fn a_typed_category_becomes_an_expense_account_unless_it_is_a_path() {
+        let b = books();
+        assert_eq!(b.category_path("  Pet   Care "), "expenses:pet-care");
+        assert_eq!(b.category_path("expenses:pets:vet"), "expenses:pets:vet");
     }
 
     fn books() -> Books {
@@ -1544,6 +1951,7 @@ mod tests {
             from: "assets:bank:checking".into(),
             to: "expenses:grocerys".into(),
             amount: "12.40".into(),
+            new_category: false,
         };
         match explain_sync(
             refused("account expenses:grocerys is not declared"),

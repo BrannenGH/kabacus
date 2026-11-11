@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+# SPDX-License-Identifier: GPL-3.0-or-later
+"""Expose the pinned upstream collection in the project skill directories."""
+import os
+from pathlib import Path
+
+root = Path(__file__).resolve().parent.parent
+vendors = [root / ".agents/vendor" / name / "skills" for name in ("claude-skills", "ponytail")]
+
+sources = {}
+for vendor in vendors:
+    if not vendor.is_dir():
+        raise SystemExit("Run git submodule update --init --recursive first.")
+    for source in sorted(vendor.glob("**/SKILL.md")):
+        name = source.parent.name
+        if name in sources:
+            raise SystemExit(f"Duplicate skill name: {name}")
+        sources[name] = source.parent
+if not sources:
+    raise SystemExit("The upstream collection contains no skills.")
+
+skills = root / ".agents/skills"
+links = {skills / name: source for name, source in sources.items()}
+links[root / ".claude/skills"] = skills
+for link, source in links.items():
+    if (link.exists() or link.is_symlink()) and not (
+        link.is_symlink() and os.readlink(link) == os.path.relpath(source, link.parent)
+    ):
+        raise SystemExit(f"Refusing to replace existing skill entry: {link.relative_to(root)}")
+for link, source in links.items():
+    link.parent.mkdir(parents=True, exist_ok=True)
+    if not link.is_symlink():
+        link.symlink_to(os.path.relpath(source, link.parent), target_is_directory=True)
+for link in skills.iterdir():
+    if link.is_symlink() and link.name not in sources and any(
+        os.readlink(link).startswith(os.path.relpath(vendor, skills) + "/") for vendor in vendors
+    ):
+        link.unlink()
+print(f"Linked {len(sources)} skills.")

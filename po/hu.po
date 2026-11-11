@@ -17,6 +17,16 @@ msgctxt "@label a form field's name"
 msgid "%1:"
 msgstr "%1:"
 
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Back"
+msgstr "Vissza"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Search"
+msgstr "Keresés"
+
 #: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "%1 is the field, %2 what's wrong with it"
@@ -128,16 +138,6 @@ msgstr "Bevétel vagy visszatérítés"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card purchase"
-msgstr "Kártyás vásárlás"
-
-#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Hozzáadja Ön helyett a tartaléksorokat"
-
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Transfer"
 msgstr "Átvezetés"
 
@@ -175,6 +175,16 @@ msgstr "Megosztás valakivel"
 #, kde-format
 msgid "They owe you, or you owe them"
 msgstr "Tartoznak Önnek, vagy Ön tartozik nekik"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settle up with someone"
+msgstr "Elszámolás valakivel"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money you paid them or they paid you"
+msgstr "Pénz, amit Ön fizetett nekik, vagy ők Önnek"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -318,10 +328,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Szabad"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "Kártyatartalékok"
+msgid "Set Aside for Credit Card Payments"
+msgstr "Hitelkártya-fizetésekre félretett összeg"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -427,7 +437,7 @@ msgstr "Megtekintés"
 msgid "Settings"
 msgstr "Beállítások"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "On this computer"
 msgstr "Ezen a számítógépen"
@@ -478,7 +488,7 @@ msgstr "Másolat mentése másként…"
 msgid "Close Window"
 msgstr "Ablak bezárása"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect to a Server…"
 msgstr "Kapcsolódás kiszolgálóhoz…"
@@ -620,6 +630,16 @@ msgstr "A másik módosítás megtekintése"
 msgid "Preview again"
 msgstr "Új előnézet"
 
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Books"
+msgstr "Könyvek"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Close"
+msgstr "Bezárás"
+
 #: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -660,6 +680,11 @@ msgstr "Kapcsolat tesztelése"
 msgid "Connect"
 msgstr "Kapcsolódás"
 
+#: crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch Books…"
+msgstr "Könyvek váltása…"
+
 #: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Refresh"
@@ -675,15 +700,20 @@ msgstr "Az elkölthető pénz nem tölthető be"
 msgid "Loading…"
 msgstr "Betöltés…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "Elkölthető pénz"
+msgid "Available to spend"
+msgstr "Elkölthető összeg"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "Az elkölthető pénzről"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Elkölthető pénz"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -692,15 +722,20 @@ msgstr "Szabad pénz, amelyet most elkölthet, a tartalékok és a kártyatartal
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "Elkölthető összeg %1"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
 msgctxt "%1 is the change in Cash on Hand, %2 a date"
 msgid "%1 since %2"
 msgstr "%1 %2 óta"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "Elkölthető pénz %1"
+msgid "How it's worked out"
+msgstr "Így számítjuk ki"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -729,8 +764,8 @@ msgstr "− Követelések (amivel Önnek tartoznak)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "Szabad pénz számlánként"
+msgid "Available by account"
+msgstr "Számlánként elérhető összeg"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -738,7 +773,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 szabad %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "Most egyik számlán sincs szabad pénz."
@@ -753,6 +788,11 @@ msgstr "Egyik tartalékba sincs semmi félretéve."
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "fedezve"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Tartozás"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -918,11 +958,6 @@ msgstr "Egyeztetés…"
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Search"
-msgstr "Keresés"
-
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Search payee, memo, account"
 msgstr "Kedvezményezett, megjegyzés, számla keresése"
 
@@ -1082,6 +1117,12 @@ msgctxt "%1 is a month and year"
 msgid "No spending in %1"
 msgstr "Nincs kiadás: %1"
 
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Review"
+msgstr "Ellenőrzés"
+
 #: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
@@ -1191,6 +1232,11 @@ msgstr "Idén semmi"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Card purchase"
+msgstr "Kártyás vásárlás"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Set money aside"
 msgstr "Pénz félretevése"
 
@@ -1210,11 +1256,16 @@ msgctxt "the payee a transfer is given"
 msgid "Transfer"
 msgstr "Átvezetés"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "View as raw postings"
+msgstr "Megtekintés nyers tételekként"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
-msgctxt "@action:button"
-msgid "Review"
-msgstr "Ellenőrzés"
+msgctxt "@option cancel a transaction with a reversal"
+msgid "Void"
+msgstr "Sztornó"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1232,16 +1283,27 @@ msgstr "Szerkesztés helyben"
 msgid "Changes it where it is. History keeps the old version."
 msgstr "Ott módosítja, ahol van. Az előzmények megőrzik a régi változatot."
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@option cancel a transaction with a reversal"
-msgid "Void"
-msgstr "Sztornó"
-
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Only the reversal: it didn't happen."
 msgstr "Csak a sztornó: meg sem történt."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Total:"
+msgstr "Összesen:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Amount:"
+msgstr "Összeg:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Összeg"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1258,6 +1320,16 @@ msgstr "Szintetikus számla"
 msgctxt "a credit card"
 msgid "Card"
 msgstr "Kártya"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This is a card purchase: its reserve lines are added for you."
+msgstr "Ez kártyás vásárlás: a tartalék sorai automatikusan hozzáadódnak."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch to Spent"
+msgstr "Váltás Költésre"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1315,6 +1387,11 @@ msgctxt "%1 is a new reserve's name, %2 the account it goes in"
 msgid "%1 isn't a reserve yet. Saving creates it in %2."
 msgstr "%1 még nem tartalék. Mentéskor létrejön itt: %2."
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 is a new category. Check the spelling; it will be created."
+msgstr "A(z) %1 új kategória. Ellenőrizze a helyesírást; létrejön."
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1337,28 +1414,26 @@ msgctxt "money set aside"
 msgid "Reserve"
 msgstr "Tartalék"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Direction"
+msgstr "Irány"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "I paid them"
+msgstr "Én fizettem nekik"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "They paid me"
+msgstr "Ők fizettek nekem"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "Kivel"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Összeg"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@label"
-msgid "Total:"
-msgstr "Összesen:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@label"
-msgid "Amount:"
-msgstr "Összeg:"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1960,6 +2035,18 @@ msgstr "%1: %2 fizetve ezzel: %3; ebből %4 tartozik %5 összeggel."
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "You paid %2 %1 from %3."
+msgstr "Ön fizetett %2 részére %1 összeget innen: %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "%2 paid you %1 into %3."
+msgstr "%2 fizetett Önnek %1 összeget ide: %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a payee"
 msgid "Edit %1 in place. History keeps the old version."
 msgstr "%1 szerkesztése helyben. Az előzmények megőrzik a régi változatot."
@@ -2012,9 +2099,19 @@ msgstr "%1 kártyának nincs tartalékszámlája"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgid "A payment to you can't go onto a card"
+msgstr "Az Önnek szóló fizetés nem mehet kártyára"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a transaction's payee"
 msgid "%1 isn't missing reserve lines"
 msgstr "%1 tételből nem hiányoznak tartaléksorok"
+
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settled up with %1"
+msgstr "Elszámolva vele: %1"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
@@ -2058,6 +2155,26 @@ msgstr "%1 továbbra is fedezve van a tartalékával"
 #, kde-format
 msgid "A card is missing its reserve lines; it will be flagged"
 msgstr "Egy kártyáról hiányoznak a tartaléksorai; meg lesz jelölve"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 since %2"
+msgstr "%1 %2 óta"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Unit price"
+msgstr "Egységár"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Teljes ár"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "More"
+msgstr "Továbbiak"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2226,11 +2343,6 @@ msgstr "Ez az alkalmazás"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "Tartozás"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "Tartalék"
 
@@ -2306,6 +2418,11 @@ msgstr "Hozzáadás — mi történt?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "Hozzáadja Ön helyett a tartaléksorokat"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Allow editing again"
 msgstr "Szerkesztés újbóli engedélyezése"
 
@@ -2341,11 +2458,6 @@ msgstr "Válassza ki, mi történt. Az űrlap kitölti a könyvelési sorokat; m
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Close"
-msgstr "Bezárás"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Connected"
 msgstr "Kapcsolódva"
 
@@ -2353,6 +2465,11 @@ msgstr "Kapcsolódva"
 #, kde-format
 msgid "Credit"
 msgstr "Hitel"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Free money by account"
+msgstr "Szabad pénz számlánként"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2383,6 +2500,15 @@ msgstr "A tartalékok későbbre, például ingatlanadóra vagy autójavításra
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "Mentve a(z) %1. változatként"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "Elkölthető pénz %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "Kártyatartalékok"
 
 #, kde-format
 #~ msgid "The books changed"
@@ -2577,10 +2703,6 @@ msgstr "Mentve a(z) %1. változatként"
 #~ msgctxt "%1 is a payee"
 #~ msgid "Correct %1: a reversal and a replacement, dated today."
 #~ msgstr "%1 javítása: egy mai keltezésű sztornó és csere."
-
-#, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "A hledger-ellenőrzés sikeres volt egy munkapéldányon"
 
 #, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"

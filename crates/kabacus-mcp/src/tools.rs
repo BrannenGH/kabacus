@@ -43,7 +43,6 @@ pub const REWRITE_TOOLS: &[&str] = &[
     "remove_account",
     "set_balance_assertion",
     "convert_money_assertions",
-    "import_journal",
 ];
 
 /// Every error as `{code, message, path?, details?}` in the error's
@@ -95,6 +94,13 @@ pub struct SharedExpenseParams {
     pub head: String,
     #[serde(flatten)]
     pub body: kabacus_service::split::SplitBody,
+}
+
+#[derive(Debug, Deserialize, schemars::JsonSchema)]
+pub struct SettleUpParams {
+    pub head: String,
+    #[serde(flatten)]
+    pub body: kabacus_service::settle::SettleBody,
 }
 
 // --- shared params ---------------------------------------------------------
@@ -435,7 +441,7 @@ impl KabacusMcp {
     }
 
     #[tool(
-        description = "Total balance for an account or account prefix over a period (e.g. monthly spending by category), summed per commodity over every transaction, as hledger sums it.",
+        description = "Total balance for an account or account prefix over a period (e.g. monthly spending by category), summed per commodity over every transaction.",
         annotations(read_only_hint = true)
     )]
     async fn get_balance(
@@ -740,6 +746,22 @@ impl KabacusMcp {
         )
     }
 
+    #[tool(
+        description = "Settle up with a person: you paid them or they paid you. A payment nets against what's already owed first (what you owe them when you pay, what they owe you when they pay), then builds the other side. Requires current head; dry_run previews without writing.",
+        annotations(read_only_hint = false, destructive_hint = false)
+    )]
+    async fn settle_up(
+        &self,
+        Extension(parts): Extension<Parts>,
+        Parameters(p): Parameters<SettleUpParams>,
+    ) -> Result<CallToolResult, McpError> {
+        write_result(
+            kabacus_service::settle::record(&self.state, principal(&parts)?, p.body, &p.head)
+                .await
+                .map_err(to_mcp_error)?,
+        )
+    }
+
     // --- write tools --------------------------------------------------------
 
     #[tool(
@@ -992,29 +1014,6 @@ impl KabacusMcp {
     ) -> Result<CallToolResult, McpError> {
         let op = WriteOp::RemoveAccount { account: p.account };
         self.rewrite(&parts, Ok(op), &p.head, p.dry_run).await
-    }
-
-    #[tool(
-        description = "Import hledger journals into these books, which must be empty: files maps each journal's name to its text and main names the one that includes the others. Each transaction gets the next id in read order. What Kabacus doesn't support (tags, P lines, automated and periodic transactions, comments outside transactions, payee and tag directives) is left out and listed in the report with file and line, as is a commodity whose places were raised or an assertion that doesn't hold at the end of its day; a date without a year, alias, apply account, decimal-mark, D, Y or an unreadable line stops the import, naming the file and line, and so does a book that fails the strict check. Needs your ledger-rewrite role. Defaults to dry_run=true, returning the counts and the report; call again with dry_run=false to import.",
-        annotations(read_only_hint = false, destructive_hint = false)
-    )]
-    async fn import_journal(
-        &self,
-        Extension(parts): Extension<Parts>,
-        Parameters(p): Parameters<ImportJournalParams>,
-    ) -> Result<CallToolResult, McpError> {
-        let result = kabacus_service::import::import_journal(
-            &self.state,
-            principal(&parts)?,
-            kabacus_service::import::JournalImportBody {
-                main: p.main,
-                files: p.files,
-                dry_run: p.dry_run.unwrap_or(true),
-            },
-        )
-        .await
-        .map_err(to_mcp_error)?;
-        structured(&result)
     }
 
     #[tool(

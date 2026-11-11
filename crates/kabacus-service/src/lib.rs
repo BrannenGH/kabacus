@@ -21,6 +21,7 @@ pub mod ops;
 pub mod reports;
 pub mod search;
 pub mod service;
+pub mod settle;
 pub mod split;
 pub mod state;
 

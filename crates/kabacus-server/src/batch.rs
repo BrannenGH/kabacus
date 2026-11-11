@@ -13,16 +13,16 @@ pub async fn batch(
     principal: &Principal,
     body: BatchBody,
 ) -> Result<Value, ApiError> {
-    match tokio::time::timeout(
+    tokio::time::timeout(
         TIME_LIMIT,
         kabacus_service::batch::batch(state, principal, body),
     )
     .await
-    {
-        Ok(result) => result.map_err(Into::into),
-        Err(_) => Err(ApiError::BatchTooLarge(format!(
+    .unwrap_or_else(|_| {
+        Err(kabacus_service::error::Error::BatchTooLarge(format!(
             "the batch took longer than {} seconds; split it into smaller batches",
             TIME_LIMIT.as_secs()
-        ))),
-    }
+        )))
+    })
+    .map_err(Into::into)
 }

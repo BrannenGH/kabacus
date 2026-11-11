@@ -17,6 +17,16 @@ msgctxt "@label a form field's name"
 msgid "%1:"
 msgstr "%1:"
 
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Back"
+msgstr "Ar ais"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Search"
+msgstr "Cuardaigh"
+
 #: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "%1 is the field, %2 what's wrong with it"
@@ -128,16 +138,6 @@ msgstr "Ioncam nó aisíocaíocht"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card purchase"
-msgstr "Ceannach le cárta"
-
-#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Cuireann sé na línte cúlchiste leis duit"
-
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Transfer"
 msgstr "Aistriú"
 
@@ -175,6 +175,16 @@ msgstr "Roinn le duine"
 #, kde-format
 msgid "They owe you, or you owe them"
 msgstr "Tá siad i bhfiacha leat, nó tá tusa i bhfiacha leo"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settle up with someone"
+msgstr "Socraigh le duine éigin"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money you paid them or they paid you"
+msgstr "Airgead a d'íoc tú leo nó a d'íoc siad leat"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -321,10 +331,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "Saor"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "Cúlchistí na gcártaí"
+msgid "Set Aside for Credit Card Payments"
+msgstr "Curtha ar leataobh le haghaidh íocaíochtaí cártaí creidmheasa"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -430,7 +440,7 @@ msgstr "Féach"
 msgid "Settings"
 msgstr "Socruithe"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "On this computer"
 msgstr "Ar an ríomhaire seo"
@@ -481,7 +491,7 @@ msgstr "Sábháil Cóip Mar…"
 msgid "Close Window"
 msgstr "Dún Fuinneog"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect to a Server…"
 msgstr "Ceangail le Freastalaí…"
@@ -623,6 +633,16 @@ msgstr "Féach ar a n-athrú"
 msgid "Preview again"
 msgstr "Réamhamharc arís"
 
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Books"
+msgstr "Leabhair"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Close"
+msgstr "Dún"
+
 #: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -663,6 +683,11 @@ msgstr "Tástáil an ceangal"
 msgid "Connect"
 msgstr "Ceangail"
 
+#: crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch Books…"
+msgstr "Athraigh leabhair…"
+
 #: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Refresh"
@@ -678,15 +703,20 @@ msgstr "Ní féidir an t-airgead le caitheamh a lódáil"
 msgid "Loading…"
 msgstr "Á lódáil…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
-msgstr "Airgead le caitheamh"
+msgid "Available to spend"
+msgstr "Ar fáil le caitheamh"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "Maidir le hairgead le caitheamh"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "Airgead le caitheamh"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -695,15 +725,20 @@ msgstr "Airgead saor is féidir leat a chaitheamh anois, tar éis cúlchistí ag
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "Ar fáil le caitheamh %1"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
 msgctxt "%1 is the change in Cash on Hand, %2 a date"
 msgid "%1 since %2"
 msgstr "%1 ó %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "Airgead le caitheamh %1"
+msgid "How it's worked out"
+msgstr "Conas a ríomhtar é"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -732,8 +767,8 @@ msgstr "− Infhaighteachtaí (a bhfuil daoine i bhfiacha leat)"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "Airgead saor de réir cuntais"
+msgid "Available by account"
+msgstr "Ar fáil de réir cuntais"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -741,7 +776,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 saor %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "Níl airgead saor ag cuntas ar bith faoi láthair."
@@ -756,6 +791,11 @@ msgstr "Níl aon rud curtha i leataobh i gcúlchiste."
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "clúdaithe"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "Dlite"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -921,11 +961,6 @@ msgstr "Réitigh…"
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Search"
-msgstr "Cuardaigh"
-
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Search payee, memo, account"
 msgstr "Cuardaigh íocaí, nóta, cuntas"
 
@@ -1085,6 +1120,12 @@ msgctxt "%1 is a month and year"
 msgid "No spending in %1"
 msgstr "Níor caitheadh aon rud i %1"
 
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Review"
+msgstr "Athbhreithnigh"
+
 #: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
@@ -1194,6 +1235,11 @@ msgstr "Faic i mbliana"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Card purchase"
+msgstr "Ceannach le cárta"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Set money aside"
 msgstr "Cuir airgead i leataobh"
 
@@ -1213,11 +1259,16 @@ msgctxt "the payee a transfer is given"
 msgid "Transfer"
 msgstr "Aistriú"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "View as raw postings"
+msgstr "Féach mar iontrálacha amha"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
-msgctxt "@action:button"
-msgid "Review"
-msgstr "Athbhreithnigh"
+msgctxt "@option cancel a transaction with a reversal"
+msgid "Void"
+msgstr "Cealaigh"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1235,16 +1286,27 @@ msgstr "Cuir in eagar san áit"
 msgid "Changes it where it is. History keeps the old version."
 msgstr "Athraíonn sé é san áit a bhfuil sé. Coinníonn an stair an seanleagan."
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@option cancel a transaction with a reversal"
-msgid "Void"
-msgstr "Cealaigh"
-
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Only the reversal: it didn't happen."
 msgstr "An t-aisiompú amháin: níor tharla sé."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Total:"
+msgstr "Iomlán:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Amount:"
+msgstr "Méid:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Méid"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1261,6 +1323,16 @@ msgstr "Cuntas sintéiseach"
 msgctxt "a credit card"
 msgid "Card"
 msgstr "Cárta"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This is a card purchase: its reserve lines are added for you."
+msgstr "Is ceannach cárta é seo: cuirtear a línte cúltaca leis duit."
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch to Spent"
+msgstr "Athraigh go Caiteachas"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1318,6 +1390,11 @@ msgctxt "%1 is a new reserve's name, %2 the account it goes in"
 msgid "%1 isn't a reserve yet. Saving creates it in %2."
 msgstr "Ní cúlchiste é %1 fós. Cruthaíonn sábháil é in %2."
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 is a new category. Check the spelling; it will be created."
+msgstr "Is catagóir nua é %1. Seiceáil an litriú; cruthófar í."
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1340,28 +1417,26 @@ msgctxt "money set aside"
 msgid "Reserve"
 msgstr "Cúlchiste"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Direction"
+msgstr "Treo"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "I paid them"
+msgstr "D'íoc mé leo"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "They paid me"
+msgstr "D'íoc siad liom"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "Le"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Méid"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@label"
-msgid "Total:"
-msgstr "Iomlán:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@label"
-msgid "Amount:"
-msgstr "Méid:"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1978,6 +2053,18 @@ msgstr "%1: %2 íoctha le %3; tá %5 de dlite ar %4."
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "You paid %2 %1 from %3."
+msgstr "D'íoc tú %1 le %2 ó %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "%2 paid you %1 into %3."
+msgstr "D'íoc %2 %1 leat isteach i %3."
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a payee"
 msgid "Edit %1 in place. History keeps the old version."
 msgstr "Cuir %1 in eagar san áit. Coinníonn an stair an seanleagan."
@@ -2033,9 +2120,19 @@ msgstr "Níl cuntas cúlchiste ag %1"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgid "A payment to you can't go onto a card"
+msgstr "Ní féidir íocaíocht chugat a chur ar chárta"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a transaction's payee"
 msgid "%1 isn't missing reserve lines"
 msgstr "Níl línte cúlchiste in easnamh ar %1"
+
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settled up with %1"
+msgstr "Socraíodh le %1"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
@@ -2079,6 +2176,26 @@ msgstr "Fanann %1 clúdaithe ag a chúlchiste"
 #, kde-format
 msgid "A card is missing its reserve lines; it will be flagged"
 msgstr "Tá línte cúlchiste in easnamh ar chárta; marcálfar é"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 since %2"
+msgstr "%1 ó %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Unit price"
+msgstr "Praghas aonaid"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "Praghas iomlán"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "More"
+msgstr "Tuilleadh"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2247,11 +2364,6 @@ msgstr "An feidhmchlár seo"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "Dlite"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "Cúlchiste"
 
@@ -2327,6 +2439,11 @@ msgstr "Cuir leis — cad a tharla?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "Cuireann sé na línte cúlchiste leis duit"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Allow editing again"
 msgstr "Ceadaigh eagarthóireacht arís"
 
@@ -2362,11 +2479,6 @@ msgstr "Roghnaigh cad a tharla. Líonann an fhoirm na línte; feiceann tú na ha
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Close"
-msgstr "Dún"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Connected"
 msgstr "Ceangailte"
 
@@ -2374,6 +2486,11 @@ msgstr "Ceangailte"
 #, kde-format
 msgid "Credit"
 msgstr "Creidmheas"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Free money by account"
+msgstr "Airgead saor de réir cuntais"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2404,6 +2521,15 @@ msgstr "Coinníonn cúlchistí airgead don todhchaí, mar cháin mhaoine nó dei
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "Sábháilte mar leasú %1"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "Airgead le caitheamh %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "Cúlchistí na gcártaí"
 
 #, kde-format
 #~ msgid "The books changed"
@@ -2598,10 +2724,6 @@ msgstr "Sábháilte mar leasú %1"
 #~ msgctxt "%1 is a payee"
 #~ msgid "Correct %1: a reversal and a replacement, dated today."
 #~ msgstr "Ceartaigh %1: aisiompú agus ionadaí, le dáta an lae inniu."
-
-#, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "D'éirigh le seiceáil hledger ar chóip oibre"
 
 #, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"

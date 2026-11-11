@@ -2,6 +2,42 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import { exactAmount } from "./api";
 import { t } from "./i18n";
+export function currencies(data) {
+  return data.commodity.commodities?.length ? data.commodity.commodities : [{ symbol: data.commodity.symbol, places: data.commodity.places }];
+}
+export function accountCurrency(data, account) {
+  const balances = data.accounts?.find(a => a.account === account)?.balances || [];
+  return balances.length === 1 ? balances[0].commodity : data.commodity.symbol;
+}
+// A card purchase: expense, card, source and reserve lines, all one amount.
+export function cardPurchase(data, tx) {
+  const ps = tx?.postings || [];
+  if (ps.length !== 4 || ps.some(p => p.cost || p.amount.commodity !== data.commodity.symbol)) return null;
+  const card = data.cash.cards.find(c => ps.some(p => p.account === c.card) && ps.some(p => p.account === c.reserve));
+  const reserve = ps.find(p => p.account === card?.reserve);
+  if (!reserve) return null;
+  const neg = p => p.amount.exact.startsWith("-");
+  const [other, ...more] = ps.filter(p => p.account !== card.card && p !== reserve && neg(p) === neg(reserve));
+  const source = ps.filter(p => p.account !== card.card && p !== reserve && neg(p) !== neg(reserve));
+  if (!other || more.length || source.length !== 1) return null;
+  const home = data.accounts.find(a => a.account === reserve.account)?.home;
+  return { card: card.card, category: other.account, source: source[0].account === home ? "free" : source[0].account };
+}
+function posting(fields, key, data, old, transfer) {
+  const index = key.slice(7);
+  const symbol = fields["currency" + index] || old?.amount.commodity || data.commodity.symbol;
+  const places = currencies(data).find(c => c.symbol === symbol)?.places;
+  const amount = exactAmount(fields["amount" + index], symbol, places);
+  if (transfer && index === "0") amount.mantissa = (-BigInt(amount.mantissa)).toString();
+  const result = { account: fields[key], amount, status: "" };
+  if (old) result.status = old.account === fields[key] ? old.status || "" : "";
+  if (fields["cost" + index]) {
+    const currency = fields["cost_currency" + index] || old?.cost?.amount.commodity || data.commodity.symbol;
+    result.cost = {kind: fields["cost_kind" + index] || old?.cost?.kind || "total",
+      amount: exactAmount(fields["cost" + index], currency, currencies(data).find(c => c.symbol === currency)?.places)};
+  } else if (old?.cost && ["", "none"].includes(fields["cost_kind" + index])) result.clear_cost = true;
+  return result;
+}
 export function operation(kind, fields, data, tx) {
   const amount = (value) =>
     exactAmount(value, data.commodity.symbol, data.commodity.places);
@@ -12,7 +48,7 @@ export function operation(kind, fields, data, tx) {
       path: `/accounts/${encodeURIComponent(fields.account)}/type`,
       body: { synthetic: fields.synthetic === "true" },
     };
-  if (kind === "postings")
+  if (kind === "postings" || kind === "transfer")
     return {
       ...base,
       path: "/transactions",
@@ -21,10 +57,7 @@ export function operation(kind, fields, data, tx) {
         description: fields.description,
         postings: Object.keys(fields)
           .filter((key) => /^account[0-9]+$/.test(key))
-          .map((key) => ({
-            account: fields[key],
-            amount: amount(fields["amount" + key.slice(7)]),
-          })),
+          .map((key) => posting(fields, key, data, null, kind === "transfer")),
         tags: [],
       },
     };
@@ -49,20 +82,24 @@ export function operation(kind, fields, data, tx) {
           date: fields.date,
           description: fields.description,
           tags: tx.tags || [],
-          postings: Object.keys(fields).filter(key => /^account[0-9]+$/.test(key)).map(key => {
-            const index = Number(key.slice(7));
-            const old = tx.postings[index];
-            const account = fields[key];
-            return {
-              account,
-              status: old?.account === account ? old.status || "" : "",
-              amount: exactAmount(fields["amount" + index], old?.amount.commodity || data.commodity.symbol),
-            };
-          }),
+          postings: Object.keys(fields).filter(key => /^account[0-9]+$/.test(key)).map(key => posting(fields, key, data, tx.postings[Number(key.slice(7))])) ,
         },
       };
     }
     const positive = amount(fields.amount);
+    if (cardPurchase(data, tx)) {
+      const card = data.cash.cards.find(c => c.card === fields.card);
+      const reserve = data.accounts.find(a => a.account === card?.reserve);
+      const refund = tx.postings.find(p => p.account === card.reserve).amount.exact.startsWith("-");
+      const sign = (negative) => (negative !== refund ? -1n : 1n) * BigInt(positive.mantissa);
+      const line = (account, negative) => ({ account, amount: { ...positive, mantissa: sign(negative).toString() },
+        status: tx.postings.find(old => old.account === account)?.status || "" });
+      return { method: "PATCH", path: `/transactions/${tx.id}`, body: {
+        date: fields.date, description: fields.description, tags: tx.tags || [],
+        postings: [line(fields.category, false), line(fields.card, true),
+          line(fields.source === "free" ? reserve.home : fields.source, true), line(card.reserve, false)],
+      } };
+    }
     return {
       method: "PATCH",
       path: `/transactions/${tx.id}`,
@@ -137,7 +174,7 @@ export function operation(kind, fields, data, tx) {
     if (!ops.length) throw new Error(t("No unreserved transactions"));
     return { ...base, path: "/batch", body: { head: data.version.head, ops } };
   }
-  amount(fields.amount);
+  if (kind !== "reconcile") amount(fields.amount);
   if (kind === "split") {
     amount(fields.their_share);
     return {
@@ -151,6 +188,21 @@ export function operation(kind, fields, data, tx) {
         person: fields.person,
         total: fields.amount,
         their_share: fields.their_share,
+      },
+    };
+  }
+  if (kind === "settle") {
+    const person = fields.person.trim();
+    return {
+      ...base,
+      path: "/settlements",
+      body: {
+        date: fields.date,
+        description: t("Settled up with %1", person.charAt(0).toUpperCase() + person.slice(1)),
+        account: fields.account,
+        person,
+        amount: fields.amount,
+        direction: fields.direction,
       },
     };
   }
@@ -181,7 +233,7 @@ export function operation(kind, fields, data, tx) {
         head: data.version.head,
         account: fields.account,
         date: fields.date,
-        balance: fields.amount,
+        balance: exactAmount(fields.amount, fields.currency || accountCurrency(data, fields.account)),
         mode: "assert",
       },
     };

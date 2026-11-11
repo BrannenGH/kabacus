@@ -22,8 +22,11 @@ Kirigami.ScrollablePage {
     property string kind: "spent"
     property var preset: ({})
 
+    globalToolBarStyle: app.narrow ? Kirigami.ApplicationHeaderStyle.None : Kirigami.ApplicationHeaderStyle.ToolBar
     property var postingRows: preset.postings || []
-    readonly property bool postingEdit: kind === "edit" && preset.postings !== undefined
+    // An existing transaction (a plain edit or a card purchase).
+    readonly property bool editing: preset.id !== undefined
+    readonly property bool postingEdit: kind === "edit" && preset.raw === true
 
     required property var app
     readonly property var ledger: app.ledger
@@ -46,19 +49,21 @@ Kirigami.ScrollablePage {
     readonly property var payeeHints: page.payeeQuery !== "" && payeesFetch.value
         ? payeesFetch.value.filter(h => h.payee !== payee.text).slice(0, 3) : []
     // Edit in place or void.
-    property string mode: preset.mode || (kind === "set_aside" ? "aside" : kind === "edit" ? "edit" : "")
+    property string mode: preset.mode || (kind === "set_aside" ? "aside" : editing ? "edit" : "")
     // Free money or a fund.
     property string source: "free"
+    // Settling up: you paid them (else they paid you).
+    property bool settlePaid: true
 
     readonly property bool live: app.wide
     readonly property var titles: ({
         spent: i18nc("@action what happened", "Spent"), received: i18nc("@action what happened", "Received"),
         transfer: i18n("Transfer"), postings: i18n("Postings"),
         card_purchase: i18n("Card purchase"), set_aside: i18n("Set money aside"), pay_card: i18n("Pay a card"),
-        split: i18n("Split with someone"), edit: i18n("Edit transaction"), fix_reserves: i18n("Fix reserve lines"),
+        split: i18n("Split with someone"), settle: i18n("Settle up with someone"), edit: i18n("Edit transaction"), fix_reserves: i18n("Fix reserve lines"),
         reconcile: i18n("Reconcile"), account_type: i18n("Account type")
     })
-    title: titles[kind] || i18n("Add")
+    title: titles[editing ? "edit" : kind] || i18n("Add")
 
     function of(kinds) { return accounts.filter(a => kinds.includes(a.kind)) }
     // Likely accounts first, then the rest, so nothing is out of reach.
@@ -90,13 +95,17 @@ Kirigami.ScrollablePage {
         case "account_type":
             return { kind: "account_type", account: preset.account, synthetic: accountType.currentIndex === 1 }
         case "card_purchase":
-            return Object.assign(base, { kind: "card_purchase", payee: payee.text, memo: memo.text,
+            if (editing && mode === "void") return { kind: "void", id: preset.id }
+            return Object.assign(base, { kind: "card_purchase", id: preset.id, payee: payee.text, memo: memo.text,
                 card: cardPicker.value, category: toPicker.value,
                 source: source === "free" ? "free" : fundPicker.value })
         case "set_aside":
             return Object.assign(base, { kind: "set_aside", from: fromPicker.value, to: toPicker.value, description: memo.text })
         case "pay_card":
             return Object.assign(base, { kind: "pay_card", card: cardPicker.value })
+        case "settle":
+            return Object.assign(base, { kind: "settle", memo: memo.text, account: fromPicker.value,
+                person: personPicker.value.split(":").pop(), paid: settlePaid })
         case "split":
             return { kind: "split", date: date.text, payee: payee.text, memo: memo.text, paid_with: fromPicker.value,
                 category: toPicker.value, person: personPicker.value.split(":").pop(), total: amount.text,
@@ -114,9 +123,13 @@ Kirigami.ScrollablePage {
             return { kind: "reconcile", account: preset.account, date: preset.date, balance: preset.balance }
         default:
             return Object.assign(base, { kind: "simple", payee: payee.text, memo: memo.text,
-                from: fromPicker.value, to: toPicker.value })
+                from: fromPicker.value, to: toPicker.value, new_category: newCategory })
         }
     }
+
+    // A category typed in that isn't one yet: saving makes it.
+    readonly property bool newCategory: kind === "spent" && toPicker.value.trim() !== ""
+        && !page.categories.some(a => a.account === toPicker.value)
 
     // A form error: under its field when it has one, else above.
     function showError(err) {
@@ -130,7 +143,7 @@ Kirigami.ScrollablePage {
         if (err.kind === "field") {
             errors[err.field] = err.message
             const picker = ({ from: fromPicker, to: toPicker, category: toPicker, card: cardPicker,
-                paid_with: fromPicker, source: fundPicker, person: personPicker })[err.field]
+                paid_with: fromPicker, account: fromPicker, source: fundPicker, person: personPicker })[err.field]
             if (picker) {
                 picker.error = err.message
                 picker.suggestion = err.suggestion || ""
@@ -270,21 +283,53 @@ Kirigami.ScrollablePage {
         const fill = (picker, account) => { if (picker.value === "") picker.set(account) }
         const p = preset
         if (p.from) fill(fromPicker, p.from)
-        else if (["spent", "transfer", "split", "postings"].includes(kind) && money.length > 0) fill(fromPicker, money[0].account)
+        else if (["spent", "transfer", "split", "settle", "postings"].includes(kind) && money.length > 0) fill(fromPicker, money[0].account)
         else if (kind === "set_aside" && asideFrom.length > 0) fill(fromPicker, asideFrom[0].account)
         if (p.to) fill(toPicker, p.to)
         else if (kind === "received" && money.length > 0) fill(toPicker, money[0].account)
         if (p.card) fill(cardPicker, p.card)
         else if (cards.length > 0) fill(cardPicker, cards[0].account)
+        if (p.purchaseSource && p.purchaseSource !== "free") {
+            source = "fund"
+            fill(fundPicker, p.purchaseSource)
+        }
         if (funds.length > 0) fill(fundPicker, funds[0].account)
+        cardSwitch()
         if (people.length > 0) fill(personPicker, people[0].account)
         presetting = false
         if (kind === "fix_reserves" || kind === "reconcile") runPreview()
     }
 
+    // Choosing a card for a Spent entry makes it a card purchase; Switch to
+    // Spent goes back, keeping what was typed.
+    function cardSwitch() {
+        if (kind === "spent" && cards.some(c => c.account === fromPicker.value)) {
+            kind = "card_purchase"
+            cardPicker.set(fromPicker.value)
+        }
+    }
+
     actions: [
         // Not while saving: the save closes the form when it's done.
-        Kirigami.Action { text: i18n("Cancel"); icon.name: "dialog-cancel"; enabled: !page.saving; onTriggered: page.app.pageStack.layers.pop() },
+        Kirigami.Action { text: i18n("Cancel"); icon.name: "dialog-cancel"; enabled: !page.saving; onTriggered: page.app.runFileAction(function() { page.app.pageStack.layers.pop() }) },
+        Kirigami.Action {
+            text: i18n("View as raw postings")
+            icon.name: "view-list-details"
+            visible: page.editing && !page.postingEdit && page.mode !== "void"
+            enabled: !page.saving
+            onTriggered: page.app.runFileAction(function() {
+                page.app.pageStack.layers.pop()
+                page.app.openEdit(page.preset.id, page.mode, true)
+            })
+        },
+        Kirigami.Action {
+            text: i18nc("@option cancel a transaction with a reversal", "Void")
+            icon.name: "edit-delete"
+            visible: page.app.narrow && page.editing && page.mode !== "void"
+            enabled: !page.saving
+            displayHint: Kirigami.DisplayHint.AlwaysHide
+            onTriggered: { page.mode = "void"; page.edited() }
+        },
         Kirigami.Action {
             text: page.live ? (page.saving ? i18n("Saving…") : i18n("Save")) : i18nc("@action:button", "Review")
             icon.name: page.live ? "document-save" : (page.LayoutMirroring.enabled ? "go-previous" : "go-next")
@@ -294,6 +339,20 @@ Kirigami.ScrollablePage {
             onTriggered: page.live ? page.saveNow() : page.review()
         }
     ]
+
+    footer: Controls.ToolBar {
+        visible: page.app.narrow
+        height: visible ? implicitHeight : 0
+        padding: 8
+        Controls.Button {
+            width: parent.width
+            text: i18nc("@action:button", "Review")
+            highlighted: true
+            implicitHeight: 48
+            enabled: page.app.canWrite && !page.previewing
+            onClicked: page.review()
+        }
+    }
 
     RowLayout {
         spacing: Kirigami.Units.gridUnit
@@ -334,7 +393,7 @@ Kirigami.ScrollablePage {
 
             // How a change to a recorded transaction is kept.
             ColumnLayout {
-                visible: page.kind === "edit"
+                visible: page.editing && !page.app.narrow
                 Layout.fillWidth: true
                 Controls.ButtonGroup { id: modeGroup }
                 Repeater {
@@ -348,6 +407,7 @@ Kirigami.ScrollablePage {
                         spacing: 0
                         Layout.fillWidth: true
                         Controls.RadioButton {
+                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                             id: modeRadio
                             text: modeDelegate.modelData[1]
                             checked: page.mode === modeDelegate.modelData[0]
@@ -385,14 +445,38 @@ Kirigami.ScrollablePage {
             Kirigami.FormLayout {
                 Layout.fillWidth: true
                 // Saving: what's shown is what's written.
-                enabled: !page.saving && !(page.kind === "edit" && page.mode === "void")
+                enabled: !page.saving && !(page.editing && page.mode === "void")
 
+                // Amount, then date: stacked, never side by side.
+                Controls.TextField {
+                    id: amount
+                    font.pixelSize: page.app.narrow ? 32 : Kirigami.Theme.defaultFont.pixelSize
+                    Layout.minimumHeight: page.app.narrow ? 56 : implicitHeight
+                    visible: page.app.narrow && !page.postingEdit && !["fix_reserves", "reconcile", "account_type"].includes(page.kind)
+                    Kirigami.FormData.label: page.kind === "split" ? i18nc("@label", "Total:") : i18nc("@label", "Amount:")
+                    Accessible.name: i18n("Amount")
+                    inputMethodHints: Qt.ImhFormattedNumbersOnly
+                    onTextEdited: page.edited()
+                    onAccepted: page.live ? page.saveNow() : page.review()
+                }
+                // The amount's problem shows as it's typed.
+                Controls.Label {
+                    readonly property string typed: amount.text === "" ? "" : page.ledger.checkAmount(amount.text, page.places, true)
+                    visible: page.app.narrow && !page.postingEdit && text !== ""
+                    text: page.fieldErrors.amount || page.fieldErrors.total || typed
+                    color: Kirigami.Theme.negativeTextColor
+                    wrapMode: Text.Wrap
+                    Layout.fillWidth: true
+                    Accessible.name: i18nc("%1 is the field, %2 what's wrong with it", "%1 problem: %2", i18n("Amount"), text)
+                }
                 Controls.Label {
                     visible: page.kind === "account_type"
                     font.bold: true
                     text: (page.accounts.find(a => a.account === page.preset.account) || {}).name || page.preset.account || ""
                 }
                 Controls.ComboBox {
+                    font.pixelSize: page.app.narrow ? 16 : Kirigami.Theme.defaultFont.pixelSize
+                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                     id: accountType
                     visible: page.kind === "account_type"
                     Kirigami.FormData.label: i18n("Account type")
@@ -408,9 +492,26 @@ Kirigami.ScrollablePage {
                     accounts: page.cards
                     onEdited: page.edited()
                 }
+                Kirigami.InlineMessage {
+                    Layout.fillWidth: true
+                    visible: page.kind === "card_purchase" && !page.editing
+                    type: Kirigami.MessageType.Information
+                    text: i18n("This is a card purchase: its reserve lines are added for you.")
+                    actions: [
+                        Kirigami.Action {
+                            text: i18n("Switch to Spent")
+                            onTriggered: {
+                                page.kind = "spent"
+                                fromPicker.set(cardPicker.value)
+                            }
+                        }
+                    ]
+                }
                 Controls.TextField {
+                    font.pixelSize: page.app.narrow ? 16 : Kirigami.Theme.defaultFont.pixelSize
+                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                     id: payee
-                    visible: !["set_aside", "pay_card", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
+                    visible: !["set_aside", "pay_card", "settle", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     Kirigami.FormData.label: page.kind === "split" ? i18nc("@label what a shared cost was for", "What:") : i18nc("@label", "Payee:")
                     Accessible.name: i18n("Payee")
                     onTextEdited: {
@@ -445,10 +546,14 @@ Kirigami.ScrollablePage {
                 AccountPicker {
                     id: fromPicker
                     visible: !page.postingEdit && !["card_purchase", "pay_card", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
-                    label: page.kind === "split" ? i18n("Paid with") : i18nc("the account money comes from", "From")
+                    label: page.kind === "split" ? i18n("Paid with") : page.kind === "settle" ? i18n("Account") : i18nc("the account money comes from", "From")
                     accounts: page.kind === "set_aside" ? page.asideFrom
-                        : page.kind === "received" ? page.incomes : page.moneyAndCards
-                    onEdited: page.edited()
+                        : page.kind === "received" ? page.incomes
+                        : page.kind === "settle" && !page.settlePaid ? page.ordered(["money"]) : page.moneyAndCards
+                    onEdited: {
+                        page.cardSwitch()
+                        page.edited()
+                    }
                 }
                 Kirigami.InlineMessage {
                     Layout.fillWidth: true
@@ -467,7 +572,7 @@ Kirigami.ScrollablePage {
                 }
                 AccountPicker {
                     id: toPicker
-                    visible: !page.postingEdit && !["pay_card", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
+                    visible: !page.postingEdit && !["pay_card", "settle", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     label: ["spent", "card_purchase", "split"].includes(page.kind) ? i18n("Category") : i18nc("the account money goes to", "To")
                     accounts: page.kind === "set_aside" ? page.asideTo
                         : ["spent", "card_purchase", "split"].includes(page.kind) ? page.categories
@@ -490,18 +595,29 @@ Kirigami.ScrollablePage {
                     Layout.fillWidth: true
                     Accessible.name: text
                 }
+                Controls.Label {
+                    visible: page.newCategory
+                    text: i18n("%1 is a new category. Check the spelling; it will be created.",
+                        toPicker.value.trim().split(/\s+/).join(" "))
+                    wrapMode: Text.Wrap
+                    Layout.maximumWidth: toPicker.width
+                    Layout.fillWidth: true
+                    Accessible.name: text
+                }
                 // Free money or a fund pays for it.
                 Controls.ButtonGroup { id: sourceGroup }
                 RowLayout {
                     visible: ["card_purchase", "fix_reserves"].includes(page.kind)
                     Kirigami.FormData.label: i18nc("@label", "Paid from:")
                     Controls.RadioButton {
+                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                         text: i18n("Free money")
                         checked: page.source === "free"
                         Controls.ButtonGroup.group: sourceGroup
                         onToggled: { page.source = "free"; page.edited() }
                     }
                     Controls.RadioButton {
+                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                         text: i18n("A reserve")
                         checked: page.source === "fund"
                         Controls.ButtonGroup.group: sourceGroup
@@ -515,9 +631,28 @@ Kirigami.ScrollablePage {
                     accounts: page.funds
                     onEdited: page.edited()
                 }
+                RowLayout {
+                    visible: page.kind === "settle"
+                    Kirigami.FormData.label: i18n("Direction")
+                    Controls.ButtonGroup { id: settleGroup }
+                    Controls.RadioButton {
+                        Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
+                        text: i18n("I paid them")
+                        checked: page.settlePaid
+                        Controls.ButtonGroup.group: settleGroup
+                        onToggled: { page.settlePaid = true; page.edited() }
+                    }
+                    Controls.RadioButton {
+                        Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
+                        text: i18n("They paid me")
+                        checked: !page.settlePaid
+                        Controls.ButtonGroup.group: settleGroup
+                        onToggled: { page.settlePaid = false; page.edited() }
+                    }
+                }
                 AccountPicker {
                     id: personPicker
-                    visible: page.kind === "split"
+                    visible: page.kind === "split" || page.kind === "settle"
                     label: i18nc("the person a cost is split with", "With")
                     accounts: page.people
                     onEdited: page.edited()
@@ -580,18 +715,21 @@ Kirigami.ScrollablePage {
                 }
                 // Amount, then date: stacked, never side by side.
                 Controls.TextField {
-                    id: amount
-                    visible: !page.postingEdit && !["fix_reserves", "reconcile", "account_type"].includes(page.kind)
+                    id: desktopAmount
+                    font.pixelSize: page.app.narrow ? 32 : Kirigami.Theme.defaultFont.pixelSize
+                    Layout.minimumHeight: page.app.narrow ? 56 : implicitHeight
+                    visible: !page.app.narrow && !page.postingEdit && !["fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     Kirigami.FormData.label: page.kind === "split" ? i18nc("@label", "Total:") : i18nc("@label", "Amount:")
                     Accessible.name: i18n("Amount")
                     inputMethodHints: Qt.ImhFormattedNumbersOnly
-                    onTextEdited: page.edited()
+                    text: amount.text
+                    onTextEdited: { amount.text = text; page.edited() }
                     onAccepted: page.live ? page.saveNow() : page.review()
                 }
                 // The amount's problem shows as it's typed.
                 Controls.Label {
                     readonly property string typed: amount.text === "" ? "" : page.ledger.checkAmount(amount.text, page.places, true)
-                    visible: !page.postingEdit && text !== ""
+                    visible: !page.app.narrow && !page.postingEdit && text !== ""
                     text: page.fieldErrors.amount || page.fieldErrors.total || typed
                     color: Kirigami.Theme.negativeTextColor
                     wrapMode: Text.Wrap
@@ -599,6 +737,8 @@ Kirigami.ScrollablePage {
                     Accessible.name: i18nc("%1 is the field, %2 what's wrong with it", "%1 problem: %2", i18n("Amount"), text)
                 }
                 Controls.TextField {
+                    font.pixelSize: page.app.narrow ? 16 : Kirigami.Theme.defaultFont.pixelSize
+                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                     id: theirShare
                     visible: page.kind === "split"
                     Kirigami.FormData.label: i18nc("@label", "Their share:")
@@ -629,6 +769,9 @@ Kirigami.ScrollablePage {
                 }
                 Controls.TextField {
                     id: date
+                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
+                    font.pixelSize: page.app.narrow ? 16 : Kirigami.Theme.defaultFont.pixelSize
+                    TapHandler { enabled: page.app.narrow; onTapped: datePicker.open() }
                     visible: !["fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     Kirigami.FormData.label: i18nc("@label", "Date:")
                     Accessible.name: i18n("Date")
@@ -641,6 +784,8 @@ Kirigami.ScrollablePage {
                     color: Kirigami.Theme.negativeTextColor
                 }
                 Controls.TextField {
+                    font.pixelSize: page.app.narrow ? 16 : Kirigami.Theme.defaultFont.pixelSize
+                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                     id: memo
                     visible: !["pay_card", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     Kirigami.FormData.label: page.kind === "set_aside" ? i18nc("@label", "Description:") : i18nc("@label", "Memo:")
@@ -664,16 +809,7 @@ Kirigami.ScrollablePage {
                     : i18n("Also moves the amount from the reserve into the card's reserve, so the card stays covered.")
             }
 
-            Controls.Button {
-                visible: page.app.narrow
-                text: i18nc("@action:button", "Review")
-                icon.name: (page.LayoutMirroring.enabled ? "go-previous" : "go-next")
-                highlighted: true
-                enabled: page.app.canWrite && !page.previewing
-                Layout.fillWidth: true
-                Layout.minimumHeight: Kirigami.Units.gridUnit * 2.5
-                onClicked: page.review()
-            }
+
         }
 
         // The live dry run, beside the fields on wide windows.
@@ -702,6 +838,53 @@ Kirigami.ScrollablePage {
                 preview: page.preview
                 Layout.fillWidth: true
             }
+        }
+    }
+
+    Controls.Dialog {
+        id: datePicker
+        parent: Controls.Overlay.overlay
+        modal: true
+        x: 0; y: 0
+        width: parent ? parent.width : 0
+        height: parent ? parent.height : 0
+        padding: 16
+        property date shown: new Date()
+        onOpened: { const parsed = new Date(date.text + "T12:00:00"); shown = isNaN(parsed.getTime()) ? new Date() : parsed }
+        header: Controls.ToolBar {
+            RowLayout {
+                anchors.fill: parent
+                Controls.ToolButton { text: i18n("Back"); implicitHeight: 48; onClicked: datePicker.close() }
+                Kirigami.Heading { text: i18n("Date"); Layout.fillWidth: true }
+            }
+        }
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 8
+            RowLayout {
+                Controls.ToolButton {
+                    icon.name: "go-previous"
+                    implicitWidth: 48; implicitHeight: 48
+                    Accessible.name: Qt.formatDate(new Date(datePicker.shown.getFullYear(), datePicker.shown.getMonth() - 1, 1), "MMMM yyyy")
+                    onClicked: datePicker.shown = new Date(datePicker.shown.getFullYear(), datePicker.shown.getMonth() - 1, 1)
+                }
+                Controls.Label { text: Qt.formatDate(datePicker.shown, "MMMM yyyy"); Layout.fillWidth: true; horizontalAlignment: Text.AlignHCenter }
+                Controls.ToolButton {
+                    icon.name: "go-next"
+                    implicitWidth: 48; implicitHeight: 48
+                    Accessible.name: Qt.formatDate(new Date(datePicker.shown.getFullYear(), datePicker.shown.getMonth() + 1, 1), "MMMM yyyy")
+                    onClicked: datePicker.shown = new Date(datePicker.shown.getFullYear(), datePicker.shown.getMonth() + 1, 1)
+                }
+            }
+            Controls.DayOfWeekRow { Layout.fillWidth: true }
+            Controls.MonthGrid {
+                month: datePicker.shown.getMonth()
+                year: datePicker.shown.getFullYear()
+                Layout.fillWidth: true
+                Layout.preferredHeight: 6 * 48
+                onClicked: function(chosen) { date.text = Qt.formatDate(chosen, "yyyy-MM-dd"); page.edited(); datePicker.close() }
+            }
+            Item { Layout.fillHeight: true }
         }
     }
 

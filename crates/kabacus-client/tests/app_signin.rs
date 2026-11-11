@@ -46,6 +46,7 @@ fn client_for(server: &TestServer, session: &UserSession) -> KabacusClient {
 async fn add_one(client: &KabacusClient) {
     let head = client.version().await.unwrap().head.unwrap();
     let body = AddTransactionBody {
+        new_accounts: vec![],
         date: "2026-02-01".to_string(),
         description: "Grocery Store".to_string(),
         postings: vec![

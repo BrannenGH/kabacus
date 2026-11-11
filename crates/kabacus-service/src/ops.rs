@@ -118,6 +118,8 @@ pub struct AddRequest {
     pub description: String,
     pub postings: Vec<DraftPosting>,
     pub tags: Vec<(String, String)>,
+    /// New expense or income accounts this write declares first.
+    pub new_accounts: Vec<String>,
 }
 
 pub struct EditRequest {
@@ -290,29 +292,32 @@ fn build_postings(
         chart.kind_of(account) == AccountKind::Money
     })?;
     let kinds: Vec<PostingKind> = carried.iter().map(|c| c.kind).collect();
-    let amounts = resolve_amounts_by_kind(drafts, &kinds)?;
-    let costs: Vec<Option<kabacus_core::Cost>> = drafts
+    let effective: Vec<DraftPosting> = drafts
         .iter()
-        .map(|d| {
-            original
-                .iter()
-                .find(|p| p.account == d.account && Some(&p.amount) == d.amount.as_ref())
-                .and_then(|p| p.cost.clone())
+        .zip(&carried)
+        .map(|(d, c)| {
+            let mut draft = d.clone();
+            draft.cost = c
+                .cost
+                .clone()
+                .map(kabacus_core::CostEdit::Set)
+                .unwrap_or(kabacus_core::CostEdit::Clear);
+            draft
         })
         .collect();
+    let amounts = resolve_amounts_by_kind(&effective, &kinds)?;
     Ok(drafts
         .iter()
         .zip(amounts)
         .zip(carried)
-        .zip(costs)
-        .map(|(((d, amount), carried), cost)| Posting {
+        .map(|((d, amount), carried)| Posting {
             account: d.account.clone(),
             amount,
             status: d.status,
             kind: carried.kind,
             comment: carried.comment,
             tags: carried.tags,
-            cost,
+            cost: carried.cost,
             balance_assertion: carried.balance_assertion,
         })
         .collect())
@@ -362,6 +367,9 @@ fn added(wc: &mut WorkingCopy, tx: Transaction, applied: &mut Applied) -> Result
 }
 
 fn add_one(wc: &mut WorkingCopy, req: AddRequest, kind: &'static str) -> Result<Applied, OpError> {
+    for account in &req.new_accounts {
+        declare_new_category(wc, account)?;
+    }
     let postings = build_postings(wc, &req.postings, &[])?;
     check_description(&req.description)?;
     check_declared(wc, &req.postings)?;
@@ -389,6 +397,7 @@ fn add_planned(
                 .postings
                 .into_iter()
                 .map(|(account, money)| DraftPosting {
+                    cost: kabacus_core::CostEdit::Keep,
                     account,
                     amount: Some(Amount::new(&commodity, money)),
                     status: Status::Unmarked,
@@ -396,6 +405,7 @@ fn add_planned(
                 })
                 .collect(),
             tags,
+            new_accounts: vec![],
         },
         "add",
     )
@@ -510,6 +520,23 @@ fn declare_new_fund(wc: &mut WorkingCopy, from: &str, fund: &str) -> Result<(), 
     kabacus_core::render_account_declaration(fund, &[])
         .map_err(|message| OpError::invalid("account", message))?;
     wc.declare(fund, "");
+    Ok(())
+}
+
+/// Declare a new expense or income account in the write that first uses
+/// it. Not a rewrite: see `check_new_category`.
+fn declare_new_category(wc: &mut WorkingCopy, account: &str) -> Result<(), OpError> {
+    kabacus_core::check_new_category(&wc.chart(), account)
+        .map_err(|message| OpError::invalid("account", message))?;
+    kabacus_core::render_account_declaration(account, &[])
+        .map_err(|message| OpError::invalid("account", message))?;
+    if wc.is_declared(account) {
+        return Err(OpError::invalid(
+            "account",
+            format!("{account} already exists"),
+        ));
+    }
+    wc.declare(account, "");
     Ok(())
 }
 

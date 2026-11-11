@@ -5,7 +5,7 @@ description: How to read and change a household's books through Kabacus's tools 
 
 # Kabacus bookkeeping
 
-Kabacus keeps a household's books (double-entry, in hledger's terms)
+Kabacus keeps a household's books (double-entry)
 behind one server. Every tool here goes through that server: it checks
 every write strictly, makes each write one new revision of the books, and
 records that the change came from you (actor `mcp`). Nothing you do is
@@ -62,7 +62,7 @@ before retrying.
 
 | Mistake | Instead |
 |---|---|
-| Inventing an account name | Use one from `list_accounts`; undeclared accounts are refused. |
+| Inventing an account name | Use one from `list_accounts`; undeclared accounts are refused. The one exception is a new expense or income category: name it in `add_transaction`'s `new_accounts` and the same write declares it. |
 | Amounts as JSON numbers | Decimal strings: `"45.68"`, `"-0.04"`. A number like `45.68` is refused (`amount_format`). |
 | More decimal places than the commodity has (`12.345` USD) by mistake | `get_commodity` gives its `places`; an amount with more is refused. |
 | Many writes one call at a time | `batch`: up to 100 operations, one check, one revision. |
@@ -71,6 +71,7 @@ before retrying.
 | Voiding to fix a typo | Use `edit_transaction`; see changing-transactions.md. |
 | Setting money aside with `add_transaction` | Use `allocate`, which checks it stays inside one account. |
 | A card purchase or payment without its reserve lines | Use `record_card_purchase` and `pay_card`; flagged `unreserved` otherwise. |
+| Recording a payment to or from a person with `add_transaction` | Use `settle_up` (`paid` or `received`); it nets against what is already owed, then builds the other side. |
 | Committing without a preview | Always dry-run first and show the user. |
 
 ## Reference files

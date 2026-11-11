@@ -131,7 +131,7 @@ pub fn project<T: Serialize>(
 #[derive(Debug, Clone, Default, Deserialize, schemars::JsonSchema)]
 pub struct SearchQuery {
     /// A plain-text filter matched against payee, memo and posting
-    /// accounts (not hledger's query language).
+    /// accounts.
     #[serde(default)]
     pub query: Option<String>,
     /// `YYYY-MM-DD`, inclusive.
@@ -266,11 +266,11 @@ pub async fn matching(
 ) -> Result<Vec<(TransactionDto, Money)>, ApiError> {
     let from = parse_optional_date(q.from.as_deref())?;
     let to = parse_optional_date(q.to.as_deref())?;
-    let all = ops::read_all_transactions(state).await?;
-    let chart = service::books_chart_from(state, &all).await?;
+    let snapshot = state.books_snapshot().await.map_err(ApiError::Internal)?;
+    let all = &snapshot.transactions;
+    let chart = service::books_chart_from(state, all).await?;
     let commodity = service::books_commodity(state).await?;
-    let flags = UnreservedIndex::new(&chart, &all);
-    let visible: Vec<&Transaction> = all.iter().collect();
+    let flags = UnreservedIndex::new(&chart, all);
 
     let kind: Option<AccountKind> = q
         .kind
@@ -338,7 +338,7 @@ pub async fn matching(
     let query = q.query.as_deref().map(str::to_lowercase);
 
     let mut rows: Vec<(&Transaction, Money)> = Vec::new();
-    for tx in visible {
+    for tx in all {
         if from.is_some_and(|d| tx.date < d) || to.is_some_and(|d| tx.date > d) {
             continue;
         }
@@ -495,14 +495,15 @@ pub async fn get_transaction(
 ) -> Result<GetTransactionDto, ApiError> {
     use kabacus_store::BookStore;
     require(principal, Role::Read)?;
-    let all = ops::read_all_transactions(state).await?;
+    let snapshot = state.books_snapshot().await.map_err(ApiError::Internal)?;
+    let all = &snapshot.transactions;
     let wanted = ops::parse_id(id)?;
     let tx = all
         .iter()
         .find(|t| t.id == wanted)
         .ok_or_else(|| ApiError::NotFound(id.to_string()))?;
-    let chart = service::books_chart_from(state, &all).await?;
-    let flags = UnreservedIndex::new(&chart, &all);
+    let chart = service::books_chart_from(state, all).await?;
+    let flags = UnreservedIndex::new(&chart, all);
     let history = if include_history {
         Some(
             state

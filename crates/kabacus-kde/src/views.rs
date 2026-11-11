@@ -544,7 +544,7 @@ fn group_accounts(accounts: &[AccountView], coh: &CashOnHandView) -> Vec<Account
         if group == "people" && balance.tone == "zero" {
             continue;
         }
-        // hledger keeps income and equity negative; shown earned
+        // Income and equity balances are negative; shown earned
         // (positive) and neutral, since red reads as "bad".
         let balance = if a.kind == "income" || a.account.starts_with("equity:") {
             earned(balance)
@@ -569,6 +569,7 @@ fn group_accounts(accounts: &[AccountView], coh: &CashOnHandView) -> Vec<Account
 
 #[derive(Debug, Clone, Serialize, PartialEq)]
 pub struct RegisterRow {
+    pub status: String,
     pub id: String,
     pub date: String,
     pub payee: String,
@@ -683,6 +684,7 @@ async fn all_register(
                 .collect::<Vec<_>>()
                 .join(&crate::model::list_separator());
             RegisterRow {
+                status: t.status.clone(),
                 id: t.id.to_string(),
                 date: t.date.clone(),
                 payee: t.payee.clone(),
@@ -744,6 +746,7 @@ pub async fn register(
                 date: l.date,
                 payee: l.payee,
                 memo: l.memo,
+                status: l.status,
                 amount: Shown::of(&l.amount),
                 balance: Shown::of(&l.balance),
                 kind: kind.to_string(),
@@ -1114,7 +1117,7 @@ fn flow_name(group: &str, display_name: &str) -> String {
         "income" => i18nc!("accounts group", "Income"),
         "expense" => i18nc!("accounts group", "Spending"),
         "pre-allocation" => i18n!("Set aside in reserves"),
-        "debt-reserve" => i18n!("Card reserves"),
+        "debt-reserve" => i18n!("Set Aside for Credit Card Payments"),
         "equity_conversion" | "term-liability" => i18n!("Loan principal"),
         "receivable" => i18n!("Fronted for others"),
         "payable" => i18n!("Owed to others"),

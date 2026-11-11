@@ -41,6 +41,12 @@ pub fn to_tags(tags: Vec<TagParam>) -> Vec<(String, String)> {
 
 #[derive(Debug, Clone, Deserialize, schemars::JsonSchema)]
 pub struct DraftPostingParam {
+    /// Conversion price: `unit` (@) or `total` (@@), with an exact amount.
+    #[serde(default)]
+    pub cost: Option<service::CostInput>,
+    /// Remove the existing conversion price on an edit.
+    #[serde(default)]
+    pub clear_cost: bool,
     pub account: String,
     /// A decimal string such as `"-12.34"` (or `{commodity, mantissa,
     /// places}`). Leave at most one posting's amount unset; the server
@@ -64,6 +70,8 @@ pub fn to_postings(postings: Vec<DraftPostingParam>) -> Vec<DraftPostingDto> {
     postings
         .into_iter()
         .map(|p| DraftPostingDto {
+            cost: p.cost,
+            clear_cost: p.clear_cost,
             account: p.account,
             amount: p.amount,
             status: p.status.unwrap_or_default(),
@@ -203,6 +211,10 @@ pub struct AddTransactionParams {
     pub description: String,
     pub postings: Vec<DraftPostingParam>,
     pub tags: Option<Vec<TagParam>>,
+    /// New expense or income accounts the postings use, e.g.
+    /// `["expenses:pets:vet"]`: declared by this write, no rewrite needed.
+    /// Any other account must already exist.
+    pub new_accounts: Option<Vec<String>>,
     /// The books' current head (their revision), from a prior read
     /// (`get_history`, `get_version`): required, so a write made on a
     /// stale view is refused as a conflict.
@@ -222,6 +234,7 @@ impl AddTransactionParams {
                 description: self.description,
                 postings: to_postings(self.postings),
                 tags: to_tags(self.tags.unwrap_or_default()),
+                new_accounts: self.new_accounts.unwrap_or_default(),
                 dry_run: false,
                 include_diff: false,
             },
@@ -581,16 +594,6 @@ impl SetBalanceAssertionParams {
             commodity,
         )
     }
-}
-
-#[derive(Debug, Deserialize, schemars::JsonSchema)]
-pub struct ImportJournalParams {
-    /// The main journal's name among `files`.
-    pub main: String,
-    /// Each journal's text, by its name (as `include` names it).
-    pub files: std::collections::BTreeMap<String, String>,
-    /// Defaults to true: read and check, import nothing.
-    pub dry_run: Option<bool>,
 }
 
 #[derive(Debug, Deserialize, schemars::JsonSchema)]

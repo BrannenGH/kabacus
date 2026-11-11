@@ -82,38 +82,6 @@ async fn spawn_year() -> (TestServer, Client) {
     (server, client)
 }
 
-/// hledger's report on the books, rendered as a journal; `None` without
-/// hledger.
-async fn hledger_csv(server: &TestServer, args: &[&str]) -> Option<Vec<Vec<String>>> {
-    let binary = hledger()?;
-    let dir = tempfile::tempdir().unwrap();
-    let file = dir.path().join("books.journal");
-    std::fs::write(&file, journal(server).await).unwrap();
-    let out = std::process::Command::new(binary)
-        .arg("-f")
-        .arg(&file)
-        .args(args)
-        .args(["-O", "csv"])
-        .output()
-        .unwrap();
-    assert!(
-        out.status.success(),
-        "{}",
-        String::from_utf8_lossy(&out.stderr)
-    );
-    Some(
-        String::from_utf8(out.stdout)
-            .unwrap()
-            .lines()
-            .map(|l| {
-                l.split("\",\"")
-                    .map(|c| c.trim_matches('"').replace("USD", ""))
-                    .collect()
-            })
-            .collect(),
-    )
-}
-
 fn cents(s: &str) -> i64 {
     let negative = s.starts_with('-');
     let digits: String = s.chars().filter(|c| c.is_ascii_digit()).collect();
@@ -126,12 +94,12 @@ fn cents(s: &str) -> i64 {
     }
 }
 
-/// The monthly income statement matches `hledger bal income expenses -M`
-/// to the cent (income as positive), and net = net_before_conversion -
+/// The monthly income statement matches the synthetic books to the cent,
+/// and net = net_before_conversion -
 /// equity conversion in every period.
 #[tokio::test]
-async fn income_statement_matches_hledger() {
-    let (server, client) = spawn_year().await;
+async fn income_statement_matches_monthly_entries() {
+    let (_server, client) = spawn_year().await;
     let report = call(
         &client,
         "income_statement",
@@ -139,32 +107,20 @@ async fn income_statement_matches_hledger() {
     )
     .await;
     assert_eq!(report["periods"].as_array().unwrap().len(), 12);
-    let Some(hledger) = hledger_csv(
-        &server,
-        &[
-            "bal",
-            "income",
-            "expenses",
-            "-M",
-            "-b",
-            "2025-10-01",
-            "-e",
-            "2026-10-01",
-            "--depth",
-            "2",
-        ],
-    )
-    .await
-    else {
-        return;
-    };
-    let mut expected: BTreeMap<String, Vec<i64>> = BTreeMap::new();
-    for row in &hledger[1..] {
-        if row[0].starts_with("Total") {
-            continue;
-        }
-        expected.insert(row[0].clone(), row[1..].iter().map(|c| cents(c)).collect());
-    }
+    let expected = BTreeMap::from([
+        (
+            "income:salary".to_string(),
+            (0..12).map(|m| -(300000 + m * 1000)).collect::<Vec<i64>>(),
+        ),
+        ("income:interest".to_string(), vec![-4; 12]),
+        (
+            "expenses:food".to_string(),
+            (0..12)
+                .map(|m| 14000 + m * 300 + m * 7 % 100 + if m == 11 { 3000 } else { 0 })
+                .collect(),
+        ),
+        ("expenses:interest".to_string(), vec![30000; 12]),
+    ]);
     let mut ours: BTreeMap<String, Vec<i64>> = BTreeMap::new();
     for (section, sign) in [("income", -1), ("expenses", 1)] {
         for row in report[section].as_array().unwrap() {
@@ -492,4 +448,35 @@ async fn reconcile_adjust_posts_the_difference() {
         cents(exact(&adjustments[0])),
         cents(result["difference"].as_str().unwrap())
     );
+}
+
+#[tokio::test]
+async fn wallet_exchange_costs_and_fee_currencies_round_trip_through_mcp() {
+    let server = spawn_server_with_journal(kabacus_testkit::WALLETS, |_| {}).await;
+    let client = connect(&server).await;
+    let mut args = json!({"head":head(&client).await,"date":"2026-02-02","description":"Cedar Exchange | ETH to XMR","postings":[
+        {"account":"assets:investments:ethereum","amount":{"commodity":"ETH","mantissa":"-1025","places":4}},
+        {"account":"assets:investments:monero","amount":{"commodity":"XMR","mantissa":"15","places":1},"cost":{"kind":"total","amount":{"commodity":"ETH","mantissa":"1","places":1}}},
+        {"account":"expenses:fees:platform","amount":{"commodity":"ETH","mantissa":"15","places":4}},
+        {"account":"expenses:fees:broker","amount":{"commodity":"ETH","mantissa":"1","places":3}}
+    ]});
+    let before = revision(&server).await;
+    call(&client, "add_transaction", args.clone()).await;
+    assert_eq!(revision(&server).await, before);
+    args["dry_run"] = json!(false);
+    let saved = call(&client, "add_transaction", args).await;
+    let tx = call(&client, "get_transaction", json!({"id":saved["id"]})).await;
+    assert_eq!(tx["postings"][1]["cost"]["kind"], "total");
+    assert_eq!(tx["postings"][1]["cost"]["amount"]["commodity"], "ETH");
+    let fees = call(
+        &client,
+        "category_breakdown",
+        json!({"from":"2026-02-01","to":"2026-02-28","depth":3,"commodity":"ETH"}),
+    )
+    .await;
+    assert_eq!(fees["rows"].as_array().unwrap().len(), 2);
+    let checked = call(&client,"reconcile",json!({"account":"assets:investments:monero","date":"2026-02-28","balance":"13.845678901234","mode":"check"})).await;
+    assert_eq!(checked["commodity"], "XMR");
+    assert_eq!(checked["status"], "matched");
+    assert_checks(&server).await;
 }

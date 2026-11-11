@@ -6,7 +6,7 @@ use anyhow::{bail, Context, Result};
 use clap::{CommandFactory, Parser, Subcommand};
 use kabacus_client::{books::computer_user, Books, BooksRequest, LocalBooks};
 use kabacus_service::local::LocalCaller;
-use kabacus_store::{BookStore, Who};
+use kabacus_store::BookStore;
 use rmcp::ServiceExt;
 use serde_json::{json, Value};
 use std::{path::PathBuf, sync::Arc};
@@ -48,12 +48,6 @@ enum Command {
         account: Option<String>,
         #[arg(long)]
         csv: bool,
-    },
-    Import {
-        books: PathBuf,
-        journal: PathBuf,
-        #[arg(long)]
-        save: bool,
     },
     Export {
         books: PathBuf,
@@ -259,67 +253,6 @@ async fn run(args: Args) -> Result<()> {
             } else {
                 print(&value, args.json);
             }
-        }
-        Command::Import {
-            books,
-            journal,
-            save,
-        } => {
-            let outcome = kabacus_ledger::import(&kabacus_ledger::FsSource, &journal)?;
-            let books = if books.exists() {
-                LocalBooks::open(books, local).await?
-            } else if save {
-                std::fs::OpenOptions::new()
-                    .write(true)
-                    .create_new(true)
-                    .open(&books)?;
-                LocalBooks::from_store(
-                    kabacus_store::AnyStore::Sqlite(kabacus_store::SqliteStore::open(&books)?),
-                    local,
-                )
-                .await?
-            } else {
-                LocalBooks::from_store(
-                    kabacus_store::AnyStore::Sqlite(kabacus_store::SqliteStore::in_memory()?),
-                    local,
-                )
-                .await?
-            };
-            let head = books.service.store.revision(books.service.ledger).await?;
-            let loaded = books.service.store.load(books.service.ledger, None).await?;
-            if !loaded.book.accounts.is_empty() || !loaded.book.transactions.is_empty() {
-                bail!("Import requires empty books");
-            }
-            let result = if save {
-                let user = books
-                    .service
-                    .store
-                    .local_user(&books.caller.username)
-                    .await?;
-                let who = Who {
-                    user,
-                    actor: "cli".into(),
-                    kind: "import".into(),
-                    summary: format!("Import {}", journal.display()),
-                    details: json!({"user":books.caller.username}),
-                };
-                books
-                    .service
-                    .store
-                    .commit(
-                        books.service.ledger,
-                        head,
-                        kabacus_store::ChangeSet::adding(&outcome.book),
-                        &who,
-                    )
-                    .await?
-            } else {
-                head
-            };
-            print(
-                &json!({"head":result.to_string(),"dry_run":!save,"transactions":outcome.book.transactions.len()}),
-                args.json,
-            );
         }
         Command::Export { books, output } => {
             let books = LocalBooks::open(books, local).await?;

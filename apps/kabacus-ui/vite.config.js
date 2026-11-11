@@ -6,6 +6,17 @@ import { catalogs } from "./catalogs";
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { createHash } from "node:crypto";
+const tokens = JSON.parse(readFileSync(new URL("../../design/tokens.json", import.meta.url), "utf8"));
+const phone = Number(tokens.breakpoint.phone.value), desktop = Number(tokens.breakpoint.desktop.value);
+function breakpoints() {
+  return { name: "kabacus-breakpoints", enforce: "pre", transform(source, id) {
+    if (!id.endsWith(".css")) return;
+    return source.replaceAll("(--phone)", `(width < ${phone}px)`)
+      .replaceAll("(--tablet)", `(${phone}px <= width < ${desktop}px)`)
+      .replaceAll("(--compact)", `(width < ${desktop}px)`)
+      .replaceAll("(--desktop)", `(width >= ${desktop}px)`);
+  } };
+}
 function pwa() {
  return {name:"kabacus-pwa",closeBundle(){
   const root="dist";
@@ -19,7 +30,7 @@ function pwa() {
 }
 export default defineConfig(({ command }) => ({
   base: command === "build" ? "./" : "/app/",
-  plugins: [react(), catalogs(), pwa()],
+  plugins: [breakpoints(), react(), catalogs(), pwa()],
   server: { port: 5173, strictPort: true },
   test: { include: ["src/**/*.test.js"] },
 }));

@@ -9,11 +9,11 @@ SPDX-License-Identifier: CC0-1.0
 <component type="desktop-application">
   <id>me.hallb.kabacus</id>
   <name>Kabacus</name>
-  <summary>Manage hledger books</summary>
+  <summary>Manage double-entry books</summary>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <description>
-    <p>A Kirigami app for hledger books. It reads and writes only through
+    <p>A Kirigami app for double-entry books. It reads and writes only through
     kabacus-server, which validates and versions every change.</p>
   </description>
   <launchable type="desktop-id">me.hallb.kabacus.desktop</launchable>

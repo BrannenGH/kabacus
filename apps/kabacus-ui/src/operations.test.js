@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 // SPDX-License-Identifier: GPL-3.0-or-later
 import { expect, test } from "vitest";
-import { operation } from "./operations";
+import { operation, cardPurchase } from "./operations";
 const data = {
   commodity: { symbol: "USD", places: 2 },
   version: { head: "42" },
@@ -178,5 +178,45 @@ test("removing the first split posting and adding a new one retains row identiti
   expect(result.body.postings.map(p => [p.account, p.status, p.amount.mantissa])).toEqual([
     ["expenses:dining", "*", "1500"], ["assets:bank:checking", "*", "-2000"],
     ["expenses:groceries", "", "500"],
+  ]);
+});
+
+test("wallet postings retain each currency, conversion cost and added fee rows", () => {
+  const tx = { id: 28, tags: [], postings: [
+    { account: "assets:investments:ethereum", status: "*", amount: { exact: "0.4", commodity: "ETH" }, cost: { kind: "total", amount: { exact: "1000.00", commodity: "USD" } } },
+    { account: "assets:bank:checking", status: "*", amount: { exact: "-1025.00", commodity: "USD" } },
+    { account: "expenses:fees:platform", amount: { exact: "15.00", commodity: "USD" } },
+    { account: "expenses:fees:broker", amount: { exact: "10.00", commodity: "USD" } },
+  ] };
+  const result = operation("edit", { date: "2026-11-02", description: "Cedar Exchange",
+    account0: tx.postings[0].account, amount0: "0.400000000000000001", currency0: "ETH", cost0: "1000.00", cost_currency0: "USD", cost_kind0: "total",
+    account1: tx.postings[1].account, amount1: "-1025.00", currency1: "USD",
+    account2: tx.postings[2].account, amount2: "15.00", currency2: "USD",
+    account3: tx.postings[3].account, amount3: "10.00", currency3: "USD",
+    account4: "expenses:fees:broker", amount4: "0.000000000001", currency4: "XMR",
+  }, data, tx);
+  expect(result.body.postings[0]).toMatchObject({ amount: { commodity: "ETH", mantissa: "400000000000000001", places: 18 }, cost: {kind: "total", amount: {commodity: "USD", mantissa: "100000", places: 2}} });
+  expect(result.body.postings[4].amount.commodity).toBe("XMR");
+});
+test("editing a card purchase rewrites its four lines from the card, category and source", () => {
+  const money = exact => ({ commodity: "USD", exact });
+  const line = (account, exact) => ({ account, amount: money(exact), status: "" });
+  const wells = "liabilities:credit-card:wells-fargo-platinum";
+  const reserve = "assets:bank:checking:card-wells-fargo-platinum";
+  const books = {
+    ...data,
+    accounts: [{ account: reserve, home: "assets:bank:checking" }],
+    cash: { cards: [{ card: wells, reserve }] },
+  };
+  const tx = { id: 7, tags: [], postings: [
+    line("expenses:household:groceries", "19.49"), line(wells, "-19.49"),
+    line("assets:bank:checking", "-19.49"), line(reserve, "19.49"),
+  ] };
+  expect(cardPurchase(books, tx)).toEqual({ card: wells, category: "expenses:household:groceries", source: "free" });
+  const { body } = operation("edit", { date: "2026-11-10", description: "Aldi", amount: "21.00",
+    card: wells, category: "expenses:household:cleaning", source: "assets:bank:checking:travel" }, books, tx);
+  expect(body.postings.map(p => [p.account, p.amount.mantissa])).toEqual([
+    ["expenses:household:cleaning", "2100"], [wells, "-2100"],
+    ["assets:bank:checking:travel", "-2100"], [reserve, "2100"],
   ]);
 });

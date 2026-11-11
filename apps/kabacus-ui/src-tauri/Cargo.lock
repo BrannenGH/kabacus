@@ -2104,13 +2104,11 @@ version = "0.2.0"
 dependencies = [
  "base64 0.22.1",
  "kabacus-core",
- "kabacus-ledger",
  "kabacus-mcp",
  "kabacus-service",
  "kabacus-store",
  "log",
  "num-bigint",
- "num-traits",
  "reqwest 0.12.28",
  "ring",
  "rmcp",
@@ -2130,7 +2128,6 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror 1.0.69",
- "uuid",
 ]
 
 [[package]]
@@ -2206,8 +2203,6 @@ dependencies = [
  "kabacus-core",
  "kabacus-ledger",
  "kabacus-store",
- "num-bigint",
- "num-traits",
  "percent-encoding",
  "regex",
  "schemars 1.2.3",
@@ -2233,7 +2228,6 @@ dependencies = [
  "thiserror 1.0.69",
  "tokio",
  "tokio-postgres",
- "tracing",
 ]
 
 [[package]]

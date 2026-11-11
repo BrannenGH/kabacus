@@ -17,6 +17,16 @@ msgctxt "@label a form field's name"
 msgid "%1:"
 msgstr "%1:"
 
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Back"
+msgstr "ย้อนกลับ"
+
+#: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Search"
+msgstr "ค้นหา"
+
 #: crates/kabacus-kde/qml/AccountPicker.qml crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "%1 is the field, %2 what's wrong with it"
@@ -128,16 +138,6 @@ msgstr "รายรับหรือเงินคืน"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card purchase"
-msgstr "ซื้อด้วยบัตร"
-
-#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "เพิ่มบรรทัดเงินสำรองให้คุณ"
-
-#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Transfer"
 msgstr "โอน"
 
@@ -175,6 +175,16 @@ msgstr "แบ่งกับคนอื่น"
 #, kde-format
 msgid "They owe you, or you owe them"
 msgstr "เขาติดเงินคุณ หรือคุณติดเงินเขา"
+
+#: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settle up with someone"
+msgstr "เคลียร์บัญชีกับใครสักคน"
+
+#: crates/kabacus-kde/qml/AddChooser.qml
+#, kde-format
+msgid "Money you paid them or they paid you"
+msgstr "เงินที่คุณจ่ายให้พวกเขาหรือพวกเขาจ่ายให้คุณ"
 
 #: crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -317,10 +327,10 @@ msgctxt "free money"
 msgid "Free"
 msgstr "อิสระ"
 
-#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/FundsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Card reserves"
-msgstr "เงินสำรองของบัตร"
+msgid "Set Aside for Credit Card Payments"
+msgstr "เงินที่กันไว้สำหรับชำระบัตรเครดิต"
 
 #: crates/kabacus-kde/qml/FundsPage.qml
 #, kde-format
@@ -426,7 +436,7 @@ msgstr "ดู"
 msgid "Settings"
 msgstr "ตั้งค่า"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "On this computer"
 msgstr "บนคอมพิวเตอร์เครื่องนี้"
@@ -477,7 +487,7 @@ msgstr "บันทึกสำเนาเป็น…"
 msgid "Close Window"
 msgstr "ปิดหน้าต่าง"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect to a Server…"
 msgstr "เชื่อมต่อกับเซิร์ฟเวอร์…"
@@ -619,6 +629,16 @@ msgstr "ดูการเปลี่ยนแปลงของผู้อื
 msgid "Preview again"
 msgstr "ดูตัวอย่างอีกครั้ง"
 
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Books"
+msgstr "สมุดบัญชี"
+
+#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Close"
+msgstr "ปิด"
+
 #: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -659,6 +679,11 @@ msgstr "ทดสอบการเชื่อมต่อ"
 msgid "Connect"
 msgstr "เชื่อมต่อ"
 
+#: crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch Books…"
+msgstr "สลับสมุดบัญชี…"
+
 #: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Refresh"
@@ -674,15 +699,20 @@ msgstr "โหลดเงินที่ใช้จ่ายได้ไม่
 msgid "Loading…"
 msgstr "กำลังโหลด…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Cash on Hand"
+msgid "Available to spend"
 msgstr "เงินที่ใช้จ่ายได้"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "About Cash on Hand"
 msgstr "เกี่ยวกับเงินที่ใช้จ่ายได้"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/PreviewPane.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cash on Hand"
+msgstr "เงินที่ใช้จ่ายได้"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -691,15 +721,20 @@ msgstr "เงินอิสระที่ใช้จ่ายได้ทั
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
+msgctxt "%1 is an amount"
+msgid "Available to spend %1"
+msgstr "เงินที่ใช้จ่ายได้ %1"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml
+#, kde-format
 msgctxt "%1 is the change in Cash on Hand, %2 a date"
 msgid "%1 since %2"
 msgstr "%1 ตั้งแต่ %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgctxt "%1 is an amount"
-msgid "Cash on Hand %1"
-msgstr "เงินที่ใช้จ่ายได้ %1"
+msgid "How it's worked out"
+msgstr "วิธีคำนวณ"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -728,8 +763,8 @@ msgstr "− ลูกหนี้ (เงินที่คนอื่นติ
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Free money by account"
-msgstr "เงินอิสระตามบัญชี"
+msgid "Available by account"
+msgstr "เงินที่ใช้จ่ายได้แยกตามบัญชี"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml
 #, kde-format
@@ -737,7 +772,7 @@ msgctxt "%1 is an account, %2 its free money"
 msgid "%1 free %2"
 msgstr "%1 อิสระ %2"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No account has free money right now."
 msgstr "ตอนนี้ไม่มีบัญชีใดมีเงินอิสระ"
@@ -752,6 +787,11 @@ msgstr "ยังไม่ได้กันเงินไว้ในเงิ
 msgctxt "a card's reserve covers what it owes"
 msgid "covered"
 msgstr "ครอบคลุมแล้ว"
+
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Owes"
+msgstr "ยอดค้าง"
 
 #: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -917,11 +957,6 @@ msgstr "กระทบยอด…"
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Search"
-msgstr "ค้นหา"
-
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Search payee, memo, account"
 msgstr "ค้นหาผู้รับเงิน บันทึก บัญชี"
 
@@ -1081,6 +1116,12 @@ msgctxt "%1 is a month and year"
 msgid "No spending in %1"
 msgstr "ไม่มีการใช้จ่ายใน %1"
 
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Review"
+msgstr "ตรวจทาน"
+
 #: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
@@ -1190,6 +1231,11 @@ msgstr "ปีนี้ไม่มี"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Card purchase"
+msgstr "ซื้อด้วยบัตร"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Set money aside"
 msgstr "กันเงินไว้"
 
@@ -1209,11 +1255,16 @@ msgctxt "the payee a transfer is given"
 msgid "Transfer"
 msgstr "โอน"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "View as raw postings"
+msgstr "ดูเป็นรายการบัญชีดิบ"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
-msgctxt "@action:button"
-msgid "Review"
-msgstr "ตรวจทาน"
+msgctxt "@option cancel a transaction with a reversal"
+msgid "Void"
+msgstr "ยกเลิก"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1231,16 +1282,27 @@ msgstr "แก้ไขในที่เดิม"
 msgid "Changes it where it is. History keeps the old version."
 msgstr "เปลี่ยนในที่เดิม ประวัติเก็บรุ่นเก่าไว้"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@option cancel a transaction with a reversal"
-msgid "Void"
-msgstr "ยกเลิก"
-
 #: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Only the reversal: it didn't happen."
 msgstr "เฉพาะรายการกลับ: ถือว่าไม่เคยเกิดขึ้น"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Total:"
+msgstr "รวม:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml
+#, kde-format
+msgctxt "@label"
+msgid "Amount:"
+msgstr "จำนวนเงิน:"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "จำนวนเงิน"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1257,6 +1319,16 @@ msgstr "บัญชีเสมือน"
 msgctxt "a credit card"
 msgid "Card"
 msgstr "บัตร"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This is a card purchase: its reserve lines are added for you."
+msgstr "นี่คือการซื้อด้วยบัตร: รายการสำรองจะถูกเพิ่มให้คุณ"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Switch to Spent"
+msgstr "สลับไปที่รายจ่าย"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1314,6 +1386,11 @@ msgctxt "%1 is a new reserve's name, %2 the account it goes in"
 msgid "%1 isn't a reserve yet. Saving creates it in %2."
 msgstr "%1 ยังไม่ใช่เงินสำรอง การบันทึกจะสร้างไว้ใน %2"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 is a new category. Check the spelling; it will be created."
+msgstr "%1 เป็นหมวดหมู่ใหม่ ตรวจสอบการสะกด หมวดหมู่นี้จะถูกสร้างขึ้น"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1336,28 +1413,26 @@ msgctxt "money set aside"
 msgid "Reserve"
 msgstr "เงินสำรอง"
 
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Direction"
+msgstr "ทิศทาง"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "I paid them"
+msgstr "ฉันจ่ายให้พวกเขา"
+
+#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "They paid me"
+msgstr "พวกเขาจ่ายให้ฉัน"
+
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "the person a cost is split with"
 msgid "With"
 msgstr "กับ"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "จำนวนเงิน"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@label"
-msgid "Total:"
-msgstr "รวม:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml
-#, kde-format
-msgctxt "@label"
-msgid "Amount:"
-msgstr "จำนวนเงิน:"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
@@ -1954,6 +2029,18 @@ msgstr "%1: %2 จ่ายด้วย %3; %4 ติดเงิน %5 ใน�
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "You paid %2 %1 from %3."
+msgstr "คุณจ่าย %1 ให้ %2 จาก %3"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
+msgctxt "%1 is an amount, %2 a person, %3 an account"
+msgid "%2 paid you %1 into %3."
+msgstr "%2 จ่าย %1 ให้คุณเข้า %3"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a payee"
 msgid "Edit %1 in place. History keeps the old version."
 msgstr "แก้ไข %1 ในที่เดิม ประวัติเก็บรุ่นเก่าไว้"
@@ -2005,9 +2092,19 @@ msgstr "%1 ไม่มีบัญชีเงินสำรอง"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
+msgid "A payment to you can't go onto a card"
+msgstr "การจ่ายเงินให้คุณไม่สามารถเข้าบัตรได้"
+
+#: crates/kabacus-kde/src/writes.rs
+#, kde-format
 msgctxt "%1 is a transaction's payee"
 msgid "%1 isn't missing reserve lines"
 msgstr "%1 ไม่ได้ขาดบรรทัดเงินสำรอง"
+
+#: crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settled up with %1"
+msgstr "เคลียร์บัญชีกับ %1 แล้ว"
 
 #: crates/kabacus-kde/src/writes.rs
 #, kde-format
@@ -2051,6 +2148,26 @@ msgstr "%1 ยังได้รับการครอบคลุมจาก
 #, kde-format
 msgid "A card is missing its reserve lines; it will be flagged"
 msgstr "บัตรใบหนึ่งขาดบรรทัดเงินสำรอง จะถูกทำเครื่องหมาย"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "%1 since %2"
+msgstr "%1 ตั้งแต่ %2"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Unit price"
+msgstr "ราคาต่อหน่วย"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Total price"
+msgstr "ราคารวม"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "More"
+msgstr "เพิ่มเติม"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2219,11 +2336,6 @@ msgstr "แอปนี้"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Owes"
-msgstr "ยอดค้าง"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Reserve"
 msgstr "เงินสำรอง"
 
@@ -2299,6 +2411,11 @@ msgstr "เพิ่ม — เกิดอะไรขึ้น?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Adds the reserve lines for you"
+msgstr "เพิ่มบรรทัดเงินสำรองให้คุณ"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Allow editing again"
 msgstr "อนุญาตให้แก้ไขอีกครั้ง"
 
@@ -2334,11 +2451,6 @@ msgstr "เลือกสิ่งที่เกิดขึ้น แบบ�
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Close"
-msgstr "ปิด"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Connected"
 msgstr "เชื่อมต่อแล้ว"
 
@@ -2346,6 +2458,11 @@ msgstr "เชื่อมต่อแล้ว"
 #, kde-format
 msgid "Credit"
 msgstr "เครดิต"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Free money by account"
+msgstr "เงินอิสระตามบัญชี"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2376,6 +2493,15 @@ msgstr "เงินสำรองเก็บไว้ใช้ภายหล
 #, kde-format
 msgid "Saved as revision %1"
 msgstr "บันทึกเป็นรุ่นแก้ไข %1 แล้ว"
+
+#, kde-format
+#~ msgctxt "%1 is an amount"
+#~ msgid "Cash on Hand %1"
+#~ msgstr "เงินที่ใช้จ่ายได้ %1"
+
+#, kde-format
+#~ msgid "Card reserves"
+#~ msgstr "เงินสำรองของบัตร"
 
 #, kde-format
 #~ msgid "The books changed"
@@ -2570,10 +2696,6 @@ msgstr "บันทึกเป็นรุ่นแก้ไข %1 แล้�
 #~ msgctxt "%1 is a payee"
 #~ msgid "Correct %1: a reversal and a replacement, dated today."
 #~ msgstr "แก้ไข %1 ให้ถูก: รายการกลับและรายการแทนที่ ลงวันที่วันนี้"
-
-#, kde-format
-#~ msgid "hledger check passed on a scratch copy"
-#~ msgstr "ผ่านการตรวจของ hledger บนสำเนาทดลอง"
 
 #, kde-format
 #~ msgctxt "%1 is a file, %2–%3 lines in it"

@@ -248,6 +248,7 @@ impl SimpleDraft {
             format!("{} | {}", self.payee.trim(), self.memo.trim())
         };
         Ok(AddTransactionBody {
+            new_accounts: vec![],
             date: self.date.trim().to_string(),
             description,
             postings: vec![

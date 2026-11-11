@@ -67,7 +67,7 @@ with tempfile.TemporaryDirectory(prefix="kabacus-native-smoke-") as folder:
     subprocess.run([str(sidecars[0]), "new", str(books), "--name", "Cedar Household"], check=True, stdout=subprocess.DEVNULL)
     process = subprocess.Popen([binary, str(books)], env=env)
     try:
-        require_window(process, {"Overview", "Cash on Hand", "On this computer"})
+        require_window(process, {"Overview", "Available to spend", "On this computer"})
         print("Native WebKit Welcome and real local books rendered successfully")
     finally:
         stop(process)

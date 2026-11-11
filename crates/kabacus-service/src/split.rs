@@ -67,6 +67,8 @@ pub fn draft(
     let mut post = |account: String, money: Money| {
         if !money.is_zero() {
             postings.push(DraftPostingDto {
+                cost: None,
+                clear_cost: false,
                 account,
                 amount: Some(AmountInput::decimal(&money.to_string())),
                 status: String::new(),
@@ -94,6 +96,7 @@ pub fn draft(
         description: body.description,
         postings,
         tags: vec![],
+        new_accounts: vec![],
         dry_run: body.dry_run,
         include_diff: false,
     })

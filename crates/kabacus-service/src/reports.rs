@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 //! The report tools and `reconcile`, over kabacus-core's reports. Every
-//! report counts every transaction, as hledger's balance reports do.
+//! report counts every transaction.
 
 use crate::caller::{Caller, Permission as Role};
 use crate::error::Error as ApiError;
@@ -101,6 +101,8 @@ fn period_dto(p: &Period, interval: Interval) -> Value {
 
 #[derive(Debug, Clone, Deserialize, schemars::JsonSchema)]
 pub struct IncomeStatementParams {
+    /// Show this commodity without converting other currencies into it.
+    pub commodity: Option<String>,
     /// `YYYY-MM-DD`, inclusive.
     pub from: String,
     pub to: String,
@@ -129,7 +131,10 @@ pub async fn income_statement(
     principal: &dyn Caller,
     p: &IncomeStatementParams,
 ) -> Result<Value, ApiError> {
-    let b = books(state, principal).await?;
+    let mut b = books(state, principal).await?;
+    if let Some(commodity) = &p.commodity {
+        b.commodity = commodity.clone();
+    }
     let (from, to) = range(&p.from, &p.to)?;
     let interval = interval(p.interval.as_deref())?;
     let periods = core_reports::periods(from, to, interval);
@@ -239,6 +244,8 @@ pub async fn balance_sheet(
 
 #[derive(Debug, Clone, Deserialize, schemars::JsonSchema)]
 pub struct CategoryBreakdownParams {
+    /// Show this commodity without converting other currencies into it.
+    pub commodity: Option<String>,
     pub from: String,
     pub to: String,
     /// Categories rolled up to this many segments (default 2).
@@ -258,7 +265,10 @@ pub async fn category_breakdown(
     principal: &dyn Caller,
     p: &CategoryBreakdownParams,
 ) -> Result<Value, ApiError> {
-    let b = books(state, principal).await?;
+    let mut b = books(state, principal).await?;
+    if let Some(commodity) = &p.commodity {
+        b.commodity = commodity.clone();
+    }
     let (from, to) = range(&p.from, &p.to)?;
     let r = core_reports::category_breakdown(
         &b.chart,
@@ -338,6 +348,8 @@ pub async fn cash_on_hand_history(
 
 #[derive(Debug, Clone, Deserialize, schemars::JsonSchema)]
 pub struct CashFlowParams {
+    /// Show this commodity without converting other currencies into it.
+    pub commodity: Option<String>,
     pub from: String,
     pub to: String,
     /// `kind` (default) or `account`.
@@ -367,7 +379,10 @@ pub async fn cash_flow(
     principal: &dyn Caller,
     p: &CashFlowParams,
 ) -> Result<Value, ApiError> {
-    let b = books(state, principal).await?;
+    let mut b = books(state, principal).await?;
+    if let Some(commodity) = &p.commodity {
+        b.commodity = commodity.clone();
+    }
     let (from, to) = range(&p.from, &p.to)?;
     let options = core_reports::CashFlowOptions {
         group_by: group_by(p.group_by.as_deref(), GroupBy::Kind)?,
@@ -556,6 +571,30 @@ pub struct ReconcileParams {
     pub include_diff: Option<bool>,
 }
 
+fn reconciliation_commodity(
+    p: &ReconcileParams,
+    default: &str,
+    txs: &[Transaction],
+) -> Result<String, ApiError> {
+    if let Some(commodity) = p.balance.0.get("commodity").and_then(Value::as_str) {
+        return Ok(commodity.to_string());
+    }
+    let currencies: std::collections::BTreeSet<&str> = txs
+        .iter()
+        .flat_map(|t| &t.postings)
+        .filter(|q| q.account.as_str() == p.account || q.account.is_under(&p.account))
+        .map(|q| q.amount.commodity.as_str())
+        .collect();
+    match currencies.len() {
+        0 => Ok(default.to_string()),
+        1 => Ok(currencies.into_iter().next().unwrap().to_string()),
+        _ => Err(invalid(
+            "balance",
+            "Choose a currency for this account's statement balance".into(),
+        )),
+    }
+}
+
 fn effective(tx: &Transaction, p: &kabacus_core::Posting) -> Status {
     if tx.status == Status::Cleared || p.status == Status::Cleared {
         Status::Cleared
@@ -571,7 +610,8 @@ pub async fn reconcile(
     principal: &dyn Caller,
     p: &ReconcileParams,
 ) -> Result<Value, ApiError> {
-    let b = books(state, principal).await?;
+    let mut b = books(state, principal).await?;
+    b.commodity = reconciliation_commodity(p, &b.commodity, &b.txs)?;
     let account = AccountName::new(&p.account);
     let kind = b.chart.kind_of(&account);
     if !matches!(
@@ -737,6 +777,8 @@ pub fn reconcile_op(
     chart: &kabacus_core::Chart,
     txs: &[Transaction],
 ) -> Result<ops::WriteOp, ApiError> {
+    let selected = reconciliation_commodity(p, commodity, txs)?;
+    let commodity = selected.as_str();
     let account = AccountName::new(&p.account);
     let kind = chart.kind_of(&account);
     if !matches!(

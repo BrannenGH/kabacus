@@ -18,7 +18,6 @@ pub mod domain;
 pub mod format;
 pub mod funds;
 pub mod impact;
-pub mod json;
 pub mod kinds;
 pub mod money;
 pub mod payee;
@@ -41,10 +40,11 @@ pub use domain::{
 };
 pub use format::format_money;
 pub use funds::{
-    card_reserves, cash_on_hand, check_new_fund, new_fund_account, plan_allocation,
-    plan_card_payment, plan_card_purchase, unreserved_flags, validation_warnings, Balances,
-    CardLine, CardReserve, CashOnHand, Chart, FundsError, MissingReserve, PlannedTransaction,
-    PurchaseSource, ReserveSource, Warning, DEFAULT_RESERVE_TEMPLATE, RESERVE_SPLIT_RULE,
+    card_reserves, cash_on_hand, check_new_category, check_new_fund, new_fund_account,
+    plan_allocation, plan_card_payment, plan_card_purchase, unreserved_flags, validation_warnings,
+    Balances, CardLine, CardReserve, CashOnHand, Chart, FundsError, MissingReserve,
+    PlannedTransaction, PurchaseSource, ReserveSource, Warning, DEFAULT_RESERVE_TEMPLATE,
+    RESERVE_SPLIT_RULE,
 };
 pub use impact::{balance_impact, BalanceChange};
 pub use kinds::{check_kind_rules, default_kind_rules, AccountKind, ClassifiedAccount, KindRule};
@@ -55,5 +55,5 @@ pub use statement_export::{statement_csv, statement_filename, statement_pdf, Sta
 pub use validate::{
     carry_over, carry_over_with, check_accounts_declared, check_balance_assertions,
     check_description, parse_date, resolve_amounts, resolve_amounts_by_kind, AssertionEdit,
-    BalanceAssertionFailure, CarriedOver, DraftPosting, ValidationError,
+    BalanceAssertionFailure, CarriedOver, CostEdit, DraftPosting, ValidationError,
 };

@@ -123,10 +123,6 @@ impl KabacusClient {
         }
     }
 
-    pub fn is_local(&self) -> bool {
-        self.local.is_some()
-    }
-
     pub async fn request_books(&self, request: BooksRequest) -> Result<BooksResponse, ClientError> {
         Books::request(self, request).await
     }

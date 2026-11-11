@@ -20,12 +20,7 @@ machine:
 | `TZ`                          | the books' timezone, for "today" (default UTC) |
 
 The database is made on first start. To use PostgreSQL instead, set
-`database_url` in the config. To bring existing hledger journals in,
-run the image's `import` command once:
-
-    podman run --rm --userns=keep-id -v /path/to/data:/data \
-      -v /path/to/journals:/journals:ro \
-      localhost/kabacus-server:latest import /journals/main.journal
+`database_url` in the config.
 
 Run it as the user who owns the data directory, so the database stays
 theirs. With rootless podman:

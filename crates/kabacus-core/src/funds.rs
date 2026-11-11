@@ -937,6 +937,28 @@ pub fn check_new_fund(chart: &Chart, from: &str, fund: &str) -> Result<(), Funds
     }
 }
 
+/// Before a write declares a new expense or income account for what it
+/// records. Like a new fund it changes nothing already recorded, so it
+/// needs no rewrite; any other kind of account still does.
+pub fn check_new_category(chart: &Chart, account: &str) -> Result<(), String> {
+    if chart.get(account).is_some() {
+        return Err(format!("{account} already exists"));
+    }
+    if account
+        .split(':')
+        .any(|s| s.trim().is_empty() || s.contains(';'))
+    {
+        return Err(format!("{account:?} can't name an account"));
+    }
+    match chart.kind_of(&AccountName::new(account)) {
+        AccountKind::Expense | AccountKind::Income => Ok(()),
+        kind => Err(format!(
+            "{account} would be a {} account; only a new expense or income category can be made here",
+            kind.as_str()
+        )),
+    }
+}
+
 /// A transaction to add: its description and `(account, amount)` lines.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PlannedTransaction {
@@ -1770,6 +1792,20 @@ mod tests {
         assert!(new_fund_account(CHECKING, "   ").is_err());
         assert!(new_fund_account(CHECKING, "travel:japan").is_err());
         assert!(new_fund_account(CHECKING, "gifts; note").is_err());
+    }
+    #[test]
+    fn only_a_new_expense_or_income_category_can_be_made_inline() {
+        let txs = vec![tx(
+            "2026-10-01",
+            "Opening",
+            &[(CHECKING, 10000), ("equity:opening", -10000)],
+        )];
+        let chart = chart(&txs, &[INSURANCE, "expenses:groceries"]);
+        assert_eq!(check_new_category(&chart, "expenses:pets:vet"), Ok(()));
+        assert_eq!(check_new_category(&chart, "income:side-gigs"), Ok(()));
+        assert!(check_new_category(&chart, "expenses:groceries").is_err());
+        assert!(check_new_category(&chart, "assets:bank:savings").is_err());
+        assert!(check_new_category(&chart, "expenses:pets;vet").is_err());
     }
     #[test]
     fn a_new_fund_sits_directly_in_the_money_it_comes_from() {

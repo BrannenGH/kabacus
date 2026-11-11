@@ -3,8 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # Kabacus's containers, on openSUSE Tumbleweed except deb. Stages:
-# - dev:    Rust plus the pinned hledger (run as a black box by the
-#           comparison tests), for building and testing without them on
+# - dev:    Rust and test tools for building and testing without them on
 #           the host (scripts/dev).
 # - gui:    dev plus Qt 6, Kirigami, Xvfb and AT-SPI, for the GUI e2e
 #           tests (scripts/gui-e2e).
@@ -14,22 +13,8 @@
 #           database in the /data volume ($KABACUS_DATABASE,
 #           /data/books.kabacus unless set, or a PostgreSQL database_url),
 #           the socket is /run/kabacus/server.sock, and any uid can run it.
-# The hledger version here is the one the test suite passed on.
-# openSUSE's hledger isn't the pinned version, so it comes from hledger's
-# static release, checked against a pinned hash.
 
 ARG BASE=registry.opensuse.org/opensuse/tumbleweed:latest
-ARG HLEDGER_VERSION=1.99.4
-ARG HLEDGER_SHA256=3361e7bb67784f2f3d7dac86f8f3ac40ba25b51c3aa5b55baae0e10fc5fa8e03
-
-FROM ${BASE} AS hledger
-ARG HLEDGER_VERSION
-ARG HLEDGER_SHA256
-RUN zypper -n install --no-recommends curl tar gzip \
- && curl -fsSLo /tmp/hledger.tar.gz \
-    "https://github.com/simonmichael/hledger/releases/download/${HLEDGER_VERSION}/hledger-linux-x64.tar.gz" \
- && echo "${HLEDGER_SHA256}  /tmp/hledger.tar.gz" | sha256sum -c - \
- && tar -xzf /tmp/hledger.tar.gz -C /usr/local/bin hledger
 
 FROM ${BASE} AS dev
 # Test tools: pdftotext reads exported statements back. The PostgreSQL
@@ -39,7 +24,6 @@ FROM ${BASE} AS dev
 RUN zypper -n install --no-recommends rust cargo gcc gcc-c++ git-core \
     poppler-tools postgresql-server timezone ca-certificates gdb \
  && zypper clean -a
-COPY --from=hledger /usr/local/bin/hledger /usr/local/bin/
 
 FROM dev AS gui
 # The Kirigami app (cxx-qt builds against the system Qt), a private X
@@ -101,6 +85,7 @@ COPY apps/kabacus-ui/package*.json ./
 RUN npm ci --no-audit --no-fund
 COPY apps/kabacus-ui/index.html apps/kabacus-ui/vite.config.js apps/kabacus-ui/catalogs.js ./
 COPY po /src/po
+COPY design/tokens.json /src/design/tokens.json
 COPY apps/kabacus-ui/src ./src
 COPY apps/kabacus-ui/public ./public
 COPY apps/kabacus-ui/sw-source.js ./

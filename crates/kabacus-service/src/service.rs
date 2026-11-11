@@ -64,16 +64,23 @@ pub fn status_str(s: Status) -> &'static str {
 
 /// The books' commodity, for Cash on Hand and counterparty statements.
 pub async fn books_commodity(state: &Service) -> Result<String, ApiError> {
-    let commodities = state.commodities().await.map_err(ApiError::Internal)?;
-    Ok(commodities
-        .first()
-        .cloned()
-        .unwrap_or_else(|| "USD".to_string()))
+    let snapshot = state.books_snapshot().await.map_err(ApiError::Internal)?;
+    Ok(crate::books::primary_commodity(
+        &snapshot.book,
+        &state.kind_rules_chart(),
+    ))
 }
 
 /// The books' commodity and the decimal places it takes.
 #[derive(Debug, Clone, Serialize)]
 pub struct CommodityDto {
+    pub commodities: Vec<CurrencyDto>,
+    pub symbol: String,
+    pub places: u32,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct CurrencyDto {
     pub symbol: String,
     pub places: u32,
 }
@@ -85,9 +92,22 @@ pub async fn books_commodity_info(
     require(principal, Role::Read)?;
     let symbol = books_commodity(state).await?;
     let books = state.books_snapshot().await.map_err(ApiError::Internal)?;
-    let places =
-        crate::books::WorkingCopy::from_snapshot(books, state.kind_table()).places(&symbol);
-    Ok(CommodityDto { symbol, places })
+    let wc = crate::books::WorkingCopy::from_snapshot(books, state.kind_table());
+    let places = wc.places(&symbol);
+    let commodities = wc
+        .book
+        .commodities
+        .keys()
+        .map(|symbol| CurrencyDto {
+            symbol: symbol.clone(),
+            places: wc.places(symbol),
+        })
+        .collect();
+    Ok(CommodityDto {
+        symbol,
+        places,
+        commodities,
+    })
 }
 
 // --- DTOs -------------------------------------------------------------------
@@ -111,9 +131,42 @@ impl From<&Amount> for AmountDto {
 
 #[derive(Debug, Clone, Serialize)]
 pub struct PostingDto {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cost: Option<CostDto>,
     pub account: String,
     pub amount: AmountDto,
     pub status: String,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct CostDto {
+    pub kind: &'static str,
+    pub amount: AmountDto,
+}
+
+impl From<&kabacus_core::Cost> for CostDto {
+    fn from(cost: &kabacus_core::Cost) -> Self {
+        Self {
+            kind: match cost.kind {
+                kabacus_core::CostKind::Unit => "unit",
+                kabacus_core::CostKind::Total => "total",
+            },
+            amount: AmountDto::from(&cost.amount),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize, schemars::JsonSchema)]
+pub struct CostInput {
+    pub kind: CostKindInput,
+    pub amount: AmountInput,
+}
+
+#[derive(Debug, Clone, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "lowercase")]
+pub enum CostKindInput {
+    Unit,
+    Total,
 }
 
 /// What a card transaction didn't post to the card's reserve.
@@ -197,6 +250,7 @@ pub fn to_dto(
             .postings
             .iter()
             .map(|p| PostingDto {
+                cost: p.cost.as_ref().map(CostDto::from),
                 account: p.account.as_str().to_string(),
                 amount: AmountDto::from(&p.amount),
                 status: status_str(p.status).to_string(),
@@ -377,6 +431,10 @@ pub fn write_result_dto(result: crate::ops::WriteResult, include_diff: bool) -> 
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct DraftPostingDto {
+    #[serde(default)]
+    pub cost: Option<CostInput>,
+    #[serde(default)]
+    pub clear_cost: bool,
     pub account: String,
     pub amount: Option<AmountInput>,
     #[serde(default)]
@@ -521,7 +579,27 @@ pub fn to_draft_postings(
                     ))
                 }
             };
+            let cost = match (p.cost, p.clear_cost) {
+                (None, false) => kabacus_core::CostEdit::Keep,
+                (None, true) => kabacus_core::CostEdit::Clear,
+                (Some(cost), false) => kabacus_core::CostEdit::Set(kabacus_core::Cost {
+                    kind: match cost.kind {
+                        CostKindInput::Unit => kabacus_core::CostKind::Unit,
+                        CostKindInput::Total => kabacus_core::CostKind::Total,
+                    },
+                    amount: cost
+                        .amount
+                        .to_amount(commodity, &format!("postings[{i}].cost.amount"))?,
+                }),
+                (Some(_), true) => {
+                    return Err(invalid(
+                        "cost",
+                        "A posting cannot set and clear its cost".into(),
+                    ))
+                }
+            };
             Ok(DraftPosting {
+                cost,
                 account: AccountName::new(p.account),
                 amount,
                 status: parse_status(&p.status),
@@ -585,6 +663,10 @@ pub struct AddTransactionBody {
     pub postings: Vec<DraftPostingDto>,
     #[serde(default)]
     pub tags: Vec<(String, String)>,
+    /// New expense or income accounts the postings use; this write
+    /// declares them.
+    #[serde(default)]
+    pub new_accounts: Vec<String>,
     #[serde(default)]
     pub dry_run: bool,
     #[serde(default)]
@@ -597,6 +679,7 @@ pub fn add_op(body: AddTransactionBody, commodity: &str) -> Result<ops::WriteOp,
         description: body.description,
         postings: to_draft_postings(body.postings, commodity)?,
         tags: body.tags,
+        new_accounts: body.new_accounts,
     }))
 }
 
@@ -1235,7 +1318,7 @@ pub struct CashOnHandQuery {
 }
 
 /// Cash on Hand as of the end of `as_of` (every transaction
-/// if `None`), counting every transaction as hledger does.
+/// if `None`), counting every transaction.
 pub async fn cash_on_hand(
     state: &Service,
     principal: &dyn Caller,

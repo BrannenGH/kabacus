@@ -31,7 +31,7 @@ Controls.Label {
         : tone === "neg" ? tokens.balanceNegative : tokens.balancePositive
     style: outlined && colored && !highlighted && tone !== "zero" ? Text.Outline : Text.Normal
     styleColor: tokens.balanceOutline
-    font.features: { "tnum": 1 }
+    font.features: { "tnum": 1, "lnum": 1 }
     horizontalAlignment: Text.AlignRight
     Accessible.name: text
 }

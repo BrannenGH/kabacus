@@ -30,6 +30,7 @@ async fn add_transaction_and_list_round_trips_exact_money() {
     let head = client.version().await.unwrap().head.unwrap();
 
     let body = AddTransactionBody {
+        new_accounts: vec![],
         date: "2026-02-01".to_string(),
         description: "Grocery Store".to_string(),
         postings: vec![
@@ -70,6 +71,7 @@ async fn add_transaction_and_list_round_trips_exact_money() {
 async fn stale_if_match_surfaces_as_conflict_error() {
     let (_dir, client) = spawn_server().await;
     let body = AddTransactionBody {
+        new_accounts: vec![],
         date: "2026-02-01".to_string(),
         description: "x".to_string(),
         postings: vec![
@@ -108,6 +110,7 @@ async fn correct_and_void_round_trip() {
     let head = client.version().await.unwrap().head.unwrap();
 
     let add_body = AddTransactionBody {
+        new_accounts: vec![],
         date: "2026-02-01".to_string(),
         description: "Grocery Store".to_string(),
         postings: vec![
@@ -206,6 +209,7 @@ async fn accounts_register_and_search_round_trip() {
     let head = client.version().await.unwrap().head.unwrap();
 
     let add_body = AddTransactionBody {
+        new_accounts: vec![],
         date: "2026-02-01".to_string(),
         description: "Grocery Store".to_string(),
         postings: vec![

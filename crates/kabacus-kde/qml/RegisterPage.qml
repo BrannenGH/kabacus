@@ -41,6 +41,7 @@ Kirigami.ScrollablePage {
         unreservedSizer.implicitWidth, moveSizer.implicitWidth)
 
     // The search as last settled (typing waits 300 ms).
+    property bool searchOpen: false
     property string query: ""
     property Fetch fetch: Fetch {
         ledger: page.ledger
@@ -59,11 +60,11 @@ Kirigami.ScrollablePage {
     // Add and Reconcile stay on a phone's narrow toolbar; Refresh can go
     // to its overflow (pulling the list down refreshes too).
     actions: [
-        Kirigami.Action { text: i18n("Add transaction"); icon.name: "list-add"; displayHint: Kirigami.DisplayHint.KeepVisible; enabled: page.app.canWrite; shortcut: StandardKey.New; onTriggered: page.app.openChooser(page.account) },
+        Kirigami.Action { text: i18n("Add transaction"); icon.name: "list-add"; displayHint: page.app.narrow ? Kirigami.DisplayHint.AlwaysHide : Kirigami.DisplayHint.KeepVisible; enabled: page.app.canWrite; shortcut: StandardKey.New; onTriggered: page.app.openChooser(page.account) },
         Kirigami.Action {
             text: i18n("Account type")
             icon.name: "document-properties"
-            displayHint: Kirigami.DisplayHint.KeepVisible
+            displayHint: page.app.narrow ? Kirigami.DisplayHint.AlwaysHide : Kirigami.DisplayHint.KeepVisible
             enabled: page.app.canWrite && page.kinds.value !== null
             onTriggered: {
                 const account = page.kinds.value.accounts.find(a => a.account === page.account)
@@ -73,7 +74,7 @@ Kirigami.ScrollablePage {
         Kirigami.Action {
             text: i18nc("@action compare an account with its statement", "Reconcile…")
             icon.name: "dialog-ok-apply"
-            displayHint: Kirigami.DisplayHint.KeepVisible
+            displayHint: page.app.narrow ? Kirigami.DisplayHint.AlwaysHide : Kirigami.DisplayHint.KeepVisible
             visible: page.reconcilable
             onTriggered: page.app.openReconcile(page.account, page.title)
         },
@@ -81,6 +82,8 @@ Kirigami.ScrollablePage {
     ]
 
     header: Controls.ToolBar {
+        visible: !page.app.narrow || page.searchOpen
+        height: visible ? implicitHeight : 0
         RowLayout {
             anchors.fill: parent
             Kirigami.SearchField {
@@ -95,11 +98,13 @@ Kirigami.ScrollablePage {
             Kirigami.Chip { id: unreservedSizer; visible: false; closable: false; checkable: false; text: page.chipLabels.unreserved }
             Kirigami.Chip { id: moveSizer; visible: false; closable: false; checkable: false; text: page.chipLabels.move }
             Controls.Switch {
+                visible: !page.app.narrow
                 text: i18n("Fund transfers")
                 checked: page.fundTransfers
                 onToggled: page.fundTransfers = checked
             }
             Controls.Switch {
+                visible: !page.app.narrow
                 text: i18n("Unreserved only")
                 checked: page.unreservedOnly
                 onToggled: page.unreservedOnly = checked
@@ -117,10 +122,24 @@ Kirigami.ScrollablePage {
         // Room for the floating Add button on a phone.
         bottomMargin: page.app.narrow ? Kirigami.Units.gridUnit * 4 : 0
         model: page.rows
-        delegate: Controls.ItemDelegate {
-            id: transactionDelegate
+        spacing: page.app.narrow ? 8 : 0
+        delegate: ColumnLayout {
+            id: dayGroup
             required property var modelData
+            required property int index
             width: ListView.view.width
+            spacing: page.app.narrow ? 8 : 0
+            Controls.Label {
+                visible: page.app.narrow && (dayGroup.index === 0 || page.rows[dayGroup.index - 1].date !== dayGroup.modelData.date)
+                text: dayGroup.modelData.date
+                padding: 8
+                font.bold: true
+            }
+            Controls.ItemDelegate {
+            id: transactionDelegate
+            readonly property var modelData: dayGroup.modelData
+            Layout.fillWidth: true
+            implicitHeight: Math.max(page.app.narrow ? 64 : 0, contentItem.implicitHeight + topPadding + bottomPadding)
             Accessible.name: i18nc("%1 is a payee, %2 a date", "%1 %2", modelData.payee, modelData.date)
             background: Rectangle {
                 color: transactionDelegate.modelData.unreserved ? page.tokens.rowUnreserved : "transparent"
@@ -145,6 +164,11 @@ Kirigami.ScrollablePage {
                 // account and balance.
                 RowLayout {
                     spacing: Kirigami.Units.largeSpacing
+                    Controls.Label {
+                        visible: page.app.narrow
+                        text: ["*", "cleared"].includes(transactionDelegate.modelData.status) ? "●" : "○"
+                        color: ["*", "cleared"].includes(transactionDelegate.modelData.status) ? page.tokens.balancePositive : Kirigami.Theme.textColor
+                    }
                     Controls.Label {
                         visible: page.oneLine
                         text: transactionDelegate.modelData.date
@@ -203,7 +227,7 @@ Kirigami.ScrollablePage {
                 RowLayout {
                     visible: !page.oneLine
                     Controls.Label {
-                        text: i18nc("%1 is a date, %2 an account", "%1 · %2", transactionDelegate.modelData.date, transactionDelegate.modelData.account)
+                        text: page.app.narrow ? transactionDelegate.modelData.memo || transactionDelegate.modelData.account : i18nc("%1 is a date, %2 an account", "%1 · %2", transactionDelegate.modelData.date, transactionDelegate.modelData.account)
                         opacity: 0.7
                         elide: Text.ElideRight
                         font: Kirigami.Theme.smallFont
@@ -216,6 +240,7 @@ Kirigami.ScrollablePage {
                     }
                 }
             }
+        }
         }
         Kirigami.PlaceholderMessage {
             anchors.centerIn: parent
