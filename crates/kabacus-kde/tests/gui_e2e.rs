@@ -407,6 +407,51 @@ async fn a_card_purchase_is_recorded_with_its_reserve_on_every_form_factor() {
     }
 }
 
+// A recorded card purchase edits in the card purchase form, and saving
+// rewrites its reserve lines with it.
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn a_card_purchase_is_edited_in_the_card_purchase_form() {
+    for (i, size) in [DESKTOP, "390x844"].into_iter().enumerate() {
+        let server = books(&format!("editpurchase{i}")).await;
+        let client = KabacusClient::connect_unix(&server.socket_path);
+        let draft = kabacus_kde::writes::Draft::CardPurchase {
+            id: None,
+            date: "2026-09-12".into(),
+            payee: "Corner Market".into(),
+            memo: String::new(),
+            card: "liabilities:credit-card:visa".into(),
+            category: "expenses:dining".into(),
+            source: "free".into(),
+            amount: "42.18".into(),
+        };
+        let p = kabacus_kde::writes::preview(&client, &draft).await.unwrap();
+        kabacus_kde::writes::commit(&client, &draft, &p.head)
+            .await
+            .unwrap();
+        let app = launch_sized(
+            &server.socket_path,
+            &config_dir(&format!("editpurchase{i}")),
+            size,
+        );
+        drive(&[
+            "edit-purchase",
+            "Visa",
+            "Corner Market",
+            "2026-09-12",
+            "50.00",
+        ])
+        .await;
+        drop(app);
+        let after = card(&client).await;
+        assert_eq!(after.card.owed.exact, "70.00", "{size}: {after:?}");
+        assert_eq!(
+            after.card.reserve.exact, "50.00",
+            "{size}: its reserve lines moved with it"
+        );
+    }
+}
+
 // The edit form opens with the transaction's own
 // From and To, and keeps them when the pickers' account list is reloaded
 // under it.
