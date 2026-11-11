@@ -24,6 +24,8 @@ Kirigami.ScrollablePage {
 
     globalToolBarStyle: app.narrow ? Kirigami.ApplicationHeaderStyle.None : Kirigami.ApplicationHeaderStyle.ToolBar
     property var postingRows: preset.postings || []
+    // An existing transaction (a plain edit or a card purchase).
+    readonly property bool editing: preset.id !== undefined
     readonly property bool postingEdit: kind === "edit" && preset.raw === true
 
     required property var app
@@ -47,7 +49,7 @@ Kirigami.ScrollablePage {
     readonly property var payeeHints: page.payeeQuery !== "" && payeesFetch.value
         ? payeesFetch.value.filter(h => h.payee !== payee.text).slice(0, 3) : []
     // Edit in place or void.
-    property string mode: preset.mode || (kind === "set_aside" ? "aside" : kind === "edit" ? "edit" : "")
+    property string mode: preset.mode || (kind === "set_aside" ? "aside" : editing ? "edit" : "")
     // Free money or a fund.
     property string source: "free"
     // Settling up: you paid them (else they paid you).
@@ -61,7 +63,7 @@ Kirigami.ScrollablePage {
         split: i18n("Split with someone"), settle: i18n("Settle up with someone"), edit: i18n("Edit transaction"), fix_reserves: i18n("Fix reserve lines"),
         reconcile: i18n("Reconcile"), account_type: i18n("Account type")
     })
-    title: titles[kind] || i18n("Add")
+    title: titles[editing ? "edit" : kind] || i18n("Add")
 
     function of(kinds) { return accounts.filter(a => kinds.includes(a.kind)) }
     // Likely accounts first, then the rest, so nothing is out of reach.
@@ -93,7 +95,8 @@ Kirigami.ScrollablePage {
         case "account_type":
             return { kind: "account_type", account: preset.account, synthetic: accountType.currentIndex === 1 }
         case "card_purchase":
-            return Object.assign(base, { kind: "card_purchase", payee: payee.text, memo: memo.text,
+            if (editing && mode === "void") return { kind: "void", id: preset.id }
+            return Object.assign(base, { kind: "card_purchase", id: preset.id, payee: payee.text, memo: memo.text,
                 card: cardPicker.value, category: toPicker.value,
                 source: source === "free" ? "free" : fundPicker.value })
         case "set_aside":
@@ -286,6 +289,10 @@ Kirigami.ScrollablePage {
         else if (kind === "received" && money.length > 0) fill(toPicker, money[0].account)
         if (p.card) fill(cardPicker, p.card)
         else if (cards.length > 0) fill(cardPicker, cards[0].account)
+        if (p.purchaseSource && p.purchaseSource !== "free") {
+            source = "fund"
+            fill(fundPicker, p.purchaseSource)
+        }
         if (funds.length > 0) fill(fundPicker, funds[0].account)
         cardSwitch()
         if (people.length > 0) fill(personPicker, people[0].account)
@@ -308,7 +315,7 @@ Kirigami.ScrollablePage {
         Kirigami.Action {
             text: i18n("View as raw postings")
             icon.name: "view-list-details"
-            visible: page.kind === "edit" && !page.postingEdit && page.mode !== "void"
+            visible: page.editing && !page.postingEdit && page.mode !== "void"
             enabled: !page.saving
             onTriggered: page.app.runFileAction(function() {
                 page.app.pageStack.layers.pop()
@@ -318,7 +325,7 @@ Kirigami.ScrollablePage {
         Kirigami.Action {
             text: i18nc("@option cancel a transaction with a reversal", "Void")
             icon.name: "edit-delete"
-            visible: page.app.narrow && page.kind === "edit" && page.mode !== "void"
+            visible: page.app.narrow && page.editing && page.mode !== "void"
             enabled: !page.saving
             displayHint: Kirigami.DisplayHint.AlwaysHide
             onTriggered: { page.mode = "void"; page.edited() }
@@ -386,7 +393,7 @@ Kirigami.ScrollablePage {
 
             // How a change to a recorded transaction is kept.
             ColumnLayout {
-                visible: page.kind === "edit" && !page.app.narrow
+                visible: page.editing && !page.app.narrow
                 Layout.fillWidth: true
                 Controls.ButtonGroup { id: modeGroup }
                 Repeater {
@@ -438,7 +445,7 @@ Kirigami.ScrollablePage {
             Kirigami.FormLayout {
                 Layout.fillWidth: true
                 // Saving: what's shown is what's written.
-                enabled: !page.saving && !(page.kind === "edit" && page.mode === "void")
+                enabled: !page.saving && !(page.editing && page.mode === "void")
 
                 // Amount, then date: stacked, never side by side.
                 Controls.TextField {
@@ -487,7 +494,7 @@ Kirigami.ScrollablePage {
                 }
                 Kirigami.InlineMessage {
                     Layout.fillWidth: true
-                    visible: page.kind === "card_purchase"
+                    visible: page.kind === "card_purchase" && !page.editing
                     type: Kirigami.MessageType.Information
                     text: i18n("This is a card purchase: its reserve lines are added for you.")
                     actions: [

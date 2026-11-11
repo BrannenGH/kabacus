@@ -254,6 +254,13 @@ Kirigami.ApplicationWindow {
             showPassiveNotification(d.error)
             return
         }
+        const purchase = raw === true ? null : d.purchase
+        if (purchase) {
+            openForm("card_purchase", { id: id, mode: mode || "edit", date: d.date, payee: d.payee,
+                memo: d.memo, amount: d.amount, card: purchase.card, to: purchase.category,
+                purchaseSource: purchase.source, postings: d.postings })
+            return
+        }
         openForm("edit", { id: id, mode: mode || "edit", date: d.date, payee: d.payee,
             memo: d.memo, from: d.from, to: d.to, amount: d.amount, postings: d.postings,
             raw: raw === true || d.complex === true })

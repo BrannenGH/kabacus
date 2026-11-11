@@ -5,7 +5,7 @@ import { PhonePicker } from "./phone-picker";
 import { useMedia, phoneQuery, desktopQuery } from "./form-factor";
 import React, { useEffect, useRef, useState } from "react";
 import { AmountField } from "./amount-field";
-import { operation, accountCurrency } from "./operations";
+import { operation, accountCurrency, cardPurchase } from "./operations";
 import { t } from "./i18n";
 const titles = {
   postings: "Postings",
@@ -55,10 +55,11 @@ export function OperationDialog({
   const [dirty, setDirty] = useState(false);
   useDialogHistory({ onClose, preview, setPreview, dirty, busy });
   const [checked, setChecked] = useState(null);
-  const presetCard = card || data.cash.cards.find(c => c.card === account)?.card || "";
-  const [repairCard, setRepairCard] = useState(presetCard);
   const [raw, setRaw] = useState(false);
-  const postingEdit = kind === "edit" && (raw || tx.postings.length !== 2 ||
+  const purchase = kind === "edit" && !raw ? cardPurchase(data, tx) : null;
+  const presetCard = purchase?.card || card || data.cash.cards.find(c => c.card === account)?.card || "";
+  const [repairCard, setRepairCard] = useState(presetCard);
+  const postingEdit = kind === "edit" && !purchase && (raw || tx.postings.length !== 2 ||
     tx.postings.some(p => p.cost || p.amount.commodity !== data.commodity.symbol));
   const [rows, setRows] = useState(postingEdit ? tx.postings.map((_, i) => i) : [0, 1]);
   const [priceKinds, setPriceKinds] = useState(Object.fromEntries((tx?.postings || []).map((p, i) => [i, p.cost?.kind || ""])));
@@ -380,7 +381,7 @@ export function OperationDialog({
                       </label>
                     </>
                   )}
-                  {kind === "edit" && !postingEdit &&
+                  {kind === "edit" && !postingEdit && !purchase &&
                     [
                       ["from", "From", true],
                       ["to", "To", false],
@@ -420,7 +421,7 @@ export function OperationDialog({
                       </button>
                     </p>
                   )}
-                  {["purchase", "payment", "fix"].includes(kind) && (
+                  {(["purchase", "payment", "fix"].includes(kind) || purchase) && (
                     <label>
                       {t("Card")}
                       <select
@@ -552,11 +553,11 @@ export function OperationDialog({
                       </label>
                     </>
                   )}
-                  {kind === "purchase" && (
+                  {(kind === "purchase" || purchase) && (
                     <>
                       <label>
                         {t("Category")}
-                        <select name="category" required defaultValue={prefill?.category || undefined}>
+                        <select name="category" required defaultValue={purchase?.category || prefill?.category || undefined}>
                           {data.accounts
                             .filter((a) => a.kind === "expense")
                             .map((a) => (
@@ -568,7 +569,7 @@ export function OperationDialog({
                       </label>
                       <label>
                         {t("Paid from:")}
-                        <select name="source">
+                        <select name="source" defaultValue={purchase?.source}>
                           <option value="free">{t("Free money")}</option>
                           {data.cash.funds.map((f) => (
                             <option key={f.account} value={f.account}>
