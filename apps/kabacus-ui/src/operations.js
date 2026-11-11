@@ -10,16 +10,18 @@ export function accountCurrency(data, account) {
   return balances.length === 1 ? balances[0].commodity : data.commodity.symbol;
 }
 // A card purchase: expense, card, source and reserve lines, all one amount.
-// Returns the index of its expense posting.
 export function cardPurchase(data, tx) {
   const ps = tx?.postings || [];
-  if (ps.length !== 4 || ps.some(p => p.cost || p.amount.commodity !== data.commodity.symbol)) return -1;
+  if (ps.length !== 4 || ps.some(p => p.cost || p.amount.commodity !== data.commodity.symbol)) return null;
   const card = data.cash.cards.find(c => ps.some(p => p.account === c.card) && ps.some(p => p.account === c.reserve));
   const reserve = ps.find(p => p.account === card?.reserve);
-  if (!reserve) return -1;
-  const sign = p => p.amount.exact.startsWith("-");
-  const rest = ps.map((p, i) => i).filter(i => ps[i].account !== card.card && i !== ps.indexOf(reserve) && sign(ps[i]) === sign(reserve));
-  return rest.length === 1 ? rest[0] : -1;
+  if (!reserve) return null;
+  const neg = p => p.amount.exact.startsWith("-");
+  const [other, ...more] = ps.filter(p => p.account !== card.card && p !== reserve && neg(p) === neg(reserve));
+  const source = ps.filter(p => p.account !== card.card && p !== reserve && neg(p) !== neg(reserve));
+  if (!other || more.length || source.length !== 1) return null;
+  const home = data.accounts.find(a => a.account === reserve.account)?.home;
+  return { card: card.card, category: other.account, source: source[0].account === home ? "free" : source[0].account };
 }
 function posting(fields, key, data, old, transfer) {
   const index = key.slice(7);
@@ -85,7 +87,19 @@ export function operation(kind, fields, data, tx) {
       };
     }
     const positive = amount(fields.amount);
-    const expense = cardPurchase(data, tx);
+    if (cardPurchase(data, tx)) {
+      const card = data.cash.cards.find(c => c.card === fields.card);
+      const reserve = data.accounts.find(a => a.account === card?.reserve);
+      const refund = tx.postings.find(p => p.account === card.reserve).amount.exact.startsWith("-");
+      const sign = (negative) => (negative !== refund ? -1n : 1n) * BigInt(positive.mantissa);
+      const line = (account, negative) => ({ account, amount: { ...positive, mantissa: sign(negative).toString() },
+        status: tx.postings.find(old => old.account === account)?.status || "" });
+      return { method: "PATCH", path: `/transactions/${tx.id}`, body: {
+        date: fields.date, description: fields.description, tags: tx.tags || [],
+        postings: [line(fields.category, false), line(fields.card, true),
+          line(fields.source === "free" ? reserve.home : fields.source, true), line(card.reserve, false)],
+      } };
+    }
     return {
       method: "PATCH",
       path: `/transactions/${tx.id}`,
@@ -93,12 +107,10 @@ export function operation(kind, fields, data, tx) {
         date: fields.date,
         description: fields.description,
         tags: tx.tags || [],
-        postings: tx.postings.map((p, i) => {
-          const account = expense >= 0
-            ? (i === expense ? fields.category || p.account : p.account)
-            : p.amount.exact.startsWith("-")
-              ? fields.from || p.account
-              : fields.to || p.account;
+        postings: tx.postings.map((p) => {
+          const account = p.amount.exact.startsWith("-")
+            ? fields.from || p.account
+            : fields.to || p.account;
           return {
             account,
             status:

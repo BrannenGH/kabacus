@@ -55,7 +55,7 @@ export function OperationDialog({
   const [dirty, setDirty] = useState(false);
   useDialogHistory({ onClose, preview, setPreview, dirty, busy });
   const [checked, setChecked] = useState(null);
-  const presetCard = card || data.cash.cards.find(c => c.card === account)?.card || "";
+  const presetCard = purchase?.card || card || data.cash.cards.find(c => c.card === account)?.card || "";
   const [repairCard, setRepairCard] = useState(presetCard);
   const [raw, setRaw] = useState(false);
   const purchaseEdit = kind === "edit" && !raw && cardPurchase(data, tx) >= 0;
@@ -435,7 +435,7 @@ export function OperationDialog({
                       </button>
                     </p>
                   )}
-                  {["purchase", "payment", "fix"].includes(kind) && (
+                  {(["purchase", "payment", "fix"].includes(kind) || purchase) && (
                     <label>
                       {t("Card")}
                       <select
@@ -567,11 +567,11 @@ export function OperationDialog({
                       </label>
                     </>
                   )}
-                  {kind === "purchase" && (
+                  {(kind === "purchase" || purchase) && (
                     <>
                       <label>
                         {t("Category")}
-                        <select name="category" required defaultValue={prefill?.category || undefined}>
+                        <select name="category" required defaultValue={purchase?.category || prefill?.category || undefined}>
                           {data.accounts
                             .filter((a) => a.kind === "expense")
                             .map((a) => (
@@ -583,7 +583,7 @@ export function OperationDialog({
                       </label>
                       <label>
                         {t("Paid from:")}
-                        <select name="source">
+                        <select name="source" defaultValue={purchase?.source}>
                           <option value="free">{t("Free money")}</option>
                           {data.cash.funds.map((f) => (
                             <option key={f.account} value={f.account}>
