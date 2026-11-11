@@ -22,6 +22,7 @@ path = [
     "design/tokens.json",
     ".vscode/**",
     ".claude/settings.json",
+    ".mcp.json",
     "crates/kabacus-server/tests/fixtures/**",
     ".dockerignore",
 ]

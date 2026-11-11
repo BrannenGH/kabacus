@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "codeatlas": {
+      "command": "npx",
+      "args": ["-y", "@codeatlas/mcp@5.3.0", "."],
+      "env": { "CODEATLAS_TELEMETRY": "0" }
+    }
+  }
+}
