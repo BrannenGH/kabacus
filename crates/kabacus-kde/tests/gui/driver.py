@@ -498,6 +498,11 @@ def main():
         save_button = wait_for("the Save button", lambda: find(app(), "Save", pyatspi.ROLE_PUSH_BUTTON))
         if save_button.getState().contains(pyatspi.STATE_ENABLED):
             fail("Save is on with nothing to save")
+        # Settings opens over an unchanged form, replacing it.
+        goto("Settings")
+        wait_for("Settings", lambda: label_starting("Kabacus ") or find(app(), "Connection", pyatspi.ROLE_HEADING), 10)
+        if label_starting("Edit transaction"):
+            fail("the edit form is still open after choosing Settings")
     elif command == "edit-modes":
         # A recorded transaction is edited in place or voided; nothing else.
         account, payee, date = args
