@@ -5,7 +5,7 @@ import { PhonePicker } from "./phone-picker";
 import { useMedia, phoneQuery, desktopQuery } from "./form-factor";
 import React, { useEffect, useRef, useState } from "react";
 import { AmountField } from "./amount-field";
-import { operation, accountCurrency } from "./operations";
+import { operation, accountCurrency, cardPurchase } from "./operations";
 import { t } from "./i18n";
 const titles = {
   postings: "Postings",
@@ -58,7 +58,8 @@ export function OperationDialog({
   const presetCard = card || data.cash.cards.find(c => c.card === account)?.card || "";
   const [repairCard, setRepairCard] = useState(presetCard);
   const [raw, setRaw] = useState(false);
-  const postingEdit = kind === "edit" && (raw || tx.postings.length !== 2 ||
+  const purchaseEdit = kind === "edit" && !raw && cardPurchase(data, tx) >= 0;
+  const postingEdit = kind === "edit" && !purchaseEdit && (raw || tx.postings.length !== 2 ||
     tx.postings.some(p => p.cost || p.amount.commodity !== data.commodity.symbol));
   const [rows, setRows] = useState(postingEdit ? tx.postings.map((_, i) => i) : [0, 1]);
   const [priceKinds, setPriceKinds] = useState(Object.fromEntries((tx?.postings || []).map((p, i) => [i, p.cost?.kind || ""])));
@@ -380,7 +381,21 @@ export function OperationDialog({
                       </label>
                     </>
                   )}
-                  {kind === "edit" && !postingEdit &&
+                  {purchaseEdit && (
+                    <label>
+                      {t("Category")}
+                      <select name="category" required defaultValue={tx.postings[cardPurchase(data, tx)].account}>
+                        {data.accounts
+                          .filter((a) => a.kind === "expense")
+                          .map((a) => (
+                            <option key={a.account} value={a.account}>
+                              {a.display_name || a.account}
+                            </option>
+                          ))}
+                      </select>
+                    </label>
+                  )}
+                  {kind === "edit" && !postingEdit && !purchaseEdit &&
                     [
                       ["from", "From", true],
                       ["to", "To", false],

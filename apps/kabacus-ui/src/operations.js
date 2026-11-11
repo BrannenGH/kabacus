@@ -9,6 +9,18 @@ export function accountCurrency(data, account) {
   const balances = data.accounts?.find(a => a.account === account)?.balances || [];
   return balances.length === 1 ? balances[0].commodity : data.commodity.symbol;
 }
+// A card purchase: expense, card, source and reserve lines, all one amount.
+// Returns the index of its expense posting.
+export function cardPurchase(data, tx) {
+  const ps = tx?.postings || [];
+  if (ps.length !== 4 || ps.some(p => p.cost || p.amount.commodity !== data.commodity.symbol)) return -1;
+  const card = data.cash.cards.find(c => ps.some(p => p.account === c.card) && ps.some(p => p.account === c.reserve));
+  const reserve = ps.find(p => p.account === card?.reserve);
+  if (!reserve) return -1;
+  const sign = p => p.amount.exact.startsWith("-");
+  const rest = ps.map((p, i) => i).filter(i => ps[i].account !== card.card && i !== ps.indexOf(reserve) && sign(ps[i]) === sign(reserve));
+  return rest.length === 1 ? rest[0] : -1;
+}
 function posting(fields, key, data, old, transfer) {
   const index = key.slice(7);
   const symbol = fields["currency" + index] || old?.amount.commodity || data.commodity.symbol;
@@ -73,6 +85,7 @@ export function operation(kind, fields, data, tx) {
       };
     }
     const positive = amount(fields.amount);
+    const expense = cardPurchase(data, tx);
     return {
       method: "PATCH",
       path: `/transactions/${tx.id}`,
@@ -80,10 +93,12 @@ export function operation(kind, fields, data, tx) {
         date: fields.date,
         description: fields.description,
         tags: tx.tags || [],
-        postings: tx.postings.map((p) => {
-          const account = p.amount.exact.startsWith("-")
-            ? fields.from || p.account
-            : fields.to || p.account;
+        postings: tx.postings.map((p, i) => {
+          const account = expense >= 0
+            ? (i === expense ? fields.category || p.account : p.account)
+            : p.amount.exact.startsWith("-")
+              ? fields.from || p.account
+              : fields.to || p.account;
           return {
             account,
             status:

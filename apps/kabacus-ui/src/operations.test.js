@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 // SPDX-License-Identifier: GPL-3.0-or-later
 import { expect, test } from "vitest";
-import { operation } from "./operations";
+import { operation, cardPurchase } from "./operations";
 const data = {
   commodity: { symbol: "USD", places: 2 },
   version: { head: "42" },
@@ -197,4 +197,30 @@ test("wallet postings retain each currency, conversion cost and added fee rows",
   }, data, tx);
   expect(result.body.postings[0]).toMatchObject({ amount: { commodity: "ETH", mantissa: "400000000000000001", places: 18 }, cost: {kind: "total", amount: {commodity: "USD", mantissa: "100000", places: 2}} });
   expect(result.body.postings[4].amount.commodity).toBe("XMR");
+});
+test("editing a card purchase keeps its reserve lines and changes only the category and amount", () => {
+  const money = exact => ({ commodity: "USD", exact });
+  const line = (account, exact) => ({ account, amount: money(exact), status: "" });
+  const books = {
+    ...data,
+    cash: { cards: [{ card: "liabilities:credit-card:wells-fargo-platinum", reserve: "assets:bank:checking:card-wells-fargo-platinum" }] },
+  };
+  const tx = {
+    id: 7,
+    tags: [],
+    postings: [
+      line("expenses:household:groceries", "19.49"),
+      line("liabilities:credit-card:wells-fargo-platinum", "-19.49"),
+      line("assets:bank:checking", "-19.49"),
+      line("assets:bank:checking:card-wells-fargo-platinum", "19.49"),
+    ],
+  };
+  expect(cardPurchase(books, tx)).toBe(0);
+  const { body } = operation("edit", { date: "2026-11-10", description: "Aldi", amount: "21.00", category: "expenses:household:cleaning" }, books, tx);
+  expect(body.postings.map(p => [p.account, p.amount.mantissa])).toEqual([
+    ["expenses:household:cleaning", "2100"],
+    ["liabilities:credit-card:wells-fargo-platinum", "-2100"],
+    ["assets:bank:checking", "-2100"],
+    ["assets:bank:checking:card-wells-fargo-platinum", "2100"],
+  ]);
 });
