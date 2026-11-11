@@ -9,5 +9,5 @@ export function Settings({data,auth,book}){
  {window.__TAURI_INTERNALS__&&<><h2>{t("Automation")}</h2><label className="checkbox"><input type="checkbox" checked={settings.automation} onChange={e=>change({automation:e.target.checked})}/>{t("Let agents drive this window")}</label><label>{t("Control port")}<input type="number" min="1" max="65535" defaultValue={settings.control_port||7979} onBlur={e=>change({control_port:Number(e.target.value)})}/></label></>}
  {error&&<p role="alert" className="banner error">{error}</p>}
  <h2>{t("Account")}</h2><p>{book?.local?t("On this computer"):auth.identity||book?.location}</p>{auth.signOut&&<button onClick={auth.signOut}>{t("Sign out")}</button>}
- <h2>{t("About")}</h2><p>Kabacus {data.version.server_version}</p><a href={data.version.source_url||"https://github.com/BrannenGH/kabacus"} target="_blank" rel="noreferrer">{t("Open the source code")}</a></section>;
+ <h2>{t("About")}</h2><p>Kabacus {__APP_VERSION__}</p><a href={data.version.source_url||"https://github.com/BrannenGH/kabacus"} target="_blank" rel="noreferrer">{t("Open the source code")}</a></section>;
 }

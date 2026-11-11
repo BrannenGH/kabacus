@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 // SPDX-License-Identifier: GPL-3.0-or-later
 import { expect, test } from "@playwright/test";
+import { readFileSync } from "node:fs";
+const appVersion = process.env.KABACUS_VERSION || JSON.parse(readFileSync("package.json", "utf8")).version;
 const amount = (exact) => ({
   commodity: "USD",
   exact,
@@ -921,7 +923,7 @@ for (const locale of ["en-US", "de-DE", "ar"]) {
       await setup(page);
       await page.locator('[data-destination="More"]').click();
       await page.locator(".settings-action").click();
-      await expect(page.getByText(`Kabacus ${version.server_version}`, {exact:true})).toBeVisible();
+      await expect(page.getByText(`Kabacus ${appVersion}`, {exact:true})).toBeVisible();
       await expect(page.locator(`main a[href="${version.source_url}"]`)).toBeVisible();
       await expect(page.locator("main")).not.toContainText(version.commit);
     });

@@ -261,7 +261,7 @@ async fn about_shows_the_version_and_source() {
             .unwrap();
         assert_eq!(version.commit.len(), 40, "{size}");
         let _app = launch_sized(&server.socket_path, &config_dir(&format!("about{i}")), size);
-        drive(&["about", &version.server_version, &version.source_url]).await;
+        drive(&["about", kabacus_service::VERSION, &version.source_url]).await;
     }
 }
 
