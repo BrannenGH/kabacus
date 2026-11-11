@@ -105,6 +105,11 @@ Hard rules:
   for the GitHub Actions CI/CD to run the full suite, only run small targeted tests
   locally.
 
+- **The KDE app and the web app keep parity.** A feature, fix or screen
+  that changes one changes the other in the same change, with the same
+  behaviour and tests in both. Neither lands with the other noted as
+  "not done".
+
 - **Every UI change works on desktop and phone** and is covered by
   GUI e2e at desktop (1280 × 800) and phone (390 × 844) sizes. Tablets use
   the desktop layout with an icon rail. Breakpoints come from design tokens.

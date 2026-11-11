@@ -11,7 +11,7 @@ use crate::views::{diff_lines, DiffLine, Shown};
 use crate::{i18n, i18nc, i18ncp, i18np};
 use kabacus_client::types::{
     AccountView, AddTransactionBody, AllocateBody, BatchOpBody, CardPaymentBody, CardPurchaseBody,
-    DraftAmount, DraftPostingBody, TransactionView, WriteResultView,
+    DraftAmount, DraftPostingBody, PostingView, TransactionView, WriteResultView,
 };
 use kabacus_client::{ClientError, KabacusClient};
 use kabacus_core::Money;
@@ -39,8 +39,11 @@ pub enum Draft {
         #[serde(default)]
         new_category: bool,
     },
-    /// With its reserve lines. `source` is `free` or a fund.
+    /// With its reserve lines. `source` is `free` or a fund. With an `id`,
+    /// the purchase recorded as that transaction is edited in place.
     CardPurchase {
+        #[serde(default)]
+        id: Option<String>,
         date: String,
         payee: String,
         #[serde(default)]
@@ -457,12 +460,64 @@ impl Books {
 
     /// A card's reserve and the money account holding it.
     fn reserve_of(&self, card: &str) -> Option<(String, String)> {
-        let leaf = card.rsplit(':').next()?;
-        self.accounts
-            .iter()
-            .find(|a| a.kind == "debt-reserve" && a.account.ends_with(&format!("card-{leaf}")))
-            .map(|r| (r.account.clone(), r.home.clone()))
+        reserve_in(&self.accounts, card)
     }
+}
+
+fn reserve_in(accounts: &[AccountView], card: &str) -> Option<(String, String)> {
+    let leaf = card.rsplit(':').next()?;
+    accounts
+        .iter()
+        .find(|a| a.kind == "debt-reserve" && a.account.ends_with(&format!("card-{leaf}")))
+        .map(|r| (r.account.clone(), r.home.clone()))
+}
+
+/// A recorded card purchase, as the card purchase form shows it: the card,
+/// the expense category and where the reserve came from (`free` or a fund).
+/// None for anything but the expense, card, source and reserve lines.
+pub fn card_purchase_of(
+    tx: &TransactionView,
+    accounts: &[AccountView],
+) -> Option<(String, String, String)> {
+    let kind = |account: &str| {
+        accounts
+            .iter()
+            .find(|a| a.account == account)
+            .map(|a| a.kind.as_str())
+    };
+    let [first, rest @ ..] = tx.postings.as_slice() else {
+        return None;
+    };
+    if rest.len() != 3
+        || tx.postings.iter().any(|p| {
+            p.amount.commodity != first.amount.commodity
+                || p.amount.exact.trim_start_matches('-')
+                    != first.amount.exact.trim_start_matches('-')
+        })
+    {
+        return None;
+    }
+    let find = |want: &dyn Fn(&PostingView) -> bool| {
+        let mut hits = tx.postings.iter().filter(|p| want(p));
+        hits.next().filter(|_| hits.next().is_none())
+    };
+    let card = find(&|p| kind(&p.account) == Some("revolving-debt"))?;
+    let (reserve, home) = reserve_in(accounts, &card.account)?;
+    let reserve = find(&|p| p.account == reserve)?;
+    let expense = find(&|p| kind(&p.account) == Some("expense"))?;
+    let source = find(&|p| {
+        p.account != card.account && p.account != reserve.account && p.account != expense.account
+    })?;
+    let negative = |p: &PostingView| p.amount.exact.starts_with('-');
+    if negative(expense) || negative(reserve) || !negative(card) || !negative(source) {
+        return None;
+    }
+    let source = if source.account == home {
+        "free".to_string()
+    } else {
+        source.account.clone()
+    };
+    Some((card.account.clone(), expense.account.clone(), source))
 }
 
 /// The current head; every preview is checked against it.
@@ -505,6 +560,7 @@ fn summary(draft: &Draft, books: &Books) -> String {
             date
         ),
         Draft::CardPurchase {
+            id: None,
             payee,
             amount,
             card,
@@ -600,7 +656,11 @@ fn summary(draft: &Draft, books: &Books) -> String {
                 )
             }
         }
-        Draft::Edit { payee, .. } | Draft::EditPostings { payee, .. } => {
+        Draft::Edit { payee, .. }
+        | Draft::EditPostings { payee, .. }
+        | Draft::CardPurchase {
+            id: Some(_), payee, ..
+        } => {
             i18nc!(
                 "%1 is a payee",
                 "Edit %1 in place. History keeps the old version.",
@@ -1076,6 +1136,58 @@ async fn send(
                 .await
         }
         Draft::CardPurchase {
+            id: Some(id),
+            date,
+            payee,
+            memo,
+            card,
+            category,
+            source,
+            amount,
+        } => {
+            let tx = transaction(client, id).await?;
+            let (reserve, home) = books.reserve_of(card).ok_or_else(|| WriteError::Other {
+                message: i18nc!(
+                    "%1 is a card",
+                    "%1 has no reserve account",
+                    books.name(card)
+                ),
+            })?;
+            let source = if source == "free" {
+                home
+            } else {
+                source.clone()
+            };
+            let m = check_amount("amount", amount, books.places, true)?;
+            let c = &books.commodity;
+            let mut postings = vec![
+                posting(category, c, m.clone()),
+                posting(card, c, -m.clone()),
+                posting(&source, c, -m.clone()),
+                posting(&reserve, c, m),
+            ];
+            for p in &mut postings {
+                if let Some(old) = tx.postings.iter().find(|o| o.account == p.account) {
+                    p.status = old.status.clone();
+                }
+            }
+            client
+                .edit_transaction(
+                    crate::model::transaction_id(id)?,
+                    head,
+                    AddTransactionBody {
+                        new_accounts: vec![],
+                        date: date.trim().to_string(),
+                        description: description(payee, memo),
+                        postings,
+                        tags: tx.tags,
+                        dry_run,
+                    },
+                )
+                .await
+        }
+        Draft::CardPurchase {
+            id: None,
             date,
             payee,
             memo,
@@ -1640,6 +1752,55 @@ mod tests {
         )
         .unwrap();
         assert!(matches!(d, Draft::CardPurchase { ref source, .. } if source == "free"));
+    }
+    #[test]
+    fn a_recorded_card_purchase_is_found_among_its_four_lines() {
+        let account = |account: &str, kind: &str, home: &str| {
+            serde_json::from_value::<AccountView>(serde_json::json!({
+                "account": account, "kind": kind, "home": home, "balances": [],
+            }))
+            .unwrap()
+        };
+        let accounts = vec![
+            account("assets:bank:checking", "money", ""),
+            account(
+                "assets:bank:checking:card-visa",
+                "debt-reserve",
+                "assets:bank:checking",
+            ),
+            account("liabilities:credit-card:visa", "revolving-debt", ""),
+            account("expenses:groceries", "expense", ""),
+        ];
+        let tx = |lines: &[(&str, &str)]| -> TransactionView {
+            serde_json::from_value(serde_json::json!({
+                "id": 7, "date": "2026-10-03", "payee": "Corner Market", "memo": "",
+                "status": "", "tags": [],
+                "postings": lines.iter().map(|(a, m)| serde_json::json!({
+                    "account": a, "status": "",
+                    "amount": {"commodity": "USD", "exact": m, "formatted": m},
+                })).collect::<Vec<_>>(),
+            }))
+            .unwrap()
+        };
+        let purchase = tx(&[
+            ("expenses:groceries", "42.18"),
+            ("liabilities:credit-card:visa", "-42.18"),
+            ("assets:bank:checking", "-42.18"),
+            ("assets:bank:checking:card-visa", "42.18"),
+        ]);
+        assert_eq!(
+            card_purchase_of(&purchase, &accounts),
+            Some((
+                "liabilities:credit-card:visa".into(),
+                "expenses:groceries".into(),
+                "free".into()
+            ))
+        );
+        let plain = tx(&[
+            ("expenses:groceries", "42.18"),
+            ("assets:bank:checking", "-42.18"),
+        ]);
+        assert_eq!(card_purchase_of(&plain, &accounts), None);
     }
     #[test]
     fn amounts_use_cores_grammar_at_the_commodity_precision() {

@@ -627,6 +627,19 @@ impl qobject::Ledger {
             })
             .collect();
         if let Some(tx) = &found {
+            let accounts = runtime()
+                .block_on(self.rust().client.list_accounts(None))
+                .unwrap_or_default();
+            if let Some((card, category, source)) = writes::card_purchase_of(tx, &accounts) {
+                let amount = tx.postings[0]
+                    .amount
+                    .exact
+                    .trim_start_matches('-')
+                    .to_string();
+                return json(&serde_json::json!({ "date": tx.date, "payee": tx.payee,
+                    "memo": tx.memo, "amount": amount, "postings": postings,
+                    "purchase": { "card": card, "category": category, "source": source } }));
+            }
             if tx.postings.len() != 2
                 || tx
                     .postings

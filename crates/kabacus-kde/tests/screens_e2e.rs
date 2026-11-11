@@ -75,6 +75,7 @@ async fn save(client: &KabacusClient, draft: &Draft) -> writes::Saved {
 
 fn card_purchase(amount: &str, source: &str) -> Draft {
     Draft::CardPurchase {
+        id: None,
         date: "2026-10-01".into(),
         payee: "Corner Market".into(),
         memo: String::new(),
@@ -511,6 +512,42 @@ async fn a_card_purchase_previews_then_commits() {
     assert_ne!(saved.head, head);
     let o = views::overview(&client).await.unwrap();
     assert_eq!(o.cash_on_hand.exact, "1657.82");
+}
+
+/// A recorded card purchase edits as one: all four lines move together.
+#[tokio::test]
+async fn a_card_purchase_edits_with_its_reserve_lines() {
+    let (_server, client) = books().await;
+    save(&client, &card_purchase("42.18", "free")).await;
+    let tx = client.list_transactions().await.unwrap().pop().unwrap();
+    let accounts = client.list_accounts(None).await.unwrap();
+    assert_eq!(
+        writes::card_purchase_of(&tx, &accounts),
+        Some((VISA.into(), "expenses:dining".into(), "free".into()))
+    );
+
+    let mut edit = card_purchase("50.00", "free");
+    if let Draft::CardPurchase { id, .. } = &mut edit {
+        *id = Some(tx.id.to_string());
+    }
+    save(&client, &edit).await;
+    let edited = client.list_transactions().await.unwrap().pop().unwrap();
+    let lines: Vec<_> = edited
+        .postings
+        .iter()
+        .map(|p| (p.account.as_str(), p.amount.exact.as_str()))
+        .collect();
+    assert_eq!(
+        lines,
+        [
+            ("expenses:dining", "50.00"),
+            (VISA, "-50.00"),
+            (CHECKING, "-50.00"),
+            (RESERVE, "50.00")
+        ]
+    );
+    let o = views::overview(&client).await.unwrap();
+    assert_eq!(o.cash_on_hand.exact, "1650.00");
 }
 
 /// Setting money aside lowers Cash on Hand; moving between funds doesn't.
