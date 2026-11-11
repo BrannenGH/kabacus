@@ -90,6 +90,7 @@ COPY apps/kabacus-ui/src ./src
 COPY apps/kabacus-ui/public ./public
 COPY apps/kabacus-ui/sw-source.js ./
 COPY --from=wasm /src/apps/kabacus-ui/public/wasm ./public/wasm
+ARG KABACUS_VERSION
 RUN npm run build
 
 FROM docker.io/library/rust:1-trixie AS tauri-test

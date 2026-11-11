@@ -170,9 +170,9 @@ pub mod qobject {
         #[cxx_name = "settingsJson"]
         fn settings_json(self: &Ledger) -> QString;
 
-        /// The connected server's version, exact commit and where its
-        /// source is, as JSON: `{"server_version", "commit", "source_url"}`
-        /// or `{"error": …}`.
+        /// This app's version and, when connected to a server, its version,
+        /// exact commit and where its source is, as JSON: `{"app_version",
+        /// "server_version", "commit", "source_url"}` or `{"error": …}`.
         #[qinvokable]
         #[cxx_name = "aboutJson"]
         fn about_json(self: &Ledger) -> QString;
@@ -681,11 +681,12 @@ impl qobject::Ledger {
             && self.rust().settings.kind == ConnectionKind::Local
         {
             return json(
-                &serde_json::json!({"server_version":kabacus_service::VERSION,"source_url":"https://github.com/BrannenGH/kabacus"}),
+                &serde_json::json!({"app_version":kabacus_service::VERSION,"source_url":"https://github.com/BrannenGH/kabacus"}),
             );
         }
         match runtime().block_on(self.rust().client.version()) {
             Ok(v) => json(&serde_json::json!({
+                "app_version": kabacus_service::VERSION,
                 "server_version": v.server_version,
                 "commit": v.commit,
                 "source_url": v.source_url,

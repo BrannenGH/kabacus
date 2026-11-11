@@ -1,0 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
+# SPDX-License-Identifier: CC0-1.0
+
+[mcp_servers.codeatlas]
+command = "npx"
+args = ["-y", "@codeatlas/mcp@5.3.0", "."]
+env = { CODEATLAS_TELEMETRY = "0" }
