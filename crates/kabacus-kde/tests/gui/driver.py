@@ -759,6 +759,15 @@ def main():
         fill_fields(Payee=payee, Amount=amount)
         pick("Category", category)
         save()
+    elif command == "edit-purchase":
+        # A recorded card purchase opens in the card purchase form.
+        account, payee, date, amount = args
+        open_row(account, payee, date)
+        wait_for("the Paid from choice", lambda: find(app(), "Free money", pyatspi.ROLE_RADIO_BUTTON))
+        if find(app(), "Amount 1", pyatspi.ROLE_TEXT, showing=False):
+            fail("the card purchase opened as raw postings")
+        fill_fields(Amount=amount)
+        save()
     elif command == "card-to-spent":
         # A card makes Spent a card purchase; Switch to Spent goes back.
         (card,) = args
