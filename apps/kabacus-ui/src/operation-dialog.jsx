@@ -55,11 +55,11 @@ export function OperationDialog({
   const [dirty, setDirty] = useState(false);
   useDialogHistory({ onClose, preview, setPreview, dirty, busy });
   const [checked, setChecked] = useState(null);
+  const [raw, setRaw] = useState(false);
+  const purchase = kind === "edit" && !raw ? cardPurchase(data, tx) : null;
   const presetCard = purchase?.card || card || data.cash.cards.find(c => c.card === account)?.card || "";
   const [repairCard, setRepairCard] = useState(presetCard);
-  const [raw, setRaw] = useState(false);
-  const purchaseEdit = kind === "edit" && !raw && cardPurchase(data, tx) >= 0;
-  const postingEdit = kind === "edit" && !purchaseEdit && (raw || tx.postings.length !== 2 ||
+  const postingEdit = kind === "edit" && !purchase && (raw || tx.postings.length !== 2 ||
     tx.postings.some(p => p.cost || p.amount.commodity !== data.commodity.symbol));
   const [rows, setRows] = useState(postingEdit ? tx.postings.map((_, i) => i) : [0, 1]);
   const [priceKinds, setPriceKinds] = useState(Object.fromEntries((tx?.postings || []).map((p, i) => [i, p.cost?.kind || ""])));
@@ -381,21 +381,7 @@ export function OperationDialog({
                       </label>
                     </>
                   )}
-                  {purchaseEdit && (
-                    <label>
-                      {t("Category")}
-                      <select name="category" required defaultValue={tx.postings[cardPurchase(data, tx)].account}>
-                        {data.accounts
-                          .filter((a) => a.kind === "expense")
-                          .map((a) => (
-                            <option key={a.account} value={a.account}>
-                              {a.display_name || a.account}
-                            </option>
-                          ))}
-                      </select>
-                    </label>
-                  )}
-                  {kind === "edit" && !postingEdit && !purchaseEdit &&
+                  {kind === "edit" && !postingEdit && !purchase &&
                     [
                       ["from", "From", true],
                       ["to", "To", false],
