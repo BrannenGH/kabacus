@@ -224,10 +224,11 @@ pub fn cash_effect(chart: &Chart, tx: &Transaction, commodity: &str) -> Money {
 pub struct CashTotals {
     pub as_of: Option<NaiveDate>,
     /// Free money: the money accounts' own balances, less what overdrawn
-    /// funds have taken from them.
+    /// funds and card reserves have taken from them.
     pub money: Money,
     /// What the funds set aside; an overdrawn fund counts as zero.
     pub funds: Money,
+    /// What the card reserves set aside; a negative reserve counts as zero.
     pub reserves: Money,
     pub receivables: Money,
     pub money_on_hand: Money,
@@ -261,8 +262,8 @@ pub fn cash_totals(
 ) -> CashTotals {
     let scale = Scale::of(transactions, commodity);
     let mut by_kind: BTreeMap<AccountKind, Money> = BTreeMap::new();
-    // Each fund's own balance, to find the overdrawn ones.
-    let mut funds_by_account: HashMap<&AccountName, Money> = HashMap::new();
+    // Each fund's and reserve's own balance, to find the overdrawn ones.
+    let mut funds_by_account: HashMap<&AccountName, (AccountKind, Money)> = HashMap::new();
     for tx in transactions
         .iter()
         .filter(|tx| as_of.is_none_or(|d| tx.date <= d))
@@ -275,25 +276,30 @@ pub fn cash_totals(
             let kind = chart.kind_of(&p.account);
             let total = by_kind.entry(kind).or_insert_with(Money::zero);
             *total = &*total + &p.amount.money;
-            if kind == AccountKind::PreAllocation {
-                let fund = funds_by_account
+            if matches!(kind, AccountKind::PreAllocation | AccountKind::DebtReserve) {
+                let (_, fund) = funds_by_account
                     .entry(&p.account)
-                    .or_insert_with(Money::zero);
+                    .or_insert_with(|| (kind, Money::zero()));
                 *fund = fund.clone() + p.amount.money.clone();
             }
         }
     }
-    // An overdrawn fund sets nothing aside: its overdraft comes off free
-    // money, as in `funds::cash_on_hand`.
-    let overdrafts: Money = funds_by_account
-        .values()
-        .filter(|m| m.is_negative())
-        .map(|m| -m.clone())
-        .sum();
+    // An overdrawn fund or reserve sets nothing aside: its overdraft comes
+    // off free money, as in `funds::cash_on_hand`.
+    let overdrafts = |of: AccountKind| -> Money {
+        funds_by_account
+            .values()
+            .filter(|(kind, m)| *kind == of && m.is_negative())
+            .map(|(_, m)| -m.clone())
+            .sum()
+    };
+    let fund_overdrafts = overdrafts(AccountKind::PreAllocation);
+    let reserve_overdrafts = overdrafts(AccountKind::DebtReserve);
     let get = |k| scale.money(by_kind.get(&k).cloned().unwrap_or_else(Money::zero));
-    let money = scale.money(get(AccountKind::Money) - overdrafts.clone());
-    let funds = scale.money(get(AccountKind::PreAllocation) + overdrafts);
-    let reserves = get(AccountKind::DebtReserve);
+    let money =
+        scale.money(get(AccountKind::Money) - fund_overdrafts.clone() - reserve_overdrafts.clone());
+    let funds = scale.money(get(AccountKind::PreAllocation) + fund_overdrafts);
+    let reserves = scale.money(get(AccountKind::DebtReserve) + reserve_overdrafts);
     let receivables = get(AccountKind::Receivable);
     let money_on_hand = money.clone() + funds.clone() + reserves.clone() + receivables.clone();
     let future_allocations = funds.clone() + reserves.clone();
@@ -961,10 +967,15 @@ pub fn cash_flow(
             .into_iter()
             .map(|part| (part, is_cash))
             .chain(overdrawn.map(|(account, change)| {
-                (
-                    (account.clone(), AccountKind::PreAllocation, change.clone()),
-                    true,
-                )
+                // A reserve's overdraft goes on its card's line.
+                let (account, kind) = match chart.kind_of(account) {
+                    AccountKind::DebtReserve => (
+                        chart.card_for_reserve(account).unwrap_or(account).clone(),
+                        AccountKind::RevolvingDebt,
+                    ),
+                    kind => (account.clone(), kind),
+                };
+                ((account, kind, change.clone()), true)
             }))
         {
             if in_cash
@@ -1021,10 +1032,10 @@ pub fn cash_flow(
     }
 }
 
-/// Per transaction in `period`, each fund whose overdraft it changes and
-/// that change's effect on Cash on Hand. Funds are followed in date order
-/// from their balances before `from`, so the changes add up to the
-/// difference between the opening and closing overdrafts.
+/// Per transaction in `period`, each fund or card reserve whose overdraft
+/// it changes and that change's effect on Cash on Hand. They are followed
+/// in date order from their balances before `from`, so the changes add up
+/// to the difference between the opening and closing overdrafts.
 fn overdraft_changes(
     chart: &Chart,
     transactions: &[Transaction],
@@ -1036,7 +1047,12 @@ fn overdraft_changes(
         tx.postings
             .iter()
             .filter(|p| p.amount.commodity == commodity)
-            .filter(|p| chart.kind_of(&p.account) == AccountKind::PreAllocation)
+            .filter(|p| {
+                matches!(
+                    chart.kind_of(&p.account),
+                    AccountKind::PreAllocation | AccountKind::DebtReserve
+                )
+            })
             .map(|p| (p.account.clone(), p.amount.money.clone()))
             .collect::<Vec<_>>()
     };
@@ -1758,6 +1774,55 @@ mod tests {
             &options,
         );
         assert_eq!(late.change, usd(-4217));
+    }
+
+    /// A card payment from a reserve that has nothing in it comes off Cash
+    /// on Hand, so the bridge shows the shortfall in the cash column on the
+    /// card's line.
+    #[test]
+    fn cash_flow_bridges_negative_card_reserves() {
+        const AMEX: &str = "liabilities:credit-card:macys-amex";
+        const AMEX_RESERVE: &str = "assets:bank:checking:card-macys-amex";
+        let txs = vec![
+            tx(
+                "2026-05-01",
+                "Opening",
+                &[(CHECKING, 40578), ("equity:opening", -40578)],
+            ),
+            tx(
+                "2026-05-22",
+                "Payment to Macy's AMEX",
+                &[(AMEX, 1883), (AMEX_RESERVE, -1883)],
+            ),
+            tx(
+                "2026-09-09",
+                "Payment to Macy's AMEX",
+                &[(AMEX, 2549), (AMEX_RESERVE, -2549)],
+            ),
+        ];
+        let chart = chart(&txs);
+        let options = CashFlowOptions {
+            group_by: GroupBy::Account,
+            depth: 3,
+            exclude: Exclude::default(),
+        };
+        let flow = cash_flow(
+            &chart,
+            &txs,
+            "USD",
+            date("2026-05-02"),
+            date("2026-09-30"),
+            &options,
+        );
+        assert_eq!(flow.change, usd(-4432));
+        let cash: Money = flow.lines.iter().map(|l| l.cash.clone()).sum();
+        assert_eq!(cash, flow.change);
+        let card = flow
+            .lines
+            .iter()
+            .find(|l| l.group == AMEX)
+            .expect("the card's line");
+        assert_eq!(card.cash, usd(-4432));
     }
     #[test]
     fn receivables_activity_balances() {

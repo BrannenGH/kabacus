@@ -716,7 +716,8 @@ async fn cash_on_hand_leaves_out_future_transactions() {
 }
 
 /// Paying a card more than it owes is realistic: the card goes into
-/// credit and its reserve follows it below zero.
+/// credit and its reserve follows it below zero. The overpayment left the
+/// bank, so it comes off free money and Cash on Hand, with a warning.
 #[tokio::test]
 async fn paying_a_card_more_than_it_owes_is_accepted() {
     let state = state(CARD_BOOKS).await;
@@ -746,7 +747,9 @@ async fn paying_a_card_more_than_it_owes_is_accepted() {
     assert_eq!(card.balance.exact, "4850.01");
     assert_eq!(card.reserve_balance.exact, "-4850.01");
     assert_eq!(card.difference.exact, "0.00");
-    assert_eq!(after.cash_on_hand.exact, before.cash_on_hand.exact);
+    assert_eq!(before.cash_on_hand.exact, "8350.01");
+    assert_eq!(after.cash_on_hand.exact, "3500.00");
+    assert!(after.warnings.iter().any(|w| w.code == "negative-reserve"));
     assert_eq!(
         before.money_on_hand.exact, "8500.00",
         "the purchase only moved free money into the reserve"
