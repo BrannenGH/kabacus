@@ -230,7 +230,17 @@ Kirigami.ApplicationWindow {
     }
 
     function openSettings() {
-        if (pageStack.layers.depth === 1) pageStack.layers.push(settingsPage)
+        if (settingsOpen) return
+        const open = () => {
+            while (pageStack.layers.depth > 1) pageStack.layers.pop()
+            pageStack.layers.push(settingsPage)
+        }
+        if (unsavedForm() !== null) {
+            discardDialog.pendingAction = open
+            discardDialog.open()
+            return
+        }
+        open()
     }
 
     // The Add chooser, then the form for what happened. From a
@@ -325,7 +335,7 @@ Kirigami.ApplicationWindow {
             Kirigami.Action { text: root.labels.Reports; icon.name: "office-chart-bar"; checked: !root.settingsOpen && root.current === "Reports"; onTriggered: root.go("Reports") },
             Kirigami.Action { text: root.labels.Activity; icon.name: "view-history"; checked: !root.settingsOpen && root.current === "Activity"; onTriggered: root.go("Activity") },
             Kirigami.Action { separator: true },
-            Kirigami.Action { text: i18n("Settings"); icon.name: "configure"; checkable: true; checked: root.settingsOpen; shortcut: StandardKey.Preferences; onTriggered: root.openSettings() }
+            Kirigami.Action { id: settingsAction; text: i18n("Settings"); icon.name: "configure"; checkable: true; checked: root.settingsOpen; shortcut: StandardKey.Preferences; onTriggered: root.openSettings() }
         ]
     }
 
@@ -693,6 +703,7 @@ Kirigami.ApplicationWindow {
                     const here = root.current
                     root.current = ""
                     root.current = here
+                    settingsAction.checked = Qt.binding(() => root.settingsOpen)
                 }
             },
             Kirigami.Action {
