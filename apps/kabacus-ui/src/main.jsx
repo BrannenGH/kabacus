@@ -55,7 +55,6 @@ export function App({ auth, book, onFileAction }) {
   const [selectedRow,setSelectedRow]=useState(book?.state?.selected||"");
   const [chooser, setChooser] = useState(false);
   const [bookMenu, setBookMenu] = useState(false);
-  const [notice, setNotice] = useState("");
   const controller = useRef();
   const [phoneSearch, setPhoneSearch] = useState(false);
   const [registerQuery, setRegisterQuery] = useState("");
@@ -148,9 +147,7 @@ export function App({ auth, book, onFileAction }) {
     };
     window.addEventListener("keydown", keys); return () => window.removeEventListener("keydown", keys);
   }, [data, error]);
-  const saved = (result) => {
-    const revision = result?.head || result?.written?.head;
-    setNotice(revision ? t("Saved as revision %1", revision) : "");
+  const saved = () => {
     refresh();
   };
   useEffect(() => {
@@ -196,10 +193,10 @@ export function App({ auth, book, onFileAction }) {
     <div className="shell">
       {phone && <header className="phone-appbar">
         {registerOpen || ["Loans", "People", "Reports", "Activity", "Settings"].includes(page)
-          ? <><button className="quiet" aria-label={t("Back")} onClick={() => history.back()}>‹</button><strong>{registerOpen ? name(data?.accounts.find(a => a.account === openedAccount) || { account: openedAccount }) : t(pageLabels[page])}</strong></>
-          : <button className="quiet phone-books-name" onClick={() => setBookMenu(true)}>{book?.name || "Kabacus"} ⌄</button>}
-        <button className="quiet" aria-label={t("Search")} onClick={() => { if (page !== "Register") navigate("Register"); setPhoneSearch(!phoneSearch); }}>⌕</button>
-        <details className="phone-overflow"><summary aria-label={t("More")}>⋮</summary><div>
+          ? <><button className="quiet" aria-label={t("Back")} onClick={() => history.back()}><Icon name="Back" /></button><strong>{registerOpen ? name(data?.accounts.find(a => a.account === openedAccount) || { account: openedAccount }) : t(pageLabels[page])}</strong></>
+          : <button className="quiet phone-books-name" aria-haspopup="dialog" onClick={() => setBookMenu(true)}><span>{book?.name || "Kabacus"}</span><Icon name="Chevron" /></button>}
+        <button className="quiet" aria-label={t("Search")} onClick={() => { if (page !== "Register") navigate("Register"); setPhoneSearch(!phoneSearch); }}><Icon name="Search" /></button>
+        <details className="phone-overflow"><summary aria-label={t("More")}><Icon name="Overflow" /></summary><div>
           <button className="quiet" data-action="refresh" onClick={refresh}>{t("Refresh")}</button>
           {registerOpen && <button className="quiet" onClick={() => setOperationForm({kind: "reconcile", account: openedAccount})}>{t("Reconcile…")}</button>}
           <button className="quiet" onClick={() => setBookMenu(true)}>{t("Books")}</button>
@@ -224,10 +221,7 @@ export function App({ auth, book, onFileAction }) {
               aria-label={t(pageLabels[item])}
               className={page === item ? "active" : ""}
               aria-current={page === item ? "page" : undefined}
-              onClick={() => {
-                go(item);
-                setNotice("");
-              }}
+              onClick={() => go(item)}
             >
               <Icon name={item} />
               {t(pageLabels[item])}<Key>{window.__TAURI_INTERNALS__?`Ctrl+${i+1}`:`G ${i+1}`}</Key>
@@ -271,9 +265,6 @@ export function App({ auth, book, onFileAction }) {
                 </button>
               )}
             </div>
-          )}
-          {notice && (
-            <div className="save-toast" role="status">{notice}<button className="quiet" onClick={() => go("Activity")}>{t("View")}</button></div>
           )}
           {phone && page === "More" && <section className="phone-more">
             {["Loans", "People", "Reports", "Activity", "Settings"].map(item => <button key={item} data-destination={item} className={item === "Settings" ? "quiet settings-action" : "quiet"} onClick={() => go(item)}><Icon name={item} />{t(pageLabels[item])}<span aria-hidden="true">›</span></button>)}

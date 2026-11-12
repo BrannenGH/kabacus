@@ -421,17 +421,6 @@ msgstr "ਲੋਕ"
 msgid "Reports"
 msgstr "ਰਿਪੋਰਟਾਂ"
 
-#: crates/kabacus-kde/qml/Main.qml
-#, kde-format
-msgctxt "%1 is the revision number"
-msgid "Saved as revision %1"
-msgstr "ਸੋਧ %1 ਵਜੋਂ ਸੰਭਾਲਿਆ"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "View"
-msgstr "ਵੇਖੋ"
-
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
@@ -2496,10 +2485,18 @@ msgstr "ਰਾਖਵਾਂ"
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "ਰਾਖਵੀਂ ਰਕਮ ਬਾਅਦ ਲਈ ਪੈਸੇ ਰੱਖਦੀ ਹੈ, ਜਿਵੇਂ ਜਾਇਦਾਦ ਟੈਕਸ ਜਾਂ ਕਾਰ ਦੀ ਮੁਰੰਮਤ। ਪੈਸੇ ਤੁਹਾਡੇ ਬੈਂਕ ਖਾਤੇ ਵਿੱਚ ਰਹਿੰਦੇ ਹਨ।"
 
-#: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Saved as revision %1"
-msgstr "ਸੋਧ %1 ਵਜੋਂ ਸੰਭਾਲਿਆ"
+#~ msgctxt "%1 is the revision number"
+#~ msgid "Saved as revision %1"
+#~ msgstr "ਸੋਧ %1 ਵਜੋਂ ਸੰਭਾਲਿਆ"
+
+#, kde-format
+#~ msgid "View"
+#~ msgstr "ਵੇਖੋ"
+
+#, kde-format
+#~ msgid "Saved as revision %1"
+#~ msgstr "ਸੋਧ %1 ਵਜੋਂ ਸੰਭਾਲਿਆ"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"

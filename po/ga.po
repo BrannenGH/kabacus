@@ -424,17 +424,6 @@ msgstr "Daoine"
 msgid "Reports"
 msgstr "Tuairiscí"
 
-#: crates/kabacus-kde/qml/Main.qml
-#, kde-format
-msgctxt "%1 is the revision number"
-msgid "Saved as revision %1"
-msgstr "Sábháilte mar leasú %1"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "View"
-msgstr "Féach"
-
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
@@ -2517,10 +2506,18 @@ msgstr "Curtha in áirithe"
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Coinníonn cúlchistí airgead don todhchaí, mar cháin mhaoine nó deisiúcháin cairr. Fanann sé i do chuntas bainc."
 
-#: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Saved as revision %1"
-msgstr "Sábháilte mar leasú %1"
+#~ msgctxt "%1 is the revision number"
+#~ msgid "Saved as revision %1"
+#~ msgstr "Sábháilte mar leasú %1"
+
+#, kde-format
+#~ msgid "View"
+#~ msgstr "Féach"
+
+#, kde-format
+#~ msgid "Saved as revision %1"
+#~ msgstr "Sábháilte mar leasú %1"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"

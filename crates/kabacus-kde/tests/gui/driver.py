@@ -292,7 +292,7 @@ def save():
         press(review)
         wait_for("the review page", lambda: label_starting("Review before saving") or find(app(), "Save", pyatspi.ROLE_PUSH_BUTTON), 90)
     press(wait_for("the Save button", lambda: find(app(), "Save", pyatspi.ROLE_PUSH_BUTTON)))
-    wait_for("the saved notification", lambda: label_starting("Saved as revision"), 90)
+    wait_for("the form to close after saving", lambda: find(app(), "Save", pyatspi.ROLE_PUSH_BUTTON) is None, 90)
 
 
 def open_row(account, payee, date):

@@ -421,17 +421,6 @@ msgstr "ആളുകൾ"
 msgid "Reports"
 msgstr "റിപ്പോർട്ടുകൾ"
 
-#: crates/kabacus-kde/qml/Main.qml
-#, kde-format
-msgctxt "%1 is the revision number"
-msgid "Saved as revision %1"
-msgstr "പതിപ്പ് %1 ആയി സംരക്ഷിച്ചു"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "View"
-msgstr "കാണുക"
-
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
@@ -2496,10 +2485,18 @@ msgstr "മാറ്റിവച്ചത്"
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "കരുതൽ തുകകൾ വസ്തുനികുതി അല്ലെങ്കിൽ കാർ അറ്റകുറ്റപ്പണി പോലുള്ള പിന്നീടുള്ള ചെലവുകൾക്കായി പണം മാറ്റിവയ്ക്കുന്നു. പണം നിങ്ങളുടെ ബാങ്ക് അക്കൗണ്ടിൽ തുടരും."
 
-#: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Saved as revision %1"
-msgstr "പതിപ്പ് %1 ആയി സംരക്ഷിച്ചു"
+#~ msgctxt "%1 is the revision number"
+#~ msgid "Saved as revision %1"
+#~ msgstr "പതിപ്പ് %1 ആയി സംരക്ഷിച്ചു"
+
+#, kde-format
+#~ msgid "View"
+#~ msgstr "കാണുക"
+
+#, kde-format
+#~ msgid "Saved as revision %1"
+#~ msgstr "പതിപ്പ് %1 ആയി സംരക്ഷിച്ചു"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"
