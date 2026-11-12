@@ -4,6 +4,7 @@ import React from "react";
 import { t } from "./i18n";
 import { OverviewDetails } from "./overview-details";
 import { Amount } from "./amount";
+import { Icon } from "./navigation";
 const nonzero = (a) => a && !/^[-+]?0(?:\.0+)?$/.test(a.exact);
 export function Overview({ data, api, onAccount, onReserve, onCredit, onFix }) {
   const cash = data.cash;
@@ -17,7 +18,7 @@ export function Overview({ data, api, onAccount, onReserve, onCredit, onFix }) {
       <div className="cash-label">
         <h2 id="spendable-heading">{t("Available to spend")}</h2>
         <details className="info-button">
-          <summary aria-label={t("About Cash on Hand")}>ⓘ</summary>
+          <summary aria-label={t("About Cash on Hand")}><Icon name="Info" /></summary>
           <p>{t("Free money you can spend right now, after reserves and card reserves.")}</p>
         </details>
       </div>
@@ -32,7 +33,7 @@ export function Overview({ data, api, onAccount, onReserve, onCredit, onFix }) {
           ["Available to spend", cash.cash_on_hand],
         ].map(([label, value], i) => <div key={label} className={i === 3 ? "total-line" : ""}>
           <dt>{t(label)}{i === 0 && <details className="info-button">
-            <summary aria-label={t("About Money on Hand")}>ⓘ</summary>
+            <summary aria-label={t("About Money on Hand")}><Icon name="Info" /></summary>
             <p>{t("Everything in your bank accounts, reserves and card reserves included, plus what people owe you. Cash on Hand is what's left once reserves, card reserves and what you're owed are set apart.")}</p>
           </details>}</dt>
           <dd>{i === 1 || i === 2 ? "− " : ""}<Amount value={value} /></dd>

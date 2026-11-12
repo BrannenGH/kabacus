@@ -20,10 +20,15 @@ const paths = {
   Search: "M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15M16 16l5 5",
   Chevron: "M6 9l6 6 6-6",
   Back: "M15 5l-7 7 7 7",
+  Forward: "M9 5l7 7-7 7",
+  Close: "M6 6l12 12M18 6L6 18",
+  Info: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M12 11v5M12 7.5v.01",
   Overflow: "M12 5.5v.01M12 12v.01M12 18.5v.01",
   Add: "M12 4v16M4 12h16", Refresh: "M20 7v5h-5M4 17v-5h5M5 8a8 8 0 0 1 13-3l2 2M4 17l2 2a8 8 0 0 0 13-3",
 };
-export function Icon({ name }) { return <svg className="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name] || paths.Register} /></svg>; }
+// Back and Forward point the other way in a right-to-left language.
+const directional = new Set(["Back", "Forward"]);
+export function Icon({ name }) { return <svg className={directional.has(name) ? "line-icon directional" : "line-icon"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name] || paths.Register} /></svg>; }
 export function Key({ children }) { return <kbd>{children}</kbd>; }
 // A modal sheet: its title, a close button, and Back or Esc to close it.
 function Sheet({ id, className, title, close, onClose, onKeyDown, children }) {

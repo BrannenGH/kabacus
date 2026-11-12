@@ -193,7 +193,7 @@ export function App({ auth, book, onFileAction }) {
       {!phone && <>
       <aside>
         <button className="brand quiet" aria-haspopup="menu" aria-expanded={bookMenu} onClick={() => setBookMenu(!bookMenu)}>
-          <img className="brand-icon" src={icon} alt="" /><span>{book?.name || "Kabacus"}<small>{book?.filename || location.host}</small></span><span aria-hidden="true">⌄</span>
+          <img className="brand-icon" src={icon} alt="" /><span>{book?.name || "Kabacus"}<small>{book?.filename || location.host}</small></span><Icon name="Chevron" />
         </button>
         {bookMenu && <div className="book-menu" role="menu">{[
           ["new-window", "New Window", "Ctrl+Shift+N"], ["new", "New Books…", ""], ["open", "Open Books…", "Ctrl+O"], ["recent", "Open Recent", ""], ["save-copy", "Save a Copy As…", "Ctrl+Shift+S"], ["close", "Close Window", "Ctrl+Shift+W"], ["connect", "Connect to a Server…", ""], ["quit", "Quit", "Ctrl+Q"]
@@ -222,7 +222,7 @@ export function App({ auth, book, onFileAction }) {
         </div>
       </aside></>}
       <div className="workspace">
-        <main>
+        <main aria-busy={loading || undefined}>
           <div className="page-heading">
             <div>
 
@@ -253,7 +253,7 @@ export function App({ auth, book, onFileAction }) {
             </div>
           )}
           {phone && page === "More" && <section className="phone-more">
-            {["Loans", "People", "Reports", "Activity", "Settings"].map(item => <button key={item} data-destination={item} className={item === "Settings" ? "quiet settings-action" : "quiet"} onClick={() => go(item)}><Icon name={item} />{t(pageLabels[item])}<span aria-hidden="true">›</span></button>)}
+            {["Loans", "People", "Reports", "Activity", "Settings"].map(item => <button key={item} data-destination={item} className={item === "Settings" ? "quiet settings-action" : "quiet"} onClick={() => go(item)}><Icon name={item} />{t(pageLabels[item])}<Icon name="Forward" /></button>)}
             <h2>{t("Books")}</h2><div className="location"><strong>{book?.name || "Kabacus"}</strong><small>{book?.local ? t("On this computer") : location.host} · {book?.location || auth.username || ""}</small></div>
             <button className="quiet" onClick={() => setBookMenu(true)}>{t("Switch Books…")}</button>
             <button className="quiet" onClick={() => onFileAction?.("connect")}>{t("Connect to a Server…")}</button>
@@ -266,7 +266,8 @@ export function App({ auth, book, onFileAction }) {
             />
           )}
           {!data ? (
-            <Empty>{loading ? t("Loading…") : t("Refresh")}</Empty>
+            // Without books there is nothing to show; an error says why above.
+            !error && <Empty>{t("Loading…")}</Empty>
           ) : (
             <>
               {(!phone || page !== "Overview") && data.cash.warnings.map((warning, i) => (
@@ -962,7 +963,7 @@ function WriteDialog({
             onClick={() => phone && preview ? setPreview(null) : close()}
             disabled={busy}
           >
-            {phone ? t(preview ? "Edit" : "Cancel") : "✕"}
+            {phone ? t(preview ? "Edit" : "Cancel") : <Icon name="Close" />}
           </button>
         </div>
         {error && !blocked && (

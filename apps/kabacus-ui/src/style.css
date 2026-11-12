@@ -18,6 +18,12 @@
   --surface: #fff;
   --accent: #21624e;
   --negative: #b03328;
+  /* Status badges: neutral, and one that needs attention. */
+  --badge-bg: #eef3ef;
+  --badge-border: #e3ebe5;
+  --badge-fg: #4f6457;
+  --attention-bg: #fef1e4;
+  --attention-fg: #a34d00;
 }
 * {
   box-sizing: border-box;
@@ -322,17 +328,17 @@ small {
   margin: 4px 0 0;
 }
 .badge {
-  background: #eef3ef;
-  border: 1px solid #e3ebe5;
-  color: #4f6457;
+  background: var(--badge-bg);
+  border: 1px solid var(--badge-border);
+  color: var(--badge-fg);
   border-radius: 5px;
   font-size: 12px;
   padding: 4px 8px;
   white-space: nowrap;
 }
 .badge.attention {
-  color: #a34d00;
-  background: #fef1e4;
+  color: var(--attention-fg);
+  background: var(--attention-bg);
 }
 .home {
   padding: 22px 24px;
@@ -520,7 +526,7 @@ select {
   place-items: center;
   width: 32px;
   height: 32px;
-  background: #eef3ef;
+  background: var(--badge-bg);
   border-radius: 50%;
   color: var(--accent);
   font-size: 12px;
@@ -807,11 +813,15 @@ dialog .banner {
   .metric.primary .amount {
     color: #c0e9c9;
   }
-  .badge,
+  :root {
+    --badge-bg: #304235;
+    --badge-border: #38533f;
+    --badge-fg: #b5cbbb;
+  }
   .history-number {
-    background: #304235;
-    border-color: #38533f;
-    color: #b5cbbb;
+    background: var(--badge-bg);
+    border-color: var(--badge-border);
+    color: var(--badge-fg);
   }
   th,
   .preview pre {
@@ -950,6 +960,7 @@ h2.subheading { font-size: 13px; letter-spacing: normal; }
 button { border-radius: 8px; }
 button .line-icon { margin-inline-end: 5px; vertical-align: middle; }
 .line-icon { width: 19px; height: 19px; flex-shrink: 0; }
+[dir="rtl"] .line-icon.directional { transform: scaleX(-1); }
 kbd { font: 12px Inter,sans-serif; opacity: .9; white-space: nowrap; margin-inline-start: auto; }
 button>kbd { padding-inline-start: 6px; }
 aside { width: 240px; background: #edf1eb; padding: 22px 12px 12px; }

@@ -1707,7 +1707,7 @@ for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 
     test.describe(`accessibility at ${viewport.width}px ${colorScheme}`, () => {
       test.use({ viewport, colorScheme });
       const phone = viewport.width < 600;
-      test("every page passes the WCAG 2.2 rule engine and keeps text at least 12px", async ({ page }) => {
+      test("every page passes the WCAG 2.2 rule engine, keeps text at least 12px and draws icons as SVG", async ({ page }) => {
         await setup(page);
         const findings = {};
         for (const destination of everyPage) {
@@ -1720,7 +1720,9 @@ for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 
               .filter(el => [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()))
               .filter(el => el.checkVisibility() && parseFloat(getComputedStyle(el).fontSize) < 12)
               .map(el => `${el.tagName.toLowerCase()}.${el.className} "${el.textContent.trim().slice(0, 20)}" is ${getComputedStyle(el).fontSize}`);
-            return [...violations, ...small];
+            // Icons are drawn as SVG, not as text characters a screen reader reads out.
+            const glyphs = /[✕ⓘ⌄›]/.test(document.body.innerText) ? ["a text glyph is used as an icon"] : [];
+            return [...violations, ...small, ...glyphs];
           });
           if (found.length) findings[destination] = found;
         }
@@ -1794,4 +1796,16 @@ test.describe("phone cleared marks", () => {
     await page.getByRole("button", { name: "All transactions", exact: true }).click();
     await expect(page.getByRole("button", { name: /^Cleared Maple Market/ })).toBeVisible();
   });
+});
+test("the page says it is busy while books load and shows no stray label after a failure", async ({ page }) => {
+  let release;
+  const held = new Promise(resolve => { release = resolve; });
+  await setup(page);
+  await page.route("**/cash-on-hand?**", async route => { await held; await route.fulfill({ status: 503, json: { message: "Books are temporarily unavailable" } }); });
+  await page.reload();
+  await expect(page.locator("main")).toHaveAttribute("aria-busy", "true");
+  release();
+  await expect(page.getByRole("alert").first()).toContainText("Books are temporarily unavailable");
+  await expect(page.locator("main")).not.toHaveAttribute("aria-busy", "true");
+  await expect(page.locator("main p.empty")).toHaveCount(0);
 });
