@@ -6,18 +6,33 @@ import os
 from pathlib import Path
 
 root = Path(__file__).resolve().parent.parent
-# bencium-design keeps each skill under <plugin>/skills/<name>.
+# bencium-design keeps each skill under <plugin>/skills/<name>. Only the
+# UI skills are taken from the larger general collections.
 vendors = {
     root / ".agents/vendor/claude-skills/skills": "**/SKILL.md",
     root / ".agents/vendor/ponytail/skills": "**/SKILL.md",
     root / ".agents/vendor/bencium-design": "*/skills/*/SKILL.md",
+    root / ".agents/vendor/accesslint/plugins/accesslint/skills": "*/SKILL.md",
+    root / ".agents/vendor/ui-ux-pro-max/.claude/skills": "ui-ux-pro-max/SKILL.md",
+    root / ".agents/vendor/anthropic-skills/skills": "frontend-design/SKILL.md",
+    root / ".agents/vendor/vercel-agent-skills/skills": tuple(
+        f"{name}/SKILL.md"
+        for name in (
+            "web-design-guidelines",
+            "react-best-practices",
+            "composition-patterns",
+            "react-native-skills",
+        )
+    ),
 }
 
 sources = {}
-for vendor, pattern in vendors.items():
+for vendor, patterns in vendors.items():
     if not vendor.is_dir():
         raise SystemExit("Run git submodule update --init --recursive first.")
-    for source in sorted(vendor.glob(pattern)):
+    if isinstance(patterns, str):
+        patterns = (patterns,)
+    for source in sorted(s for pattern in patterns for s in vendor.glob(pattern)):
         name = source.parent.name
         if name in sources:
             raise SystemExit(f"Duplicate skill name: {name}")
