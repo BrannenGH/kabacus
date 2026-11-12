@@ -96,14 +96,14 @@ aside {
   height: 35px;
 }
 .edition {
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 3px;
   color: var(--muted);
   padding-left: 46px;
   margin-top: -10px;
 }
 .nav-label {
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 1.8px;
   font-weight: 650;
   color: #7c8d85;
@@ -141,7 +141,7 @@ nav button.active {
   padding: 20px 10px 0;
 }
 .sidebar-bottom p {
-  font-size: 10px;
+  font-size: 12px;
 }
 .status-dot {
   display: inline-block;
@@ -180,7 +180,7 @@ header strong {
   align-items: center;
 }
 .revision {
-  font-size: 11px;
+  font-size: 12px;
 }
 header button {
   font-size: 12px;
@@ -199,7 +199,7 @@ main {
   margin-bottom: 30px;
 }
 .eyebrow {
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 1.7px;
   font-weight: 700;
   color: var(--muted);
@@ -232,7 +232,7 @@ h3 {
   margin: 0;
 }
 small {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
   overflow-wrap: anywhere;
 }
@@ -263,7 +263,7 @@ small {
   margin-bottom: 15px;
 }
 .metric small {
-  font-size: 10px;
+  font-size: 12px;
 }
 .metric.primary {
   background: #e7f0e9;
@@ -297,16 +297,16 @@ small {
   border-bottom: 1px solid var(--border);
 }
 .panel-heading p {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
   margin: 4px 0 0;
 }
 .badge {
   background: #eef3ef;
   border: 1px solid #e3ebe5;
-  color: #63786b;
+  color: #4f6457;
   border-radius: 5px;
-  font-size: 10px;
+  font-size: 12px;
   padding: 4px 8px;
   white-space: nowrap;
 }
@@ -345,7 +345,7 @@ dl {
   margin: 20px 0 0;
 }
 dt {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
   margin-bottom: 6px;
 }
@@ -389,7 +389,7 @@ dd {
   padding: 17px 24px;
 }
 .panel-footer button {
-  font-size: 11px;
+  font-size: 12px;
 }
 .empty {
   padding: 25px;
@@ -409,7 +409,7 @@ th {
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 600;
   background: #fafcfb;
   padding: 12px 24px;
@@ -437,7 +437,7 @@ td strong {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  font-size: 11px;
+  font-size: 12px;
   margin-bottom: 4px;
 }
 .posting > span:first-child {
@@ -448,7 +448,7 @@ td strong {
   font-size: 12px;
 }
 footer {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
   display: flex;
   justify-content: space-between;
@@ -592,7 +592,7 @@ dialog .banner {
 }
 .preview .list-row {
   padding: 15px 0;
-  font-size: 11px;
+  font-size: 12px;
 }
 @media (--desktop) {
   main {
@@ -650,7 +650,7 @@ dialog .banner {
     gap: 0;
   }
   nav button {
-    font-size: 11px;
+    font-size: 12px;
     padding: 8px 10px;
   }
   nav button span {
@@ -687,7 +687,7 @@ dialog .banner {
   }
   .page-heading button {
     padding: 9px;
-    font-size: 11px;
+    font-size: 12px;
   }
   .metrics {
     gap: 10px;
@@ -926,21 +926,22 @@ aside {
 h1,h2,.brand { font-family: inherit; }
 h1 { font-size: 30px; line-height: 1.25; margin: 0; }
 h2 { font-size: 21px; font-weight: 600; }
+h2.subheading { font-size: 13px; letter-spacing: normal; }
 button { border-radius: 8px; }
 button .line-icon { margin-inline-end: 5px; vertical-align: middle; }
 .line-icon { width: 19px; height: 19px; flex-shrink: 0; }
-kbd { font: 10px Inter,sans-serif; opacity: .65; white-space: nowrap; margin-inline-start: auto; }
+kbd { font: 12px Inter,sans-serif; opacity: .9; white-space: nowrap; margin-inline-start: auto; }
 button>kbd { padding-inline-start: 6px; }
 aside { width: 240px; background: #edf1eb; padding: 22px 12px 12px; }
 .brand { width: 100%; font-size: 18px; text-align: start; flex-wrap: nowrap; padding: 6px; }
-.brand small { display: block; font: 10px Inter,sans-serif; color: var(--muted); margin-top: 3px; }
+.brand small { display: block; font: 12px Inter,sans-serif; color: var(--muted); margin-top: 3px; }
 .nav-spacer { height: 24px; }
 nav { gap: 3px; }
 nav button { min-height: 35px; padding: 7px 10px; gap: 9px; color: var(--accent); }
 nav button.active { border: 1px solid #ad915b; background: #e1e6d5; box-shadow: inset 3px 0 #ad915b; color: var(--accent); }
 .sidebar-bottom { padding: 0; }
 .settings-action { width: 100%; display: flex; align-items: center; margin-bottom: 8px; gap: 8px; }
-.location { padding: 11px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; font-size: 11px; }
+.location { padding: 11px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; font-size: 12px; }
 .location small { display: block; color: var(--muted); margin-top: 3px; overflow-wrap: anywhere; }
 .workspace { margin-inline-start: 240px; width: calc(100% - 240px); }
 .workspace>main { padding: 0 28px 30px; }
@@ -955,14 +956,14 @@ nav button.active { border: 1px solid #ad915b; background: #e1e6d5; box-shadow: 
 .amount.negative { color: var(--negative); }
 .transactions-workspace { display: grid; grid-template-columns: minmax(200px,260px) minmax(0,1fr); align-items: start; gap: 16px; }
 .account-list { padding: 12px; }
-.account-list h3 { text-transform: uppercase; letter-spacing: .08em; font: 11px Inter,sans-serif; color: var(--muted); margin: 14px 8px 4px; }
+.account-list h2 { text-transform: uppercase; letter-spacing: .08em; font: 12px Inter,sans-serif; color: var(--muted); margin: 14px 8px 4px; }
 .account-list button { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 10px; font: 13px Inter,sans-serif; text-align: start; background: transparent; color: inherit; padding: 8px; }
 .account-list button.selected { background: #e1e6d5; font-weight: 600; }
 .account-list .account-child { padding-inline-start: 23px; }
 .card-actions { justify-content: flex-start; flex-wrap: wrap; }
 .row-actions { display: flex; gap: 4px; margin-top: 6px; }
 th,td { padding: 9px 12px; }
-th { background: #efead8; color: var(--muted); font-size: 11px; }
+th { background: #efead8; color: var(--muted); font-size: 12px; }
 .add-chooser { width: min(660px,calc(100vw - 40px)); padding: 24px; color: inherit; border: 1px solid var(--border); background: var(--surface); border-radius: 10px; }
 .add-chooser::backdrop { background: #263e3560; }
 .add-chooser>p { color: var(--muted); font-size: 12px; }
@@ -971,7 +972,7 @@ th { background: #efead8; color: var(--muted); font-size: 11px; }
 .choice-grid button:first-child { background: #e1e6d5; border-color: var(--accent); }
 .choice-grid button span { flex: 1; }
 .choice-grid strong { display: block; font-size: 13px; }
-.choice-grid small { display: block; font-size: 11px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+.choice-grid small { display: block; font-size: 12px; font-weight: 400; color: var(--muted); margin-top: 2px; }
 .book-menu { position: absolute; z-index: 100; top: 72px; inset-inline-start: 10px; width: 270px; padding: 7px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 6px 20px #263e3520; }
 .book-menu button { display: flex; width: 100%; background: transparent; color: inherit; font-size: 12px; font-weight: 400; text-align: start; padding: 8px; }
 .book-menu button:hover { background: #e1e6d5; }
@@ -1018,7 +1019,7 @@ th { background: #efead8; color: var(--muted); font-size: 11px; }
 .bookkeeping-dialog .dialog-heading { padding:0 0 18px;margin-bottom:20px;border-bottom:1px solid var(--border); }
 .editor-grid { display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start; }
 .editor-grid>div,.editor-grid>.preview { background:var(--surface);padding:22px;border:1px solid var(--border);border-radius:10px; }
-.balanced-badge { background:#e0f0e5;color:#1a7340;border-radius:12px;padding:4px 10px;display:inline-block;font-size:10px; }
+.balanced-badge { background:#e0f0e5;color:#1a7340;border-radius:12px;padding:4px 10px;display:inline-block;font-size:12px; }
 .conflict-panel { border:1px solid #ad915b;padding:20px;border-radius:10px;background:var(--surface); }
 .conflict-panel button { margin:5px; }
 @media(prefers-color-scheme:dark) { .bookkeeping-dialog[open]{background:#15271f}.cash-summary .total-line{background:color-mix(in srgb,var(--accent) 8%,var(--surface))} }
@@ -1103,7 +1104,7 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
   .transactions-workspace { display:block; }
   .account-list { padding:8px; }
   .account-list button { font-size:14px; min-height:48px; margin-bottom:4px; }
-  .account-list h3 { font-size:12px; }
+  .account-list h2 { font-size:12px; }
   .phone-register { padding:0 12px 16px; }
   .phone-register h3 { font:600 12px Inter,sans-serif; color:var(--muted); padding:8px 0; }
   .register-row { display:flex; align-items:center; gap:12px; width:100%; min-height:64px; margin-bottom:8px; border:1px solid var(--border); border-radius:12px; background:var(--surface); text-align:start; }

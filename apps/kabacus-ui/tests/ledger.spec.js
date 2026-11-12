@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 const appVersion = process.env.KABACUS_VERSION || JSON.parse(readFileSync("package.json", "utf8")).version;
 const amount = (exact) => ({
   commodity: "USD",
@@ -1690,4 +1691,55 @@ test("a transaction row leads with its payee and the book status has no stray se
   await page.getByRole("navigation").getByRole("button", { name: "Transactions", exact: true }).click();
   const cell = page.locator("tbody tr").first().locator("td").nth(1);
   await expect(cell).toHaveText(/^Maple Market/);
+});
+
+const accessLint = createRequire(import.meta.url).resolve("@accesslint/core/iife");
+const everyPage = ["Overview", "Register", "Funds", "Cards", "Loans", "People", "Reports", "Activity", "Settings"];
+async function visit(page, destination, phone) {
+  if (phone && !["Overview", "Register", "Funds", "Cards"].includes(destination))
+    await page.locator('nav.phone-tabs [data-destination="More"]').click();
+  if (!phone && destination === "Settings") await page.locator(".settings-action").click();
+  else await page.locator(`[data-destination="${destination}"]:visible`).click();
+  await expect(page.locator("main h1")).toBeVisible();
+}
+for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
+  for (const colorScheme of ["light", "dark"]) {
+    test.describe(`accessibility at ${viewport.width}px ${colorScheme}`, () => {
+      test.use({ viewport, colorScheme });
+      const phone = viewport.width < 600;
+      test("every page passes the WCAG 2.2 rule engine and keeps text at least 12px", async ({ page }) => {
+        await setup(page);
+        const findings = {};
+        for (const destination of everyPage) {
+          await visit(page, destination, phone);
+          await page.addScriptTag({ path: accessLint });
+          const found = await page.evaluate(() => {
+            const violations = window.AccessLint.runAudit(document).violations
+              .map(v => `${v.ruleId} ${v.selector}: ${v.message}`);
+            const small = [...document.querySelectorAll("body *")]
+              .filter(el => [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()))
+              .filter(el => el.checkVisibility() && parseFloat(getComputedStyle(el).fontSize) < 12)
+              .map(el => `${el.tagName.toLowerCase()}.${el.className} "${el.textContent.trim().slice(0, 20)}" is ${getComputedStyle(el).fontSize}`);
+            return [...violations, ...small];
+          });
+          if (found.length) findings[destination] = found;
+        }
+        expect(findings).toEqual({});
+      });
+    });
+  }
+}
+test("a transaction row is selected from the keyboard as well as by pointer", async ({ page }) => {
+  await setup(page);
+  await page.getByRole("navigation").getByRole("button", { name: "Transactions", exact: true }).click();
+  const row = page.locator("tbody tr").first();
+  await expect(row).toHaveAttribute("aria-selected", "false");
+  await row.getByRole("button", { name: "Edit", exact: true }).focus();
+  await expect(row).toHaveAttribute("aria-selected", "true");
+});
+test("each change in Activity is one tab stop", async ({ page }) => {
+  await setup(page);
+  await page.locator('[data-destination="Activity"]').click();
+  const row = page.locator(".list-row").first();
+  await expect(row.getByRole("button")).toHaveCount(1);
 });

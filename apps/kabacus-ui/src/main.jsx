@@ -511,7 +511,7 @@ function Transactions({ transactions, onOperation, selected, onSelect, activity 
         </thead>
         <tbody>
           {transactions.map((tx) => (
-            <tr key={tx.id} aria-selected={selected===String(tx.id)} onClick={()=>onSelect?.(String(tx.id))} className={activity?.changed?.includes(tx.id)?"agent-changed":""} title={activity?.changed?.includes(tx.id)?activity.changed_by:undefined}>
+            <tr key={tx.id} aria-selected={selected===String(tx.id)} onClick={()=>onSelect?.(String(tx.id))} onFocus={()=>onSelect?.(String(tx.id))} className={activity?.changed?.includes(tx.id)?"agent-changed":""} title={activity?.changed?.includes(tx.id)?activity.changed_by:undefined}>
               <td className="date">{tx.date}</td>
               <td>
                 <strong>{tx.payee || "—"}</strong>
@@ -716,7 +716,7 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, initi
                       .includes(searchQuery.toLowerCase()),
                 )
                 .map((line, i) => (
-                  <tr key={`${line.id}-${i}`} aria-selected={selected===String(line.id)} onClick={()=>onSelect?.(String(line.id))} className={activity?.changed?.includes(line.id)?"agent-changed":""} title={activity?.changed?.includes(line.id)?activity.changed_by:undefined}>
+                  <tr key={`${line.id}-${i}`} aria-selected={selected===String(line.id)} onClick={()=>onSelect?.(String(line.id))} onFocus={()=>onSelect?.(String(line.id))} className={activity?.changed?.includes(line.id)?"agent-changed":""} title={activity?.changed?.includes(line.id)?activity.changed_by:undefined}>
                     <td>{line.date}</td>
                     <td>
                       {onOperation &&

@@ -49,7 +49,7 @@ export function AccountList({ data, selected, onSelect }) {
     {groups.map(([kind, label]) => {
       const accounts = data.accounts.filter((a) => (a.account.startsWith("equity:") ? "unclassified" : a.kind) === kind);
       if (!accounts.length) return null;
-      return <section key={kind}><h3>{t(label)}</h3>{accounts.map((a) => <React.Fragment key={a.account}>
+      return <section key={kind}><h2>{t(label)}</h2>{accounts.map((a) => <React.Fragment key={a.account}>
         <button className={selected === a.account ? "selected" : ""} onClick={() => onSelect(a.account)}><span>{a.display_name || a.account}</span><span className={!neutral(a) && (a.balance_inclusive || []).some((b) => b.exact.startsWith("-")) ? "amount negative" : "amount"}>{amount(a)}</span></button>
         {data.accounts.filter((c) => c.home === a.account && c.account !== a.account).map((c) => <button key={c.account} className={`account-child ${selected === c.account ? "selected" : ""}`} onClick={() => onSelect(c.account)}><span>{c.display_name || c.account}</span><span className="amount">{amount(c)}</span></button>)}
       </React.Fragment>)}</section>;
