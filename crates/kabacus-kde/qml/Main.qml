@@ -285,7 +285,6 @@ Kirigami.ApplicationWindow {
             root.saveFailed = null
             if (r.ok) {
                 while (root.pageStack.layers.depth > 1) root.pageStack.layers.pop()
-                root.showPassiveNotification(i18nc("%1 is the revision number", "Saved as revision %1", r.ok.head), "long", i18n("View"), function() { root.go("Activity", {selected: r.ok.head}) })
                 return
             }
             if (r.error.kind === "conflict") {

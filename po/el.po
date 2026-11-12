@@ -421,17 +421,6 @@ msgstr "Άτομα"
 msgid "Reports"
 msgstr "Αναφορές"
 
-#: crates/kabacus-kde/qml/Main.qml
-#, kde-format
-msgctxt "%1 is the revision number"
-msgid "Saved as revision %1"
-msgstr "Αποθηκεύτηκε ως αναθεώρηση %1"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "View"
-msgstr "Προβολή"
-
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
@@ -2496,10 +2485,18 @@ msgstr "Δεσμευμένα"
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Τα αποθεματικά κρατούν χρήματα για αργότερα, όπως για φόρο ακινήτων ή επισκευές αυτοκινήτου. Παραμένουν στον τραπεζικό σας λογαριασμό."
 
-#: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Saved as revision %1"
-msgstr "Αποθηκεύτηκε ως αναθεώρηση %1"
+#~ msgctxt "%1 is the revision number"
+#~ msgid "Saved as revision %1"
+#~ msgstr "Αποθηκεύτηκε ως αναθεώρηση %1"
+
+#, kde-format
+#~ msgid "View"
+#~ msgstr "Προβολή"
+
+#, kde-format
+#~ msgid "Saved as revision %1"
+#~ msgstr "Αποθηκεύτηκε ως αναθεώρηση %1"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"

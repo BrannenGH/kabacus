@@ -420,17 +420,6 @@ msgstr "Адамдар"
 msgid "Reports"
 msgstr "Есептер"
 
-#: crates/kabacus-kde/qml/Main.qml
-#, kde-format
-msgctxt "%1 is the revision number"
-msgid "Saved as revision %1"
-msgstr "%1 ревизиясы ретінде сақталды"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "View"
-msgstr "Көру"
-
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
@@ -2489,10 +2478,18 @@ msgstr "Бөлінген"
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Резервтер мүлік салығы не көлік жөндеу сияқты кейінгі шығындарға ақша сақтайды. Ақша банк шотыңызда қалады."
 
-#: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Saved as revision %1"
-msgstr "%1 ревизиясы ретінде сақталды"
+#~ msgctxt "%1 is the revision number"
+#~ msgid "Saved as revision %1"
+#~ msgstr "%1 ревизиясы ретінде сақталды"
+
+#, kde-format
+#~ msgid "View"
+#~ msgstr "Көру"
+
+#, kde-format
+#~ msgid "Saved as revision %1"
+#~ msgstr "%1 ревизиясы ретінде сақталды"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"

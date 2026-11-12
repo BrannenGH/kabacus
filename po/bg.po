@@ -421,17 +421,6 @@ msgstr "Хора"
 msgid "Reports"
 msgstr "Отчети"
 
-#: crates/kabacus-kde/qml/Main.qml
-#, kde-format
-msgctxt "%1 is the revision number"
-msgid "Saved as revision %1"
-msgstr "Запазено като ревизия %1"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "View"
-msgstr "Преглед"
-
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
@@ -2496,10 +2485,18 @@ msgstr "Заделено"
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Резервите пазят пари за по-късно, например за данък върху имота или ремонт на колата. Те остават в банковата ви сметка."
 
-#: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Saved as revision %1"
-msgstr "Запазено като ревизия %1"
+#~ msgctxt "%1 is the revision number"
+#~ msgid "Saved as revision %1"
+#~ msgstr "Запазено като ревизия %1"
+
+#, kde-format
+#~ msgid "View"
+#~ msgstr "Преглед"
+
+#, kde-format
+#~ msgid "Saved as revision %1"
+#~ msgstr "Запазено като ревизия %1"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"

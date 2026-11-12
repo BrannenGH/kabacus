@@ -421,17 +421,6 @@ msgstr "Személyek"
 msgid "Reports"
 msgstr "Jelentések"
 
-#: crates/kabacus-kde/qml/Main.qml
-#, kde-format
-msgctxt "%1 is the revision number"
-msgid "Saved as revision %1"
-msgstr "Mentve a(z) %1. változatként"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "View"
-msgstr "Megtekintés"
-
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
@@ -2496,10 +2485,18 @@ msgstr "Félretéve"
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "A tartalékok későbbre, például ingatlanadóra vagy autójavításra tesznek félre pénzt. Az összeg a bankszámláján marad."
 
-#: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Saved as revision %1"
-msgstr "Mentve a(z) %1. változatként"
+#~ msgctxt "%1 is the revision number"
+#~ msgid "Saved as revision %1"
+#~ msgstr "Mentve a(z) %1. változatként"
+
+#, kde-format
+#~ msgid "View"
+#~ msgstr "Megtekintés"
+
+#, kde-format
+#~ msgid "Saved as revision %1"
+#~ msgstr "Mentve a(z) %1. változatként"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"

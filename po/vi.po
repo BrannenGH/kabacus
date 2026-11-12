@@ -420,17 +420,6 @@ msgstr "Mọi người"
 msgid "Reports"
 msgstr "Báo cáo"
 
-#: crates/kabacus-kde/qml/Main.qml
-#, kde-format
-msgctxt "%1 is the revision number"
-msgid "Saved as revision %1"
-msgstr "Đã lưu thành bản sửa đổi %1"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "View"
-msgstr "Xem"
-
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
@@ -2489,10 +2478,18 @@ msgstr "Đã dự trữ"
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Khoản dự trữ giữ tiền để dùng sau, như thuế nhà đất hoặc sửa xe. Tiền vẫn nằm trong tài khoản ngân hàng của bạn."
 
-#: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Saved as revision %1"
-msgstr "Đã lưu thành bản sửa đổi %1"
+#~ msgctxt "%1 is the revision number"
+#~ msgid "Saved as revision %1"
+#~ msgstr "Đã lưu thành bản sửa đổi %1"
+
+#, kde-format
+#~ msgid "View"
+#~ msgstr "Xem"
+
+#, kde-format
+#~ msgid "Saved as revision %1"
+#~ msgstr "Đã lưu thành bản sửa đổi %1"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"

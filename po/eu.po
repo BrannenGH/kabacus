@@ -421,17 +421,6 @@ msgstr "Pertsonak"
 msgid "Reports"
 msgstr "Txostenak"
 
-#: crates/kabacus-kde/qml/Main.qml
-#, kde-format
-msgctxt "%1 is the revision number"
-msgid "Saved as revision %1"
-msgstr "%1 berrikuspen gisa gorde da"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "View"
-msgstr "Ikusi"
-
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
@@ -2496,10 +2485,18 @@ msgstr "Erreserbatuta"
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Erreserbek dirua gerorako gordetzen dute, adibidez etxebizitzaren zergak edo autoa konpontzeko. Zure banku-kontuan geratzen da."
 
-#: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Saved as revision %1"
-msgstr "%1 berrikuspen gisa gorde da"
+#~ msgctxt "%1 is the revision number"
+#~ msgid "Saved as revision %1"
+#~ msgstr "%1 berrikuspen gisa gorde da"
+
+#, kde-format
+#~ msgid "View"
+#~ msgstr "Ikusi"
+
+#, kde-format
+#~ msgid "Saved as revision %1"
+#~ msgstr "%1 berrikuspen gisa gorde da"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"

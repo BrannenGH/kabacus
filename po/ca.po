@@ -421,17 +421,6 @@ msgstr "Persones"
 msgid "Reports"
 msgstr "Informes"
 
-#: crates/kabacus-kde/qml/Main.qml
-#, kde-format
-msgctxt "%1 is the revision number"
-msgid "Saved as revision %1"
-msgstr "Desat com a revisió %1"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "View"
-msgstr "Mostra"
-
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
@@ -2496,10 +2485,18 @@ msgstr "Reservat"
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Les reserves guarden diners per més endavant, com els impostos sobre l’habitatge o les reparacions del cotxe. Es queden al vostre compte bancari."
 
-#: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Saved as revision %1"
-msgstr "Desat com a revisió %1"
+#~ msgctxt "%1 is the revision number"
+#~ msgid "Saved as revision %1"
+#~ msgstr "Desat com a revisió %1"
+
+#, kde-format
+#~ msgid "View"
+#~ msgstr "Mostra"
+
+#, kde-format
+#~ msgid "Saved as revision %1"
+#~ msgstr "Desat com a revisió %1"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"
