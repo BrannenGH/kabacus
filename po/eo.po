@@ -421,17 +421,6 @@ msgstr "Homoj"
 msgid "Reports"
 msgstr "Raportoj"
 
-#: crates/kabacus-kde/qml/Main.qml
-#, kde-format
-msgctxt "%1 is the revision number"
-msgid "Saved as revision %1"
-msgstr "Konservita kiel revizio %1"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "View"
-msgstr "Vidi"
-
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
@@ -2496,10 +2485,18 @@ msgstr "Rezervita"
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Rezervoj tenas monon por poste, kiel por domimposto aŭ aŭtoriparoj. Ĝi restas en via bankkonto."
 
-#: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Saved as revision %1"
-msgstr "Konservita kiel revizio %1"
+#~ msgctxt "%1 is the revision number"
+#~ msgid "Saved as revision %1"
+#~ msgstr "Konservita kiel revizio %1"
+
+#, kde-format
+#~ msgid "View"
+#~ msgstr "Vidi"
+
+#, kde-format
+#~ msgid "Saved as revision %1"
+#~ msgstr "Konservita kiel revizio %1"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"

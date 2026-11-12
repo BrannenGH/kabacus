@@ -1071,10 +1071,14 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
   .header-actions { display:none; }
   .phone-appbar { position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:8px; height:64px; padding:8px 16px; border-bottom:1px solid var(--border); background:var(--surface); }
   .phone-appbar strong { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .phone-appbar .phone-books-name { font-size:16px; margin-inline-end:auto; min-width:0; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; font-weight:600; }
-  .phone-appbar button { padding:8px; }
+  .phone-appbar .phone-books-name { display:flex; align-items:center; gap:4px; font-size:16px; margin-inline-end:auto; min-width:0; font-weight:600; }
+  .phone-books-name span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .phone-appbar button { display:grid; place-items:center; padding:8px; }
+  .phone-appbar .line-icon, .phone-overflow .line-icon { width:24px; height:24px; flex:none; }
+  .phone-overflow .line-icon { stroke-width:3; }
   .phone-search { padding:8px 16px; background:var(--surface); }
-  .phone-overflow summary { display:grid; place-items:center; padding:8px; width:48px; list-style:none; font-size:24px; }
+  .phone-overflow summary { display:grid; place-items:center; padding:8px; width:48px; list-style:none; }
+  .phone-overflow summary::-webkit-details-marker { display:none; }
   .phone-overflow>div { position:absolute; inset-inline-end:8px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px; display:grid; gap:8px; box-shadow:0 5px 20px #263e3520; }
   nav.phone-tabs { position:fixed; inset:auto 0 0; z-index:40; height:calc(var(--phone-tabs-height) + env(safe-area-inset-bottom)); padding:8px 8px calc(8px + env(safe-area-inset-bottom)); margin:0; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:0; overflow:visible; background:var(--surface); border-top:1px solid var(--border); }
   nav.phone-tabs button { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:4px 0; min-width:0; min-height:48px; background:transparent; color:var(--muted); font-size:12px; white-space:normal; }

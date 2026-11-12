@@ -421,17 +421,6 @@ msgstr "Одамон"
 msgid "Reports"
 msgstr "Ҳисоботҳо"
 
-#: crates/kabacus-kde/qml/Main.qml
-#, kde-format
-msgctxt "%1 is the revision number"
-msgid "Saved as revision %1"
-msgstr "Ҳамчун таҳрири %1 сабт шуд"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "View"
-msgstr "Дидан"
-
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
@@ -2496,10 +2485,18 @@ msgstr "Ҷудошуда"
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Захираҳо пулро барои баъд, масалан андози амвол ё таъмири мошин, нигоҳ медоранд. Пул дар ҳисоби бонкии шумо мемонад."
 
-#: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Saved as revision %1"
-msgstr "Ҳамчун таҳрири %1 сабт шуд"
+#~ msgctxt "%1 is the revision number"
+#~ msgid "Saved as revision %1"
+#~ msgstr "Ҳамчун таҳрири %1 сабт шуд"
+
+#, kde-format
+#~ msgid "View"
+#~ msgstr "Дидан"
+
+#, kde-format
+#~ msgid "Saved as revision %1"
+#~ msgstr "Ҳамчун таҳрири %1 сабт шуд"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"

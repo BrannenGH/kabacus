@@ -1146,9 +1146,7 @@ test.describe("phone layout", () => {
     await expect(form.getByText("What changes", { exact: true })).toBeVisible();
     await form.getByRole("button", { name: "Save", exact: true }).click();
     expect(writes.at(-1).body.dry_run).toBe(false);
-    const toast = await page.locator(".save-toast").boundingBox();
-    const tabs = await page.getByRole("navigation").boundingBox();
-    expect(toast.y + toast.height).toBeLessThanOrEqual(tabs.y);
+    await expect(page.locator(".save-toast")).toHaveCount(0);
   });
 });
 

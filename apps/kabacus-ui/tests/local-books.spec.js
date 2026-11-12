@@ -20,7 +20,8 @@ test('local books use the real engine, save a revision, reopen and download a po
  await page.getByLabel('Amount (USD)').fill('3200.00');
  await expect(page.getByText(/Balanced · checked against revision/)).toBeVisible();
  await page.keyboard.press('Control+Enter');
- await expect(page.getByRole('status').filter({hasText:'Saved as revision 3'})).toBeVisible();
+ await expect(page.getByRole('dialog')).toBeHidden();
+ await expect(page.getByRole('status').filter({hasText:'Saved as revision'})).toHaveCount(0);
  await page.getByRole('navigation').getByRole('button',{name:'Transactions',exact:true}).click();
  await expect(page.getByText('Cedar Design payroll',{exact:true})).toBeVisible();
  const id=await page.evaluate(()=>new Promise((resolve,reject)=>{const r=indexedDB.open('kabacus-local-books',1);r.onsuccess=()=>{const tx=r.result.transaction('books');const q=tx.objectStore('books').getAll();q.onsuccess=()=>resolve(q.result[0].id);q.onerror=()=>reject(q.error);};}));
@@ -62,7 +63,7 @@ test.describe('phone local books', () => {
   await page.getByRole('button',{name:'Review',exact:true}).tap();
   await expect(page.locator('.preview')).toContainText('USD2184.33');
   await page.getByRole('button',{name:'Save',exact:true}).tap();
-  await expect(page.locator('.save-toast')).toContainText('Saved as revision 3');
+  await expect(page.locator('.save-toast')).toHaveCount(0);
   await expect(page.locator('.cash-total')).toHaveText('$2,184.33');
   await page.reload();
   await expect(page.locator('.cash-total')).toHaveText('$2,184.33');

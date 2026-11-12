@@ -420,17 +420,6 @@ msgstr "聯絡人"
 msgid "Reports"
 msgstr "報表"
 
-#: crates/kabacus-kde/qml/Main.qml
-#, kde-format
-msgctxt "%1 is the revision number"
-msgid "Saved as revision %1"
-msgstr "已儲存為修訂 %1"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "View"
-msgstr "檢視"
-
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
@@ -2489,10 +2478,18 @@ msgstr "已預留"
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "準備金用於日後支付房屋稅或汽車維修等費用。資金仍保留在您的銀行帳戶中。"
 
-#: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Saved as revision %1"
-msgstr "已儲存為修訂 %1"
+#~ msgctxt "%1 is the revision number"
+#~ msgid "Saved as revision %1"
+#~ msgstr "已儲存為修訂 %1"
+
+#, kde-format
+#~ msgid "View"
+#~ msgstr "檢視"
+
+#, kde-format
+#~ msgid "Saved as revision %1"
+#~ msgstr "已儲存為修訂 %1"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"

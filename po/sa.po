@@ -421,17 +421,6 @@ msgstr "जनाः"
 msgid "Reports"
 msgstr "प्रतिवेदनानि"
 
-#: crates/kabacus-kde/qml/Main.qml
-#, kde-format
-msgctxt "%1 is the revision number"
-msgid "Saved as revision %1"
-msgstr "%1 संशोधनरूपेण रक्षितम्"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "View"
-msgstr "पश्य"
-
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
@@ -2496,10 +2485,18 @@ msgstr "आरक्षितम्"
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "आरक्षितधनं सम्पत्तिकराय वाहनसंस्काराय वा भाविव्ययाय तिष्ठति। धनं भवतः वित्तकोषखाते तिष्ठति।"
 
-#: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Saved as revision %1"
-msgstr "%1 संशोधनरूपेण रक्षितम्"
+#~ msgctxt "%1 is the revision number"
+#~ msgid "Saved as revision %1"
+#~ msgstr "%1 संशोधनरूपेण रक्षितम्"
+
+#, kde-format
+#~ msgid "View"
+#~ msgstr "पश्य"
+
+#, kde-format
+#~ msgid "Saved as revision %1"
+#~ msgstr "%1 संशोधनरूपेण रक्षितम्"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"

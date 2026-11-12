@@ -420,17 +420,6 @@ msgstr "사람"
 msgid "Reports"
 msgstr "보고서"
 
-#: crates/kabacus-kde/qml/Main.qml
-#, kde-format
-msgctxt "%1 is the revision number"
-msgid "Saved as revision %1"
-msgstr "리비전 %1로 저장됨"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "View"
-msgstr "보기"
-
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
@@ -2489,10 +2478,18 @@ msgstr "준비됨"
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "준비금은 재산세나 자동차 수리처럼 나중에 쓸 돈을 따로 마련합니다. 돈은 은행 계좌에 남아 있습니다."
 
-#: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Saved as revision %1"
-msgstr "리비전 %1로 저장됨"
+#~ msgctxt "%1 is the revision number"
+#~ msgid "Saved as revision %1"
+#~ msgstr "리비전 %1로 저장됨"
+
+#, kde-format
+#~ msgid "View"
+#~ msgstr "보기"
+
+#, kde-format
+#~ msgid "Saved as revision %1"
+#~ msgstr "리비전 %1로 저장됨"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"

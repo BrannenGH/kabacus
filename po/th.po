@@ -420,17 +420,6 @@ msgstr "บุคคล"
 msgid "Reports"
 msgstr "รายงาน"
 
-#: crates/kabacus-kde/qml/Main.qml
-#, kde-format
-msgctxt "%1 is the revision number"
-msgid "Saved as revision %1"
-msgstr "บันทึกเป็นรุ่นแก้ไข %1 แล้ว"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "View"
-msgstr "ดู"
-
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Settings"
@@ -2489,10 +2478,18 @@ msgstr "กันไว้แล้ว"
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "เงินสำรองเก็บไว้ใช้ภายหลัง เช่น ภาษีที่ดินหรือค่าซ่อมรถ เงินยังคงอยู่ในบัญชีธนาคารของคุณ"
 
-#: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Saved as revision %1"
-msgstr "บันทึกเป็นรุ่นแก้ไข %1 แล้ว"
+#~ msgctxt "%1 is the revision number"
+#~ msgid "Saved as revision %1"
+#~ msgstr "บันทึกเป็นรุ่นแก้ไข %1 แล้ว"
+
+#, kde-format
+#~ msgid "View"
+#~ msgstr "ดู"
+
+#, kde-format
+#~ msgid "Saved as revision %1"
+#~ msgstr "บันทึกเป็นรุ่นแก้ไข %1 แล้ว"
 
 #, kde-format
 #~ msgctxt "%1 is an amount"
