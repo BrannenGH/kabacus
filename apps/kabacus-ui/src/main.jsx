@@ -182,11 +182,13 @@ export function App({ auth, book, onFileAction }) {
           ? <><button className="quiet" aria-label={t("Back")} onClick={() => history.back()}><Icon name="Back" /></button><strong>{registerOpen ? name(data?.accounts.find(a => a.account === openedAccount) || { account: openedAccount }) : t(pageLabels[page])}</strong></>
           : <button className="quiet phone-books-name" aria-haspopup="dialog" onClick={() => setBookMenu(true)}><span>{book?.name || "Kabacus"}</span><Icon name="Chevron" /></button>}
         <button className="quiet" aria-label={t("Search")} onClick={() => { if (page !== "Register") navigate("Register"); setPhoneSearch(!phoneSearch); }}><Icon name="Search" /></button>
-        <details className="phone-overflow"><summary aria-label={t("More")}><Icon name="Overflow" /></summary><div>
+        {/* A native popover closes on Esc, a tap outside or a choice. */}
+        <button className="quiet overflow-button" aria-label={t("More")} popoverTarget="phone-overflow"><Icon name="Overflow" /></button>
+        <div id="phone-overflow" className="phone-overflow" popover="auto" onClick={(event) => { if (event.target.closest("button")) event.currentTarget.hidePopover(); }}>
           <button className="quiet" data-action="refresh" onClick={refresh}>{t("Refresh")}</button>
           {registerOpen && <button className="quiet" onClick={() => setOperationForm({kind: "reconcile", account: openedAccount})}>{t("Reconcile…")}</button>}
           <button className="quiet" onClick={() => setBookMenu(true)}>{t("Books")}</button>
-        </div></details>
+        </div>
       </header>}
       {phone && phoneSearch && <div className="phone-search"><input type="search" name="search" autoComplete="off" spellCheck={false} aria-label={t("Search")} placeholder={t("Search payee, memo, account")} value={registerQuery} onChange={e => setRegisterQuery(e.target.value)} autoFocus /></div>}
       {phone && bookMenu && <BooksSheet book={book} onClose={() => setBookMenu(false)} onAction={id => {setBookMenu(false); onFileAction?.(id);}} />}

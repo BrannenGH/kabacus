@@ -51,10 +51,15 @@ button {
   font-weight: 600;
   color: white;
   background: var(--accent);
-  transition: background 0.15s;
+  transition: filter 0.15s;
 }
 button:hover {
   filter: brightness(0.94);
+}
+/* A press shows at once, also on touch, where there is no hover. */
+button:active:not(:disabled) {
+  filter: brightness(0.86);
+  transition: none;
 }
 button:disabled {
   opacity: 0.5;
@@ -1099,12 +1104,12 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
   .phone-appbar .phone-books-name { display:flex; align-items:center; gap:4px; font-size:16px; margin-inline-end:auto; min-width:0; font-weight:600; }
   .phone-books-name span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .phone-appbar button { display:grid; place-items:center; padding:8px; }
-  .phone-appbar .line-icon, .phone-overflow .line-icon { width:24px; height:24px; flex:none; }
-  .phone-overflow .line-icon { stroke-width:3; }
+  .phone-appbar .line-icon { width:24px; height:24px; flex:none; }
+  .overflow-button .line-icon { stroke-width:3; }
   .phone-search { padding:8px 16px; background:var(--surface); }
-  .phone-overflow summary { display:grid; place-items:center; padding:8px; width:48px; list-style:none; }
-  .phone-overflow summary::-webkit-details-marker { display:none; }
-  .phone-overflow>div { position:absolute; inset-inline-end:8px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px; display:grid; gap:8px; box-shadow:0 5px 20px #263e3520; }
+  .overflow-button { width:48px; }
+  .phone-overflow { inset:auto; top:calc(64px + env(safe-area-inset-top)); inset-inline-end:8px; margin:0; color:inherit; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px; gap:8px; box-shadow:0 5px 20px #263e3520; }
+  .phone-overflow:popover-open { display:grid; }
   nav.phone-tabs { position:fixed; inset:auto 0 0; z-index:40; height:calc(var(--phone-tabs-height) + env(safe-area-inset-bottom)); padding:8px 8px calc(8px + env(safe-area-inset-bottom)); margin:0; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:0; overflow:visible; background:var(--surface); border-top:1px solid var(--border); }
   nav.phone-tabs button { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:4px 0; min-width:0; min-height:48px; background:transparent; color:var(--muted); font-size:12px; white-space:normal; }
   nav.phone-tabs button span { display:block; font:inherit; width:auto; height:auto; overflow-wrap:normal; text-align:center; }
@@ -1128,6 +1133,8 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
   .account-list button { font-size:14px; min-height:48px; margin-bottom:4px; }
   .account-list h2 { font-size:12px; }
   .phone-register { padding:0 12px 16px; }
+  /* Days scrolled out of view are not laid out until they come back. */
+  .phone-register section { content-visibility:auto; contain-intrinsic-size:auto 320px; }
   .phone-register h3 { font:600 12px Inter,sans-serif; color:var(--muted); padding:8px 0; }
   .register-row { display:flex; align-items:center; gap:12px; width:100%; min-height:64px; margin-bottom:8px; border:1px solid var(--border); border-radius:12px; background:var(--surface); text-align:start; }
   .register-row small { display:block; color:var(--muted); margin-top:4px; font-size:12px; }

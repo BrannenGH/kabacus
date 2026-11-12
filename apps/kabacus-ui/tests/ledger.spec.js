@@ -873,7 +873,7 @@ async function largeBalances(page) {
       },
     }),
   );
-  if (await page.locator(".phone-overflow").isVisible()) await page.locator(".phone-overflow summary").click();
+  if (await page.locator(".overflow-button").isVisible()) await page.locator(".overflow-button").click();
   await page.locator('[data-action="refresh"]:visible').click();
   await expect(page.locator(".cash-total .amount").first()).toHaveText(
     balance.formatted,
@@ -1498,7 +1498,7 @@ for (const phone of [false, true]) test.describe(`wallets on ${phone ? "phone" :
     await page.getByRole('navigation').getByRole('button',{name:'Transactions',exact:true}).click();
     if(phone) {
       await page.locator('.account-list button').filter({hasText:'Monero wallet'}).click();
-      await page.locator('.phone-overflow summary').click();
+      await page.locator('.overflow-button').click();
     } else await page.getByRole('combobox',{name:'Account',exact:true}).selectOption('assets:investments:monero');
     await page.getByRole('button',{name:'Reconcile…',exact:true}).click();
     await page.getByLabel('Amount',{exact:true}).fill('12.345678901234');
@@ -1831,5 +1831,38 @@ test.describe("typographic restraint", () => {
       return p.getBoundingClientRect().width / average;
     });
     expect(perLine).toBeLessThan(80);
+  });
+});
+test.describe("phone overflow menu", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+  test("closes after a choice, on Esc and on a tap outside", async ({ page }) => {
+    await setup(page);
+    const menu = page.locator("#phone-overflow");
+    const open = page.locator(".overflow-button");
+    await open.click();
+    await expect(menu).toBeVisible();
+    await menu.getByRole("button", { name: "Refresh", exact: true }).click();
+    await expect(menu).toBeHidden();
+    await open.click();
+    await page.keyboard.press("Escape");
+    await expect(menu).toBeHidden();
+    await open.click();
+    await page.locator(".cash-total").click();
+    await expect(menu).toBeHidden();
+  });
+});
+test.describe("touch feedback on a phone", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+  test("a pressed button darkens at once and days out of view skip layout", async ({ page }) => {
+    await setup(page);
+    const tab = page.locator('nav.phone-tabs [data-destination="Register"]');
+    await expect(tab).toHaveCSS("transition-property", "filter");
+    const box = await tab.boundingBox();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await expect(tab).toHaveCSS("filter", "brightness(0.86)");
+    await page.mouse.up();
+    await page.getByRole("button", { name: "All transactions", exact: true }).click();
+    await expect(page.locator(".phone-register section").first()).toHaveCSS("content-visibility", "auto");
   });
 });

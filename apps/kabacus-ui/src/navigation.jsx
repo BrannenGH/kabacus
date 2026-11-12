@@ -54,6 +54,8 @@ export function AddChooser({ commands, onChoose, onClose }) {
 export function AccountList({ data, selected, onSelect }) {
   const groups = [["money", "Bank & cash"], ["revolving-debt", "Credit"], ["term-liability", "Loans"], ["receivable", "People"], ["payable", "People"], ["expense", "Spending"], ["income", "Income"], ["non-liquid", "Investments"], ["unclassified", "Other"]];
   const neutral = account => account.kind === "income" || account.account.startsWith("equity:");
+  const children = new Map();
+  for (const c of data.accounts) if (c.home && c.home !== c.account) children.set(c.home, [...(children.get(c.home) || []), c]);
   const amount = (account) => (account.balance_inclusive || account.balances || []).map((b) => neutral(account) && b.exact.startsWith("-") ? b.formatted.replace(/^-/, "") : b.formatted).join(" / ");
   return <div className="account-list panel" aria-label={t("Accounts")}>
     <button className={!selected ? "selected quiet" : "quiet"} onClick={() => onSelect("")}>{t("All transactions")}</button>
@@ -62,7 +64,7 @@ export function AccountList({ data, selected, onSelect }) {
       if (!accounts.length) return null;
       return <section key={kind}><h2>{t(label)}</h2>{accounts.map((a) => <React.Fragment key={a.account}>
         <button className={selected === a.account ? "selected" : ""} onClick={() => onSelect(a.account)}><span>{a.display_name || a.account}</span><span className={!neutral(a) && (a.balance_inclusive || []).some((b) => b.exact.startsWith("-")) ? "amount negative" : "amount"}>{amount(a)}</span></button>
-        {data.accounts.filter((c) => c.home === a.account && c.account !== a.account).map((c) => <button key={c.account} className={`account-child ${selected === c.account ? "selected" : ""}`} onClick={() => onSelect(c.account)}><span>{c.display_name || c.account}</span><span className="amount">{amount(c)}</span></button>)}
+        {(children.get(a.account) || []).map((c) => <button key={c.account} className={`account-child ${selected === c.account ? "selected" : ""}`} onClick={() => onSelect(c.account)}><span>{c.display_name || c.account}</span><span className="amount">{amount(c)}</span></button>)}
       </React.Fragment>)}</section>;
     })}
   </div>;
