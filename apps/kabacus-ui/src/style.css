@@ -955,10 +955,12 @@ nav button.active { border: 1px solid #ad915b; background: #e1e6d5; box-shadow: 
 .amount.negative { color: var(--negative); }
 .transactions-workspace { display: grid; grid-template-columns: minmax(200px,260px) minmax(0,1fr); align-items: start; gap: 16px; }
 .account-list { padding: 12px; }
-.account-list h3 { text-transform: uppercase; letter-spacing: .08em; font: 10px Inter,sans-serif; color: var(--muted); margin: 14px 8px 4px; }
-.account-list button { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 10px; font: 12px Inter,sans-serif; text-align: start; background: transparent; color: inherit; padding: 8px; }
+.account-list h3 { text-transform: uppercase; letter-spacing: .08em; font: 11px Inter,sans-serif; color: var(--muted); margin: 14px 8px 4px; }
+.account-list button { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 10px; font: 13px Inter,sans-serif; text-align: start; background: transparent; color: inherit; padding: 8px; }
 .account-list button.selected { background: #e1e6d5; font-weight: 600; }
-.account-list .account-child { padding-inline-start: 23px; font-size: 11px; }
+.account-list .account-child { padding-inline-start: 23px; }
+.card-actions { justify-content: flex-start; flex-wrap: wrap; }
+.row-actions { display: flex; gap: 4px; margin-top: 6px; }
 th,td { padding: 9px 12px; }
 th { background: #efead8; color: var(--muted); font-size: 11px; }
 .add-chooser { width: min(660px,calc(100vw - 40px)); padding: 24px; color: inherit; border: 1px solid var(--border); background: var(--surface); border-radius: 10px; }
@@ -1100,7 +1102,7 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
   .phone-more h2 { margin-top:24px; }
   .transactions-workspace { display:block; }
   .account-list { padding:8px; }
-  .account-list button { font-size:14px; min-height:56px; margin-bottom:8px; }
+  .account-list button { font-size:14px; min-height:48px; margin-bottom:4px; }
   .account-list h3 { font-size:12px; }
   .phone-register { padding:0 12px 16px; }
   .phone-register h3 { font:600 12px Inter,sans-serif; color:var(--muted); padding:8px 0; }

@@ -1647,3 +1647,47 @@ test("on desktop a click browses account groups and typing searches them all", a
   await picker.getByRole("button", { name: "Groceries", exact: true }).click();
   await expect(form.locator('input[name="to"]')).toHaveValue("Groceries");
 });
+for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
+  test.describe(`design review at ${viewport.width}px`, () => {
+    test.use({ viewport, timezoneId: "UTC" });
+    const phone = viewport.width < 600;
+    test("credit offers reserve lines only when a card needs them", async ({ page }) => {
+      await setup(page);
+      await page.locator('[data-destination="Cards"]:visible').click();
+      await expect(page.getByRole("button", { name: "Record purchase", exact: true })).toBeVisible();
+      await expect(page.getByRole("button", { name: "Add all reserve lines", exact: true })).toHaveCount(0);
+      await page.route("**/cash-on-hand?**", route => route.fulfill({ json: {
+        ...cash, unreserved_count: 2, cards: cash.cards.map(card => ({ ...card, unreserved_count: 2 })),
+      } }));
+      await page.keyboard.press("r");
+      await expect(page.getByRole("button", { name: "Add all reserve lines", exact: true })).toBeVisible();
+    });
+    test("reserves name their bank account", async ({ page }) => {
+      await setup(page);
+      await page.locator('[data-destination="Funds"]:visible').click();
+      const row = page.locator(".list-row").filter({ hasText: "Travel" });
+      await expect(row.locator("small")).toHaveText("Checking");
+    });
+    test("activity shows when a change was made in local time", async ({ page }) => {
+      await setup(page);
+      if (phone) await page.locator('[data-destination="More"]').click();
+      await page.locator('[data-destination="Activity"]:visible').click();
+      await expect(page.getByText("Morgan Reed · 2026-10-23 12:00", { exact: true })).toBeVisible();
+    });
+    test("account list rows are legible", async ({ page }) => {
+      await setup(page);
+      await page.locator('[data-destination="Register"]:visible').click();
+      const sizes = await page.locator(".account-list button").evaluateAll(buttons =>
+        buttons.map(b => parseFloat(getComputedStyle(b).fontSize)));
+      expect(Math.min(...sizes)).toBeGreaterThanOrEqual(13);
+      expect(new Set(sizes).size).toBe(1);
+    });
+  });
+}
+test("a transaction row leads with its payee and the book status has no stray separator", async ({ page }) => {
+  await setup(page);
+  await expect(page.locator(".sidebar-bottom .location small")).toHaveText("All changes saved");
+  await page.getByRole("navigation").getByRole("button", { name: "Transactions", exact: true }).click();
+  const cell = page.locator("tbody tr").first().locator("td").nth(1);
+  await expect(cell).toHaveText(/^Maple Market/);
+});
