@@ -774,10 +774,9 @@ account expenses:dining   ; ynab-envelope:Dining
     for (i, size) in [DESKTOP, "390x844"].into_iter().enumerate() {
         let name = format!("cleared{i}");
         let socket = socket_path(&name);
-        let server = kabacus_testkit::spawn_server_with_journal(journal, |c| {
-            c.socket_path = socket.clone()
-        })
-        .await;
+        let server =
+            kabacus_testkit::spawn_server_with_journal(journal, |c| c.socket_path = socket.clone())
+                .await;
         let _app = launch_sized(&server.socket_path, &config_dir(&name), size);
         drive(&["cleared-mark", "Coffee Roasters", "Larkspur Bakery"]).await;
     }
