@@ -138,6 +138,13 @@ impl Chart {
         AccountName::new(self.reserve_template.replace("{card}", card.leaf()))
     }
 
+    /// The card whose reserve is `reserve`, if the chart has one.
+    pub fn card_for_reserve(&self, reserve: &AccountName) -> Option<&AccountName> {
+        self.of_kind(AccountKind::RevolvingDebt)
+            .map(|c| &c.account)
+            .find(|card| &self.reserve_for(card) == reserve)
+    }
+
     fn of_kind(&self, kind: AccountKind) -> impl Iterator<Item = &ClassifiedAccount> {
         self.accounts.iter().filter(move |c| c.kind == kind)
     }
@@ -261,7 +268,8 @@ impl Balances {
 /// write.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct Warning {
-    /// `negative-fund`, `negative-free-money`, `reserve-mismatch`,
+    /// `negative-fund`, `negative-free-money`, `negative-reserve`,
+    /// `reserve-mismatch`, `unreserved-unaccounted`,
     /// `unclassified`, `uncategorized` or `duplicate-display-name`.
     pub code: &'static str,
     pub message: String,
@@ -378,7 +386,8 @@ fn card_lines(
         .collect()
 }
 
-/// How far `fund` is overdrawn: zero unless its balance is negative.
+/// How far `fund` (a fund or card reserve) is overdrawn: zero unless its
+/// balance is negative.
 fn overdraft(balances: &Balances, fund: &AccountName) -> Money {
     let balance = balances.exclusive(fund).money;
     if balance.is_negative() {
@@ -389,18 +398,26 @@ fn overdraft(balances: &Balances, fund: &AccountName) -> Money {
 }
 
 /// A money account's free money: its own balance less what its overdrawn
-/// funds have taken from it. An overdrawn fund's spending was really paid
+/// funds and card reserves have taken from it. An overdrawn fund's
+/// spending, or a card payment past what its reserve held, was really paid
 /// out of free money, so that money can't be spent again, even though the
-/// fund carries the minus. Counting the fund as a negative allocation
+/// fund or reserve carries the minus. Counting it as a negative allocation
 /// instead would leave Cash on Hand too high by the overdraft.
 fn free_money(chart: &Chart, balances: &Balances, home: &AccountName) -> Amount {
-    balances.amount(balances.exclusive(home).money - overdrawn_in(chart, balances, home))
+    let overdrawn = overdrawn_in(chart, balances, home, AccountKind::PreAllocation)
+        + overdrawn_in(chart, balances, home, AccountKind::DebtReserve);
+    balances.amount(balances.exclusive(home).money - overdrawn)
 }
 
-/// How far the funds in `home` are overdrawn, together.
-fn overdrawn_in(chart: &Chart, balances: &Balances, home: &AccountName) -> Money {
+/// How far the accounts of `kind` in `home` are overdrawn, together.
+fn overdrawn_in(
+    chart: &Chart,
+    balances: &Balances,
+    home: &AccountName,
+    kind: AccountKind,
+) -> Money {
     chart
-        .of_kind(AccountKind::PreAllocation)
+        .of_kind(kind)
         .filter(|c| c.home.as_ref() == Some(home))
         .map(|c| overdraft(balances, &c.account))
         .sum()
@@ -440,6 +457,32 @@ fn warnings(chart: &Chart, balances: &Balances, cards: &[CardLine]) -> Vec<Warni
                 accounts: vec![home.to_string()],
             });
         }
+    }
+    for card in cards {
+        let overdrawn = card.reserve_balance.money.is_negative();
+        let in_credit = card.balance.money.is_positive();
+        if !overdrawn && !in_credit {
+            continue;
+        }
+        let mut parts = Vec::new();
+        if in_credit {
+            parts.push(format!("is in credit by {}", format_money(&card.balance)));
+        }
+        if overdrawn {
+            parts.push(format!(
+                "its reserve is overdrawn by {}",
+                format_money(&balances.amount(-card.reserve_balance.money.clone()))
+            ));
+        }
+        out.push(Warning {
+            code: "negative-reserve",
+            message: format!(
+                "{} {}; a payment may be missing the purchases it paid for",
+                card.display_name,
+                parts.join(" and ")
+            ),
+            accounts: vec![card.card.to_string(), card.reserve.to_string()],
+        });
     }
     for card in cards.iter().filter(|c| !c.difference.money.is_zero()) {
         let why = match (card.reserve_exists, card.unreserved.len()) {
@@ -541,6 +584,7 @@ pub struct HomeLine {
     pub free: Amount,
     /// What its funds set aside; an overdrawn fund counts as zero.
     pub funds: Amount,
+    /// What its card reserves set aside; a negative reserve counts as zero.
     pub reserves: Amount,
     /// The inclusive balance, which matches the bank statement.
     pub inclusive: Amount,
@@ -616,11 +660,12 @@ pub fn cash_on_hand(
         AccountKind::DebtReserve,
         AccountKind::Receivable,
     ]);
-    let overdrafts: Money = chart
-        .of_kind(AccountKind::PreAllocation)
+    let overdrafts: Money = [AccountKind::PreAllocation, AccountKind::DebtReserve]
+        .into_iter()
+        .flat_map(|kind| chart.of_kind(kind))
         .map(|c| overdraft(&balances, &c.account))
         .sum();
-    // Overdrawn funds set nothing aside (see `free_money`).
+    // Overdrawn funds and reserves set nothing aside (see `free_money`).
     let future_allocations =
         total(&[AccountKind::PreAllocation, AccountKind::DebtReserve]) + overdrafts;
     let receivables = total(&[AccountKind::Receivable]);
@@ -635,13 +680,16 @@ pub fn cash_on_hand(
                     .map(|c| balances.exclusive(&c.account).money)
                     .sum()
             };
-            let overdrawn = overdrawn_in(chart, &balances, &home.account);
+            let overdrawn = |kind| overdrawn_in(chart, &balances, &home.account, kind);
             HomeLine {
                 account: home.account.clone(),
                 display_name: home.display_name.clone(),
                 free: free_money(chart, &balances, &home.account),
-                funds: balances.amount(held(AccountKind::PreAllocation) + overdrawn),
-                reserves: balances.amount(held(AccountKind::DebtReserve)),
+                funds: balances.amount(
+                    held(AccountKind::PreAllocation) + overdrawn(AccountKind::PreAllocation),
+                ),
+                reserves: balances
+                    .amount(held(AccountKind::DebtReserve) + overdrawn(AccountKind::DebtReserve)),
                 inclusive: balances.inclusive(&home.account),
             }
         })
@@ -1294,10 +1342,12 @@ mod tests {
         let chart = chart(&txs, &[]);
         let report = cash_on_hand(&chart, &txs, "USD", None);
         assert_eq!(report.money_on_hand.money, usd(1217825));
-        assert_eq!(report.future_allocations.money, usd(781625));
+        // The store card in credit leaves its reserve at -25.00, which sets
+        // nothing aside and comes off checking's free money.
+        assert_eq!(report.future_allocations.money, usd(784125));
         assert_eq!(report.receivables.money, usd(120000));
-        assert_eq!(report.cash_on_hand.money, usd(316200));
-        assert_eq!(report.cash_on_hand.money.to_string(), "3162.00");
+        assert_eq!(report.cash_on_hand.money, usd(313700));
+        assert_eq!(report.cash_on_hand.money.to_string(), "3137.00");
 
         let group = |kind| report.by_kind.iter().find(|g| g.kind == kind).unwrap();
         assert_eq!(group(AccountKind::Money).total.money, usd(316200));
@@ -1316,10 +1366,10 @@ mod tests {
             .iter()
             .find(|h| h.account.as_str() == CHECKING)
             .unwrap();
-        assert_eq!(checking.free.money, usd(315000));
+        assert_eq!(checking.free.money, usd(312500));
         assert_eq!(checking.funds.money, usd(143500));
-        assert_eq!(checking.reserves.money, usd(138125));
-        assert_eq!(checking.inclusive.money, usd(315000 + 143500 + 138125));
+        assert_eq!(checking.reserves.money, usd(140625));
+        assert_eq!(checking.inclusive.money, usd(312500 + 143500 + 140625));
 
         let emergency = report
             .funds
@@ -1338,7 +1388,12 @@ mod tests {
             .unwrap();
         assert_eq!(dept_store.owed.money, usd(-2500));
         assert_eq!(dept_store.reserve_balance.money, usd(-2500));
-        assert!(report.warnings.is_empty(), "{:?}", report.warnings);
+        let codes: Vec<&str> = report.warnings.iter().map(|w| w.code).collect();
+        assert_eq!(codes, ["negative-reserve"], "{:?}", report.warnings);
+        assert_eq!(
+            report.warnings[0].accounts[0],
+            "liabilities:credit-card:dept-store"
+        );
     }
     #[test]
     fn as_of_leaves_out_later_transactions() {
@@ -1642,6 +1697,101 @@ mod tests {
         assert_eq!(totals.money_on_hand, report.money_on_hand.money);
         assert_eq!(totals.future_allocations, report.future_allocations.money);
         assert_eq!(totals.cash_on_hand, report.cash_on_hand.money);
+    }
+
+    /// Card payments made from a reserve whose purchases were never
+    /// recorded leave the reserve negative and the card in credit. That
+    /// money really left free money, so the reserve counts as zero and its
+    /// shortfall comes off the home's free money, like an overdrawn fund.
+    #[test]
+    fn a_negative_card_reserve_comes_out_of_its_homes_free_money() {
+        let mut txs = vec![
+            tx(
+                "2026-05-01",
+                "Opening",
+                &[(CHECKING, 40578), ("equity:opening", -40578)],
+            ),
+            tx(
+                "2026-05-22",
+                "Payment to Rewards Visa",
+                &[(VISA, 1883), (VISA_RESERVE, -1883)],
+            ),
+            tx(
+                "2026-09-09",
+                "Payment to Rewards Visa",
+                &[(VISA, 2549), (VISA_RESERVE, -2549)],
+            ),
+        ];
+        let chart = chart(&txs, &[VISA_RESERVE]);
+        let report = cash_on_hand(&chart, &txs, "USD", None);
+        let checking = report
+            .homes
+            .iter()
+            .find(|h| h.account.as_str() == CHECKING)
+            .unwrap();
+        assert_eq!(checking.inclusive.money, usd(36146));
+        assert_eq!(checking.free.money, usd(36146));
+        assert_eq!(checking.reserves.money, usd(0));
+        assert_eq!(report.future_allocations.money, usd(0));
+        assert_eq!(report.cash_on_hand.money, usd(36146));
+        let warning = report
+            .warnings
+            .iter()
+            .find(|w| w.code == "negative-reserve")
+            .expect("negative-reserve warning");
+        assert!(
+            warning.message.contains("Rewards Visa"),
+            "{}",
+            warning.message
+        );
+        assert!(warning.message.contains("44.32"), "{}", warning.message);
+        assert_eq!(warning.accounts, [VISA, VISA_RESERVE]);
+
+        let totals = crate::reports::cash_totals(&chart, &txs, "USD", None);
+        assert_eq!(totals.money, usd(36146));
+        assert_eq!(totals.reserves, usd(0));
+        assert_eq!(totals.future_allocations, report.future_allocations.money);
+        assert_eq!(totals.cash_on_hand, report.cash_on_hand.money);
+
+        // Recording the missing purchases doesn't change Cash on Hand.
+        txs.push(tx(
+            "2026-05-20",
+            "Macy's",
+            &[
+                ("expenses:household:clothing", 4432),
+                (VISA, -4432),
+                (VISA_RESERVE, 4432),
+                (CHECKING, -4432),
+            ],
+        ));
+        let report = cash_on_hand(&chart, &txs, "USD", None);
+        assert_eq!(report.cash_on_hand.money, usd(36146));
+        assert!(report.warnings.iter().all(|w| w.code != "negative-reserve"));
+    }
+
+    /// A card in credit warns even while its reserve is at zero.
+    #[test]
+    fn a_card_in_credit_warns() {
+        let txs = vec![
+            tx(
+                "2026-10-01",
+                "Opening",
+                &[(CHECKING, 120000), ("equity:opening", -120000)],
+            ),
+            tx(
+                "2026-10-05",
+                "Payment to Rewards Visa",
+                &[(VISA, 2500), (CHECKING, -2500)],
+            ),
+        ];
+        let chart = chart(&txs, &[VISA_RESERVE]);
+        let report = cash_on_hand(&chart, &txs, "USD", None);
+        let warning = report
+            .warnings
+            .iter()
+            .find(|w| w.code == "negative-reserve")
+            .expect("negative-reserve warning");
+        assert!(warning.message.contains("in credit"), "{}", warning.message);
     }
 
     #[test]

@@ -51,7 +51,9 @@ Cash on Hand       = Money on Hand - Future Allocations - Receivables
 That is the free money left in the money accounts. Card debt is covered by
 the reserves, so it isn't subtracted again. An overdrawn fund counts as
 zero in funds: its overdraft was spent from its home's free money, so it
-comes off that free money (and Cash on Hand) instead. The report also lists every
+comes off that free money (and Cash on Hand) instead. A negative card
+reserve (a payment recorded without the purchases it paid for) counts as
+zero in card reserves the same way. The report also lists every
 account by kind, the free money in each home, every fund, every card with
 its reserve and `difference` (owed minus reserve: what the reserve still
 needs), and warnings. It is a summary: each card has
@@ -65,6 +67,7 @@ blocks a write:
 |---|---|
 | `negative-fund` | A fund is overdrawn. |
 | `negative-free-money` | A home's funds and reserves hold more than the account. |
+| `negative-reserve` | A card's reserve is negative or the card is in credit: usually a payment whose purchases were never recorded. |
 | `reserve-mismatch` | A card's reserve doesn't equal what it owes; its `unreserved` transactions say why. |
 | `unreserved-unaccounted` | The flagged transactions don't add up to the card's `difference`: money moved in or out of the reserve on its own. |
 | `unclassified` | No kind rule matches an account. |

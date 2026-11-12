@@ -300,7 +300,7 @@ fn card_row(c: &kabacus_client::types::CardView) -> CardRow {
 fn warning_row(w: &kabacus_client::types::WarningView) -> WarningRow {
     let account = w.accounts.first().cloned().unwrap_or_default();
     let (action, target) = match w.code.as_str() {
-        "reserve-mismatch" | "unreserved-unaccounted" => {
+        "reserve-mismatch" | "unreserved-unaccounted" | "negative-reserve" => {
             (i18nc!("@action fix a card", "Fix"), "card")
         }
         "uncategorized" => (i18n!("Categorize"), "register"),
@@ -1583,6 +1583,21 @@ mod tests {
         assert_eq!(Shown::amount("-7.65", "USD").text, "−$7.65");
         assert_eq!(Shown::amount("-7.65", "").text, "−7.65");
         assert_eq!(Shown::from_exact("-7.655", None).text, "−7.655");
+    }
+
+    /// A negative card reserve opens the card it names, as the web app does.
+    #[test]
+    fn a_negative_reserve_warning_fixes_its_card() {
+        let row = warning_row(&kabacus_client::types::WarningView {
+            code: "negative-reserve".into(),
+            message: "Macy's AMEX is in credit by $44.32".into(),
+            accounts: vec![
+                "liabilities:credit-card:macys-amex".into(),
+                "assets:bank:checking:card-macys-amex".into(),
+            ],
+        });
+        assert_eq!(row.target, "card");
+        assert_eq!(row.account, "liabilities:credit-card:macys-amex");
     }
 
     #[test]
