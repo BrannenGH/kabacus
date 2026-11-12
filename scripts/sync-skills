@@ -6,13 +6,18 @@ import os
 from pathlib import Path
 
 root = Path(__file__).resolve().parent.parent
-vendors = [root / ".agents/vendor" / name / "skills" for name in ("claude-skills", "ponytail")]
+# bencium-design keeps each skill under <plugin>/skills/<name>.
+vendors = {
+    root / ".agents/vendor/claude-skills/skills": "**/SKILL.md",
+    root / ".agents/vendor/ponytail/skills": "**/SKILL.md",
+    root / ".agents/vendor/bencium-design": "*/skills/*/SKILL.md",
+}
 
 sources = {}
-for vendor in vendors:
+for vendor, pattern in vendors.items():
     if not vendor.is_dir():
         raise SystemExit("Run git submodule update --init --recursive first.")
-    for source in sorted(vendor.glob("**/SKILL.md")):
+    for source in sorted(vendor.glob(pattern)):
         name = source.parent.name
         if name in sources:
             raise SystemExit(f"Duplicate skill name: {name}")
