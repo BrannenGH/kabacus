@@ -712,6 +712,17 @@ def main():
         wait_for(f"the {transfer!r} fund transfer", lambda: row(transfer))
         if not row(real):
             fail(f"{real!r} went missing with fund transfers on")
+    elif command == "cleared-mark":
+        # A cleared transaction says so to a screen reader; the filled dot
+        # alone only shows it to the eye.
+        cleared, uncleared = args
+        goto("Transactions")
+        open_list_item("All transactions", lambda: find(app(), "All transactions", pyatspi.ROLE_LIST_ITEM),
+                 lambda: row(cleared))
+        if row(cleared).description != "Cleared":
+            fail(f"{cleared!r} is not described as cleared: {row(cleared).description!r}")
+        if row(uncleared).description:
+            fail(f"{uncleared!r} is described as {row(uncleared).description!r}")
     elif command == "loans":
         # Loans lists each loan; a loan opens its register.
         loan, payee = args

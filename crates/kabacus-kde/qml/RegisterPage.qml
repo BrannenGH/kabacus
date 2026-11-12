@@ -141,6 +141,7 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
             implicitHeight: Math.max(page.app.narrow ? 64 : 0, contentItem.implicitHeight + topPadding + bottomPadding)
             Accessible.name: i18nc("%1 is a payee, %2 a date", "%1 %2", modelData.payee, modelData.date)
+            Accessible.description: ["*", "cleared"].includes(modelData.status) ? i18n("Cleared") : ""
             background: Rectangle {
                 color: transactionDelegate.modelData.unreserved ? page.tokens.rowUnreserved : "transparent"
                 border.width: (page.app.agent.changed || []).indexOf(Number(transactionDelegate.modelData.id)) >= 0 ? 2 : 0

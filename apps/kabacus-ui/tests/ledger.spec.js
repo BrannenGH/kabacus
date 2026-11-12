@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 const appVersion = process.env.KABACUS_VERSION || JSON.parse(readFileSync("package.json", "utf8")).version;
 const amount = (exact) => ({
   commodity: "USD",
@@ -210,7 +211,7 @@ async function fillTransaction(page) {
   await page.getByLabel("Amount (USD)").fill("84.25");
   await page.getByRole("button", { name: "Preview" }).click();
   await expect(
-    page.getByRole("heading", { name: "What changes", exact: true }),
+    page.getByRole("heading", { name: "Review before saving", exact: true }),
   ).toBeVisible();
 }
 for (const target of [accounts[0], accounts[1]]) {
@@ -872,7 +873,7 @@ async function largeBalances(page) {
       },
     }),
   );
-  if (await page.locator(".phone-overflow").isVisible()) await page.locator(".phone-overflow summary").click();
+  if (await page.locator(".overflow-button").isVisible()) await page.locator(".overflow-button").click();
   await page.locator('[data-action="refresh"]:visible').click();
   await expect(page.locator(".cash-total .amount").first()).toHaveText(
     balance.formatted,
@@ -1143,7 +1144,7 @@ test.describe("phone layout", () => {
     await form.locator('input[name="to"]').fill("Groceries");
     await form.getByRole("button", { name: "Review", exact: true }).click();
     expect(writes.at(-1).body.dry_run).toBe(true);
-    await expect(form.getByText("What changes", { exact: true })).toBeVisible();
+    await expect(form.getByRole("heading", { name: "Review before saving", exact: true })).toBeVisible();
     await form.getByRole("button", { name: "Save", exact: true }).click();
     expect(writes.at(-1).body.dry_run).toBe(false);
     await expect(page.locator(".save-toast")).toHaveCount(0);
@@ -1497,7 +1498,7 @@ for (const phone of [false, true]) test.describe(`wallets on ${phone ? "phone" :
     await page.getByRole('navigation').getByRole('button',{name:'Transactions',exact:true}).click();
     if(phone) {
       await page.locator('.account-list button').filter({hasText:'Monero wallet'}).click();
-      await page.locator('.phone-overflow summary').click();
+      await page.locator('.overflow-button').click();
     } else await page.getByRole('combobox',{name:'Account',exact:true}).selectOption('assets:investments:monero');
     await page.getByRole('button',{name:'Reconcile…',exact:true}).click();
     await page.getByLabel('Amount',{exact:true}).fill('12.345678901234');
@@ -1690,4 +1691,178 @@ test("a transaction row leads with its payee and the book status has no stray se
   await page.getByRole("navigation").getByRole("button", { name: "Transactions", exact: true }).click();
   const cell = page.locator("tbody tr").first().locator("td").nth(1);
   await expect(cell).toHaveText(/^Maple Market/);
+});
+
+const accessLint = createRequire(import.meta.url).resolve("@accesslint/core/iife");
+const everyPage = ["Overview", "Register", "Funds", "Cards", "Loans", "People", "Reports", "Activity", "Settings"];
+async function visit(page, destination, phone) {
+  if (phone && !["Overview", "Register", "Funds", "Cards"].includes(destination))
+    await page.locator('nav.phone-tabs [data-destination="More"]').click();
+  if (!phone && destination === "Settings") await page.locator(".settings-action").click();
+  else await page.locator(`[data-destination="${destination}"]:visible`).click();
+  await expect(page.locator("main h1")).toBeVisible();
+}
+for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
+  for (const colorScheme of ["light", "dark"]) {
+    test.describe(`accessibility at ${viewport.width}px ${colorScheme}`, () => {
+      test.use({ viewport, colorScheme });
+      const phone = viewport.width < 600;
+      test("every page passes the WCAG 2.2 rule engine, keeps text at least 12px and draws icons as SVG", async ({ page }) => {
+        await setup(page);
+        const findings = {};
+        for (const destination of everyPage) {
+          await visit(page, destination, phone);
+          await page.addScriptTag({ path: accessLint });
+          const found = await page.evaluate(() => {
+            const violations = window.AccessLint.runAudit(document).violations
+              .map(v => `${v.ruleId} ${v.selector}: ${v.message}`);
+            const small = [...document.querySelectorAll("body *")]
+              .filter(el => [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()))
+              .filter(el => el.checkVisibility() && parseFloat(getComputedStyle(el).fontSize) < 12)
+              .map(el => `${el.tagName.toLowerCase()}.${el.className} "${el.textContent.trim().slice(0, 20)}" is ${getComputedStyle(el).fontSize}`);
+            // Icons are drawn as SVG, not as text characters a screen reader reads out.
+            const glyphs = /[✕ⓘ⌄›]/.test(document.body.innerText) ? ["a text glyph is used as an icon"] : [];
+            return [...violations, ...small, ...glyphs];
+          });
+          if (found.length) findings[destination] = found;
+        }
+        expect(findings).toEqual({});
+      });
+    });
+  }
+}
+test("a transaction row is selected from the keyboard as well as by pointer", async ({ page }) => {
+  await setup(page);
+  await page.getByRole("navigation").getByRole("button", { name: "Transactions", exact: true }).click();
+  const row = page.locator("tbody tr").first();
+  await expect(row).toHaveAttribute("aria-selected", "false");
+  await row.getByRole("button", { name: "Edit", exact: true }).focus();
+  await expect(row).toHaveAttribute("aria-selected", "true");
+});
+test("each change in Activity is one tab stop", async ({ page }) => {
+  await setup(page);
+  await page.locator('[data-destination="Activity"]').click();
+  const row = page.locator(".list-row").first();
+  await expect(row.getByRole("button")).toHaveCount(1);
+});
+for (const colorScheme of ["light", "dark"]) {
+  test(`the ${colorScheme} browser bar matches the phone app bar`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await setup(page);
+    const [theme, bar] = await page.evaluate(() => {
+      const meta = [...document.querySelectorAll('meta[name="theme-color"]')].find(m => matchMedia(m.media).matches);
+      const probe = document.createElement("i");
+      probe.style.color = meta.content;
+      document.body.append(probe);
+      return [getComputedStyle(probe).color, getComputedStyle(document.querySelector(".phone-appbar")).backgroundColor];
+    });
+    expect(theme).toBe(bar);
+  });
+}
+test.describe("phone focus", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+  test("a focused control is not hidden under the tabs", async ({ page }) => {
+    const categories = ["Groceries", "Dining out", "Fuel", "Pharmacy", "Pet supplies", "Hardware", "Gifts", "Streaming", "Parking", "Haircuts", "Books", "Garden", "Laundry", "Bakery", "Coffee", "Cinema", "Charity", "Taxi"]
+      .map(name => ({ account: `expenses:${name.toLowerCase().replace(" ", "-")}`, display_name: name, kind: "expense" }));
+    await setup(page, false, transaction, [...accounts, ...categories]);
+    await page.locator('nav.phone-tabs [data-destination="Register"]').click();
+    await page.evaluate(() => window.scrollTo(0, 0));
+    const below = await page.locator(".account-list button").evaluateAll(buttons =>
+      buttons.findIndex(b => b.getBoundingClientRect().top > innerHeight));
+    expect(below).toBeGreaterThan(0);
+    // Safari and Firefox scroll a newly focused control just into view
+    // (nearest edge); Chromium centres it, so ask for the nearest edge.
+    const next = page.locator(".account-list button").nth(below);
+    await next.evaluate(b => { b.focus({ preventScroll: true }); b.scrollIntoView({ block: "nearest" }); });
+    const tabsTop = await page.locator("nav.phone-tabs").evaluate(n => n.getBoundingClientRect().top);
+    const box = await next.boundingBox();
+    expect(box.y + box.height).toBeLessThanOrEqual(tabsTop);
+  });
+  test("search and payee fields stay out of the browser's autofill", async ({ page }) => {
+    await setup(page);
+    await page.locator('nav.phone-tabs [data-destination="Register"]').click();
+    await page.getByRole("button", { name: "Search", exact: true }).click();
+    const search = page.getByRole("searchbox", { name: "Search" });
+    await expect(search).toHaveAttribute("autocomplete", "off");
+    await expect(search).toHaveAttribute("spellcheck", "false");
+  });
+});
+test.describe("phone cleared marks", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+  test("a cleared transaction is read out as cleared", async ({ page }) => {
+    await setup(page);
+    await page.locator('nav.phone-tabs [data-destination="Register"]').click();
+    await page.getByRole("button", { name: "All transactions", exact: true }).click();
+    await expect(page.getByRole("button", { name: /^Cleared Maple Market/ })).toBeVisible();
+  });
+});
+test("the page says it is busy while books load and shows no stray label after a failure", async ({ page }) => {
+  let release;
+  const held = new Promise(resolve => { release = resolve; });
+  await setup(page);
+  await page.route("**/cash-on-hand?**", async route => { await held; await route.fulfill({ status: 503, json: { message: "Books are temporarily unavailable" } }); });
+  await page.reload();
+  await expect(page.locator("main")).toHaveAttribute("aria-busy", "true");
+  release();
+  await expect(page.getByRole("alert").first()).toContainText("Books are temporarily unavailable");
+  await expect(page.locator("main")).not.toHaveAttribute("aria-busy", "true");
+  await expect(page.locator("main p.empty")).toHaveCount(0);
+});
+test.describe("typographic restraint", () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
+  test("account groups are labelled in sentence case and dialogs carry no label above their title", async ({ page }) => {
+    await setup(page);
+    await page.getByRole("navigation").getByRole("button", { name: "Transactions", exact: true }).click();
+    const heading = page.locator(".account-list h2").first();
+    await expect(heading).toHaveCSS("text-transform", "none");
+    await expect(heading).toHaveCSS("letter-spacing", "normal");
+    await page.getByRole("button", { name: "Add", exact: true }).click();
+    await page.locator(".add-chooser button[data-choice]").first().click();
+    await expect(page.locator(".bookkeeping-dialog .dialog-heading p")).toHaveCount(0);
+  });
+  test("running text stays under 80 characters a line", async ({ page }) => {
+    await setup(page);
+    await page.getByRole("button", { name: "Add", exact: true }).click();
+    const perLine = await page.locator(".add-chooser > p").evaluate(p => {
+      const context = document.createElement("canvas").getContext("2d");
+      context.font = getComputedStyle(p).font;
+      const average = context.measureText(p.textContent).width / p.textContent.length;
+      return p.getBoundingClientRect().width / average;
+    });
+    expect(perLine).toBeLessThan(80);
+  });
+});
+test.describe("phone overflow menu", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+  test("closes after a choice, on Esc and on a tap outside", async ({ page }) => {
+    await setup(page);
+    const menu = page.locator("#phone-overflow");
+    const open = page.locator(".overflow-button");
+    await open.click();
+    await expect(menu).toBeVisible();
+    await menu.getByRole("button", { name: "Refresh", exact: true }).click();
+    await expect(menu).toBeHidden();
+    await open.click();
+    await page.keyboard.press("Escape");
+    await expect(menu).toBeHidden();
+    await open.click();
+    await page.locator(".cash-total").click();
+    await expect(menu).toBeHidden();
+  });
+});
+test.describe("touch feedback on a phone", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+  test("a pressed button darkens at once and days out of view skip layout", async ({ page }) => {
+    await setup(page);
+    const tab = page.locator('nav.phone-tabs [data-destination="Register"]');
+    await expect(tab).toHaveCSS("transition-property", "filter");
+    const box = await tab.boundingBox();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await expect(tab).toHaveCSS("filter", "brightness(0.86)");
+    await page.mouse.up();
+    await page.getByRole("button", { name: "All transactions", exact: true }).click();
+    await expect(page.locator(".phone-register section").first()).toHaveCSS("content-visibility", "auto");
+  });
 });

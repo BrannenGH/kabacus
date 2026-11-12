@@ -43,18 +43,16 @@ export function Activity({ api, data, onOpen }) {
       </div>
       {changes.map((change) => (
           <div className="list-row" key={change.hash}>
-            <button className="quiet" onClick={() => setSelected(change.hash)}>
-              {change.revision}
-            </button>
+            <span className="history-number">{change.revision}</span>
             <div className="grow">
-              <h3>
+              <h2 className="subheading">
                 <button
                   className="quiet"
                   onClick={() => setSelected(change.hash)}
                 >
                   {change.summary}
                 </button>
-              </h3>
+              </h2>
               <small>
                 {change.agent && <span className="agent-badge">{t("Agent")}: {change.agent} · </span>}
                 {t("%1 · %2", change.user || change.actor || "", localTime(change.date))}
@@ -82,7 +80,7 @@ export function Activity({ api, data, onOpen }) {
       )}
       {selected && (
         <div className="preview">
-          <h3>{t("What changes")}</h3>
+          <h2 className="subheading">{t("What changes")}</h2>
           <pre>{diff || t("Loading…")}</pre>
         </div>
       )}

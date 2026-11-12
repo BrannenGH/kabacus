@@ -5,16 +5,16 @@ import { Workspace } from "./workspace";
 import { useDialogHistory, keepsUnsavedChange } from "./phone-history";
 import { PhonePicker } from "./phone-picker";
 import { useMedia, phoneQuery, desktopQuery } from "./form-factor";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Api, exactAmount } from "./api";
-import { initializeAuth } from "./auth";
 import "./style.css";
 import { Reports } from "./reports";
 import { AmountField } from "./amount-field";
+import { Amount } from "./amount";
 import { accountCurrency, currencies } from "./operations";
 import { OperationDialog } from "./operation-dialog";
-import { Accounts, People } from "./accounts";
+import { Loans, People } from "./accounts";
 import { Settings } from "./settings";
 import { Overview } from "./overview";
 import { Activity } from "./activity";
@@ -29,15 +29,6 @@ const today = () => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 };
 const name = (account) => account.display_name || account.account;
-function Amount({ value }) {
-  return (
-    <span
-      className={`amount ${value?.exact?.startsWith("-") ? "negative" : ""}`}
-    >
-      {value?.formatted ?? "—"}
-    </span>
-  );
-}
 function Empty({ children }) {
   return <p className="empty">{children}</p>;
 }
@@ -124,9 +115,12 @@ export function App({ auth, book, onFileAction }) {
     else setOperationForm({ kind: { "settle.record": "settle", "card.pay": "payment", "split.record": "split", "transaction.split": "split", "transaction.transfer": "transfer", "transaction.postings": "postings" }[command.id], account: openedAccount });
   };
   useEffect(() => { book?.remember?.({ page, account: openedAccount, selected:selectedRow }); }, [page, openedAccount, selectedRow, book?.id]);
+  const latest = useRef();
+  latest.current = { data, error, go, beginAdd };
   useEffect(() => {
     let goUntil = 0;
     const keys = (event) => {
+      const { data, error, go, beginAdd } = latest.current;
       if (event.key.length === 1 || event.key === "Tab") document.documentElement.classList.add("hardware-keyboard");
       const editing = event.target.closest("input, textarea, select, [contenteditable=true]");
       if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
@@ -146,7 +140,7 @@ export function App({ auth, book, onFileAction }) {
       else if (event.key === "/") { event.preventDefault(); go("Register"); setTimeout(() => document.querySelector('input[type="search"], input[placeholder="' + t("Search payee, memo, account") + '"]')?.focus(), 0); }
     };
     window.addEventListener("keydown", keys); return () => window.removeEventListener("keydown", keys);
-  }, [data, error]);
+  }, []);
   const saved = () => {
     refresh();
   };
@@ -180,15 +174,7 @@ export function App({ auth, book, onFileAction }) {
         {error && <p role="alert">{error}</p>}
       </main>
     );
-  const titles = {
-    Overview: t(
-      "Free money you can spend right now, after reserves and card reserves.",
-    ),
-    Register: t("Transactions"),
-    Funds: t("Set money aside"),
-    Cards: t("Each card's reserve should equal what it owes."),
-    Activity: t("Activity"),
-  };
+
   return (
     <div className="shell">
       {phone && <header className="phone-appbar">
@@ -196,18 +182,20 @@ export function App({ auth, book, onFileAction }) {
           ? <><button className="quiet" aria-label={t("Back")} onClick={() => history.back()}><Icon name="Back" /></button><strong>{registerOpen ? name(data?.accounts.find(a => a.account === openedAccount) || { account: openedAccount }) : t(pageLabels[page])}</strong></>
           : <button className="quiet phone-books-name" aria-haspopup="dialog" onClick={() => setBookMenu(true)}><span>{book?.name || "Kabacus"}</span><Icon name="Chevron" /></button>}
         <button className="quiet" aria-label={t("Search")} onClick={() => { if (page !== "Register") navigate("Register"); setPhoneSearch(!phoneSearch); }}><Icon name="Search" /></button>
-        <details className="phone-overflow"><summary aria-label={t("More")}><Icon name="Overflow" /></summary><div>
+        {/* A native popover closes on Esc, a tap outside or a choice. */}
+        <button className="quiet overflow-button" aria-label={t("More")} popoverTarget="phone-overflow"><Icon name="Overflow" /></button>
+        <div id="phone-overflow" className="phone-overflow" popover="auto" onClick={(event) => { if (event.target.closest("button")) event.currentTarget.hidePopover(); }}>
           <button className="quiet" data-action="refresh" onClick={refresh}>{t("Refresh")}</button>
           {registerOpen && <button className="quiet" onClick={() => setOperationForm({kind: "reconcile", account: openedAccount})}>{t("Reconcile…")}</button>}
           <button className="quiet" onClick={() => setBookMenu(true)}>{t("Books")}</button>
-        </div></details>
+        </div>
       </header>}
-      {phone && phoneSearch && <div className="phone-search"><input type="search" aria-label={t("Search")} placeholder={t("Search payee, memo, account")} value={registerQuery} onChange={e => setRegisterQuery(e.target.value)} autoFocus /></div>}
+      {phone && phoneSearch && <div className="phone-search"><input type="search" name="search" autoComplete="off" spellCheck={false} aria-label={t("Search")} placeholder={t("Search payee, memo, account")} value={registerQuery} onChange={e => setRegisterQuery(e.target.value)} autoFocus /></div>}
       {phone && bookMenu && <BooksSheet book={book} onClose={() => setBookMenu(false)} onAction={id => {setBookMenu(false); onFileAction?.(id);}} />}
       {!phone && <>
       <aside>
         <button className="brand quiet" aria-haspopup="menu" aria-expanded={bookMenu} onClick={() => setBookMenu(!bookMenu)}>
-          <img className="brand-icon" src={icon} alt="" /><span>{book?.name || "Kabacus"}<small>{book?.filename || location.host}</small></span><span aria-hidden="true">⌄</span>
+          <img className="brand-icon" src={icon} alt="" /><span>{book?.name || "Kabacus"}<small>{book?.filename || location.host}</small></span><Icon name="Chevron" />
         </button>
         {bookMenu && <div className="book-menu" role="menu">{[
           ["new-window", "New Window", "Ctrl+Shift+N"], ["new", "New Books…", ""], ["open", "Open Books…", "Ctrl+O"], ["recent", "Open Recent", ""], ["save-copy", "Save a Copy As…", "Ctrl+Shift+S"], ["close", "Close Window", "Ctrl+Shift+W"], ["connect", "Connect to a Server…", ""], ["quit", "Quit", "Ctrl+Q"]
@@ -236,7 +224,7 @@ export function App({ auth, book, onFileAction }) {
         </div>
       </aside></>}
       <div className="workspace">
-        <main>
+        <main aria-busy={loading || undefined}>
           <div className="page-heading">
             <div>
 
@@ -267,7 +255,7 @@ export function App({ auth, book, onFileAction }) {
             </div>
           )}
           {phone && page === "More" && <section className="phone-more">
-            {["Loans", "People", "Reports", "Activity", "Settings"].map(item => <button key={item} data-destination={item} className={item === "Settings" ? "quiet settings-action" : "quiet"} onClick={() => go(item)}><Icon name={item} />{t(pageLabels[item])}<span aria-hidden="true">›</span></button>)}
+            {["Loans", "People", "Reports", "Activity", "Settings"].map(item => <button key={item} data-destination={item} className={item === "Settings" ? "quiet settings-action" : "quiet"} onClick={() => go(item)}><Icon name={item} />{t(pageLabels[item])}<Icon name="Forward" /></button>)}
             <h2>{t("Books")}</h2><div className="location"><strong>{book?.name || "Kabacus"}</strong><small>{book?.local ? t("On this computer") : location.host} · {book?.location || auth.username || ""}</small></div>
             <button className="quiet" onClick={() => setBookMenu(true)}>{t("Switch Books…")}</button>
             <button className="quiet" onClick={() => onFileAction?.("connect")}>{t("Connect to a Server…")}</button>
@@ -280,7 +268,8 @@ export function App({ auth, book, onFileAction }) {
             />
           )}
           {!data ? (
-            <Empty>{loading ? t("Loading…") : t("Refresh")}</Empty>
+            // Without books there is nothing to show; an error says why above.
+            !error && <Empty>{t("Loading…")}</Empty>
           ) : (
             <>
               {(!phone || page !== "Overview") && data.cash.warnings.map((warning, i) => (
@@ -304,13 +293,7 @@ export function App({ auth, book, onFileAction }) {
               ))}
               {page === "Overview" && <Overview data={data} api={api} onFix={warning => go(warning.code?.includes("reserve") ? "Cards" : warning.code?.includes("fund") ? "Funds" : "Register")} onAccount={openRegister} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} />}
               {page === "Loans" && (
-                <Accounts
-                  data={data}
-                  loans={page === "Loans"}
-                  onOpen={(account) => {
-                    openRegister(account);
-                  }}
-                />
+                <Loans data={data} onOpen={openRegister} />
               )}
               {page === "People" && <People api={api} />}
               {page === "Reports" && <Reports api={api} data={data} />}
@@ -319,7 +302,7 @@ export function App({ auth, book, onFileAction }) {
                   phone={phone} query={registerQuery}
                   data={data}
                   api={api}
-                  initialAccount={openedAccount}
+                  account={openedAccount}
                   onAccountChange={setOpenedAccount}
                   selected={selectedRow} onSelect={setSelectedRow} activity={book?.activity}
                   onOperation={
@@ -511,46 +494,15 @@ function Transactions({ transactions, onOperation, selected, onSelect, activity 
         </thead>
         <tbody>
           {transactions.map((tx) => (
-            <tr key={tx.id} aria-selected={selected===String(tx.id)} onClick={()=>onSelect?.(String(tx.id))} className={activity?.changed?.includes(tx.id)?"agent-changed":""} title={activity?.changed?.includes(tx.id)?activity.changed_by:undefined}>
+            <tr key={tx.id} aria-selected={selected===String(tx.id)} onClick={()=>onSelect?.(String(tx.id))} onFocus={()=>onSelect?.(String(tx.id))} className={activity?.changed?.includes(tx.id)?"agent-changed":""} title={activity?.changed?.includes(tx.id)?activity.changed_by:undefined}>
               <td className="date">{tx.date}</td>
               <td>
                 <strong>{tx.payee || "—"}</strong>
                 <small className="block">{tx.memo}</small>
                 {onOperation && <div className="row-actions">
-                {onOperation && (
-                  <button
-                    className="quiet"
-                    onClick={() =>
-                      onOperation({
-                        kind: "edit",
-                        tx,
-                      })
-                    }
-                  >
-                    {t("Edit")}
-                  </button>
-                )}
-                {onOperation && (
-                  <button
-                    className="quiet"
-                    onClick={() =>
-                      onOperation({
-                        kind: "void",
-                        tx,
-                      })
-                    }
-                  >
-                    {t("Void")}
-                  </button>
-                )}
-                {onOperation && (
-                  <button
-                    className="quiet"
-                    onClick={() => onOperation({ kind: "status", tx })}
-                  >
-                    {t("Review")}
-                  </button>
-                )}
+                  {[["edit", "Edit"], ["void", "Void"], ["status", "Review"]].map(([kind, label]) => (
+                    <button key={kind} className="quiet" onClick={() => onOperation({ kind, tx })}>{t(label)}</button>
+                  ))}
                 </div>}
               </td>
               <td>
@@ -579,12 +531,21 @@ function Transactions({ transactions, onOperation, selected, onSelect, activity 
     </div>
   );
 }
-function Register({ phone, query: phoneQuery = "", data, api, onOperation, initialAccount = "", onAccountChange, selected, onSelect, activity }) {
+// The dot shows a cleared transaction to the eye; the hidden word reads it out.
+function ClearedMark({ status }) {
+  const cleared = ["*", "cleared"].includes(status);
+  return <span className="cleared-mark"><span aria-hidden="true">{cleared ? "●" : "○"}</span>{cleared && <span className="visually-hidden">{t("Cleared")}</span>}</span>;
+}
+// Newest day first, and within a day the latest entry first.
+function RegisterDays({ rows, row }) {
+  const days = [...new Set(rows.map((r) => r.date))].sort().reverse();
+  return <div className="phone-register">{days.map((day) => <section key={day}>
+    <h3>{day}</h3>{rows.map((r, i) => [r, i]).filter(([r]) => r.date === day).reverse().map(([r, i]) => row(r, i))}
+  </section>)}</div>;
+}
+function Register({ phone, query: phoneQuery = "", data, api, onOperation, account = "", onAccountChange: setAccount, selected, onSelect, activity }) {
   const [query, setQuery] = useState("");
   const [unreserved, setUnreserved] = useState(false);
-  const [account, setAccount] = useState(initialAccount);
-  useEffect(()=>setAccount(initialAccount),[initialAccount]);
-  useEffect(()=>onAccountChange?.(account),[account]);
   const [lines, setLines] = useState(null);
   const [error, setError] = useState("");
   useEffect(() => {
@@ -602,13 +563,15 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, initi
       });
     return () => controller.abort();
   }, [account, data, api]);
-  const searchQuery = phone ? phoneQuery : query;
+  // Filtering every transaction waits for typing to settle.
+  const searchQuery = useDeferredValue(phone ? phoneQuery : query).toLowerCase();
+  const byId = useMemo(() => new Map(data.transactions.map((tx) => [tx.id, tx])), [data.transactions]);
   const transactions = data.transactions.filter(
     (tx) =>
       (!unreserved || tx.unreserved) &&
       `${tx.payee} ${tx.memo} ${tx.postings.map((p) => p.account).join(" ")}`
         .toLowerCase()
-        .includes(searchQuery.toLowerCase()),
+        .includes(searchQuery),
   );
   return (
     <section className="panel">
@@ -657,6 +620,10 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, initi
         <label>
           {t("Search")}
           <input
+            type="search"
+            name="search"
+            autoComplete="off"
+            spellCheck={false}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t("Search payee, memo, account")}
@@ -679,7 +646,7 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, initi
           {error}
         </p>
       )}
-      {phone && !account ? <div className="phone-register">{[...new Set(transactions.map(tx => tx.date))].sort().reverse().map(day => <section key={day}><h3>{day}</h3>{transactions.filter(tx => tx.date === day).reverse().map(tx => <button key={tx.id} className="register-row quiet" onClick={() => onOperation?.({kind:"edit",tx})}><span>{["*", "cleared"].includes(tx.status) ? "●" : "○"}</span><span className="grow"><strong>{tx.payee}</strong><small>{tx.memo}</small></span><Amount value={tx.postings[0]?.amount} /></button>)}</section>)}</div> : !account ? (
+      {phone && !account ? <RegisterDays rows={transactions} row={tx => <button key={tx.id} className="register-row quiet" onClick={() => onOperation?.({kind:"edit",tx})}><ClearedMark status={tx.status} /><span className="grow"><strong>{tx.payee}</strong><small>{tx.memo}</small></span><Amount value={tx.postings[0]?.amount} /></button>} /> : !account ? (
         <Transactions
           transactions={[...transactions].reverse()}
           onOperation={onOperation}
@@ -688,11 +655,10 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, initi
       ) : !lines ? (
         <Empty>{t("Loading…")}</Empty>
       ) : (
-        phone ? <div className="phone-register">{[...new Set(lines.map(line => line.date))].sort().reverse().map(day => <section key={day}>
-          <h3>{day}</h3>{lines.filter(line => line.date === day && `${line.payee} ${line.memo} ${line.other_account}`.toLowerCase().includes(searchQuery.toLowerCase())).reverse().map((line, i) => <button className="register-row quiet" key={`${line.id}-${i}`} onClick={() => {onSelect?.(String(line.id)); const tx = data.transactions.find(tx => tx.id === line.id); if (tx && onOperation) onOperation({kind: "edit", tx});}}>
-            <span className="cleared-mark">{["*", "cleared"].includes(data.transactions.find(tx => tx.id === line.id)?.status) ? "●" : "○"}</span>
+        phone ? <RegisterDays rows={lines.filter(line => `${line.payee} ${line.memo} ${line.other_account}`.toLowerCase().includes(searchQuery))} row={(line, i) => <button className="register-row quiet" key={`${line.id}-${i}`} onClick={() => {onSelect?.(String(line.id)); const tx = byId.get(line.id); if (tx && onOperation) onOperation({kind: "edit", tx});}}>
+            <ClearedMark status={byId.get(line.id)?.status} />
             <span className="grow"><strong>{line.payee}</strong><small>{line.memo || line.other_account}</small></span><span><Amount value={line.amount} /><small><Amount value={line.balance} /></small></span>
-          </button>)}</section>)}</div> :
+          </button>} /> :
         <div className="table-wrap">
           <table>
             <thead>
@@ -709,26 +675,24 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, initi
                 .filter(
                   (line) =>
                     (!unreserved ||
-                      data.transactions.find((tx) => tx.id === line.id)
+                      byId.get(line.id)
                         ?.unreserved) &&
                     `${line.payee} ${line.memo} ${line.other_account}`
                       .toLowerCase()
-                      .includes(searchQuery.toLowerCase()),
+                      .includes(searchQuery),
                 )
                 .map((line, i) => (
-                  <tr key={`${line.id}-${i}`} aria-selected={selected===String(line.id)} onClick={()=>onSelect?.(String(line.id))} className={activity?.changed?.includes(line.id)?"agent-changed":""} title={activity?.changed?.includes(line.id)?activity.changed_by:undefined}>
+                  <tr key={`${line.id}-${i}`} aria-selected={selected===String(line.id)} onClick={()=>onSelect?.(String(line.id))} onFocus={()=>onSelect?.(String(line.id))} className={activity?.changed?.includes(line.id)?"agent-changed":""} title={activity?.changed?.includes(line.id)?activity.changed_by:undefined}>
                     <td>{line.date}</td>
                     <td>
                       {onOperation &&
-                      data.transactions.find((tx) => tx.id === line.id) ? (
+                      byId.get(line.id) ? (
                         <button
                           className="quiet"
                           onClick={() =>
                             onOperation({
                               kind: "edit",
-                              tx: data.transactions.find(
-                                (tx) => tx.id === line.id,
-                              ),
+                              tx: byId.get(line.id),
                             })
                           }
                         >
@@ -983,9 +947,6 @@ function WriteDialog({
       <form ref={formRef} onSubmit={submit} onChange={changed}>
         <div className="dialog-heading">
           <div>
-            <p className="eyebrow">
-              {preview ? t("Review before saving") : t("Add")}
-            </p>
             <h2 id="dialog-title">
               {phone && preview ? t("Review") : allocation
                 ? t("Set money aside")
@@ -1001,7 +962,7 @@ function WriteDialog({
             onClick={() => phone && preview ? setPreview(null) : close()}
             disabled={busy}
           >
-            {phone ? t(preview ? "Edit" : "Cancel") : "✕"}
+            {phone ? t(preview ? "Edit" : "Cancel") : <Icon name="Close" />}
           </button>
         </div>
         {error && !blocked && (
@@ -1030,6 +991,7 @@ function WriteDialog({
                     {t("Payee")}
                     <input
                       name="description"
+                      autoComplete="off"
                       list="known-payees"
                       defaultValue={defaults.description}
                       onChange={(e) => recall(e.target.value)}
@@ -1047,7 +1009,7 @@ function WriteDialog({
                 {!allocation && (
                   <label>
                     {t("Memo")}
-                    <input name="memo" defaultValue={defaults.memo} />
+                    <input name="memo" autoComplete="off" defaultValue={defaults.memo} />
                   </label>
                 )}
                 <label>
@@ -1106,6 +1068,7 @@ function WriteDialog({
                   ) : (
                     <input
                       name="to"
+                      autoComplete="off"
                       list="accounts"
                       defaultValue={defaults.to || ""}
                       required
@@ -1136,7 +1099,7 @@ function WriteDialog({
             </div>
             {preview && (
               <section className="preview">
-                <h3>{t("What changes")}</h3><p className="balanced-badge">{t("Balanced · checked against revision %1", preview.head)}</p>
+                <h3>{t("Review before saving")}</h3><p className="balanced-badge">{t("Balanced · checked against revision %1", preview.head)}</p>
                 <pre>{preview.result.preview || preview.result.after}</pre>
                 {preview.result.cash_on_hand && (
                   <div className="list-row">
@@ -1207,7 +1170,8 @@ initializeLocale().then(async () => {
   if(query.has("returnTo")){try{const back=new URL(query.get("returnTo"));if(back.protocol==="https:"||back.origin===location.origin)sessionStorage.setItem("kabacus.return",back.href);}catch{}}
   let auth=null;
   if(!nativeLauncher && location.pathname.startsWith("/app/")) {
-    try { auth=await initializeAuth(); } catch { /* Local books remain available offline. */ }
+    // The sign-in library loads only for books served from a server.
+    try { auth=await (await import("./auth")).initializeAuth(); } catch { /* Local books remain available offline. */ }
   }
   createRoot(document.getElementById("root")).render(<Workspace Application={App} hosted={auth}/>);
   if("serviceWorker" in navigator && !nativeLauncher)navigator.serviceWorker.register(new URL("./sw.js",document.baseURI)).catch(()=>{});

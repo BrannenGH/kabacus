@@ -966,6 +966,11 @@ msgctxt "%1 is a payee, %2 a date"
 msgid "%1 %2"
 msgstr "%1 %2"
 
+#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cleared"
+msgstr "ਮਿਲਾਨ ਹੋਇਆ"
+
 #: crates/kabacus-kde/qml/RegisterPage.qml
 #, kde-format
 msgctxt "%1 is an account, %2 a memo"

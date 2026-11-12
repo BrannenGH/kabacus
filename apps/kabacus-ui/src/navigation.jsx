@@ -20,38 +20,51 @@ const paths = {
   Search: "M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15M16 16l5 5",
   Chevron: "M6 9l6 6 6-6",
   Back: "M15 5l-7 7 7 7",
+  Forward: "M9 5l7 7-7 7",
+  Close: "M6 6l12 12M18 6L6 18",
+  Info: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M12 11v5M12 7.5v.01",
   Overflow: "M12 5.5v.01M12 12v.01M12 18.5v.01",
   Add: "M12 4v16M4 12h16", Refresh: "M20 7v5h-5M4 17v-5h5M5 8a8 8 0 0 1 13-3l2 2M4 17l2 2a8 8 0 0 0 13-3",
 };
-export function Icon({ name }) { return <svg className="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name] || paths.Register} /></svg>; }
+// Back and Forward point the other way in a right-to-left language.
+const directional = new Set(["Back", "Forward"]);
+export function Icon({ name }) { return <svg className={directional.has(name) ? "line-icon directional" : "line-icon"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name] || paths.Register} /></svg>; }
 export function Key({ children }) { return <kbd>{children}</kbd>; }
-export function AddChooser({ commands, onChoose, onClose }) {
+// A modal sheet: its title, a close button, and Back or Esc to close it.
+function Sheet({ id, className, title, close, onClose, onKeyDown, children }) {
   useDialogHistory({ onClose });
   const ref = useRef();
-  useEffect(() => { ref.current.showModal(); ref.current.querySelector("button[data-choice]")?.focus(); }, []);
-  return <dialog ref={ref} className="add-chooser" aria-labelledby="add-title" onCancel={(e) => { e.preventDefault(); onClose(); }} onKeyDown={(e) => {
+  useEffect(() => { ref.current.showModal(); ref.current.querySelector("[data-autofocus]")?.focus(); }, []);
+  return <dialog ref={ref} className={className} aria-labelledby={id} onCancel={(e) => { e.preventDefault(); onClose(); }} onKeyDown={onKeyDown}>
+    <div className="dialog-heading"><h2 id={id}>{title}</h2><button className="quiet" onClick={onClose}>{close}</button></div>
+    {children}
+  </dialog>;
+}
+export function AddChooser({ commands, onChoose, onClose }) {
+  return <Sheet id="add-title" className="add-chooser" title={t("Add — what happened?")} close={<>{t("Cancel")} <Key>Esc</Key></>} onClose={onClose} onKeyDown={(e) => {
     if (/^[1-8]$/.test(e.key)) { e.preventDefault(); onChoose(commands[Number(e.key) - 1]); }
   }}>
-    <div className="dialog-heading"><h2 id="add-title">{t("Add — what happened?")}</h2><button className="quiet" onClick={onClose}>{t("Cancel")} <Key>Esc</Key></button></div>
     <p>{t("Choose what happened. The form fills in the lines; you see what changes before you save.")}</p>
-    <div className="choice-grid">{commands.map((command, i) => <button data-choice key={command.id} onClick={() => onChoose(command)}>
+    <div className="choice-grid">{commands.map((command, i) => <button data-choice data-autofocus={i === 0 || undefined} key={command.id} onClick={() => onChoose(command)}>
       <Icon name={i === 2 || i === 5 ? "Cards" : i === 4 ? "Funds" : "Register"} /><span><strong>{t(command.label)}</strong><small>{t(["Money left an account", "Income or a refund", "Adds the reserve lines for you", "Between two bank accounts", "Into a reserve, out, or between reserves", "From its reserve", "They owe you, or you owe them", "Any two accounts"][i])}</small></span><Key>{i + 1}</Key>
     </button>)}</div>
-  </dialog>;
+  </Sheet>;
 }
 
 export function AccountList({ data, selected, onSelect }) {
   const groups = [["money", "Bank & cash"], ["revolving-debt", "Credit"], ["term-liability", "Loans"], ["receivable", "People"], ["payable", "People"], ["expense", "Spending"], ["income", "Income"], ["non-liquid", "Investments"], ["unclassified", "Other"]];
   const neutral = account => account.kind === "income" || account.account.startsWith("equity:");
+  const children = new Map();
+  for (const c of data.accounts) if (c.home && c.home !== c.account) children.set(c.home, [...(children.get(c.home) || []), c]);
   const amount = (account) => (account.balance_inclusive || account.balances || []).map((b) => neutral(account) && b.exact.startsWith("-") ? b.formatted.replace(/^-/, "") : b.formatted).join(" / ");
   return <div className="account-list panel" aria-label={t("Accounts")}>
     <button className={!selected ? "selected quiet" : "quiet"} onClick={() => onSelect("")}>{t("All transactions")}</button>
     {groups.map(([kind, label]) => {
       const accounts = data.accounts.filter((a) => (a.account.startsWith("equity:") ? "unclassified" : a.kind) === kind);
       if (!accounts.length) return null;
-      return <section key={kind}><h3>{t(label)}</h3>{accounts.map((a) => <React.Fragment key={a.account}>
+      return <section key={kind}><h2>{t(label)}</h2>{accounts.map((a) => <React.Fragment key={a.account}>
         <button className={selected === a.account ? "selected" : ""} onClick={() => onSelect(a.account)}><span>{a.display_name || a.account}</span><span className={!neutral(a) && (a.balance_inclusive || []).some((b) => b.exact.startsWith("-")) ? "amount negative" : "amount"}>{amount(a)}</span></button>
-        {data.accounts.filter((c) => c.home === a.account && c.account !== a.account).map((c) => <button key={c.account} className={`account-child ${selected === c.account ? "selected" : ""}`} onClick={() => onSelect(c.account)}><span>{c.display_name || c.account}</span><span className="amount">{amount(c)}</span></button>)}
+        {(children.get(a.account) || []).map((c) => <button key={c.account} className={`account-child ${selected === c.account ? "selected" : ""}`} onClick={() => onSelect(c.account)}><span>{c.display_name || c.account}</span><span className="amount">{amount(c)}</span></button>)}
       </React.Fragment>)}</section>;
     })}
   </div>;
@@ -59,15 +72,11 @@ export function AccountList({ data, selected, onSelect }) {
 
 
 export function BooksSheet({ book, onClose, onAction }) {
-  useDialogHistory({ onClose });
-  const ref = useRef();
-  useEffect(() => { ref.current.showModal(); }, []);
-  return <dialog ref={ref} className="books-sheet" aria-labelledby="books-title" onCancel={e => {e.preventDefault(); onClose();}}>
-    <div className="dialog-heading"><h2 id="books-title">{t("Books")}</h2><button className="quiet" onClick={onClose}>{t("Close")}</button></div>
+  return <Sheet id="books-title" className="books-sheet" title={t("Books")} close={t("Close")} onClose={onClose}>
     <div className="location"><strong>{book?.name || "Kabacus"}</strong><small>{book?.local ? t("On this computer") : location.host} · {book?.location || ""}</small></div>
     <h3>{t("Open Recent")}</h3>
     {(book?.recent || []).map((source, i) => <button key={i} className="quiet" onClick={() => {onClose(); book.openRecent(source);}}>{source.name || source.filename || source.url || source.path}</button>)}
     {[["new", "New Books…"], ["open", "Open Books…"], ["save-copy", "Save a Copy As…"], ["connect", "Connect to a Server…"]].map(([id, label]) => <button key={id} className="quiet" onClick={() => onAction(id)}>{t(label)}</button>)}
-  </dialog>;
+  </Sheet>;
 
 }

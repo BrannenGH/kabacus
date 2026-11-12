@@ -10,3 +10,15 @@
 [submodule ".agents/vendor/bencium-design"]
 	path = .agents/vendor/bencium-design
 	url = https://github.com/bencium/bencium-claude-code-design-skill.git
+[submodule ".agents/vendor/anthropic-skills"]
+	path = .agents/vendor/anthropic-skills
+	url = https://github.com/anthropics/skills.git
+[submodule ".agents/vendor/vercel-agent-skills"]
+	path = .agents/vendor/vercel-agent-skills
+	url = https://github.com/vercel-labs/agent-skills.git
+[submodule ".agents/vendor/ui-ux-pro-max"]
+	path = .agents/vendor/ui-ux-pro-max
+	url = https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git
+[submodule ".agents/vendor/accesslint"]
+	path = .agents/vendor/accesslint
+	url = https://github.com/accesslint/claude-marketplace.git
