@@ -34,6 +34,14 @@ Use the pinned versions; do not update upstream pins as part of loading skills.
 See `.agents/README.md` for details. The user's instructions and these
 repository rules take precedence over skill guidance.
 
+## Code navigation
+
+The `codeatlas` MCP server (`.mcp.json` for Claude Code,
+`.codex/config.toml` for Codex) indexes this repository. Use it to find
+code, trace callers and check what a change affects before you edit,
+and to review a diff, rather than sweeping the tree with grep. Its
+indexes (`.codeatlas/`, `.codeatlas-sa/`) are local and gitignored.
+
 `AGENTS.md` is the canonical instructions file; `CLAUDE.md` is a relative
 symbolic link to it. Edit `AGENTS.md` when updating these instructions.
 

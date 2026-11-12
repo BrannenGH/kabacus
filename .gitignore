@@ -37,5 +37,6 @@ __pycache__/
 
 /apps/kabacus-ui/src-tauri/binaries/
 
-# CodeAtlas index (built by the codeatlas MCP server).
+# CodeAtlas indexes (built by the codeatlas MCP server).
 /.codeatlas/
+/.codeatlas-sa/
