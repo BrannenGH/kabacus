@@ -153,10 +153,12 @@ async fn cash_on_hand_matches_the_worked_example() {
     let report = call(&client, "cash_on_hand", json!({"as_of": "2026-10-01"})).await;
     assert_eq!(report["as_of"], "2026-10-01");
     assert_eq!(exact(&report["money_on_hand"]), "12178.25");
-    assert_eq!(exact(&report["future_allocations"]), "7816.25");
+    // dept-store is in credit: its -25.00 reserve sets nothing aside and
+    // comes off checking's free money.
+    assert_eq!(exact(&report["future_allocations"]), "7841.25");
     assert_eq!(exact(&report["receivables"]), "1200.00");
-    assert_eq!(exact(&report["cash_on_hand"]), "3162.00");
-    assert_eq!(report["cash_on_hand"]["formatted"], "$3,162.00");
+    assert_eq!(exact(&report["cash_on_hand"]), "3137.00");
+    assert_eq!(report["cash_on_hand"]["formatted"], "$3,137.00");
 
     let by_kind = &report["by_kind"];
     let money = find(by_kind, "kind", "money");
@@ -187,9 +189,9 @@ async fn cash_on_hand_matches_the_worked_example() {
     );
 
     let checking = find(&report["homes"], "account", "assets:bank:checking");
-    assert_eq!(exact(&checking["free"]), "3150.00");
+    assert_eq!(exact(&checking["free"]), "3125.00");
     assert_eq!(exact(&checking["funds"]), "1435.00");
-    assert_eq!(exact(&checking["reserves"]), "1381.25");
+    assert_eq!(exact(&checking["reserves"]), "1406.25");
     assert_eq!(exact(&checking["inclusive"]), "5966.25");
 
     for (fund, amount) in FUNDS {
@@ -209,19 +211,25 @@ async fn cash_on_hand_matches_the_worked_example() {
         assert_eq!(line["unreserved_count"], 0);
     }
     assert_eq!(report["unreserved_count"], 0);
-    // Only the fixture's own `assets:checking`, which no rule matches.
+    // dept-store in credit, and the fixture's own `assets:checking`,
+    // which no rule matches.
     let codes: Vec<&str> = report["warnings"]
         .as_array()
         .unwrap()
         .iter()
         .map(|w| w["code"].as_str().unwrap())
         .collect();
-    assert_eq!(codes, ["unclassified"], "{}", report["warnings"]);
+    assert_eq!(
+        codes,
+        ["negative-reserve", "unclassified"],
+        "{}",
+        report["warnings"]
+    );
 
     // The day before, the funds and receivables weren't opened yet.
     let before = call(&client, "cash_on_hand", json!({"as_of": "2026-09-30"})).await;
-    assert_eq!(exact(&before["cash_on_hand"]), "3150.00");
-    assert_eq!(exact(&before["future_allocations"]), "1381.25");
+    assert_eq!(exact(&before["cash_on_hand"]), "3125.00");
+    assert_eq!(exact(&before["future_allocations"]), "1406.25");
     let bad = try_call(&client, "cash_on_hand", json!({"as_of": "October"})).await;
     assert!(bad.is_err());
     client.cancel().await.unwrap();
