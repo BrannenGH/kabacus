@@ -945,9 +945,6 @@ function WriteDialog({
       <form ref={formRef} onSubmit={submit} onChange={changed}>
         <div className="dialog-heading">
           <div>
-            <p className="eyebrow">
-              {preview ? t("Review before saving") : t("Add")}
-            </p>
             <h2 id="dialog-title">
               {phone && preview ? t("Review") : allocation
                 ? t("Set money aside")
@@ -1100,7 +1097,7 @@ function WriteDialog({
             </div>
             {preview && (
               <section className="preview">
-                <h3>{t("What changes")}</h3><p className="balanced-badge">{t("Balanced · checked against revision %1", preview.head)}</p>
+                <h3>{t("Review before saving")}</h3><p className="balanced-badge">{t("Balanced · checked against revision %1", preview.head)}</p>
                 <pre>{preview.result.preview || preview.result.after}</pre>
                 {preview.result.cash_on_hand && (
                   <div className="list-row">

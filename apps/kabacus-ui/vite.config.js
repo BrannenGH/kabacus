@@ -21,7 +21,7 @@ function breakpoints() {
 function pwa() {
  return {name:"kabacus-pwa",closeBundle(){
   const root="dist";
-  for(const font of ["inter","playfair-display"]){writeFileSync(join(root,`${font}-LICENSE.txt`),readFileSync(`node_modules/@fontsource/${font}/LICENSE`));}
+  for(const font of ["inter"]){writeFileSync(join(root,`${font}-LICENSE.txt`),readFileSync(`node_modules/@fontsource/${font}/LICENSE`));}
   function files(dir){return readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?files(join(dir,e.name)):[join(dir,e.name)]);}
   const assets=files(root).filter(path=>!path.endsWith("sw.js")).map(path=>relative(root,path));
   const version=createHash("sha256").update(Buffer.concat(assets.map(path=>readFileSync(join(root,path))))).digest("hex").slice(0,16);

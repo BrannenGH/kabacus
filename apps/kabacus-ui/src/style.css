@@ -9,15 +9,18 @@
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  color: #253331;
-  background: #f5f7f6;
+  color: #18251f;
+  background: #f6f7f3;
   font-synthesis: none;
   line-height: 1.5;
-  --border: #e2e8e5;
-  --muted: #697b74;
-  --surface: #fff;
-  --accent: #21624e;
+  --border: #d4ddd6;
+  --muted: #53635b;
+  --surface: #ffffff;
+  --accent: #246447;
   --negative: #b03328;
+  --positive: #246447;
+  --sage: #a7b298;
+  --gold: #ad915b;
   /* Status badges: neutral, and one that needs attention. */
   --badge-bg: #eef3ef;
   --badge-border: #e3ebe5;
@@ -30,6 +33,10 @@
 }
 body {
   margin: 0;
+}
+/* Running text stays under about 70 characters a line (Inter fits ~1.3 per ch). */
+p:not(.banner) {
+  max-inline-size: 52ch;
 }
 button,
 input,
@@ -223,13 +230,6 @@ main {
   gap: 20px;
   align-items: center;
   margin-bottom: 30px;
-}
-.eyebrow {
-  font-size: 12px;
-  letter-spacing: 1.7px;
-  font-weight: 700;
-  color: var(--muted);
-  margin: 0 0 9px;
 }
 h1 {
   font-size: 32px;
@@ -783,15 +783,6 @@ dialog .banner {
   }
 }
 @media (prefers-color-scheme: dark) {
-  :root {
-    color: #dce8e1;
-    background: #17201c;
-    --surface: #1f2b25;
-    --border: #33483b;
-    --muted: #9aafa1;
-    --accent: #4a8b6c;
-    --negative: #ff7a6e;
-  }
   aside {
     background: #1b2820;
   }
@@ -952,7 +943,6 @@ aside {
 }
 
 /* Neutral surfaces keep green for navigation and financial emphasis. */
-:root { --border: #d4ddd6; --muted: #53635b; --surface: #ffffff; --accent: #246447; --negative: #b03328; --positive: #246447; color: #18251f; background: #f6f7f3; }
 h1,h2,.brand { font-family: inherit; }
 h1 { font-size: 30px; line-height: 1.25; margin: 0; }
 h2 { font-size: 21px; font-weight: 600; }
@@ -987,7 +977,7 @@ nav button.active { border: 1px solid #ad915b; background: #e1e6d5; box-shadow: 
 .amount.negative { color: var(--negative); }
 .transactions-workspace { display: grid; grid-template-columns: minmax(200px,260px) minmax(0,1fr); align-items: start; gap: 16px; }
 .account-list { padding: 12px; }
-.account-list h2 { text-transform: uppercase; letter-spacing: .08em; font: 12px Inter,sans-serif; color: var(--muted); margin: 14px 8px 4px; }
+.account-list h2 { font: 600 12px Inter,sans-serif; letter-spacing: normal; color: var(--muted); margin: 14px 8px 4px; }
 .account-list button { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 10px; font: 13px Inter,sans-serif; text-align: start; background: transparent; color: inherit; padding: 8px; }
 .account-list button.selected { background: #e1e6d5; font-weight: 600; }
 .account-list .account-child { padding-inline-start: 23px; }
@@ -1082,7 +1072,6 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
  .page-heading { flex-wrap:wrap;gap:10px; }
 }
 
-:root { --sage:#a7b298; --gold:#ad915b; }
 
 /* The media aliases are expanded from design/tokens.json by Vite. */
 .phone-appbar, .phone-tabs, .phone-fab { display:none; }
@@ -1188,7 +1177,6 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
   .bookkeeping-dialog .form-fields>label:has(input[name="memo"]) { order:11; }
   .bookkeeping-dialog .dialog-heading>div { flex:1; text-align:center; }
   .bookkeeping-dialog .dialog-heading>button { order:-1; }
-  .bookkeeping-dialog .eyebrow { display:none; }
   .bookkeeping-dialog .form-fields>label { font-size:14px; }
 }
 

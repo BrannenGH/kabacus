@@ -211,7 +211,7 @@ async function fillTransaction(page) {
   await page.getByLabel("Amount (USD)").fill("84.25");
   await page.getByRole("button", { name: "Preview" }).click();
   await expect(
-    page.getByRole("heading", { name: "What changes", exact: true }),
+    page.getByRole("heading", { name: "Review before saving", exact: true }),
   ).toBeVisible();
 }
 for (const target of [accounts[0], accounts[1]]) {
@@ -1144,7 +1144,7 @@ test.describe("phone layout", () => {
     await form.locator('input[name="to"]').fill("Groceries");
     await form.getByRole("button", { name: "Review", exact: true }).click();
     expect(writes.at(-1).body.dry_run).toBe(true);
-    await expect(form.getByText("What changes", { exact: true })).toBeVisible();
+    await expect(form.getByRole("heading", { name: "Review before saving", exact: true })).toBeVisible();
     await form.getByRole("button", { name: "Save", exact: true }).click();
     expect(writes.at(-1).body.dry_run).toBe(false);
     await expect(page.locator(".save-toast")).toHaveCount(0);
@@ -1808,4 +1808,28 @@ test("the page says it is busy while books load and shows no stray label after a
   await expect(page.getByRole("alert").first()).toContainText("Books are temporarily unavailable");
   await expect(page.locator("main")).not.toHaveAttribute("aria-busy", "true");
   await expect(page.locator("main p.empty")).toHaveCount(0);
+});
+test.describe("typographic restraint", () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
+  test("account groups are labelled in sentence case and dialogs carry no label above their title", async ({ page }) => {
+    await setup(page);
+    await page.getByRole("navigation").getByRole("button", { name: "Transactions", exact: true }).click();
+    const heading = page.locator(".account-list h2").first();
+    await expect(heading).toHaveCSS("text-transform", "none");
+    await expect(heading).toHaveCSS("letter-spacing", "normal");
+    await page.getByRole("button", { name: "Add", exact: true }).click();
+    await page.locator(".add-chooser button[data-choice]").first().click();
+    await expect(page.locator(".bookkeeping-dialog .dialog-heading p")).toHaveCount(0);
+  });
+  test("running text stays under 80 characters a line", async ({ page }) => {
+    await setup(page);
+    await page.getByRole("button", { name: "Add", exact: true }).click();
+    const perLine = await page.locator(".add-chooser > p").evaluate(p => {
+      const context = document.createElement("canvas").getContext("2d");
+      context.font = getComputedStyle(p).font;
+      const average = context.measureText(p.textContent).width / p.textContent.length;
+      return p.getBoundingClientRect().width / average;
+    });
+    expect(perLine).toBeLessThan(80);
+  });
 });
