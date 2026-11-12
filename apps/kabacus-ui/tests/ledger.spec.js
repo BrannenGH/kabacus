@@ -1743,3 +1743,46 @@ test("each change in Activity is one tab stop", async ({ page }) => {
   const row = page.locator(".list-row").first();
   await expect(row.getByRole("button")).toHaveCount(1);
 });
+for (const colorScheme of ["light", "dark"]) {
+  test(`the ${colorScheme} browser bar matches the phone app bar`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await setup(page);
+    const [theme, bar] = await page.evaluate(() => {
+      const meta = [...document.querySelectorAll('meta[name="theme-color"]')].find(m => matchMedia(m.media).matches);
+      const probe = document.createElement("i");
+      probe.style.color = meta.content;
+      document.body.append(probe);
+      return [getComputedStyle(probe).color, getComputedStyle(document.querySelector(".phone-appbar")).backgroundColor];
+    });
+    expect(theme).toBe(bar);
+  });
+}
+test.describe("phone focus", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+  test("a focused control is not hidden under the tabs", async ({ page }) => {
+    const categories = ["Groceries", "Dining out", "Fuel", "Pharmacy", "Pet supplies", "Hardware", "Gifts", "Streaming", "Parking", "Haircuts", "Books", "Garden", "Laundry", "Bakery", "Coffee", "Cinema", "Charity", "Taxi"]
+      .map(name => ({ account: `expenses:${name.toLowerCase().replace(" ", "-")}`, display_name: name, kind: "expense" }));
+    await setup(page, false, transaction, [...accounts, ...categories]);
+    await page.locator('nav.phone-tabs [data-destination="Register"]').click();
+    await page.evaluate(() => window.scrollTo(0, 0));
+    const below = await page.locator(".account-list button").evaluateAll(buttons =>
+      buttons.findIndex(b => b.getBoundingClientRect().top > innerHeight));
+    expect(below).toBeGreaterThan(0);
+    // Safari and Firefox scroll a newly focused control just into view
+    // (nearest edge); Chromium centres it, so ask for the nearest edge.
+    const next = page.locator(".account-list button").nth(below);
+    await next.evaluate(b => { b.focus({ preventScroll: true }); b.scrollIntoView({ block: "nearest" }); });
+    const tabsTop = await page.locator("nav.phone-tabs").evaluate(n => n.getBoundingClientRect().top);
+    const box = await next.boundingBox();
+    expect(box.y + box.height).toBeLessThanOrEqual(tabsTop);
+  });
+  test("search and payee fields stay out of the browser's autofill", async ({ page }) => {
+    await setup(page);
+    await page.locator('nav.phone-tabs [data-destination="Register"]').click();
+    await page.getByRole("button", { name: "Search", exact: true }).click();
+    const search = page.getByRole("searchbox", { name: "Search" });
+    await expect(search).toHaveAttribute("autocomplete", "off");
+    await expect(search).toHaveAttribute("spellcheck", "false");
+  });
+});

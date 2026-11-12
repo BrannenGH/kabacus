@@ -55,6 +55,18 @@ summary:focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 3px;
 }
+button,
+a,
+summary,
+label,
+input,
+select {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+dialog {
+  overscroll-behavior: contain;
+}
 .secondary {
   border-color: var(--border);
   background: var(--surface);
@@ -1066,6 +1078,8 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
 }
 @media (--phone) {
   :root { --phone-tabs-height:76px; }
+  /* Keep a focused control clear of the sticky app bar and the fixed tabs. */
+  html { scroll-padding-block:72px calc(var(--phone-tabs-height) + 16px + env(safe-area-inset-bottom)); }
   .shell { display:block; padding-top:env(safe-area-inset-top); }
   .workspace,[dir="rtl"] .workspace { margin:0; width:100%; }
   .workspace>main { padding:16px 16px calc(156px + env(safe-area-inset-bottom)); }

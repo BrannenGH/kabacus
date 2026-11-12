@@ -202,7 +202,7 @@ export function App({ auth, book, onFileAction }) {
           <button className="quiet" onClick={() => setBookMenu(true)}>{t("Books")}</button>
         </div></details>
       </header>}
-      {phone && phoneSearch && <div className="phone-search"><input type="search" aria-label={t("Search")} placeholder={t("Search payee, memo, account")} value={registerQuery} onChange={e => setRegisterQuery(e.target.value)} autoFocus /></div>}
+      {phone && phoneSearch && <div className="phone-search"><input type="search" name="search" autoComplete="off" spellCheck={false} aria-label={t("Search")} placeholder={t("Search payee, memo, account")} value={registerQuery} onChange={e => setRegisterQuery(e.target.value)} autoFocus /></div>}
       {phone && bookMenu && <BooksSheet book={book} onClose={() => setBookMenu(false)} onAction={id => {setBookMenu(false); onFileAction?.(id);}} />}
       {!phone && <>
       <aside>
@@ -657,6 +657,10 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, initi
         <label>
           {t("Search")}
           <input
+            type="search"
+            name="search"
+            autoComplete="off"
+            spellCheck={false}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t("Search payee, memo, account")}
@@ -1030,6 +1034,7 @@ function WriteDialog({
                     {t("Payee")}
                     <input
                       name="description"
+                      autoComplete="off"
                       list="known-payees"
                       defaultValue={defaults.description}
                       onChange={(e) => recall(e.target.value)}
@@ -1047,7 +1052,7 @@ function WriteDialog({
                 {!allocation && (
                   <label>
                     {t("Memo")}
-                    <input name="memo" defaultValue={defaults.memo} />
+                    <input name="memo" autoComplete="off" defaultValue={defaults.memo} />
                   </label>
                 )}
                 <label>
@@ -1106,6 +1111,7 @@ function WriteDialog({
                   ) : (
                     <input
                       name="to"
+                      autoComplete="off"
                       list="accounts"
                       defaultValue={defaults.to || ""}
                       required
