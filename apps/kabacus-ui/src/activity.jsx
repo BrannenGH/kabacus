@@ -57,7 +57,7 @@ export function Activity({ api, data, onOpen }) {
               </h3>
               <small>
                 {change.agent && <span className="agent-badge">{t("Agent")}: {change.agent} · </span>}
-                {t("%1 · %2", change.user || change.actor || "", change.date)}
+                {t("%1 · %2", change.user || change.actor || "", localTime(change.date))}
               </small>
             </div>
             {/\[#(\d+)\]/.test(change.summary) && (
@@ -88,4 +88,11 @@ export function Activity({ api, data, onOpen }) {
       )}
     </section>
   );
+}
+// Matches the KDE app: the viewer's local time, to the minute.
+function localTime(date) {
+  const d = new Date(date);
+  if (isNaN(d)) return date;
+  const p = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }

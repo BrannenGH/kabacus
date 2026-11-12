@@ -230,7 +230,7 @@ export function App({ auth, book, onFileAction }) {
         </nav>
         <div className="sidebar-bottom">
           <button className="quiet settings-action" onClick={() => go("Settings")}><Icon name="Settings" />{t("Settings")}<Key>Ctrl+,</Key></button>
-          <div className="location"><span className="status-dot" /> <strong>{book?.local ? t("On this computer") : location.host}</strong><small>{book?.location || auth.username || ""} · {t("All changes saved")}</small></div>
+          <div className="location"><span className="status-dot" /> <strong>{book?.local ? t("On this computer") : location.host}</strong><small>{book?.location || auth.username ? t("%1 · %2", book?.location || auth.username, t("All changes saved")) : t("All changes saved")}</small></div>
           {book?.activity?.agent && <p role="status">{t("%1 is working in these books", book.activity.agent)}</p>}
           {auth.signOut && <button className="quiet" onClick={auth.signOut}>{t("Sign out")}</button>}
         </div>
@@ -358,7 +358,7 @@ export function App({ auth, book, onFileAction }) {
                             {fund.display_name || fund.account}
                           </button>
                         </h3>
-                        <small>{fund.home}</small>
+                        <small>{data.accounts.find((a) => a.account === fund.home)?.display_name || fund.home}</small>
                       </div>
                       <Amount value={fund.balance} />
                     </div>
@@ -370,7 +370,7 @@ export function App({ auth, book, onFileAction }) {
               )}
               {page === "Cards" && (
                 <section className="panel">
-                  <div className="panel-heading">
+                  <div className="panel-heading card-actions">
                     <button
                       onClick={() =>
                         setOperationForm({
@@ -382,16 +382,7 @@ export function App({ auth, book, onFileAction }) {
                       {t("Record purchase")}
                     </button>
                     <button
-                      onClick={() =>
-                        setOperationForm({
-                          kind: "fix",
-                        })
-                      }
-                      disabled={loading || !!error}
-                    >
-                      {t("Add all reserve lines")}
-                    </button>
-                    <button
+                      className="secondary"
                       onClick={() =>
                         setOperationForm({
                           kind: "payment",
@@ -401,6 +392,19 @@ export function App({ auth, book, onFileAction }) {
                     >
                       {t("Pay card")}
                     </button>
+                    {data.cash.unreserved_count > 0 && (
+                      <button
+                        className="secondary"
+                        onClick={() =>
+                          setOperationForm({
+                            kind: "fix",
+                          })
+                        }
+                        disabled={loading || !!error}
+                      >
+                        {t("Add all reserve lines")}
+                      </button>
+                    )}
                   </div>
                   <div className="panel-heading">
                     <div>
@@ -510,6 +514,9 @@ function Transactions({ transactions, onOperation, selected, onSelect, activity 
             <tr key={tx.id} aria-selected={selected===String(tx.id)} onClick={()=>onSelect?.(String(tx.id))} className={activity?.changed?.includes(tx.id)?"agent-changed":""} title={activity?.changed?.includes(tx.id)?activity.changed_by:undefined}>
               <td className="date">{tx.date}</td>
               <td>
+                <strong>{tx.payee || "—"}</strong>
+                <small className="block">{tx.memo}</small>
+                {onOperation && <div className="row-actions">
                 {onOperation && (
                   <button
                     className="quiet"
@@ -544,8 +551,7 @@ function Transactions({ transactions, onOperation, selected, onSelect, activity 
                     {t("Review")}
                   </button>
                 )}
-                <strong>{tx.payee || "—"}</strong>
-                <small className="block">{tx.memo}</small>
+                </div>}
               </td>
               <td>
                 {tx.postings.map((posting, i) => (

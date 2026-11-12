@@ -7,3 +7,6 @@
 [submodule ".agents/vendor/ponytail"]
 	path = .agents/vendor/ponytail
 	url = https://github.com/DietrichGebert/ponytail.git
+[submodule ".agents/vendor/bencium-design"]
+	path = .agents/vendor/bencium-design
+	url = https://github.com/bencium/bencium-claude-code-design-skill.git
