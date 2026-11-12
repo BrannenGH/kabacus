@@ -2,35 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import React, { useEffect, useState } from "react";
 import { t } from "./i18n";
-export function Accounts({ data, loans = false, onOpen }) {
+export function Loans({ data, onOpen }) {
   const nonzero = (a) =>
     (a.balance_inclusive || a.balances || []).some(
       (b) => !/^[-+]?0(?:\.0+)?$/.test(b.exact),
     );
-  const labels = {
-    money: "Money",
-    "revolving-debt": "Cards",
-    "term-liability": "Loans",
-    receivable: "People",
-    payable: "People",
-    expense: "Spending",
-    income: "Income",
-    "non-liquid": "Investments",
-  };
-  const groups = [...Object.entries(labels), ["other", "Other"]].filter(
-    ([kind]) => !loans || kind === "term-liability",
-  );
+  const groups = [["term-liability", "Loans"]];
   return (
     <section className="panel">
       {groups.map(([kind, label]) => {
-        const accounts = data.accounts
-          .filter((a) => nonzero(a))
-          .filter((a) =>
-            kind === "other"
-              ? !labels[a.kind] &&
-                !["parent", "pre-allocation", "debt-reserve"].includes(a.kind)
-              : a.kind === kind,
-          );
+        const accounts = data.accounts.filter((a) => nonzero(a) && a.kind === kind);
         if (!accounts.length) return null;
         return (
           <section key={kind}>

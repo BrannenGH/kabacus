@@ -3,10 +3,8 @@
 import React from "react";
 import { t } from "./i18n";
 import { OverviewDetails } from "./overview-details";
+import { Amount } from "./amount";
 const nonzero = (a) => a && !/^[-+]?0(?:\.0+)?$/.test(a.exact);
-function Amount({ value }) {
-  return <span className={`amount ${value?.exact.startsWith("-") ? "negative" : ""}`}>{value?.formatted}</span>;
-}
 export function Overview({ data, api, onAccount, onReserve, onCredit, onFix }) {
   const cash = data.cash;
   const funds = cash.funds.filter(fund => nonzero(fund.balance));

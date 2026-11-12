@@ -5,16 +5,16 @@ import { Workspace } from "./workspace";
 import { useDialogHistory, keepsUnsavedChange } from "./phone-history";
 import { PhonePicker } from "./phone-picker";
 import { useMedia, phoneQuery, desktopQuery } from "./form-factor";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Api, exactAmount } from "./api";
-import { initializeAuth } from "./auth";
 import "./style.css";
 import { Reports } from "./reports";
 import { AmountField } from "./amount-field";
+import { Amount } from "./amount";
 import { accountCurrency, currencies } from "./operations";
 import { OperationDialog } from "./operation-dialog";
-import { Accounts, People } from "./accounts";
+import { Loans, People } from "./accounts";
 import { Settings } from "./settings";
 import { Overview } from "./overview";
 import { Activity } from "./activity";
@@ -29,15 +29,6 @@ const today = () => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 };
 const name = (account) => account.display_name || account.account;
-function Amount({ value }) {
-  return (
-    <span
-      className={`amount ${value?.exact?.startsWith("-") ? "negative" : ""}`}
-    >
-      {value?.formatted ?? "—"}
-    </span>
-  );
-}
 function Empty({ children }) {
   return <p className="empty">{children}</p>;
 }
@@ -124,9 +115,12 @@ export function App({ auth, book, onFileAction }) {
     else setOperationForm({ kind: { "settle.record": "settle", "card.pay": "payment", "split.record": "split", "transaction.split": "split", "transaction.transfer": "transfer", "transaction.postings": "postings" }[command.id], account: openedAccount });
   };
   useEffect(() => { book?.remember?.({ page, account: openedAccount, selected:selectedRow }); }, [page, openedAccount, selectedRow, book?.id]);
+  const latest = useRef();
+  latest.current = { data, error, go, beginAdd };
   useEffect(() => {
     let goUntil = 0;
     const keys = (event) => {
+      const { data, error, go, beginAdd } = latest.current;
       if (event.key.length === 1 || event.key === "Tab") document.documentElement.classList.add("hardware-keyboard");
       const editing = event.target.closest("input, textarea, select, [contenteditable=true]");
       if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
@@ -146,7 +140,7 @@ export function App({ auth, book, onFileAction }) {
       else if (event.key === "/") { event.preventDefault(); go("Register"); setTimeout(() => document.querySelector('input[type="search"], input[placeholder="' + t("Search payee, memo, account") + '"]')?.focus(), 0); }
     };
     window.addEventListener("keydown", keys); return () => window.removeEventListener("keydown", keys);
-  }, [data, error]);
+  }, []);
   const saved = () => {
     refresh();
   };
@@ -180,15 +174,7 @@ export function App({ auth, book, onFileAction }) {
         {error && <p role="alert">{error}</p>}
       </main>
     );
-  const titles = {
-    Overview: t(
-      "Free money you can spend right now, after reserves and card reserves.",
-    ),
-    Register: t("Transactions"),
-    Funds: t("Set money aside"),
-    Cards: t("Each card's reserve should equal what it owes."),
-    Activity: t("Activity"),
-  };
+
   return (
     <div className="shell">
       {phone && <header className="phone-appbar">
@@ -304,13 +290,7 @@ export function App({ auth, book, onFileAction }) {
               ))}
               {page === "Overview" && <Overview data={data} api={api} onFix={warning => go(warning.code?.includes("reserve") ? "Cards" : warning.code?.includes("fund") ? "Funds" : "Register")} onAccount={openRegister} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} />}
               {page === "Loans" && (
-                <Accounts
-                  data={data}
-                  loans={page === "Loans"}
-                  onOpen={(account) => {
-                    openRegister(account);
-                  }}
-                />
+                <Loans data={data} onOpen={openRegister} />
               )}
               {page === "People" && <People api={api} />}
               {page === "Reports" && <Reports api={api} data={data} />}
@@ -319,7 +299,7 @@ export function App({ auth, book, onFileAction }) {
                   phone={phone} query={registerQuery}
                   data={data}
                   api={api}
-                  initialAccount={openedAccount}
+                  account={openedAccount}
                   onAccountChange={setOpenedAccount}
                   selected={selectedRow} onSelect={setSelectedRow} activity={book?.activity}
                   onOperation={
@@ -517,40 +497,9 @@ function Transactions({ transactions, onOperation, selected, onSelect, activity 
                 <strong>{tx.payee || "—"}</strong>
                 <small className="block">{tx.memo}</small>
                 {onOperation && <div className="row-actions">
-                {onOperation && (
-                  <button
-                    className="quiet"
-                    onClick={() =>
-                      onOperation({
-                        kind: "edit",
-                        tx,
-                      })
-                    }
-                  >
-                    {t("Edit")}
-                  </button>
-                )}
-                {onOperation && (
-                  <button
-                    className="quiet"
-                    onClick={() =>
-                      onOperation({
-                        kind: "void",
-                        tx,
-                      })
-                    }
-                  >
-                    {t("Void")}
-                  </button>
-                )}
-                {onOperation && (
-                  <button
-                    className="quiet"
-                    onClick={() => onOperation({ kind: "status", tx })}
-                  >
-                    {t("Review")}
-                  </button>
-                )}
+                  {[["edit", "Edit"], ["void", "Void"], ["status", "Review"]].map(([kind, label]) => (
+                    <button key={kind} className="quiet" onClick={() => onOperation({ kind, tx })}>{t(label)}</button>
+                  ))}
                 </div>}
               </td>
               <td>
@@ -579,12 +528,16 @@ function Transactions({ transactions, onOperation, selected, onSelect, activity 
     </div>
   );
 }
-function Register({ phone, query: phoneQuery = "", data, api, onOperation, initialAccount = "", onAccountChange, selected, onSelect, activity }) {
+// Newest day first, and within a day the latest entry first.
+function RegisterDays({ rows, row }) {
+  const days = [...new Set(rows.map((r) => r.date))].sort().reverse();
+  return <div className="phone-register">{days.map((day) => <section key={day}>
+    <h3>{day}</h3>{rows.map((r, i) => [r, i]).filter(([r]) => r.date === day).reverse().map(([r, i]) => row(r, i))}
+  </section>)}</div>;
+}
+function Register({ phone, query: phoneQuery = "", data, api, onOperation, account = "", onAccountChange: setAccount, selected, onSelect, activity }) {
   const [query, setQuery] = useState("");
   const [unreserved, setUnreserved] = useState(false);
-  const [account, setAccount] = useState(initialAccount);
-  useEffect(()=>setAccount(initialAccount),[initialAccount]);
-  useEffect(()=>onAccountChange?.(account),[account]);
   const [lines, setLines] = useState(null);
   const [error, setError] = useState("");
   useEffect(() => {
@@ -602,13 +555,15 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, initi
       });
     return () => controller.abort();
   }, [account, data, api]);
-  const searchQuery = phone ? phoneQuery : query;
+  // Filtering every transaction waits for typing to settle.
+  const searchQuery = useDeferredValue(phone ? phoneQuery : query).toLowerCase();
+  const byId = useMemo(() => new Map(data.transactions.map((tx) => [tx.id, tx])), [data.transactions]);
   const transactions = data.transactions.filter(
     (tx) =>
       (!unreserved || tx.unreserved) &&
       `${tx.payee} ${tx.memo} ${tx.postings.map((p) => p.account).join(" ")}`
         .toLowerCase()
-        .includes(searchQuery.toLowerCase()),
+        .includes(searchQuery),
   );
   return (
     <section className="panel">
@@ -683,7 +638,7 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, initi
           {error}
         </p>
       )}
-      {phone && !account ? <div className="phone-register">{[...new Set(transactions.map(tx => tx.date))].sort().reverse().map(day => <section key={day}><h3>{day}</h3>{transactions.filter(tx => tx.date === day).reverse().map(tx => <button key={tx.id} className="register-row quiet" onClick={() => onOperation?.({kind:"edit",tx})}><span>{["*", "cleared"].includes(tx.status) ? "●" : "○"}</span><span className="grow"><strong>{tx.payee}</strong><small>{tx.memo}</small></span><Amount value={tx.postings[0]?.amount} /></button>)}</section>)}</div> : !account ? (
+      {phone && !account ? <RegisterDays rows={transactions} row={tx => <button key={tx.id} className="register-row quiet" onClick={() => onOperation?.({kind:"edit",tx})}><span>{["*", "cleared"].includes(tx.status) ? "●" : "○"}</span><span className="grow"><strong>{tx.payee}</strong><small>{tx.memo}</small></span><Amount value={tx.postings[0]?.amount} /></button>} /> : !account ? (
         <Transactions
           transactions={[...transactions].reverse()}
           onOperation={onOperation}
@@ -692,11 +647,10 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, initi
       ) : !lines ? (
         <Empty>{t("Loading…")}</Empty>
       ) : (
-        phone ? <div className="phone-register">{[...new Set(lines.map(line => line.date))].sort().reverse().map(day => <section key={day}>
-          <h3>{day}</h3>{lines.filter(line => line.date === day && `${line.payee} ${line.memo} ${line.other_account}`.toLowerCase().includes(searchQuery.toLowerCase())).reverse().map((line, i) => <button className="register-row quiet" key={`${line.id}-${i}`} onClick={() => {onSelect?.(String(line.id)); const tx = data.transactions.find(tx => tx.id === line.id); if (tx && onOperation) onOperation({kind: "edit", tx});}}>
-            <span className="cleared-mark">{["*", "cleared"].includes(data.transactions.find(tx => tx.id === line.id)?.status) ? "●" : "○"}</span>
+        phone ? <RegisterDays rows={lines.filter(line => `${line.payee} ${line.memo} ${line.other_account}`.toLowerCase().includes(searchQuery))} row={(line, i) => <button className="register-row quiet" key={`${line.id}-${i}`} onClick={() => {onSelect?.(String(line.id)); const tx = byId.get(line.id); if (tx && onOperation) onOperation({kind: "edit", tx});}}>
+            <span className="cleared-mark">{["*", "cleared"].includes(byId.get(line.id)?.status) ? "●" : "○"}</span>
             <span className="grow"><strong>{line.payee}</strong><small>{line.memo || line.other_account}</small></span><span><Amount value={line.amount} /><small><Amount value={line.balance} /></small></span>
-          </button>)}</section>)}</div> :
+          </button>} /> :
         <div className="table-wrap">
           <table>
             <thead>
@@ -713,26 +667,24 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, initi
                 .filter(
                   (line) =>
                     (!unreserved ||
-                      data.transactions.find((tx) => tx.id === line.id)
+                      byId.get(line.id)
                         ?.unreserved) &&
                     `${line.payee} ${line.memo} ${line.other_account}`
                       .toLowerCase()
-                      .includes(searchQuery.toLowerCase()),
+                      .includes(searchQuery),
                 )
                 .map((line, i) => (
                   <tr key={`${line.id}-${i}`} aria-selected={selected===String(line.id)} onClick={()=>onSelect?.(String(line.id))} onFocus={()=>onSelect?.(String(line.id))} className={activity?.changed?.includes(line.id)?"agent-changed":""} title={activity?.changed?.includes(line.id)?activity.changed_by:undefined}>
                     <td>{line.date}</td>
                     <td>
                       {onOperation &&
-                      data.transactions.find((tx) => tx.id === line.id) ? (
+                      byId.get(line.id) ? (
                         <button
                           className="quiet"
                           onClick={() =>
                             onOperation({
                               kind: "edit",
-                              tx: data.transactions.find(
-                                (tx) => tx.id === line.id,
-                              ),
+                              tx: byId.get(line.id),
                             })
                           }
                         >
@@ -1213,7 +1165,8 @@ initializeLocale().then(async () => {
   if(query.has("returnTo")){try{const back=new URL(query.get("returnTo"));if(back.protocol==="https:"||back.origin===location.origin)sessionStorage.setItem("kabacus.return",back.href);}catch{}}
   let auth=null;
   if(!nativeLauncher && location.pathname.startsWith("/app/")) {
-    try { auth=await initializeAuth(); } catch { /* Local books remain available offline. */ }
+    // The sign-in library loads only for books served from a server.
+    try { auth=await (await import("./auth")).initializeAuth(); } catch { /* Local books remain available offline. */ }
   }
   createRoot(document.getElementById("root")).render(<Workspace Application={App} hosted={auth}/>);
   if("serviceWorker" in navigator && !nativeLauncher)navigator.serviceWorker.register(new URL("./sw.js",document.baseURI)).catch(()=>{});
