@@ -10,6 +10,7 @@ export const messages = [
   "How it's worked out",
   "View as raw postings",
   "Back", "Books", "Switch Books…", "More",
+  "Cleared",
   "Sign in to %1",
   "Back to my books",
   "Account type",

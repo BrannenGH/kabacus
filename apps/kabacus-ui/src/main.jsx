@@ -528,6 +528,11 @@ function Transactions({ transactions, onOperation, selected, onSelect, activity 
     </div>
   );
 }
+// The dot shows a cleared transaction to the eye; the hidden word reads it out.
+function ClearedMark({ status }) {
+  const cleared = ["*", "cleared"].includes(status);
+  return <span className="cleared-mark"><span aria-hidden="true">{cleared ? "●" : "○"}</span>{cleared && <span className="visually-hidden">{t("Cleared")}</span>}</span>;
+}
 // Newest day first, and within a day the latest entry first.
 function RegisterDays({ rows, row }) {
   const days = [...new Set(rows.map((r) => r.date))].sort().reverse();
@@ -638,7 +643,7 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, accou
           {error}
         </p>
       )}
-      {phone && !account ? <RegisterDays rows={transactions} row={tx => <button key={tx.id} className="register-row quiet" onClick={() => onOperation?.({kind:"edit",tx})}><span>{["*", "cleared"].includes(tx.status) ? "●" : "○"}</span><span className="grow"><strong>{tx.payee}</strong><small>{tx.memo}</small></span><Amount value={tx.postings[0]?.amount} /></button>} /> : !account ? (
+      {phone && !account ? <RegisterDays rows={transactions} row={tx => <button key={tx.id} className="register-row quiet" onClick={() => onOperation?.({kind:"edit",tx})}><ClearedMark status={tx.status} /><span className="grow"><strong>{tx.payee}</strong><small>{tx.memo}</small></span><Amount value={tx.postings[0]?.amount} /></button>} /> : !account ? (
         <Transactions
           transactions={[...transactions].reverse()}
           onOperation={onOperation}
@@ -648,7 +653,7 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, accou
         <Empty>{t("Loading…")}</Empty>
       ) : (
         phone ? <RegisterDays rows={lines.filter(line => `${line.payee} ${line.memo} ${line.other_account}`.toLowerCase().includes(searchQuery))} row={(line, i) => <button className="register-row quiet" key={`${line.id}-${i}`} onClick={() => {onSelect?.(String(line.id)); const tx = byId.get(line.id); if (tx && onOperation) onOperation({kind: "edit", tx});}}>
-            <span className="cleared-mark">{["*", "cleared"].includes(byId.get(line.id)?.status) ? "●" : "○"}</span>
+            <ClearedMark status={byId.get(line.id)?.status} />
             <span className="grow"><strong>{line.payee}</strong><small>{line.memo || line.other_account}</small></span><span><Amount value={line.amount} /><small><Amount value={line.balance} /></small></span>
           </button>} /> :
         <div className="table-wrap">

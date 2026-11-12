@@ -1786,3 +1786,12 @@ test.describe("phone focus", () => {
     await expect(search).toHaveAttribute("spellcheck", "false");
   });
 });
+test.describe("phone cleared marks", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+  test("a cleared transaction is read out as cleared", async ({ page }) => {
+    await setup(page);
+    await page.locator('nav.phone-tabs [data-destination="Register"]').click();
+    await page.getByRole("button", { name: "All transactions", exact: true }).click();
+    await expect(page.getByRole("button", { name: /^Cleared Maple Market/ })).toBeVisible();
+  });
+});

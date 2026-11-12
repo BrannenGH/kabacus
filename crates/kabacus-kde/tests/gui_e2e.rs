@@ -751,6 +751,38 @@ async fn all_transactions_hides_fund_transfers_until_asked() {
     }
 }
 
+// A cleared transaction's dot has a name a screen reader reads out.
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn a_cleared_transaction_is_named_as_cleared() {
+    let journal = "
+account assets:bank:checking   ; ynab-account:Checking
+account expenses:dining   ; ynab-envelope:Dining
+
+2026-09-01 * Opening
+    assets:bank:checking  2000.00 USD
+    equity:opening
+
+2026-09-10 * Coffee Roasters
+    expenses:dining  18.40 USD
+    assets:bank:checking
+
+2026-09-12 Larkspur Bakery
+    expenses:dining  9.75 USD
+    assets:bank:checking
+";
+    for (i, size) in [DESKTOP, "390x844"].into_iter().enumerate() {
+        let name = format!("cleared{i}");
+        let socket = socket_path(&name);
+        let server = kabacus_testkit::spawn_server_with_journal(journal, |c| {
+            c.socket_path = socket.clone()
+        })
+        .await;
+        let _app = launch_sized(&server.socket_path, &config_dir(&name), size);
+        drive(&["cleared-mark", "Coffee Roasters", "Larkspur Bakery"]).await;
+    }
+}
+
 // Reconcile is on a bank account's register (not a
 // destination of its own, and not on a spending account's) and checks the
 // account against a statement.
