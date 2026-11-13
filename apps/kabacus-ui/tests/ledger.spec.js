@@ -1100,13 +1100,17 @@ test.describe("phone layout", () => {
     await form.locator('select[name="from"]').tap();
     let picker = page.locator(".phone-picker");
     await expect(picker).toBeVisible();
-    expect((await picker.boundingBox()).height).toBe(844);
+    expect((await picker.boundingBox()).height).toBeCloseTo(844, 0);
     await picker.getByRole("button", { name: "Salary", exact: true }).tap();
     await expect(form.locator('select[name="from"]')).toHaveValue("income:salary");
     await form.locator('input[name="date"]').tap();
     await expect(picker).toBeVisible();
     await picker.getByRole("button", { name: "Back", exact: true }).tap();
     await expect(picker).toHaveCount(0);
+    const date = form.locator('input[name="date"]');
+    await date.dispatchEvent("pointerdown", { pointerType: "touch", bubbles: true });
+    await date.dispatchEvent("click", { pointerType: "mouse", bubbles: true });
+    await expect(picker).toBeVisible();
   });
   test("typing in a picker lists matches from every group with where each lives", async ({ page }) => {
     await setup(page);

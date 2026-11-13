@@ -674,7 +674,7 @@ def main():
 
         def to_is_fund():
             picker = find(app(), "To", pyatspi.ROLE_COMBO_BOX)
-            return picker is not None and picker.description == fund
+            return picker is not None and picker.description == f"{fund} · $300.00"
         wait_for(f"To preset to {fund}", lambda: to_is_fund() or None, 10)
 
         # A phone's form hides the tabs; leave it before navigating.
