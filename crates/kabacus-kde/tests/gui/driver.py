@@ -674,7 +674,7 @@ def main():
 
         def to_is_fund():
             picker = find(app(), "To", pyatspi.ROLE_COMBO_BOX)
-            return picker is not None and picker.description == fund
+            return picker is not None and picker.description == f"{fund} · $300.00"
         wait_for(f"To preset to {fund}", lambda: to_is_fund() or None, 10)
 
         # A phone's form hides the tabs; leave it before navigating.
@@ -797,6 +797,8 @@ def main():
         goto("Reserves")
         press(wait_for(f"Set aside for {fund}", lambda: find(app(), f"Set aside for {fund}", pyatspi.ROLE_PUSH_BUTTON)))
         wait_for("the form", lambda: find(app(), "Amount", pyatspi.ROLE_TEXT))
+        wait_for("the source balance", lambda: find(app(), "$2,000.00", pyatspi.ROLE_LABEL, showing=False))
+        wait_for("the empty fund balance", lambda: find(app(), "$0.00", pyatspi.ROLE_LABEL, showing=False))
         fill_fields(Amount=amount)
         save()
     elif command == "fix-reserves":

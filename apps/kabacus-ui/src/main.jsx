@@ -753,6 +753,7 @@ function WriteDialog({
   const [payees, setPayees] = useState([]);
   const [dirty, setDirty] = useState(false);
   const [typedTo, setTypedTo] = useState(defaults.to || "");
+  const [typedFrom, setTypedFrom] = useState(defaults.from || "");
   useDialogHistory({ onClose, preview, setPreview, dirty, busy });
   const close = () => {
     if (!busy && (!dirty || window.confirm(t("Discard this change?"))))
@@ -798,6 +799,11 @@ function WriteDialog({
       (a) => name(a).toLocaleLowerCase() === typed.toLocaleLowerCase(),
     );
     return matches.length === 1 ? matches[0].account : typed;
+  }
+  function allocationBalance(value) {
+    const account = accountPath(value);
+    return data.cash.funds.find(f => f.account === account)?.balance ||
+      data.cash.homes.find(h => h.account === account)?.free;
   }
   useEffect(() => {
     if (allocation) return;
@@ -847,6 +853,7 @@ function WriteDialog({
     event.currentTarget.dataset.dirty = "true";
     draft.current = Object.fromEntries(new FormData(event.currentTarget));
     setTypedTo(draft.current.to || "");
+    setTypedFrom(draft.current.from || "");
     generation.current++;
     setPreview(null);
     setError("");
@@ -1016,6 +1023,8 @@ function WriteDialog({
                   {t("From")}
                   <select
                     name="from"
+                    aria-label={t("From")}
+                    aria-describedby={allocation && allocationBalance(typedFrom) ? "allocation-from-balance" : undefined}
                     onChange={e => {
                       if (!received && !allocation) setCurrency(accountCurrency(data, e.target.value));
                       if (spending && data.cash.cards.some((c) => c.card === e.target.value)) {
@@ -1045,12 +1054,14 @@ function WriteDialog({
                       </option>
                     ))}
                   </select>
+                  {allocation && allocationBalance(typedFrom) && <small id="allocation-from-balance" className="account-balance"><Amount value={allocationBalance(typedFrom)} /></small>}
                 </label>
                 <label>
                   {t("To")}
                   {received ? (
                     <select
                       name="to"
+                      aria-label={t("To")}
                       onChange={e => setCurrency(accountCurrency(data, e.target.value))}
                       required
                       defaultValue={
@@ -1068,6 +1079,8 @@ function WriteDialog({
                   ) : (
                     <input
                       name="to"
+                      aria-label={t("To")}
+                      aria-describedby={allocation && allocationBalance(typedTo) ? "allocation-to-balance" : undefined}
                       autoComplete="off"
                       list="accounts"
                       defaultValue={defaults.to || ""}
@@ -1082,6 +1095,7 @@ function WriteDialog({
                       </option>
                     ))}
                   </datalist>
+                  {allocation && allocationBalance(typedTo) && <small id="allocation-to-balance" className="account-balance"><Amount value={allocationBalance(typedTo)} /></small>}
                 </label>
                 {newCategory(typedTo) && (
                   <p className="banner warning" role="status">

@@ -24,16 +24,20 @@ export function PhonePicker({ form }) {
   useDialogHistory({ active: !!field, onClose: () => setField(null) });
   useEffect(() => {
     if (!form.current) return;
-    const inputFor = event => {
+    let pointerType = "";
+    const inputFor = (event, type = event.pointerType) => {
       const el = event.target.closest('select,input[list]:not([name="description"]),input[type="date"]');
-      if (event.pointerType === "touch") return phone ? el : null;
-      return event.pointerType === "mouse" && isAccountField(el) ? el : null;
+      if (type === "touch") return phone ? el : null;
+      return type === "mouse" && isAccountField(el) ? el : null;
     };
     const preventNative = event => {
-      if (inputFor(event)) event.preventDefault();
+      if (event.type === "pointerdown") pointerType = event.pointerType;
+      if (inputFor(event, event.pointerType || pointerType)) event.preventDefault();
     };
     const pick = event => {
-      const input = inputFor(event);
+      // WebKit can deliver a MouseEvent click after a touch pointerdown.
+      const input = inputFor(event, pointerType || event.pointerType);
+      pointerType = "";
       if (!input) return;
       event.preventDefault();
       const current = [...(input.options || input.list?.options || [])].find(option => option.value === input.value);

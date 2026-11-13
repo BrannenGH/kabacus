@@ -17,6 +17,8 @@ ColumnLayout {
 
     readonly property bool phone: picker.Window.window !== null && picker.Window.window.width < Theme.phoneBreakpoint
     property string label: ""
+    property bool showBalance: false
+    readonly property string balance: showBalance ? accounts.find(a => a.account === value)?.balance || "" : ""
     // [{account, name, kind, home}]
     property var accounts: []
     // The chosen account path.
@@ -118,7 +120,7 @@ ColumnLayout {
         currentIndex: -1
         Accessible.name: picker.label
         // What it shows, for a screen reader (and the GUI e2e).
-        Accessible.description: editText
+        Accessible.description: picker.balance !== "" ? editText + " · " + picker.balance : editText
         Layout.fillWidth: true
         Layout.minimumWidth: Kirigami.Units.gridUnit * 12
         onActivated: {
@@ -221,6 +223,13 @@ ColumnLayout {
             }
         }
     }
+    }
+    Controls.Label {
+        visible: picker.balance !== ""
+        text: picker.balance
+        Layout.fillWidth: true
+        wrapMode: Text.Wrap
+        Accessible.name: text
     }
     Controls.Label {
         visible: picker.error !== ""

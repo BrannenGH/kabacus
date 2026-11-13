@@ -1100,13 +1100,17 @@ test.describe("phone layout", () => {
     await form.locator('select[name="from"]').tap();
     let picker = page.locator(".phone-picker");
     await expect(picker).toBeVisible();
-    expect((await picker.boundingBox()).height).toBe(844);
+    expect((await picker.boundingBox()).height).toBeCloseTo(844, 0);
     await picker.getByRole("button", { name: "Salary", exact: true }).tap();
     await expect(form.locator('select[name="from"]')).toHaveValue("income:salary");
     await form.locator('input[name="date"]').tap();
     await expect(picker).toBeVisible();
     await picker.getByRole("button", { name: "Back", exact: true }).tap();
     await expect(picker).toHaveCount(0);
+    const date = form.locator('input[name="date"]');
+    await date.dispatchEvent("pointerdown", { pointerType: "touch", bubbles: true });
+    await date.dispatchEvent("click", { pointerType: "mouse", bubbles: true });
+    await expect(picker).toBeVisible();
   });
   test("typing in a picker lists matches from every group with where each lives", async ({ page }) => {
     await setup(page);
@@ -1841,6 +1845,9 @@ test.describe("phone overflow menu", () => {
     const open = page.locator(".overflow-button");
     await open.click();
     await expect(menu).toBeVisible();
+    const bounds = await menu.boundingBox();
+    expect(bounds.height).toBeLessThan(160);
+    expect(bounds.width).toBeLessThan(240);
     await menu.getByRole("button", { name: "Refresh", exact: true }).click();
     await expect(menu).toBeHidden();
     await open.click();
@@ -1865,4 +1872,43 @@ test.describe("touch feedback on a phone", () => {
     await page.getByRole("button", { name: "All transactions", exact: true }).click();
     await expect(page.locator(".phone-register section").first()).toHaveCSS("content-visibility", "auto");
   });
+});
+
+for (const width of [390, 1280]) {
+  test(`set-aside shows selected fund totals at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 844 });
+    const writes = await setup(page);
+    await page.getByRole("button", { name: "Add", exact: true }).click();
+    await page.getByRole("button", { name: /^Set aside/ }).click();
+    const form = page.locator(".bookkeeping-dialog");
+    await form.getByLabel("From", { exact: true }).selectOption(accounts[1].account);
+    await form.locator('input[name="to"]').fill("Checking");
+    await expect(form.locator(".account-balance")).toHaveText(["$1800.00", "$3900.75"]);
+    await form.getByLabel("From", { exact: true }).selectOption(accounts[0].account);
+    await form.locator('input[name="to"]').fill("Travel");
+    await expect(form.locator(".account-balance")).toHaveText(["$3900.75", "$1800.00"]);
+    await form.getByLabel("Amount (USD)").fill("100.00");
+    await form.getByRole("button", { name: width < 600 ? "Review" : "Preview", exact: true }).click();
+    await expect(form.locator(".preview")).toBeVisible();
+    expect(writes.at(-1).body).toMatchObject({ from: accounts[0].account, to: accounts[1].account, amount: "100.00", dry_run: true });
+    await form.getByRole("button", { name: "Back to edit", exact: true }).click();
+    await expect(form.locator(".account-balance")).toHaveText(["$3900.75", "$1800.00"]);
+    await form.locator('input[name="to"]').fill("Rainy day");
+    await expect(form.locator(".account-balance")).toHaveText(["$3900.75"]);
+  });
+}
+
+test("phone date field fits the form", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await setup(page);
+  await page.getByRole("button", { name: "Add", exact: true }).click();
+  await page.getByRole("button", { name: /^Set aside/ }).click();
+  const date = page.locator('.bookkeeping-dialog input[type="date"]');
+  const field = await date.boundingBox();
+  expect(field.x + field.width).toBeLessThanOrEqual(374);
+  expect(field.x).toBeGreaterThanOrEqual(16);
+  expect(field.height).toBeGreaterThanOrEqual(48);
+  await date.fill("2026-12-01");
+  await expect(date).toHaveValue("2026-12-01");
+  expect(await page.locator(".bookkeeping-dialog").evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
 });

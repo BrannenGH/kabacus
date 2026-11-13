@@ -952,6 +952,19 @@ async fn payee_memory_and_pickers_come_from_the_books() {
     let gifts = picks.accounts.iter().find(|p| p.account == GIFTS).unwrap();
     assert_eq!(gifts.kind, "pre-allocation");
     assert_eq!(gifts.home, CHECKING);
+    assert_eq!(gifts.balance, "$0.00");
+    let insurance = picks
+        .accounts
+        .iter()
+        .find(|p| p.account == INSURANCE)
+        .unwrap();
+    assert_eq!(insurance.balance, "$300.00");
+    let checking = picks
+        .accounts
+        .iter()
+        .find(|p| p.account == CHECKING)
+        .unwrap();
+    assert_eq!(checking.balance, "$1,700.00");
 }
 
 /// Every row carries its transaction's number, and an edit keeps it.

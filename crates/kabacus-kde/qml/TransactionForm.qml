@@ -545,6 +545,7 @@ Kirigami.ScrollablePage {
                 }
                 AccountPicker {
                     id: fromPicker
+                    showBalance: page.kind === "set_aside"
                     visible: !page.postingEdit && !["card_purchase", "pay_card", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     label: page.kind === "split" ? i18n("Paid with") : page.kind === "settle" ? i18n("Account") : i18nc("the account money comes from", "From")
                     accounts: page.kind === "set_aside" ? page.asideFrom
@@ -572,6 +573,7 @@ Kirigami.ScrollablePage {
                 }
                 AccountPicker {
                     id: toPicker
+                    showBalance: page.kind === "set_aside"
                     visible: !page.postingEdit && !["pay_card", "settle", "fix_reserves", "reconcile", "account_type"].includes(page.kind)
                     label: ["spent", "card_purchase", "split"].includes(page.kind) ? i18n("Category") : i18nc("the account money goes to", "To")
                     accounts: page.kind === "set_aside" ? page.asideTo
