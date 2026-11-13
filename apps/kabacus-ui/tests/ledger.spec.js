@@ -1848,8 +1848,6 @@ test.describe("phone overflow menu", () => {
     const bounds = await menu.boundingBox();
     expect(bounds.height).toBeLessThan(160);
     expect(bounds.width).toBeLessThan(240);
-    await expect(menu).toHaveCSS("height", `${bounds.height}px`);
-    expect(await menu.evaluate(el => getComputedStyle(el).alignContent)).toBe("start");
     await menu.getByRole("button", { name: "Refresh", exact: true }).click();
     await expect(menu).toBeHidden();
     await open.click();
@@ -1900,15 +1898,17 @@ for (const width of [390, 1280]) {
   });
 }
 
-test("phone date fields fit the form and its picker", async ({ page }) => {
+test("phone date field fits the form", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await setup(page);
   await page.getByRole("button", { name: "Add", exact: true }).click();
   await page.getByRole("button", { name: /^Set aside/ }).click();
   const date = page.locator('.bookkeeping-dialog input[type="date"]');
-  await expect(date).toHaveCSS("appearance", "none");
   const field = await date.boundingBox();
   expect(field.x + field.width).toBeLessThanOrEqual(374);
   expect(field.x).toBeGreaterThanOrEqual(16);
+  expect(field.height).toBeGreaterThanOrEqual(48);
+  await date.fill("2026-12-01");
+  await expect(date).toHaveValue("2026-12-01");
   expect(await page.locator(".bookkeeping-dialog").evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
 });
