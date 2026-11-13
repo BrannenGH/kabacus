@@ -507,6 +507,7 @@ footer {
   border-bottom: 1px solid var(--border);
 }
 label {
+  min-width: 0;
   display: grid;
   gap: 7px;
   font-size: 12px;
@@ -526,6 +527,13 @@ select {
   font-size: 13px;
   width: 100%;
 }
+/* WebKit date controls otherwise keep their intrinsic width inside a grid. */
+input[type="date"] {
+  appearance: none;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+.account-balance { font-size:14px; font-weight:400; font-variant-numeric:tabular-nums; }
 .history-number {
   display: grid;
   place-items: center;
@@ -1108,7 +1116,7 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
   .overflow-button .line-icon { stroke-width:3; }
   .phone-search { padding:8px 16px; background:var(--surface); }
   .overflow-button { width:48px; }
-  .phone-overflow { inset:auto; top:calc(64px + env(safe-area-inset-top)); inset-inline-end:8px; margin:0; color:inherit; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px; gap:8px; box-shadow:0 5px 20px #263e3520; }
+  .phone-overflow { width:max-content; height:fit-content; max-width:calc(100vw - 16px); max-height:calc(100dvh - 80px - env(safe-area-inset-top)); overflow:auto; align-content:start; inset:auto; top:calc(64px + env(safe-area-inset-top)); inset-inline-end:8px; margin:0; color:inherit; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px; gap:8px; box-shadow:0 5px 20px #263e3520; }
   .phone-overflow:popover-open { display:grid; }
   nav.phone-tabs { position:fixed; inset:auto 0 0; z-index:40; height:calc(var(--phone-tabs-height) + env(safe-area-inset-bottom)); padding:8px 8px calc(8px + env(safe-area-inset-bottom)); margin:0; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:0; overflow:visible; background:var(--surface); border-top:1px solid var(--border); }
   nav.phone-tabs button { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:4px 0; min-width:0; min-height:48px; background:transparent; color:var(--muted); font-size:12px; white-space:normal; }

@@ -800,7 +800,7 @@ async fn reconcile_is_on_an_accounts_register() {
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
 async fn setting_money_aside_from_the_funds_page() {
-    for (i, size) in [DESKTOP].into_iter().enumerate() {
+    for (i, size) in [DESKTOP, "390x844"].into_iter().enumerate() {
         let server = books(&format!("aside{i}")).await;
         let client = KabacusClient::connect_unix(&server.socket_path);
         let app = launch_sized(&server.socket_path, &config_dir(&format!("aside{i}")), size);

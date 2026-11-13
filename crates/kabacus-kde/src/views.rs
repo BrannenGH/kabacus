@@ -1306,6 +1306,7 @@ pub struct Pick {
     pub kind: String,
     pub home: String,
     pub synthetic: bool,
+    pub balance: String,
 }
 
 /// The forms' pickers: every account, with its kind and home so a form
@@ -1329,6 +1330,15 @@ pub async fn picker(client: &KabacusClient) -> Result<Pickers, ModelError> {
                 a.account.clone()
             } else {
                 a.display_name.clone()
+            },
+            balance: if a.balance_exclusive.is_empty() {
+                Shown::amount("0.00", &commodity.symbol).text
+            } else {
+                a.balance_exclusive
+                    .iter()
+                    .map(|b| b.formatted.as_str())
+                    .collect::<Vec<_>>()
+                    .join(" / ")
             },
             account: a.account,
             kind: a.kind,
