@@ -2,11 +2,9 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-//! Reading a journal tree into a book. Implements the specification's
-//! "Ledger spec: scope and feature inventory" and the engine implementation
-//! specification, sections 1.5, 2.2 (`import`, `files`) and 3.2: what is
-//! read as is, what is raised or ignored and reported, and what stops the
-//! import with an error naming file and line.
+//! Reading a journal tree into a book: what is read as is, what is raised
+//! or ignored and reported, and what stops the import with an error naming
+//! file and line.
 
 use crate::amount::{parse_amount, style_from_example, AmountError, Style, UsageStyle};
 use crate::balance::{infer, Written};

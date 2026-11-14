@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-//! The scope and amounts pages' examples, and the engine implementation
-//! specification's import rules (section 1.5).
+//! Journal reading: supported features, amounts, and what is reported or
+//! refused.
 
 use super::*;
 use crate::Side;

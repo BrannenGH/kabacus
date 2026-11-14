@@ -4,8 +4,7 @@
 
 //! The `.kabacus` file: a SQLite database in the SQLite store's schema,
 //! marked with the application id `KBCS`. Writing one makes a single
-//! self-contained file; reading one treats it as untrusted. Implements the
-//! engine implementation specification, section 1.8.
+//! self-contained file; reading one treats it as untrusted.
 
 use crate::sqlite::schema::{self, APPLICATION_ID};
 use crate::{book_of, replay, LedgerDump, Result, StoreError};

@@ -3,9 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 //! Filling in an omitted amount and checking that a transaction balances.
-//! Implements the specification's "Ledger spec: inferring the missing
-//! amount and balancing" and the engine implementation specification,
-//! sections 1.1 (item 7) and 2.2 (`infer`).
+//! Implements "Balancing and omitted amounts" in the manual's ledger rules.
 
 use kabacus_core::{Amount, Money, Posting, PostingKind};
 use num_bigint::BigInt;

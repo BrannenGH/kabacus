@@ -7,8 +7,7 @@
 //! change against an expected revision, history, users and memberships,
 //! `.kabacus` export and import), with two implementations that behave
 //! identically: [`SqliteStore`] for local mode and small self-hosted
-//! servers, and `PostgresStore` for the hosted service. Implements the
-//! engine implementation specification, sections 1.2 to 1.8 and 2.4.
+//! servers, and `PostgresStore` for the hosted service.
 
 pub mod file;
 #[cfg(not(any(target_arch = "wasm32", target_os = "ios", target_os = "android")))]

@@ -2,9 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-//! The store on SQLite: one `.kabacus` file, one writer at a time.
-//! Implements the engine implementation specification, sections 1.2 to
-//! 1.4 and 2.4, for local mode and small self-hosted servers.
+//! The store on SQLite: one `.kabacus` file, one writer at a time, for
+//! local mode and small self-hosted servers.
 
 pub mod schema;
 

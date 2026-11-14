@@ -62,7 +62,7 @@ jobs:
       matrix:
         # repo: the <distro>/<version> on repo.hallb.me. aliases: more
         # repositories served the same files. Only x86_64. Left out (the
-        # specification's supported platforms say why): EL 8, SLES/SLED,
+        # website's Download page says why): EL 8, SLES/SLED,
         # SLE Micro, Leap Micro, and releases past their end of life.
         include:
           - { target: fedora-43, image: "registry.fedoraproject.org/fedora:43", repo: fedora/43 }

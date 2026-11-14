@@ -3,9 +3,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 //! Journal text for transactions and whole books, rendered from stored
-//! values. Implements the engine implementation specification, sections
-//! 2.2 (`render_transaction`, `render_book`) and 3.3, and the rendering
-//! rules of "Ledger spec: amounts, commodity styles and precision".
+//! values, in each commodity's display style. kabacus-cli export writes it
+//! (the manual's "Export to hledger").
 
 use crate::amount::{render_amount, render_example, render_symbol};
 use crate::book::{style_in, Book, Styles};

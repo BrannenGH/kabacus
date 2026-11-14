@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 //! Reading and writing amounts, and commodity display styles. Implements
-//! the specification's "Ledger spec: amounts, commodity styles and
-//! precision".
+//! "Exact amounts and commodities" in the manual's ledger rules.
 
 use kabacus_core::{Amount, Money};
 use num_bigint::BigInt;

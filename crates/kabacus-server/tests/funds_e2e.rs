@@ -270,7 +270,7 @@ async fn accounts_carry_their_kind_home_display_name_and_both_balances() {
         "receivable"
     );
 
-    // The collisions the spec names, told apart by kind.
+    // Display names that collide, told apart by kind.
     let name = |account: &str| find(&accounts, "account", account)["display_name"].clone();
     assert_eq!(name("assets:bank:checking:car"), "Car (fund)");
     assert_eq!(name("liabilities:loans:car"), "Car (loan)");

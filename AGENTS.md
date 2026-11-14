@@ -46,11 +46,16 @@ indexes (`.codeatlas/`, `.codeatlas-sa/`) are local and gitignored.
 symbolic link to it. Edit `AGENTS.md` when updating these instructions.
 
 Where things are documented:
+- **The specification is the Kabacus website**: its help manual, at
+  https://kabacus.hallb.me/wiki, from the `BrannenGH/kabacus-blog`
+  repository (`src/content/wiki.ts`). It says what Kabacus does and why,
+  and decides when the code and the manual disagree. A change to
+  Kabacus's behaviour updates the manual in the same piece of work.
 - **The repository holds no requirements documentation.** READMEs,
   comments and other files in it cover implementation only: how to
   build, run, test and contribute, and why the code is written the way it
   is. They don't describe product behaviour, user needs or business
-  requirements.
+  requirements; those go in the manual.
 - **Comments are short and only where needed**: a non-obvious reason, a
   constraint the code can't show. No history of how the code used to be,
   no restating what the code says.
@@ -94,8 +99,7 @@ Hard rules:
   plausible payees, amounts, usernames and client ids, not `foo`,
   `test-client` or placeholder values.
 
-- **Testing follows the test strategy in the specification.** It is risk
-  based: accounting invariants (balanced transactions, allocations plus
+- **Testing is risk based.** accounting invariants (balanced transactions, allocations plus
   unallocated equal cash on hand) come first, with property tests. Most
   tests are unit tests with the back end in memory (an in-memory SQLite
   store) and mocks rather than spawned processes. End-to-end tests over the
