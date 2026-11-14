@@ -46,19 +46,14 @@ indexes (`.codeatlas/`, `.codeatlas-sa/`) are local and gitignored.
 symbolic link to it. Edit `AGENTS.md` when updating these instructions.
 
 Where things are documented:
-- **The specification lives in the project's Taiga wiki**, and only there.
-  Read it there for what the app does and why; it decides when the code
-  and the spec disagree.
 - **The repository holds no requirements documentation.** READMEs,
   comments and other files in it cover implementation only: how to
   build, run, test and contribute, and why the code is written the way it
   is. They don't describe product behaviour, user needs or business
-  requirements; those go in the wiki.
+  requirements.
 - **Comments are short and only where needed**: a non-obvious reason, a
   constraint the code can't show. No history of how the code used to be,
   no restating what the code says.
-- **The repository doesn't link to the wiki** (no URLs to it); say "the
-  specification" by name.
 
 Hard rules:
 - **Editing is in place; the store keeps history.** An edit goes through
