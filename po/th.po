@@ -181,7 +181,7 @@ msgstr "เขาติดเงินคุณ หรือคุณติด�
 msgid "Settle up with someone"
 msgstr "เคลียร์บัญชีกับใครสักคน"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "เงินที่คุณจ่ายให้พวกเขาหรือพวกเขาจ่ายให้คุณ"
@@ -2405,11 +2405,6 @@ msgstr "เพิ่ม — เกิดอะไรขึ้น?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "เพิ่มบรรทัดเงินสำรองให้คุณ"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "อนุญาตให้แก้ไขอีกครั้ง"
 
@@ -2482,6 +2477,10 @@ msgstr "กันไว้แล้ว"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "เงินสำรองเก็บไว้ใช้ภายหลัง เช่น ภาษีที่ดินหรือค่าซ่อมรถ เงินยังคงอยู่ในบัญชีธนาคารของคุณ"
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "เพิ่มบรรทัดเงินสำรองให้คุณ"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

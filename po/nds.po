@@ -181,7 +181,7 @@ msgstr "Se schüllt di wat, oder du schüllst jem wat"
 msgid "Settle up with someone"
 msgstr "Mit wen afrekenen"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Geld, dat du jemehr betahlt hest oder se di"
@@ -2412,11 +2412,6 @@ msgstr "Tofögen — wat is passeert?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Föögt för di de Reservregen to"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Bewerken wedder tolaten"
 
@@ -2489,6 +2484,10 @@ msgstr "Reserveert"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Reserven hoolt Geld för later, as Huusstüern oder Autoreparaturen. Dat blifft op dien Bankkonto."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Föögt för di de Reservregen to"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

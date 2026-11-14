@@ -181,7 +181,7 @@ msgstr "ते भवते धारयन्ति, भवान् वा त
 msgid "Settle up with someone"
 msgstr "केनचित् सह लेखा शोधय"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "भवता तेभ्यः दत्तं तैः वा भवते दत्तं धनम्"
@@ -2412,11 +2412,6 @@ msgstr "योजय — किं जातम्?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "भवतः कृते आरक्षितपङ्क्तीः योजयति"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "पुनः सम्पादनम् अनुमन्यस्व"
 
@@ -2489,6 +2484,10 @@ msgstr "आरक्षितम्"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "आरक्षितधनं सम्पत्तिकराय वाहनसंस्काराय वा भाविव्ययाय तिष्ठति। धनं भवतः वित्तकोषखाते तिष्ठति।"
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "भवतः कृते आरक्षितपङ्क्तीः योजयति"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

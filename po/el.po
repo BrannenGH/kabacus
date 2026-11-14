@@ -181,7 +181,7 @@ msgstr "Σας χρωστούν ή τους χρωστάτε"
 msgid "Settle up with someone"
 msgstr "Εξόφληση με κάποιον"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Χρήματα που πληρώσατε εσείς ή σας πλήρωσαν"
@@ -2412,11 +2412,6 @@ msgstr "Προσθήκη — τι συνέβη;"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Προσθέτει τις γραμμές αποθέματος για εσάς"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Να επιτρέπεται ξανά η επεξεργασία"
 
@@ -2489,6 +2484,10 @@ msgstr "Δεσμευμένα"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Τα αποθεματικά κρατούν χρήματα για αργότερα, όπως για φόρο ακινήτων ή επισκευές αυτοκινήτου. Παραμένουν στον τραπεζικό σας λογαριασμό."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Προσθέτει τις γραμμές αποθέματος για εσάς"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

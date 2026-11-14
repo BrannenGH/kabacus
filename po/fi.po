@@ -181,7 +181,7 @@ msgstr "He ovat sinulle velkaa, tai sinä heille"
 msgid "Settle up with someone"
 msgstr "Tee tilitys jonkun kanssa"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Raha, jonka maksoit heille tai he sinulle"
@@ -2412,11 +2412,6 @@ msgstr "Lisää — mitä tapahtui?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Lisää varausrivit puolestasi"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Salli muokkaus uudelleen"
 
@@ -2489,6 +2484,10 @@ msgstr "Varattu"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Varaukset pitävät rahaa myöhempää käyttöä varten, kuten kiinteistöveroon tai auton korjauksiin. Raha pysyy pankkitililläsi."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Lisää varausrivit puolestasi"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

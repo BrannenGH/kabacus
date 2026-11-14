@@ -40,13 +40,24 @@ function Sheet({ id, className, title, close, onClose, onKeyDown, children }) {
     {children}
   </dialog>;
 }
+// Keyed by command id, as in the KDE app's chooser.
+const choices = {
+  "transaction.spent": ["Register", "Money left an account"],
+  "transaction.received": ["Register", "Income or a refund"],
+  "transaction.transfer": ["Register", "Between two bank accounts"],
+  "reserve.setAside": ["Funds", "Into a reserve, out, or between reserves"],
+  "card.pay": ["Cards", "From its reserve"],
+  "split.record": ["People", "They owe you, or you owe them"],
+  "settle.record": ["People", "Money you paid them or they paid you"],
+  "transaction.postings": ["Register", "Any two accounts"],
+};
 export function AddChooser({ commands, onChoose, onClose }) {
   return <Sheet id="add-title" className="add-chooser" title={t("Add — what happened?")} close={<>{t("Cancel")} <Key>Esc</Key></>} onClose={onClose} onKeyDown={(e) => {
     if (/^[1-8]$/.test(e.key)) { e.preventDefault(); onChoose(commands[Number(e.key) - 1]); }
   }}>
     <p>{t("Choose what happened. The form fills in the lines; you see what changes before you save.")}</p>
     <div className="choice-grid">{commands.map((command, i) => <button data-choice data-autofocus={i === 0 || undefined} key={command.id} onClick={() => onChoose(command)}>
-      <Icon name={i === 2 || i === 5 ? "Cards" : i === 4 ? "Funds" : "Register"} /><span><strong>{t(command.label)}</strong><small>{t(["Money left an account", "Income or a refund", "Adds the reserve lines for you", "Between two bank accounts", "Into a reserve, out, or between reserves", "From its reserve", "They owe you, or you owe them", "Any two accounts"][i])}</small></span><Key>{i + 1}</Key>
+      <Icon name={choices[command.id]?.[0] || "Register"} /><span><strong>{t(command.label)}</strong>{choices[command.id] && <small>{t(choices[command.id][1])}</small>}</span><Key>{i + 1}</Key>
     </button>)}</div>
   </Sheet>;
 }

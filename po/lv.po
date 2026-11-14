@@ -181,7 +181,7 @@ msgstr "Viņi ir parādā jums, vai jūs viņiem"
 msgid "Settle up with someone"
 msgstr "Norēķināties ar kādu"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Nauda, ko jūs viņiem samaksājāt vai viņi jums"
@@ -2419,11 +2419,6 @@ msgstr "Pievienot — kas notika?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Pievieno rezerves rindas jūsu vietā"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Atkal atļaut rediģēšanu"
 
@@ -2496,6 +2491,10 @@ msgstr "Rezervēts"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Rezerves glabā naudu vēlākam laikam, piemēram, īpašuma nodoklim vai auto remontam. Nauda paliek jūsu bankas kontā."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Pievieno rezerves rindas jūsu vietā"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

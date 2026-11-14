@@ -179,7 +179,7 @@ msgstr ""
 msgid "Settle up with someone"
 msgstr ""
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr ""
@@ -2406,11 +2406,6 @@ msgstr ""
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add — what happened?"
-msgstr ""
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Adds the reserve lines for you"
 msgstr ""
 
 #: apps/kabacus-ui/src/messages.js

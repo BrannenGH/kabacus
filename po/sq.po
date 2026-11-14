@@ -181,7 +181,7 @@ msgstr "Ata ju detyrohen, ose ju u detyroheni atyre"
 msgid "Settle up with someone"
 msgstr "Shlyej llogari me dikë"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Para që ju u keni paguar atyre ose ata ju"
@@ -2412,11 +2412,6 @@ msgstr "Shto — çfarë ndodhi?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Shton rreshtat e rezervës për ju"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Lejo sërish përpunimin"
 
@@ -2489,6 +2484,10 @@ msgstr "Të rezervuara"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Rezervat mbajnë para për më vonë, si taksat e pronës ose riparimet e makinës. Ato mbeten në llogarinë tuaj bankare."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Shton rreshtat e rezervës për ju"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

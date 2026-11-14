@@ -181,7 +181,7 @@ msgstr "Ili ŝuldas al vi, aŭ vi ŝuldas al ili"
 msgid "Settle up with someone"
 msgstr "Kvitiĝi kun iu"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Mono, kiun vi pagis al ili aŭ ili al vi"
@@ -2412,11 +2412,6 @@ msgstr "Aldoni — kio okazis?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Aldonas la rezervajn liniojn por vi"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Permesi redaktadon denove"
 
@@ -2489,6 +2484,10 @@ msgstr "Rezervita"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Rezervoj tenas monon por poste, kiel por domimposto aŭ aŭtoriparoj. Ĝi restas en via bankkonto."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Aldonas la rezervajn liniojn por vi"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

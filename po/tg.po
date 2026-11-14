@@ -181,7 +181,7 @@ msgstr "Онҳо аз шумо қарздоранд ё шумо аз онҳо"
 msgid "Settle up with someone"
 msgstr "Ҳисобкунӣ бо касе"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Пуле, ки шумо ба онҳо ё онҳо ба шумо пардохтанд"
@@ -2412,11 +2412,6 @@ msgstr "Илова — чӣ рӯй дод?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Сатрҳои захираро ба ҷои шумо илова мекунад"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Боз иҷозат додани таҳрир"
 
@@ -2489,6 +2484,10 @@ msgstr "Ҷудошуда"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Захираҳо пулро барои баъд, масалан андози амвол ё таъмири мошин, нигоҳ медоранд. Пул дар ҳисоби бонкии шумо мемонад."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Сатрҳои захираро ба ҷои шумо илова мекунад"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

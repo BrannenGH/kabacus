@@ -181,7 +181,7 @@ msgstr "Tartoznak Önnek, vagy Ön tartozik nekik"
 msgid "Settle up with someone"
 msgstr "Elszámolás valakivel"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Pénz, amit Ön fizetett nekik, vagy ők Önnek"
@@ -2412,11 +2412,6 @@ msgstr "Hozzáadás — mi történt?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Hozzáadja Ön helyett a tartaléksorokat"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Szerkesztés újbóli engedélyezése"
 
@@ -2489,6 +2484,10 @@ msgstr "Félretéve"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "A tartalékok későbbre, például ingatlanadóra vagy autójavításra tesznek félre pénzt. Az összeg a bankszámláján marad."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Hozzáadja Ön helyett a tartaléksorokat"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

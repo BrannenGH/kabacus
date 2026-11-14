@@ -174,7 +174,7 @@ export const messages = [
   "%1 is working in these books",
   "Accounts",
   "Add — what happened?",
-  "Adds the reserve lines for you",
+  "Money you paid them or they paid you",
   "Agent",
   "All changes saved",
   "Allow editing again",
