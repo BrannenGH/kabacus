@@ -181,7 +181,7 @@ msgstr "相手があなたに借りがある、またはあなたが相手に借
 msgid "Settle up with someone"
 msgstr "相手と精算する"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "あなたが相手に支払った、または相手があなたに支払ったお金"
@@ -2405,11 +2405,6 @@ msgstr "追加 — 何がありましたか？"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "引当の行を自動で追加します"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "再び編集を許可する"
 
@@ -2482,6 +2477,10 @@ msgstr "取り置き済み"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "積立は固定資産税や車の修理など、後で使うお金を取り置きします。お金は銀行口座に残ります。"
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "引当の行を自動で追加します"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

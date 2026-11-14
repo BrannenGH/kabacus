@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 //! A whole book in memory: declared accounts, declared commodities with
-//! their styles, and transactions. Implements the engine implementation
-//! specification, section 2.2 (`Book`).
+//! their styles, and transactions.
 
 use crate::amount::Style;
 use kabacus_core::{AccountName, Transaction};

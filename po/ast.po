@@ -181,7 +181,7 @@ msgstr "Débente a ti, o tu débes-yos"
 msgid "Settle up with someone"
 msgstr "Saldar cuentes con daquién"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Dineru que-yos pagasti o que te pagaron"
@@ -2412,11 +2412,6 @@ msgstr "Amestar — ¿qué pasó?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Amiesta les llinies de reserva por ti"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Permitir editar otra vegada"
 
@@ -2489,6 +2484,10 @@ msgstr "Reservao"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Les reserves guarden dineru pa más alantre, como impuestos de la vivienda o arreglos del coche. Queda na to cuenta bancaria."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Amiesta les llinies de reserva por ti"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

@@ -5,8 +5,8 @@
 # The kabacus app (crates/kabacus-kde), built against the distribution's
 # own Qt 6 and Kirigami: one spec for Fedora, EL (CentOS Stream, AlmaLinux)
 # and openSUSE. packaging/rpm/build-rpm builds it in a container of each
-# distribution; the specification's supported platforms say where it
-# builds and why not elsewhere. kabacus-server isn't packaged: it ships as a container image.
+# distribution; the website's Download page says where it builds and why
+# not elsewhere. kabacus-server isn't packaged: it ships as a container image.
 #
 # Defines:
 #   pkg_version  scripts/package-version (<major>.<minor>.<commit count>)

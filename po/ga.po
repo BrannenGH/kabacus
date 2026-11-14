@@ -181,7 +181,7 @@ msgstr "Tá siad i bhfiacha leat, nó tá tusa i bhfiacha leo"
 msgid "Settle up with someone"
 msgstr "Socraigh le duine éigin"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Airgead a d'íoc tú leo nó a d'íoc siad leat"
@@ -2433,11 +2433,6 @@ msgstr "Cuir leis — cad a tharla?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Cuireann sé na línte cúlchiste leis duit"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Ceadaigh eagarthóireacht arís"
 
@@ -2510,6 +2505,10 @@ msgstr "Curtha in áirithe"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Coinníonn cúlchistí airgead don todhchaí, mar cháin mhaoine nó deisiúcháin cairr. Fanann sé i do chuntas bainc."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Cuireann sé na línte cúlchiste leis duit"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

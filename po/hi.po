@@ -181,7 +181,7 @@ msgstr "वे आपके कर्ज़दार हैं, या आप �
 msgid "Settle up with someone"
 msgstr "किसी के साथ हिसाब चुकता करें"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "पैसे जो आपने उन्हें दिए या उन्होंने आपको दिए"
@@ -2412,11 +2412,6 @@ msgstr "जोड़ें — क्या हुआ?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "आपके लिए आरक्षित राशि की पंक्तियाँ जोड़ता है"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "फिर संपादन की अनुमति दें"
 
@@ -2489,6 +2484,10 @@ msgstr "आरक्षित"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "आरक्षित राशि बाद के लिए रखी जाती है, जैसे संपत्ति कर या कार की मरम्मत। पैसा आपके बैंक खाते में रहता है।"
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "आपके लिए आरक्षित राशि की पंक्तियाँ जोड़ता है"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

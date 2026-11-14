@@ -181,7 +181,7 @@ msgstr "別人欠你，或你欠別人"
 msgid "Settle up with someone"
 msgstr "與某人結清"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "你付給對方或對方付給你的錢"
@@ -2405,11 +2405,6 @@ msgstr "新增 — 發生了什麼？"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "自動為你新增準備金分錄行"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "重新允許編輯"
 
@@ -2482,6 +2477,10 @@ msgstr "已預留"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "準備金用於日後支付房屋稅或汽車維修等費用。資金仍保留在您的銀行帳戶中。"
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "自動為你新增準備金分錄行"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

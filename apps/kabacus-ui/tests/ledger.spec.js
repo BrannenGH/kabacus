@@ -253,6 +253,25 @@ test("account type conflicts keep the edit open without changing the displayed t
   expect(writes.at(-1).body.dry_run).toBe(false);
 });
 
+for (const size of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
+  test(`each Add choice describes itself at ${size.width} px`, async ({ page }) => {
+    await page.setViewportSize(size);
+    await setup(page);
+    await page.getByRole("button", { name: /^Add/ }).first().click();
+    const choices = page.getByRole("dialog").locator("[data-choice]");
+    await expect(choices).toHaveText([
+      /^Spent\s*Money left an account/,
+      /^Received\s*Income or a refund/,
+      /^Transfer\s*Between two bank accounts/,
+      /^Set aside\s*Into a reserve, out, or between reserves/,
+      /^Pay a card\s*From its reserve/,
+      /^Split with someone\s*They owe you, or you owe them/,
+      /^Settle up with someone\s*Money you paid them or they paid you/,
+      /^Postings\s*Any two accounts/,
+    ]);
+  });
+}
+
 test("desktop navigation and account register", async ({ page }) => {
   await setup(page);
   await page.screenshot({ path: "test-results/overview.png", fullPage: true });

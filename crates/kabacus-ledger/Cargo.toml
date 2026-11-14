@@ -9,7 +9,7 @@ edition.workspace = true
 license.workspace = true
 repository.workspace = true
 
-# Written from the specification only; see src/lib.rs.
+# Follows the ledger rules in the Kabacus manual; see src/lib.rs.
 [dependencies]
 kabacus-core = { path = "../kabacus-core" }
 chrono = { workspace = true }

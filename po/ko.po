@@ -181,7 +181,7 @@ msgstr "상대가 빚졌거나, 내가 빚졌음"
 msgid "Settle up with someone"
 msgstr "상대와 정산"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "내가 상대에게 지불했거나 상대가 나에게 지불한 돈"
@@ -2405,11 +2405,6 @@ msgstr "추가 — 무슨 일이 있었나요?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "준비금 줄을 대신 추가해 줌"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "다시 편집 허용"
 
@@ -2482,6 +2477,10 @@ msgstr "준비됨"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "준비금은 재산세나 자동차 수리처럼 나중에 쓸 돈을 따로 마련합니다. 돈은 은행 계좌에 남아 있습니다."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "준비금 줄을 대신 추가해 줌"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

@@ -5,10 +5,8 @@
 //! The strict check: every transaction balances, every balance assertion
 //! holds at the end of its day, and every commodity and account used is
 //! declared. Every failure is reported, by kind and then position.
-//! Implements the specification's "Ledger spec: strict checks and error
-//! reporting" and "Ledger spec: balance assertions and order within a
-//! date" (its engine rules), and the engine implementation specification,
-//! sections 1.3, 2.2 (`check`, `check_change`) and 3.1.
+//! Implements "Dates and assertions" and the validation step of "Write
+//! pipeline" in the manual's ledger rules.
 
 use crate::balance::{check_balanced, Group, Sums, Unbalanced};
 use crate::book::{Book, Styles};

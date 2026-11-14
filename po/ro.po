@@ -181,7 +181,7 @@ msgstr "Îți datorează ei, sau le datorezi tu"
 msgid "Settle up with someone"
 msgstr "Decontează cu cineva"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Bani pe care i-ați plătit lor sau ei vouă"
@@ -2419,11 +2419,6 @@ msgstr "Adaugă — ce s-a întâmplat?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Adaugă liniile de rezervă în locul tău"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Permite din nou editarea"
 
@@ -2496,6 +2491,10 @@ msgstr "Rezervat"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Rezervele păstrează bani pentru mai târziu, cum ar fi impozitul pe proprietate sau reparațiile mașinii. Banii rămân în contul bancar."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Adaugă liniile de rezervă în locul tău"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

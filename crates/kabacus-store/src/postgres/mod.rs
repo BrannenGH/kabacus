@@ -5,8 +5,6 @@
 //! The store on PostgreSQL, for the hosted service: pooled connections,
 //! row-level security keyed on the ledger each transaction sets with
 //! `SET LOCAL`, and the same tables and behaviour as the SQLite store.
-//! Implements the engine implementation specification, sections 1.2 to
-//! 1.4 and 2.4.
 
 use crate::rows::{AccountRow, CommodityRow, PostingRow, Row, RowChange, TxRow};
 use crate::sqlite::next_id_after;

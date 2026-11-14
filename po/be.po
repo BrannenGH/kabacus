@@ -181,7 +181,7 @@ msgstr "Вам вінныя, або вы вінныя ім"
 msgid "Settle up with someone"
 msgstr "Разлік з кімсьці"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Грошы, якія вы заплацілі ім або яны вам"
@@ -2419,11 +2419,6 @@ msgstr "Дадаць — што адбылося?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Дадае радкі рэзерву за вас"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Зноў дазволіць рэдагаванне"
 
@@ -2496,6 +2491,10 @@ msgstr "Зарэзервавана"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Рэзервы захоўваюць грошы на будучыню, напрыклад на падатак на нерухомасць ці рамонт аўтамабіля. Грошы застаюцца на вашым банкаўскім рахунку."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Дадае радкі рэзерву за вас"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

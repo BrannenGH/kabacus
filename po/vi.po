@@ -181,7 +181,7 @@ msgstr "Họ nợ bạn, hoặc bạn nợ họ"
 msgid "Settle up with someone"
 msgstr "Thanh toán với ai đó"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Tiền bạn đã trả cho họ hoặc họ đã trả cho bạn"
@@ -2405,11 +2405,6 @@ msgstr "Thêm — chuyện gì đã xảy ra?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Tự thêm các dòng dự phòng cho bạn"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Cho phép chỉnh sửa lại"
 
@@ -2482,6 +2477,10 @@ msgstr "Đã dự trữ"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Khoản dự trữ giữ tiền để dùng sau, như thuế nhà đất hoặc sửa xe. Tiền vẫn nằm trong tài khoản ngân hàng của bạn."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Tự thêm các dòng dự phòng cho bạn"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

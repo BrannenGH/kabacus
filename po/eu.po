@@ -181,7 +181,7 @@ msgstr "Haiek zor dizute, edo zuk zor diezu"
 msgid "Settle up with someone"
 msgstr "Norbaitekin kontuak garbitu"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Zuek ordaindu duzuena edo zuei ordaindu dizutena"
@@ -2412,11 +2412,6 @@ msgstr "Gehitu — zer gertatu da?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Erreserba-lerroak zure ordez gehitzen ditu"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Baimendu berriro editatzea"
 
@@ -2489,6 +2484,10 @@ msgstr "Erreserbatuta"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Erreserbek dirua gerorako gordetzen dute, adibidez etxebizitzaren zergak edo autoa konpontzeko. Zure banku-kontuan geratzen da."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Erreserba-lerroak zure ordez gehitzen ditu"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

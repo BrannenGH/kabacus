@@ -181,7 +181,7 @@ msgstr "Mereka berutang kepada Anda, atau Anda berutang kepada mereka"
 msgid "Settle up with someone"
 msgstr "Lunasi dengan seseorang"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Uang yang Anda bayarkan kepada mereka atau mereka bayarkan kepada Anda"
@@ -2412,11 +2412,6 @@ msgstr "Tambah — apa yang terjadi?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Menambahkan baris cadangan untuk Anda"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Izinkan penyuntingan lagi"
 
@@ -2489,6 +2484,10 @@ msgstr "Dicadangkan"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Cadangan menyimpan uang untuk nanti, seperti pajak properti atau perbaikan mobil. Uangnya tetap di rekening bank Anda."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Menambahkan baris cadangan untuk Anda"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

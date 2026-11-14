@@ -181,7 +181,7 @@ msgstr "അവർ നിങ്ങൾക്ക് തരാനുണ്ട്, �
 msgid "Settle up with someone"
 msgstr "ഒരാളുമായി കണക്ക് തീർക്കുക"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "നിങ്ങൾ അവർക്ക് നൽകിയതോ അവർ നിങ്ങൾക്ക് നൽകിയതോ ആയ പണം"
@@ -2412,11 +2412,6 @@ msgstr "ചേർക്കുക — എന്താണ് സംഭവിച്
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "കരുതൽ വരികൾ നിങ്ങൾക്കായി ചേർക്കുന്നു"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "വീണ്ടും തിരുത്താൻ അനുവദിക്കുക"
 
@@ -2489,6 +2484,10 @@ msgstr "മാറ്റിവച്ചത്"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "കരുതൽ തുകകൾ വസ്തുനികുതി അല്ലെങ്കിൽ കാർ അറ്റകുറ്റപ്പണി പോലുള്ള പിന്നീടുള്ള ചെലവുകൾക്കായി പണം മാറ്റിവയ്ക്കുന്നു. പണം നിങ്ങളുടെ ബാങ്ക് അക്കൗണ്ടിൽ തുടരും."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "കരുതൽ വരികൾ നിങ്ങൾക്കായി ചേർക്കുന്നു"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

@@ -8,9 +8,8 @@
 //! accounts) and renders journal text. Pure functions on in-memory values;
 //! the only I/O is reading journals through an [`ImportSource`].
 //!
-//! Implements the engine implementation specification, section 2. Every
-//! module is written from the specification's ledger-spec pages; its header
-//! names what it implements.
+//! Implements the Kabacus manual's ledger rules ("Amounts, balancing and
+//! validation"); each module's header names the part it implements.
 
 pub mod amount;
 pub mod balance;

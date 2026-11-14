@@ -181,7 +181,7 @@ msgstr "De skylder dig, eller du skylder dem"
 msgid "Settle up with someone"
 msgstr "Gør op med nogen"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Penge du har betalt dem, eller de har betalt dig"
@@ -2412,11 +2412,6 @@ msgstr "Tilføj — hvad skete der?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Tilføjer reservelinjerne for dig"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Tillad redigering igen"
 
@@ -2489,6 +2484,10 @@ msgstr "Reserveret"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Reserver holder penge til senere, som ejendomsskat eller bilreparationer. De bliver på din bankkonto."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Tilføjer reservelinjerne for dig"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

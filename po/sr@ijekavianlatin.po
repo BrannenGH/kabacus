@@ -181,7 +181,7 @@ msgstr "Oni duguju vama, ili vi njima"
 msgid "Settle up with someone"
 msgstr "Obračun sa nekim"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Novac koji ste vi platili njima ili oni vama"
@@ -2426,11 +2426,6 @@ msgstr "Dodaj — šta se dogodilo?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Dodaje redove rezerve umjesto vas"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Ponovo dozvoli uređivanje"
 
@@ -2503,6 +2498,10 @@ msgstr "Rezervisano"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Rezerve čuvaju novac za kasnije, poput poreza na imovinu ili popravke auta. Ostaje na vašem bankovnom računu."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Dodaje redove rezerve umjesto vas"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

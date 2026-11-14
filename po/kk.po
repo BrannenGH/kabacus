@@ -181,7 +181,7 @@ msgstr "Олар сізге қарыз, немесе сіз оларға қар�
 msgid "Settle up with someone"
 msgstr "Біреумен есеп айырысу"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "Сіз оларға немесе олар сізге төлеген ақша"
@@ -2405,11 +2405,6 @@ msgstr "Қосу — не болды?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "Резерв жолдарын сіз үшін қосады"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "Өңдеуге қайта рұқсат беру"
 
@@ -2482,6 +2477,10 @@ msgstr "Бөлінген"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Резервтер мүлік салығы не көлік жөндеу сияқты кейінгі шығындарға ақша сақтайды. Ақша банк шотыңызда қалады."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "Резерв жолдарын сіз үшін қосады"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"

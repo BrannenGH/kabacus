@@ -181,7 +181,7 @@ msgstr "அவர்கள் உங்களுக்குக் கடன்�
 msgid "Settle up with someone"
 msgstr "ஒருவருடன் கணக்கைத் தீர்க்கவும்"
 
-#: crates/kabacus-kde/qml/AddChooser.qml
+#: crates/kabacus-kde/qml/AddChooser.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Money you paid them or they paid you"
 msgstr "நீங்கள் அவர்களுக்கு அல்லது அவர்கள் உங்களுக்கு செலுத்திய பணம்"
@@ -2412,11 +2412,6 @@ msgstr "சேர் — என்ன நடந்தது?"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Adds the reserve lines for you"
-msgstr "ஒதுக்கீட்டு வரிகளை உங்களுக்காகச் சேர்க்கிறது"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Allow editing again"
 msgstr "மீண்டும் திருத்த அனுமதி"
 
@@ -2489,6 +2484,10 @@ msgstr "ஒதுக்கப்பட்டது"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "ஒதுக்கீடுகள் சொத்து வரி அல்லது கார் பழுது போன்ற பிற்காலச் செலவுகளுக்குப் பணத்தை வைத்திருக்கும். பணம் உங்கள் வங்கிக் கணக்கிலேயே இருக்கும்."
+
+#, kde-format
+#~ msgid "Adds the reserve lines for you"
+#~ msgstr "ஒதுக்கீட்டு வரிகளை உங்களுக்காகச் சேர்க்கிறது"
 
 #, kde-format
 #~ msgctxt "%1 is the revision number"
