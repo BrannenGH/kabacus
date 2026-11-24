@@ -865,3 +865,136 @@ async fn postgres_rows_are_visible_only_for_the_ledger_set() {
     // next.
     assert_eq!(count("SELECT count(*) FROM transactions".into()).await, 0);
 }
+
+async fn simplefin_access_contract(fixture: Fixture) {
+    use kabacus_store::simplefin::{Access, Owner, RequestBudget};
+    let store = fixture.store;
+    let dana = store.local_user("Dana Okafor").await.unwrap();
+    let riley = store.local_user("Riley Chen").await.unwrap();
+    let ledger = store
+        .create_ledger("Cedar Street Household", dana)
+        .await
+        .unwrap();
+    store
+        .set_membership(ledger, riley, Some(kabacus_store::Role::Write))
+        .await
+        .unwrap();
+    let before = store.revision(ledger).await.unwrap();
+    let dana = Owner::Member(dana);
+    let riley = Owner::Member(riley);
+    let credential = "https://cedar-ledger:synthetic-access@bridge.example.org/simplefin";
+    let access = Access::new(credential.into(), 1_791_792_000);
+    store
+        .set_simplefin_access(ledger, dana, &access)
+        .await
+        .unwrap();
+    assert_eq!(store.revision(ledger).await.unwrap(), before);
+    assert!(store
+        .simplefin_access(ledger, riley)
+        .await
+        .unwrap()
+        .is_none());
+    assert!(!format!("{access:?}").contains(credential));
+    for remaining in (0..20).rev() {
+        assert_eq!(
+            store
+                .reserve_simplefin_request(ledger, dana, &access, access.claimed_at)
+                .await
+                .unwrap(),
+            RequestBudget::Allowed { remaining }
+        );
+    }
+    assert_eq!(
+        store
+            .reserve_simplefin_request(ledger, dana, &access, access.claimed_at + 1)
+            .await
+            .unwrap(),
+        RequestBudget::Exhausted {
+            next_at: access.claimed_at + 86_400
+        }
+    );
+    store
+        .set_simplefin_access(ledger, riley, &access)
+        .await
+        .unwrap();
+    assert_eq!(
+        store
+            .reserve_simplefin_request(ledger, riley, &access, access.claimed_at)
+            .await
+            .unwrap(),
+        RequestBudget::Allowed { remaining: 19 }
+    );
+    let bytes = store.export_bytes(&[ledger]).await.unwrap();
+    assert!(!bytes
+        .windows(credential.len())
+        .any(|window| window == credential.as_bytes()));
+    let copy = kabacus_store::SqliteStore::from_bytes(&bytes).unwrap();
+    let copy_id = copy.ledgers().await.unwrap()[0].id;
+    assert!(copy
+        .simplefin_access(copy_id, Owner::Local)
+        .await
+        .unwrap()
+        .is_none());
+    let Owner::Member(user) = dana else {
+        unreachable!()
+    };
+    store.set_membership(ledger, user, None).await.unwrap();
+    assert!(store
+        .simplefin_access(ledger, dana)
+        .await
+        .unwrap()
+        .is_none());
+    assert!(store
+        .simplefin_access(ledger, riley)
+        .await
+        .unwrap()
+        .is_some());
+}
+
+#[tokio::test]
+async fn simplefin_access_is_private_and_excluded_from_sqlite_exports() {
+    simplefin_access_contract(sqlite()).await;
+}
+
+#[tokio::test]
+async fn simplefin_access_is_private_and_excluded_from_postgres_exports() {
+    if let Some(fixture) = postgres().await {
+        simplefin_access_contract(fixture).await;
+    }
+}
+
+#[tokio::test]
+async fn simplefin_local_access_survives_reopening_the_same_file() {
+    use kabacus_store::simplefin::{Access, Owner};
+    let folder = tempfile::tempdir().unwrap();
+    let path = folder.path().join("Cedar household.kabacus");
+    let store = SqliteStore::open(&path).unwrap();
+    let user = store.local_user("Dana Okafor").await.unwrap();
+    let ledger = store.create_ledger("Cedar household", user).await.unwrap();
+    let credential = "https://cedar-ledger:synthetic-access@bridge.example.org/simplefin";
+    store
+        .set_simplefin_access(
+            ledger,
+            Owner::Local,
+            &Access::new(credential.into(), 1_791_792_000),
+        )
+        .await
+        .unwrap();
+    drop(store);
+    let store = SqliteStore::open(&path).unwrap();
+    let access = store
+        .simplefin_access(ledger, Owner::Local)
+        .await
+        .unwrap()
+        .unwrap();
+    assert_eq!(access.url(), credential);
+    let copy = folder.path().join("Cedar copy.kabacus");
+    store.export_file(&[ledger], &copy).await.unwrap();
+    let store = SqliteStore::open(&copy).unwrap();
+    let ledger = store.ledgers().await.unwrap()[0].id;
+    assert!(store
+        .simplefin_access(ledger, Owner::Local)
+        .await
+        .unwrap()
+        .is_none());
+}
