@@ -732,7 +732,7 @@ def main():
         account, path = args
         goto("Transactions")
         open_list_item(f"the {account} account", lambda: find(app(), account, pyatspi.ROLE_LIST_ITEM),
-                       lambda: find(app(), account, pyatspi.ROLE_PAGE_TAB))
+                       lambda: find_any(account, {pyatspi.ROLE_PAGE_TAB, pyatspi.ROLE_PANEL}))
         if not find(app(), "Import statement…"):
             click(wait_for("register actions", lambda: find(app(), "More Actions") or find(app(), "More", pyatspi.ROLE_PUSH_BUTTON)))
         click(wait_for("Import statement…", lambda: find(app(), "Import statement…")))
