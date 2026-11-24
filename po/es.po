@@ -196,12 +196,12 @@ msgstr "Asientos"
 msgid "Any two accounts"
 msgstr "Dos cuentas cualesquiera"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Bank connections"
 msgstr "Conexiones bancarias"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Your bank connection"
 msgstr "Tu conexión bancaria"
@@ -217,32 +217,32 @@ msgctxt "%1 is the remaining request count"
 msgid "Requests remaining today: %1"
 msgstr "Solicitudes restantes hoy: %1"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sync"
 msgstr "Sincronizar"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Load bank accounts"
 msgstr "Cargar cuentas bancarias"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Replace connection"
 msgstr "Reemplazar conexión"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Disconnect"
 msgstr "Desconectar"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Get a SimpleFIN setup token"
 msgstr "Obtenga un token de configuración SimpleFIN"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Setup token"
 msgstr "Ficha de configuración"
@@ -253,12 +253,12 @@ msgctxt "%1 is the hostname"
 msgid "Connect to %1?"
 msgstr "¿Conectarse a %1?"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Anyone with this file can read your connected bank transactions until you revoke access at your SimpleFIN server."
 msgstr "Cualquiera que tenga este archivo puede leer sus transacciones bancarias conectadas hasta que revoque el acceso en su servidor SimpleFIN."
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "This replaces your current bank connection."
 msgstr "Esto reemplaza su conexión bancaria actual."
@@ -273,17 +273,17 @@ msgstr "Cancelar"
 msgid "Connect"
 msgstr "Conectar"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect SimpleFIN"
 msgstr "Conectar SimpleFIN"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Don’t import"
 msgstr "no importar"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Linked through another member’s connection"
 msgstr "Vinculado a través de la conexión de otro miembro"
@@ -1295,7 +1295,7 @@ msgstr "Importación completa"
 msgid "Review"
 msgstr "Revisar"
 
-#: crates/kabacus-kde/qml/StatementImportPage.qml
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sync bank transactions"
 msgstr "Sincronizar transacciones bancarias"
@@ -1406,12 +1406,12 @@ msgstr "Signos de cantidad inversa"
 msgid "This account is unavailable"
 msgstr "Esta cuenta no está disponible"
 
-#: crates/kabacus-kde/qml/StatementImportPage.qml
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Start date"
 msgstr "Fecha de inicio"
 
-#: crates/kabacus-kde/qml/StatementImportPage.qml
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "New transactions"
 msgstr "Nuevas transacciones"
@@ -2736,6 +2736,11 @@ msgstr "Las reservas guardan dinero para más adelante, como impuestos sobre la 
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
+msgid "Connect to %1?"
+msgstr "¿Conectarse a %1?"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
 msgid "Imported %1 new and matched %2 transactions."
 msgstr "Transacciones %1 nuevas importadas y %2 coincidentes."
 
@@ -2743,6 +2748,11 @@ msgstr "Transacciones %1 nuevas importadas y %2 coincidentes."
 #, kde-format
 msgid "Match transaction %1"
 msgstr "Coincidencia con la transacción %1"
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Requests remaining today: %1"
+msgstr "Solicitudes restantes hoy: %1"
 
 #, kde-format
 #~ msgid "Adds the reserve lines for you"
