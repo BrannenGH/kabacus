@@ -13,6 +13,7 @@ pub mod file;
 #[cfg(not(any(target_arch = "wasm32", target_os = "ios", target_os = "android")))]
 pub mod postgres;
 pub mod rows;
+pub mod simplefin;
 pub mod sqlite;
 #[cfg(all(
     feature = "testing",
@@ -274,6 +275,33 @@ pub trait BookStore: Send + Sync {
         role: Option<Role>,
     ) -> impl Future<Output = Result<()>> + Send;
 
+    fn simplefin_access(
+        &self,
+        ledger: LedgerId,
+        owner: simplefin::Owner,
+    ) -> impl Future<Output = Result<Option<simplefin::Access>>> + Send;
+
+    fn set_simplefin_access(
+        &self,
+        ledger: LedgerId,
+        owner: simplefin::Owner,
+        access: &simplefin::Access,
+    ) -> impl Future<Output = Result<()>> + Send;
+
+    fn delete_simplefin_access(
+        &self,
+        ledger: LedgerId,
+        owner: simplefin::Owner,
+    ) -> impl Future<Output = Result<()>> + Send;
+
+    fn reserve_simplefin_request(
+        &self,
+        ledger: LedgerId,
+        owner: simplefin::Owner,
+        access: &simplefin::Access,
+        now: i64,
+    ) -> impl Future<Output = Result<simplefin::RequestBudget>> + Send;
+
     /// Every stored row of `ledger`, read consistently.
     fn dump(&self, ledger: LedgerId) -> impl Future<Output = Result<LedgerDump>> + Send;
 
@@ -440,6 +468,37 @@ impl BookStore for AnyStore {
         role: Option<Role>,
     ) -> Result<()> {
         delegate!(self, s => s.set_membership(ledger, user, role))
+    }
+    async fn simplefin_access(
+        &self,
+        ledger: LedgerId,
+        owner: simplefin::Owner,
+    ) -> Result<Option<simplefin::Access>> {
+        delegate!(self, s => s.simplefin_access(ledger, owner))
+    }
+    async fn set_simplefin_access(
+        &self,
+        ledger: LedgerId,
+        owner: simplefin::Owner,
+        access: &simplefin::Access,
+    ) -> Result<()> {
+        delegate!(self, s => s.set_simplefin_access(ledger, owner, access))
+    }
+    async fn delete_simplefin_access(
+        &self,
+        ledger: LedgerId,
+        owner: simplefin::Owner,
+    ) -> Result<()> {
+        delegate!(self, s => s.delete_simplefin_access(ledger, owner))
+    }
+    async fn reserve_simplefin_request(
+        &self,
+        ledger: LedgerId,
+        owner: simplefin::Owner,
+        access: &simplefin::Access,
+        now: i64,
+    ) -> Result<simplefin::RequestBudget> {
+        delegate!(self, s => s.reserve_simplefin_request(ledger, owner, access, now))
     }
     async fn dump(&self, ledger: LedgerId) -> Result<LedgerDump> {
         delegate!(self, s => s.dump(ledger))
