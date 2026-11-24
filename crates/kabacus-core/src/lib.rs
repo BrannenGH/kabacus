@@ -11,6 +11,7 @@
 //! crate ever constructs a `Money` from a float.
 
 pub mod accounts;
+pub mod bank_import;
 pub mod comment;
 pub mod correction;
 pub mod counterparty;
