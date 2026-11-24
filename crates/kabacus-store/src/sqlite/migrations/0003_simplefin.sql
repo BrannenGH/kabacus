@@ -12,4 +12,4 @@ CREATE TABLE simplefin_access (
     PRIMARY KEY (ledger_id, slot),
     FOREIGN KEY (ledger_id, user_id) REFERENCES memberships (ledger_id, user_id) ON DELETE CASCADE,
     CHECK (slot = COALESCE(user_id, 0))
-);
+) STRICT;
