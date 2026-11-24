@@ -115,7 +115,7 @@ fn every_table_is_strict() {
         .unwrap()
         .map(Result::unwrap)
         .collect();
-    assert_eq!(rows.len(), 9);
+    assert_eq!(rows.len(), 10);
     assert!(rows.iter().all(|(_, strict)| *strict == 1), "{rows:?}");
 }
 
