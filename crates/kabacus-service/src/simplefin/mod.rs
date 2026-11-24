@@ -864,6 +864,7 @@ pub async fn sync(
         None => fetch(state, transport, owner, &access, Some(window), body.refresh).await?,
     };
     let starts = dates(&wc, &links, &body, end);
+    let mut decisions = body.decisions;
     let mut results = Vec::new();
     let mut count = 0usize;
     let mut added = 0u64;
@@ -898,7 +899,7 @@ pub async fn sync(
             since: starts.get(&target).copied(),
             limit: body.limit,
             cursor: body.cursors.get(&target).cloned(),
-            decisions: body.decisions.get(&target).cloned().unwrap_or_default(),
+            decisions: decisions.remove(&target).unwrap_or_default(),
             ..Default::default()
         };
         let mut result = apply_statement(&mut wc, &target, statement, &options)?;
@@ -907,6 +908,9 @@ pub async fn sync(
         added += result["counts"]["new"].as_u64().unwrap_or_default();
         matched += result["counts"]["matched"].as_u64().unwrap_or_default();
         results.push(result);
+    }
+    if let Some(choice) = decisions.into_values().flatten().next() {
+        return Err(ImportError::Decision(choice.import_id).into());
     }
     ops::check(&wc)?;
     if !dry_run && (added + matched != 0) {

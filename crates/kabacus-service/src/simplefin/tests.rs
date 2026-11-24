@@ -185,6 +185,20 @@ async fn linked_simplefin_accounts_commit_one_snapshot_without_a_second_fetch() 
     assert_eq!(review["counts"]["new"], 2);
     request["snapshot"] = review["snapshot"].clone();
     request["dry_run"] = json!(false);
+    let mut unknown_account = request.clone();
+    unknown_account["decisions"] = json!({
+        "assets:bank:other": [{
+            "import_id": review["accounts"][0]["rows"][0]["import_id"],
+            "action": "skip"
+        }]
+    });
+    assert_eq!(
+        sync(&state, &dana, &mock, &head, body(unknown_account))
+            .await
+            .unwrap_err()
+            .code(),
+        "statement_import"
+    );
     let saved = sync(&state, &dana, &mock, &head, body(request.clone()))
         .await
         .unwrap();
