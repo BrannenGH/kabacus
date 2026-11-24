@@ -68,16 +68,20 @@ export function AccountList({ data, selected, onSelect }) {
   const children = new Map();
   for (const c of data.accounts) if (c.home && c.home !== c.account) children.set(c.home, [...(children.get(c.home) || []), c]);
   const amount = (account) => (account.balance_inclusive || account.balances || []).map((b) => neutral(account) && b.exact.startsWith("-") ? b.formatted.replace(/^-/, "") : b.formatted).join(" / ");
-  return <div className="account-list panel" aria-label={t("Accounts")}>
-    <button className={!selected ? "selected quiet" : "quiet"} onClick={() => onSelect("")}>{t("All transactions")}</button>
-    {groups.map(([kind, label]) => {
-      const accounts = data.accounts.filter((a) => (a.account.startsWith("equity:") ? "unclassified" : a.kind) === kind);
-      if (!accounts.length) return null;
-      return <section key={kind}><h2>{t(label)}</h2>{accounts.map((a) => <React.Fragment key={a.account}>
-        <button className={selected === a.account ? "selected" : ""} onClick={() => onSelect(a.account)}><span>{a.display_name || a.account}</span><span className={!neutral(a) && (a.balance_inclusive || []).some((b) => b.exact.startsWith("-")) ? "amount negative" : "amount"}>{amount(a)}</span></button>
-        {(children.get(a.account) || []).map((c) => <button key={c.account} className={`account-child ${selected === c.account ? "selected" : ""}`} onClick={() => onSelect(c.account)}><span>{c.display_name || c.account}</span><span className="amount">{amount(c)}</span></button>)}
-      </React.Fragment>)}</section>;
-    })}
+  return <div className="account-sidebar">
+    <button className={`panel all-transactions${selected === "" ? " selected" : ""}`} aria-current={selected === "" || undefined} onClick={() => onSelect("")}>
+      {t("All transactions")}<Icon name="Forward" />
+    </button>
+    <div className="account-list panel" aria-label={t("Accounts")}>
+      {groups.map(([kind, label]) => {
+        const accounts = data.accounts.filter((a) => (a.account.startsWith("equity:") ? "unclassified" : a.kind) === kind);
+        if (!accounts.length) return null;
+        return <section key={kind}><h2>{t(label)}</h2>{accounts.map((a) => <React.Fragment key={a.account}>
+          <button className={selected === a.account ? "selected" : ""} onClick={() => onSelect(a.account)}><span>{a.display_name || a.account}</span><span className={!neutral(a) && (a.balance_inclusive || []).some((b) => b.exact.startsWith("-")) ? "amount negative" : "amount"}>{amount(a)}</span></button>
+          {(children.get(a.account) || []).map((c) => <button key={c.account} className={`account-child ${selected === c.account ? "selected" : ""}`} onClick={() => onSelect(c.account)}><span>{c.display_name || c.account}</span><span className="amount">{amount(c)}</span></button>)}
+        </React.Fragment>)}</section>;
+      })}
+    </div>
   </div>;
 }
 

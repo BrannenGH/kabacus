@@ -751,6 +751,34 @@ async fn all_transactions_hides_fund_transfers_until_asked() {
     }
 }
 
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn fix_opens_only_transactions_needing_a_category_on_desktop_and_phone() {
+    let journal = format!(
+        "{BOOKS}
+account expenses:uncategorized
+
+2026-09-12 Harbor Street Cafe
+    expenses:uncategorized  18.40 USD
+    assets:bank:checking
+
+2026-09-13 Harbor Street Cafe Refund
+    expenses:uncategorized  -18.40 USD
+    assets:bank:checking
+"
+    );
+    for (index, size) in [DESKTOP, "390x844"].into_iter().enumerate() {
+        let name = format!("categorize{index}");
+        let socket = socket_path(&name);
+        let server = kabacus_testkit::spawn_server_with_journal(&journal, |c| {
+            c.socket_path = socket.clone()
+        })
+        .await;
+        let _app = launch_sized(&server.socket_path, &config_dir(&name), size);
+        drive(&["categorize"]).await;
+    }
+}
+
 // A cleared transaction's dot has a name a screen reader reads out.
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]

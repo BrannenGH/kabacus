@@ -39,15 +39,20 @@ msgctxt "%1 is the closest account to what was typed"
 msgid "Use %1"
 msgstr "Upotrebi %1"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "All transactions"
-msgstr "Sve transakcije"
-
 #: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add"
 msgstr "Dodaj"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Fix"
+msgstr "Popravi"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "All transactions"
+msgstr "Sve transakcije"
 
 #: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1001,6 +1006,11 @@ msgstr "Vjerovatna objašnjenja"
 msgid "Edit"
 msgstr "Uredi"
 
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Categorize"
+msgstr "Razvrstaj"
+
 #: crates/kabacus-kde/qml/RegisterPage.qml
 #, kde-format
 msgctxt "a card transaction without its reserve lines"
@@ -1311,11 +1321,6 @@ msgstr "Izvodi iz banke (%1)"
 #, kde-format
 msgid "All files (%1)"
 msgstr "Svi fajlovi (%1)"
-
-#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Categorize"
-msgstr "Razvrstaj"
 
 #: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2482,11 +2487,6 @@ msgstr "MCP"
 #, kde-format
 msgid "External edit"
 msgstr "Spoljna izmjena"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Fix"
-msgstr "Popravi"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
