@@ -1545,6 +1545,7 @@ dependencies = [
  "kabacus-testkit",
  "log",
  "num-traits",
+ "qt-build-utils",
  "reqwest",
  "secret-service",
  "serde",
