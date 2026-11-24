@@ -87,6 +87,12 @@ enum Command {
         #[arg(long)]
         save: bool,
     },
+    /// Manage a SimpleFIN connection and sync linked accounts.
+    Simplefin {
+        books: PathBuf,
+        #[command(subcommand)]
+        action: SimplefinCommand,
+    },
     Mcp {
         #[arg(long, required_unless_present = "attach", conflicts_with = "attach")]
         books: Vec<PathBuf>,
@@ -101,6 +107,166 @@ enum Command {
     },
     Man,
 }
+#[derive(Subcommand)]
+enum SimplefinCommand {
+    Status,
+    /// Read a one-time SimpleFIN setup token from standard input.
+    Connect {
+        #[arg(long)]
+        replace: bool,
+        #[arg(long)]
+        preview: bool,
+    },
+    Disconnect,
+    Accounts {
+        #[arg(long)]
+        refresh: bool,
+    },
+    Link {
+        account: String,
+        #[arg(long)]
+        head: String,
+        #[arg(long, requires = "remote_id", conflicts_with = "unlink")]
+        conn_id: Option<String>,
+        #[arg(long, requires = "conn_id", conflicts_with = "unlink")]
+        remote_id: Option<String>,
+        #[arg(long)]
+        unlink: bool,
+    },
+    Sync {
+        #[arg(long)]
+        head: String,
+        /// Review and confirm the import in this process.
+        #[arg(long)]
+        save: bool,
+        #[arg(long)]
+        since: Option<String>,
+        #[arg(long)]
+        refresh: bool,
+        /// JSON options with per-account date starts and review decisions.
+        #[arg(long)]
+        options: Option<PathBuf>,
+    },
+}
+
+async fn bank_operation(books: &LocalBooks, action: SimplefinCommand) -> Result<Value> {
+    let (method, path, head, body) = match action {
+        SimplefinCommand::Status => ("GET", "/simplefin/connection".into(), None, Value::Null),
+        SimplefinCommand::Connect { replace, preview } => {
+            let mut token = String::new();
+            std::io::stdin().read_line(&mut token)?;
+            if !preview {
+                eprintln!("This file will hold a bank credential. Anyone with the file can read the connected transactions until you revoke access at your SimpleFIN server.");
+            }
+            (
+                "PUT",
+                "/simplefin/connection".into(),
+                None,
+                json!({"token":token.trim(), "replace":replace, "dry_run":preview}),
+            )
+        }
+        SimplefinCommand::Disconnect => {
+            ("DELETE", "/simplefin/connection".into(), None, Value::Null)
+        }
+        SimplefinCommand::Accounts { refresh } => (
+            "GET",
+            format!("/simplefin/accounts?refresh={refresh}"),
+            None,
+            Value::Null,
+        ),
+        SimplefinCommand::Link {
+            account,
+            head,
+            conn_id,
+            remote_id,
+            unlink,
+        } => {
+            let remote = match conn_id.zip(remote_id) {
+                Some((conn_id, id)) => json!({"conn_id":conn_id, "id":id}),
+                None if unlink => Value::Null,
+                None => bail!("Give both --conn-id and --remote-id, or use --unlink"),
+            };
+            (
+                "PUT",
+                format!(
+                    "/accounts/{}/simplefin-link",
+                    kabacus_client::urlencode(&account)
+                ),
+                Some(head),
+                json!({"remote":remote}),
+            )
+        }
+        SimplefinCommand::Sync {
+            head,
+            save,
+            since,
+            refresh,
+            options,
+        } => {
+            let mut body = match options {
+                Some(path) => serde_json::from_reader(std::fs::File::open(path)?)?,
+                None => json!({}),
+            };
+            let fields = body
+                .as_object_mut()
+                .context("Sync options must be a JSON object")?;
+            fields.insert("dry_run".into(), json!(true));
+            fields.remove("snapshot");
+            if let Some(since) = since {
+                fields.insert("since".into(), json!(since));
+            }
+            if refresh {
+                fields.insert("refresh".into(), json!(true));
+            }
+            let mut request = BooksRequest {
+                method: "POST".into(),
+                path: "/simplefin/sync".into(),
+                head: Some(head),
+                body,
+            };
+            let reviewed = bank_request(books, request.clone()).await?;
+            if !save
+                || reviewed["counts"]["new"].as_u64().unwrap_or_default()
+                    + reviewed["counts"]["matched"].as_u64().unwrap_or_default()
+                    == 0
+            {
+                return Ok(reviewed);
+            }
+            eprintln!("{}", serde_json::to_string_pretty(&reviewed)?);
+            eprintln!("Import the reviewed transactions? [y/N]");
+            let mut answer = String::new();
+            std::io::stdin().read_line(&mut answer)?;
+            if !answer.trim().eq_ignore_ascii_case("y")
+                && !answer.trim().eq_ignore_ascii_case("yes")
+            {
+                return Ok(reviewed);
+            }
+            request.body["snapshot"] = reviewed["snapshot"].clone();
+            request.body["dry_run"] = json!(false);
+            return bank_request(books, request).await;
+        }
+    };
+    bank_request(
+        books,
+        BooksRequest {
+            method: method.into(),
+            path,
+            head,
+            body,
+        },
+    )
+    .await
+}
+
+async fn bank_request(books: &LocalBooks, request: BooksRequest) -> Result<Value> {
+    let response = books.request(request).await?;
+    let body: Value = serde_json::from_slice(&response.body)?;
+    if response.status >= 400 {
+        bail!("{}", body["message"].as_str().unwrap_or("Request failed"));
+    }
+    Ok(body)
+}
+
 fn caller(allow: bool, actor: &str) -> LocalCaller {
     let mut caller = LocalCaller::new(computer_user(), actor);
     caller.allow_rewrites = allow;
@@ -369,6 +535,10 @@ async fn run(args: Args) -> Result<()> {
             .await
             .map_err(|error| anyhow::anyhow!(error.body().message))?;
             print(&result, args.json);
+        }
+        Command::Simplefin { books, action } => {
+            let books = LocalBooks::open(books, local).await?;
+            print(&bank_operation(&books, action).await?, args.json);
         }
         Command::Mcp {
             books,

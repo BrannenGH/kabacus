@@ -945,3 +945,119 @@ async fn an_unknown_revision_is_not_found() {
         assert_eq!(status, 404, "{path}: {body:?}");
     }
 }
+
+#[tokio::test]
+async fn signed_in_writers_can_connect_and_import_their_own_bank_accounts() {
+    use kabacus_server::config::AuthMode;
+    use kabacus_testkit::{provider::FakeProvider, simplefin};
+
+    async fn request(
+        client: &reqwest::Client,
+        method: &str,
+        path: &str,
+        head: Option<String>,
+        body: Value,
+    ) -> (u16, Value) {
+        let mut request =
+            client.request(method.parse().unwrap(), format!("http://localhost{path}"));
+        if let Some(head) = head {
+            request = request.header("if-match", format!("\"{head}\""));
+        }
+        if !body.is_null() {
+            request = request.json(&body);
+        }
+        let result = request.send().await.unwrap();
+        (result.status().as_u16(), result.json().await.unwrap())
+    }
+
+    let provider = FakeProvider::start(Default::default()).await;
+    let server = simplefin::books_with(|cfg| {
+        cfg.auth = AuthConfig {
+            mode: AuthMode::Oauth,
+            issuer: Some(provider.issuer.clone()),
+            audience: Some("kabacus-server".into()),
+            role_map: [
+                ("ledger-read".into(), "ledger-read".into()),
+                ("ledger-write".into(), "ledger-write".into()),
+            ]
+            .into(),
+            ..Default::default()
+        };
+    })
+    .await;
+    let client = |name| {
+        let authorization = format!("Bearer {}", provider.mint(name, "kabacus-app"));
+        reqwest::Client::builder()
+            .unix_socket(server.socket_path.clone())
+            .default_headers({
+                let mut headers = reqwest::header::HeaderMap::new();
+                headers.insert("authorization", authorization.parse().unwrap());
+                headers
+            })
+            .build()
+            .unwrap()
+    };
+    let drew = client("drew.evans");
+    let riley = client("riley.chen");
+    let connection = "/simplefin/connection";
+    let sync = "/simplefin/sync";
+    let mut head = Some(server.head().await);
+    for (client, token, target, bank, remote) in [
+        (
+            &drew,
+            simplefin::token(),
+            "checking",
+            "Cedar Bank",
+            "Cedar Everyday",
+        ),
+        (
+            &riley,
+            simplefin::harbor_token(),
+            "savings",
+            "Harbor Bank",
+            "Harbor Everyday",
+        ),
+    ] {
+        assert_eq!(
+            request(client, "GET", connection, None, Value::Null).await,
+            (200, json!({"connected":false}))
+        );
+        let (status, reply) =
+            request(client, "PUT", connection, None, json!({"token": token})).await;
+        assert_eq!(status, 200, "{reply}");
+        assert_eq!(reply["accounts"].as_array().unwrap().len(), 1);
+        assert_eq!(reply["accounts"][0]["name"], remote);
+        let path = format!("/accounts/assets:bank:{target}/simplefin-link");
+        let (status, linked) = request(
+            client,
+            "PUT",
+            &path,
+            head,
+            json!({"remote": {"conn_id": bank, "id": remote}}),
+        )
+        .await;
+        assert_eq!(status, 200, "{linked}");
+        head = Some(linked["head"].as_str().unwrap().into());
+    }
+
+    for (client, other, payee) in [
+        (&drew, &riley, "Harbor Street Cafe"),
+        (&riley, &drew, "Red Maple Books"),
+    ] {
+        let (status, preview) = request(client, "POST", sync, head.clone(), json!({})).await;
+        assert_eq!(status, 200, "{preview}");
+        assert_eq!(preview["counts"]["new"], 1);
+        let groups = preview["accounts"].as_array().unwrap();
+        assert!(groups
+            .iter()
+            .any(|group| group["rows"][0]["description"] == payee));
+        assert!(groups.iter().any(|group| group["other_connection"] == true));
+        let save = json!({"dry_run": false, "snapshot": preview["snapshot"]});
+        let (_, refused) = request(other, "POST", sync, head.clone(), save.clone()).await;
+        assert_eq!(refused["code"], "snapshot_expired");
+        let (status, saved) = request(client, "POST", sync, head, save).await;
+        assert_eq!(status, 200, "{saved}");
+        assert_eq!(saved["counts"]["new"], 1);
+        head = Some(saved["head"].as_str().unwrap().into());
+    }
+}

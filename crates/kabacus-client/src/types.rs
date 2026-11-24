@@ -261,6 +261,10 @@ pub struct CommodityView {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AccountView {
     pub account: String,
+    #[serde(default)]
+    pub simplefin_linked: bool,
+    #[serde(default)]
+    pub simplefin_served: Option<bool>,
     /// The YNAB account/envelope name from the declaration, if any.
     #[serde(default)]
     pub friendly_name: Option<String>,

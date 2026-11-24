@@ -5,6 +5,7 @@
 //! Shared test fixtures. Not shipped; used only from `[dev-dependencies]`.
 
 pub mod provider;
+pub mod simplefin;
 
 use kabacus_server::config::{AuthConfig, AuthMode, Config, Database};
 use kabacus_server::state::{self, AppState};
@@ -103,6 +104,14 @@ pub async fn spawn_server_with_journal(
     extra: &str,
     customize: impl FnOnce(&mut Config),
 ) -> TestServer {
+    spawn_scratch(extra, customize, None).await
+}
+
+async fn spawn_scratch(
+    extra: &str,
+    customize: impl FnOnce(&mut Config),
+    simplefin: Option<Arc<dyn kabacus_service::simplefin::Transport>>,
+) -> TestServer {
     let dir = tempfile::tempdir().unwrap();
 
     // Unix socket paths are limited to ~108 bytes; keep this one short.
@@ -124,7 +133,11 @@ pub async fn spawn_server_with_journal(
 
     let store = state::open_store(&config).await.unwrap();
     import_journal(&store, config.ledger.as_deref(), &scratch_journal(extra)).await;
-    let state = Arc::new(AppState::with_store(config, store).await.unwrap());
+    let mut state = AppState::with_store(config, store).await.unwrap();
+    if let Some(bridge) = simplefin {
+        state.simplefin_transport = bridge;
+    }
+    let state = Arc::new(state);
 
     let _ = std::fs::remove_file(&socket_path);
     let listener = tokio::net::UnixListener::bind(&socket_path).unwrap();

@@ -17,6 +17,7 @@ pub use kabacus_service::state::{find_or_create_ledger, KindTable, DEFAULT_LEDGE
 pub struct AppState {
     pub config: Config,
     pub auth: AuthContext,
+    pub simplefin_transport: std::sync::Arc<dyn kabacus_service::simplefin::Transport>,
     pub tool_lists: std::sync::Arc<crate::mcp::ToolLists>,
     pub(crate) service: std::sync::Arc<kabacus_service::state::Service>,
     users: tokio::sync::Mutex<HashMap<String, UserId>>,
@@ -64,11 +65,14 @@ impl AppState {
                 kabacus_service::state::Settings {
                     allow_rewrite: config.allow_rewrite,
                     import_max_bytes: config.import_max_bytes,
-                    statement_limits: config.import,
+                    statement_limits: config.import.limits,
+                    simplefin: Some(config.import.simplefin.clone()),
+                    simplefin_per_member: config.auth.mode != crate::config::AuthMode::None,
                     app_client_id: config.auth.clients.app.clone(),
                 },
                 kinds,
             )),
+            simplefin_transport: std::sync::Arc::new(kabacus_service::simplefin::Http),
             tool_lists: std::sync::Arc::new(crate::mcp::ToolLists::new()),
             config,
             auth,

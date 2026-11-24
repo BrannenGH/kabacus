@@ -7,6 +7,7 @@
 mod csv;
 mod ofx;
 mod planner;
+pub mod simplefin;
 
 use crate::{AccountKind, Money};
 use chrono::NaiveDate;

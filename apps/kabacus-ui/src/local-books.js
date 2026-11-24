@@ -52,7 +52,11 @@ export class BrowserApi extends Api {
     const api=new BrowserApi(record,books);await api.persist(bytes);return api;
   }
   async persist(bytes){
-    if(this.record.handle){const writable=await this.record.handle.createWritable({mode:"exclusive"});try{await writable.write(bytes);await writable.close();}catch(error){await writable.abort().catch(()=>{});throw error;}}
+    if(this.record.handle){
+      const writable=await this.record.handle.createWritable({mode:"exclusive"});
+      try{await writable.write(bytes);await writable.close();}catch(error){await writable.abort().catch(()=>{});throw error;}
+      this.modified=(await this.record.handle.getFile()).lastModified;
+    }
     this.record={...this.record,bytes:this.record.handle?undefined:bytes,stamp:Date.now()};this.stamp=this.record.stamp;await stored("books","put",undefined,this.record);
   }
   async reload(){
@@ -64,10 +68,12 @@ export class BrowserApi extends Api {
   }
   async raw(path,{method="GET",body,head,signal}={}){
     signal?.throwIfAborted();
+    const bankRequest=path.startsWith("/simplefin/")||path.endsWith("/simplefin-link");
     const execute=async()=>{
-      if(method!=="GET"||path==="/version")await this.reload();
+      if(bankRequest||method!=="GET"||path==="/version")await this.reload();
       const before=method!=="GET"?await this.books.bytes():null;
-      const response=JSON.parse(await this.books.request(JSON.stringify({method,path,body:body??null,head:head??null})));
+      const request=JSON.stringify({method,path,body:body??null,head:head??null});
+      const response=JSON.parse(bankRequest?await this.books.request_with_checkpoint(request,bytes=>this.persist(bytes)):await this.books.request(request));
       if(method!=="GET"&&response.status<400&&body?.dry_run!==true){
         try{await this.persist(await this.books.bytes());}
         catch(error){const module=await wasm();const old=this.books;this.books=await module.BrowserBooks.open(before,this.record.username||"local");old.free();throw new ApiError(507,{message:t("Can't save these books. Check the folder's permissions and available space."),details:{reason:String(error)}});}

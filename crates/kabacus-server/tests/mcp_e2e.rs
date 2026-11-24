@@ -55,7 +55,11 @@ async fn spawn_rewrite_server() -> TestServer {
 /// the app can.
 #[tokio::test]
 async fn there_is_a_tool_for_every_api_endpoint() {
-    let server = spawn_rewrite_server().await;
+    let server = spawn_server(|config| {
+        support::rewrites(config);
+        config.import.simplefin.enabled = true;
+    })
+    .await;
     let client = connect(&server).await;
     let names = tool_names(&client).await;
 
@@ -119,7 +123,7 @@ async fn there_is_a_tool_for_every_api_endpoint() {
 #[tokio::test]
 async fn every_listed_endpoint_is_routed() {
     use tower::ServiceExt as _;
-    let server = spawn_server(|_| {}).await;
+    let server = spawn_server(|cfg| cfg.import.simplefin.enabled = true).await;
     let head = store_head(&server).await;
     for endpoint in ENDPOINTS {
         let path = endpoint

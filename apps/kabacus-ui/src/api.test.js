@@ -70,3 +70,48 @@ test('a conflicting save names the current revision actor without retrying the w
   await expect(new Api().request('/transactions/12',{method:'PATCH',head:'42',body:{dry_run:false}})).rejects.toThrow('Morgan Reed saved a change');
   expect(fetch.mock.calls.filter(([,options])=>options.method==='PATCH')).toHaveLength(1);
 });
+
+test("a browser file keeps the SimpleFIN snapshot after saving its request budget", async () => {
+  let lastModified = 1;
+  let snapshot;
+  const request = { result: null };
+  vi.stubGlobal("indexedDB", {
+    open() {
+      queueMicrotask(() => request.onsuccess());
+      return request;
+    },
+  });
+  request.result = {
+    close() {},
+    transaction() {
+      const transaction = {
+        objectStore() { return { get: () => ({}), put: () => ({}) }; },
+      };
+      queueMicrotask(() => transaction.oncomplete());
+      return transaction;
+    },
+  };
+  const handle = {
+    getFile: async () => ({ lastModified, arrayBuffer: async () => new Uint8Array([8]).buffer }),
+    createWritable: async () => ({ write: async () => {}, close: async () => { lastModified++; } }),
+  };
+  const books = {
+    bytes: async () => new Uint8Array([8]),
+    async request_with_checkpoint(text, checkpoint) {
+      const { body } = JSON.parse(text);
+      if (body.dry_run) {
+        await checkpoint(await this.bytes());
+        snapshot = "cedar-snapshot";
+      } else {
+        expect(body.snapshot).toBe(snapshot);
+      }
+      return JSON.stringify({ status: 200, body: [] });
+    },
+  };
+  const { BrowserApi } = await import("./local-books");
+  const browser = new BrowserApi({ id: "cedar", handle }, books);
+  browser.modified = lastModified;
+  await browser.raw("/simplefin/sync", { method: "POST", body: { dry_run: true } });
+  await browser.raw("/simplefin/sync", { method: "POST", body: { dry_run: false, snapshot } });
+  expect(lastModified).toBe(3);
+});
