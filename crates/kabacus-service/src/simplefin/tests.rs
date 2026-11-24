@@ -314,3 +314,45 @@ async fn private_claim_addresses_and_other_members_snapshots_are_refused() {
     assert_eq!(long.code(), "simplefin_window");
     assert_eq!(mock.fetched.load(Ordering::Relaxed), before);
 }
+
+#[tokio::test]
+async fn a_books_writer_can_connect_on_first_visit() {
+    let (state, dana, _) = scratch(true).await;
+    let writer = LocalCaller::new("Drew Evans", "app");
+    let user = state.user_of(&writer).await.unwrap();
+    assert!(state.store.memberships(user).await.unwrap().is_empty());
+    assert_eq!(
+        connection(&state, &writer).await.unwrap(),
+        json!({"connected":false})
+    );
+    let request = |dry_run| ConnectBody {
+        token: STANDARD.encode(CLAIM),
+        replace: false,
+        dry_run,
+    };
+    let bridge = Bridge::default();
+    connect(&state, &writer, &bridge, request(true))
+        .await
+        .unwrap();
+    assert!(state.store.memberships(user).await.unwrap().is_empty());
+    connect(&state, &writer, &bridge, request(false))
+        .await
+        .unwrap();
+    assert_eq!(
+        connection(&state, &writer).await.unwrap()["connected"],
+        true
+    );
+    assert_eq!(
+        connection(&state, &dana).await.unwrap(),
+        json!({"connected":false})
+    );
+    state
+        .store
+        .set_membership(state.ledger, user, None)
+        .await
+        .unwrap();
+    assert_eq!(
+        connection(&state, &writer).await.unwrap(),
+        json!({"connected":false})
+    );
+}

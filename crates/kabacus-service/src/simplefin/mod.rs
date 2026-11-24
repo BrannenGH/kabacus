@@ -153,19 +153,6 @@ async fn owner(
         return Ok(Owner::Local);
     }
     let user = state.user_of(caller).await.map_err(|_| reconnect())?;
-    if !state
-        .store
-        .memberships(user)
-        .await
-        .map_err(store_error)?
-        .iter()
-        .any(|(ledger, _)| *ledger == state.ledger)
-    {
-        return Err(problem(
-            "simplefin_membership",
-            "Join these books to connect a bank",
-        ));
-    }
     Ok(Owner::Member(user))
 }
 
@@ -452,6 +439,20 @@ pub async fn connect(
     }
     let access = Access::new(url.into(), Utc::now().timestamp());
     credentials(&access, allowlist(state))?;
+    // Hosted books grant access through the configured OIDC role map.
+    if let Owner::Member(user) = owner {
+        let memberships = state.store.memberships(user).await.map_err(store_error)?;
+        if !memberships
+            .iter()
+            .any(|(ledger, _)| *ledger == state.ledger)
+        {
+            state
+                .store
+                .set_membership(state.ledger, user, Some(kabacus_store::Role::Write))
+                .await
+                .map_err(store_error)?;
+        }
+    }
     state
         .store
         .set_simplefin_access(state.ledger, owner, &access)

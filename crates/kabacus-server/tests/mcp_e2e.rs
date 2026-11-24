@@ -123,7 +123,7 @@ async fn there_is_a_tool_for_every_api_endpoint() {
 #[tokio::test]
 async fn every_listed_endpoint_is_routed() {
     use tower::ServiceExt as _;
-    let server = spawn_server(|_| {}).await;
+    let server = spawn_server(|cfg| cfg.import.simplefin.enabled = true).await;
     let head = store_head(&server).await;
     for endpoint in ENDPOINTS {
         let path = endpoint
