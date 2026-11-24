@@ -196,6 +196,98 @@ msgstr "გატარებები"
 msgid "Any two accounts"
 msgstr "ნებისმიერი ორი ანგარიში"
 
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Bank connections"
+msgstr "საბანკო კავშირები"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Your bank connection"
+msgstr "თქვენი საბანკო კავშირი"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Checking with the server…"
+msgstr "სერვერთან მოწმდება…"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgctxt "%1 is the remaining request count"
+msgid "Requests remaining today: %1"
+msgstr "დღეს დარჩენილი მოთხოვნები: %1"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Sync"
+msgstr "სინქრონიზაცია"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Load bank accounts"
+msgstr "საბანკო ანგარიშების ჩატვირთვა"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Replace connection"
+msgstr "შეცვალეთ კავშირი"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Disconnect"
+msgstr "გათიშვა"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Get a SimpleFIN setup token"
+msgstr "მიიღეთ SimpleFIN დაყენების ნიშანი"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Setup token"
+msgstr "ჟეტონის დაყენება"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgctxt "%1 is the hostname"
+msgid "Connect to %1?"
+msgstr "დაკავშირება %1-თან?"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Anyone with this file can read your connected bank transactions until you revoke access at your SimpleFIN server."
+msgstr "ნებისმიერს, ვისაც აქვს ეს ფაილი, შეუძლია წაიკითხოს თქვენი დაკავშირებული საბანკო ტრანზაქციები, სანამ არ გააუქმებთ წვდომას თქვენს SimpleFIN სერვერზე."
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "This replaces your current bank connection."
+msgstr "ეს ჩაანაცვლებს თქვენს ამჟამინდელ საბანკო კავშირს."
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cancel"
+msgstr "გაუქმება"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connect"
+msgstr "დაკავშირება"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Connect SimpleFIN"
+msgstr "დააკავშირეთ SimpleFIN"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Don’t import"
+msgstr "არ შემოიტანოთ"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Linked through another member’s connection"
+msgstr "დაკავშირებულია სხვა წევრის კავშირით"
+
 #: crates/kabacus-kde/qml/CardsPage.qml
 #, kde-format
 msgid "Can't load cards"
@@ -541,11 +633,6 @@ msgstr "შესვლა"
 msgid "Finish signing in in your browser…"
 msgstr "დაასრულეთ შესვლა ბრაუზერში…"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Cancel"
-msgstr "გაუქმება"
-
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
 msgctxt "%1 is why the server can't be reached, as one sentence"
@@ -663,11 +750,6 @@ msgstr "პირადი სერტიფიკაციის ორგა�
 #, kde-format
 msgid "Test connection"
 msgstr "კავშირის შემოწმება"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Connect"
-msgstr "დაკავშირება"
 
 #: crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1142,11 +1224,6 @@ msgstr "ინახება…"
 msgid "Save"
 msgstr "შენახვა"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Checking with the server…"
-msgstr "სერვერთან მოწმდება…"
-
 #: crates/kabacus-kde/qml/ReviewPage.qml
 #, kde-format
 msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
@@ -1217,6 +1294,11 @@ msgstr "იმპორტი დასრულდა"
 #, kde-format
 msgid "Review"
 msgstr "შემოწმება"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Sync bank transactions"
+msgstr "საბანკო ტრანზაქციების სინქრონიზაცია"
 
 #: crates/kabacus-kde/qml/StatementImportPage.qml
 #, kde-format
@@ -1320,6 +1402,16 @@ msgid "Reverse amount signs"
 msgstr "საპირისპირო თანხის ნიშნები"
 
 #: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This account is unavailable"
+msgstr "ეს ანგარიში მიუწვდომელია"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Start date"
+msgstr "დაწყების თარიღი"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
 #, kde-format
 msgid "New transactions"
 msgstr "ახალი გარიგებები"

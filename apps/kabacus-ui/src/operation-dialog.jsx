@@ -7,6 +7,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { AmountField } from "./amount-field";
 import { operation, accountCurrency, cardPurchase } from "./operations";
 import { t } from "./i18n";
+import { BankSync } from "./bank-connections";
 import { StatementImport } from "./statement-import";
 const titles = {
   postings: "Postings",
@@ -23,6 +24,7 @@ const titles = {
   "account-type": "Account type",
 };
 export function OperationDialog(props) {
+  if (props.kind === "bank-sync") return <BankSync {...props} />;
   return props.kind === "statement-import" ? <StatementImport {...props} /> : <WriteOperationDialog {...props} />;
 }
 function WriteOperationDialog({

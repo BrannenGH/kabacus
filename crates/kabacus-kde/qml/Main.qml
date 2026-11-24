@@ -110,6 +110,8 @@ Kirigami.ApplicationWindow {
     // dimmed, and every write is off until it's back.
     readonly property bool serverBooks: hasBooks && (!bookSource || bookSource.kind === "remote")
     readonly property bool offline: serverBooks && ledger.error !== "" && !needsSignIn
+    property var bankStatus: null
+    property int bankStatusTicket: 0
     readonly property bool canWrite: hasBooks && ledger.error === "" && !needsSignIn
     // The current destination: a key of `pages`, never the label shown
     // for it, which is translated.
@@ -227,6 +229,26 @@ Kirigami.ApplicationWindow {
     // account's register rather than being a destination of its own.
     function openReconcile(account, name) {
         pageStack.layers.push(reconcilePage, { account: account, accountName: name })
+    }
+
+    function loadBankStatus() {
+        if (!canWrite) { bankStatus = null; return }
+        bankStatusTicket = ledger.startRequest(JSON.stringify({method:"GET", path:"/simplefin/connection"}))
+    }
+    function openBankConnections() { pageStack.layers.push(bankConnectionsPage) }
+    function openBankSync() {
+        if (bankStatus?.connected) pageStack.layers.push(statementImportPage, {account:"", accountName:"", syncMode:true})
+        else openBankConnections()
+    }
+    onCanWriteChanged: loadBankStatus()
+    Connections {
+        target: root.ledger
+        function onRevisionChanged() { root.loadBankStatus() }
+        function onRequestFinished(ticket: int, reply: string) {
+            if (ticket !== root.bankStatusTicket) return
+            const response = JSON.parse(reply)
+            root.bankStatus = response.status === 200 ? response.body : null
+        }
     }
 
     function openStatementImport(account, name) {
@@ -676,6 +698,7 @@ Kirigami.ApplicationWindow {
     Component { id: peoplePage; PeoplePage { app: root } }
     Component { id: reportsPage; ReportsPage { app: root } }
     Component { id: reconcilePage; ReconcilePage { app: root } }
+    Component { id: bankConnectionsPage; BankConnectionsPage { app: root } }
     Component { id: statementImportPage; StatementImportPage { app: root } }
     Component { id: activityPage; ActivityPage { app: root } }
     Component { id: morePage; MorePage { app: root } }

@@ -196,6 +196,98 @@ msgstr "خاتىرىلەر"
 msgid "Any two accounts"
 msgstr "خالىغان ئىككى ھېسابات"
 
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Bank connections"
+msgstr "بانكا ئۇلىنىشى"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Your bank connection"
+msgstr "بانكا ئۇلىنىشىڭىز"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Checking with the server…"
+msgstr "مۇلازىمېتىر بىلەن تەكشۈرۈۋاتىدۇ…"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgctxt "%1 is the remaining request count"
+msgid "Requests remaining today: %1"
+msgstr "بۈگۈن قالغان تەلەپلەر: %1"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Sync"
+msgstr "ماسقەدەملەش"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Load bank accounts"
+msgstr "بانكا ھېساباتىنى يۈكلەڭ"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Replace connection"
+msgstr "ئۇلىنىشنى ئالماشتۇرۇڭ"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Disconnect"
+msgstr "ئۈزۈڭ"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Get a SimpleFIN setup token"
+msgstr "SimpleFIN تەڭشەش بەلگىسىگە ئېرىشىڭ"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Setup token"
+msgstr "تەڭشەش بەلگىسى"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgctxt "%1 is the hostname"
+msgid "Connect to %1?"
+msgstr "%1 غا ئۇلىنامسىز؟"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Anyone with this file can read your connected bank transactions until you revoke access at your SimpleFIN server."
+msgstr "بۇ ھۆججەتكە ئىگە ھەرقانداق كىشى سىزنىڭ SimpleFIN مۇلازىمېتىرىڭىزدىكى زىيارەتنى بىكار قىلغۇچە ئۇلانغان بانكا سودىڭىزنى ئوقۇيالايدۇ."
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "This replaces your current bank connection."
+msgstr "بۇ سىزنىڭ ھازىرقى بانكا ئۇلىنىشىڭىزنىڭ ئورنىنى ئالىدۇ."
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cancel"
+msgstr "ۋاز كېچىش"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connect"
+msgstr "ئۇلا"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Connect SimpleFIN"
+msgstr "SimpleFIN نى ئۇلاڭ"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Don’t import"
+msgstr "ئىمپورت قىلماڭ"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Linked through another member’s connection"
+msgstr "باشقا بىر ئەزانىڭ ئۇلىنىشى ئارقىلىق باغلانغان"
+
 #: crates/kabacus-kde/qml/CardsPage.qml
 #, kde-format
 msgid "Can't load cards"
@@ -540,11 +632,6 @@ msgstr "كىرىش"
 msgid "Finish signing in in your browser…"
 msgstr "كىرىشنى توركۆرگۈدە تاماملاڭ…"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Cancel"
-msgstr "ۋاز كېچىش"
-
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
 msgctxt "%1 is why the server can't be reached, as one sentence"
@@ -662,11 +749,6 @@ msgstr "شەخسىي گۇۋاھنامە ئورگىنى"
 #, kde-format
 msgid "Test connection"
 msgstr "ئۇلىنىشنى سىناش"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Connect"
-msgstr "ئۇلا"
 
 #: crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1141,11 +1223,6 @@ msgstr "ساقلاۋاتىدۇ…"
 msgid "Save"
 msgstr "ساقلاش"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Checking with the server…"
-msgstr "مۇلازىمېتىر بىلەن تەكشۈرۈۋاتىدۇ…"
-
 #: crates/kabacus-kde/qml/ReviewPage.qml
 #, kde-format
 msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
@@ -1216,6 +1293,11 @@ msgstr "ئەكىرىش تامام"
 #, kde-format
 msgid "Review"
 msgstr "تەكشۈرۈش"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Sync bank transactions"
+msgstr "بانكا سودىسى"
 
 #: crates/kabacus-kde/qml/StatementImportPage.qml
 #, kde-format
@@ -1319,6 +1401,16 @@ msgid "Reverse amount signs"
 msgstr "تەتۈر مىقدار بەلگىسى"
 
 #: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This account is unavailable"
+msgstr "بۇ ھېساباتنى ئىشلەتكىلى بولمايدۇ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Start date"
+msgstr "باشلىنىش ۋاقتى"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
 #, kde-format
 msgid "New transactions"
 msgstr "يېڭى سودا"

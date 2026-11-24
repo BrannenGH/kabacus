@@ -42,6 +42,7 @@ export function App({ auth, book, onFileAction }) {
   useEffect(() => { if (!phone && page === "More") setPage("Overview"); }, [phone, page]);
   const [form, setForm] = useState(null);
   const [operationForm, setOperationForm] = useState(null);
+  const [bankStatus, setBankStatus] = useState(null);
   const [openedAccount, setOpenedAccount] = useState(book?.state?.account || "");
   const [selectedRow,setSelectedRow]=useState(book?.state?.selected||"");
   const [chooser, setChooser] = useState(false);
@@ -144,6 +145,20 @@ export function App({ auth, book, onFileAction }) {
   const saved = () => {
     refresh();
   };
+  const simplefinOffered = data?.commands?.commands?.some(command => command.tool === "get_simplefin_connection");
+  const openBankSync = () => bankStatus?.connected ? setOperationForm({kind: "bank-sync"}) : go("Settings");
+  async function reloadBankStatus(signal) {
+    if (!simplefinOffered) return;
+    try { setBankStatus(await api.request("/simplefin/connection", {signal})); }
+    catch (failure) { if (failure.name !== "AbortError") setBankStatus(null); }
+  }
+  useEffect(() => {
+    if (!simplefinOffered) { setBankStatus(null); return; }
+    const abort = new AbortController();
+    reloadBankStatus(abort.signal);
+    return () => abort.abort();
+  }, [api, simplefinOffered]);
+
   useEffect(() => {
     if (!auth.signedIn) return;
     latestRefresh.current();
@@ -187,6 +202,7 @@ export function App({ auth, book, onFileAction }) {
         <div id="phone-overflow" className="phone-overflow" popover="auto" onClick={(event) => { if (event.target.closest("button")) event.currentTarget.hidePopover(); }}>
           <button className="quiet" data-action="refresh" onClick={refresh}>{t("Refresh")}</button>
           {registerOpen && data?.accounts.some(item => item.account === openedAccount && !item.synthetic && ["money", "revolving-debt"].includes(item.kind)) && <button className="quiet" disabled={!!error || loading} onClick={() => setOperationForm({kind: "statement-import", account: openedAccount})}>{t("Import statement…")}</button>}
+          {bankStatus && (page === "Overview" || (registerOpen && data?.accounts.some(item => item.account === openedAccount && item.simplefin_linked))) && <button className="quiet" onClick={openBankSync}>{bankStatus.connected ? t("Sync") : t("Connect")}</button>}
           {registerOpen && <button className="quiet" onClick={() => setOperationForm({kind: "reconcile", account: openedAccount})}>{t("Reconcile…")}</button>}
           <button className="quiet" onClick={() => setBookMenu(true)}>{t("Books")}</button>
         </div>
@@ -265,7 +281,7 @@ export function App({ auth, book, onFileAction }) {
             <Settings
               data={data || { version: { auth: {}, server_version: "—" } }}
               api={api}
-              auth={auth} book={book}
+              auth={auth} book={book} bankStatus={bankStatus} onBankChanged={() => { reloadBankStatus(); refresh(); }} onBankSync={openBankSync}
             />
           )}
           {!data ? (
@@ -292,7 +308,7 @@ export function App({ auth, book, onFileAction }) {
                   </button>
                 </div>
               ))}
-              {page === "Overview" && <Overview data={data} api={api} onFix={warning => warning.code === "uncategorized" ? openRegister("expenses:uncategorized") : go(warning.code?.includes("reserve") ? "Cards" : warning.code?.includes("fund") ? "Funds" : "Register")} onAccount={openRegister} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} />}
+              {page === "Overview" && <Overview data={data} api={api} onFix={warning => warning.code === "uncategorized" ? openRegister("expenses:uncategorized") : go(warning.code?.includes("reserve") ? "Cards" : warning.code?.includes("fund") ? "Funds" : "Register")} onAccount={openRegister} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} bankStatus={bankStatus} onBankSync={openBankSync} />}
               {page === "Loans" && (
                 <Loans data={data} onOpen={openRegister} />
               )}
@@ -306,6 +322,7 @@ export function App({ auth, book, onFileAction }) {
                   account={openedAccount}
                   onAccountChange={setOpenedAccount}
                   selected={selectedRow} onSelect={setSelectedRow} activity={book?.activity}
+                  bankStatus={bankStatus} onBankSync={openBankSync}
                   onOperation={
                     !error && !loading ? setOperationForm : undefined
                   }
@@ -546,7 +563,7 @@ function RegisterDays({ rows, row }) {
     <h3>{day}</h3>{rows.map((r, i) => [r, i]).filter(([r]) => r.date === day).reverse().map(([r, i]) => row(r, i))}
   </section>)}</div>;
 }
-function Register({ phone, query: phoneQuery = "", data, api, onOperation, account = "", onAccountChange: setAccount, selected, onSelect, activity }) {
+function Register({ phone, query: phoneQuery = "", data, api, onOperation, account = "", onAccountChange: setAccount, selected, onSelect, activity, bankStatus, onBankSync }) {
   const [query, setQuery] = useState("");
   const [unreserved, setUnreserved] = useState(false);
   const [lines, setLines] = useState(null);
@@ -608,6 +625,7 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, accou
             >
               {t("Account type")}
             </button>
+            {bankStatus && data.accounts.some(item => item.account === account && item.simplefin_linked) && <button className="secondary" onClick={onBankSync}>{bankStatus.connected ? t("Sync") : t("Connect")}</button>}
             {data.accounts.some(item => item.account === account && !item.synthetic && ["money", "revolving-debt"].includes(item.kind)) && (
               <button className="secondary" onClick={() => onOperation({ kind: "statement-import", account })}>{t("Import statement…")}</button>
             )}

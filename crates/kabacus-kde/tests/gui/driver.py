@@ -728,6 +728,24 @@ def main():
         loan, payee = args
         goto("Loans")
         open_list_item(f"the {loan} loan", lambda: find(app(), loan, pyatspi.ROLE_LIST_ITEM), lambda: row(payee))
+    elif command == "simplefin-sync":
+        token, = args
+        goto("Settings")
+        press(wait_for("Bank connections", lambda: find(app(), "Bank connections", pyatspi.ROLE_PUSH_BUTTON)))
+        field = wait_for("Setup token", lambda: find(app(), "Setup token", pyatspi.ROLE_PASSWORD_TEXT) or find(app(), "Setup token", pyatspi.ROLE_TEXT))
+        set_text(field, token)
+        press(wait_for("Connect SimpleFIN", lambda: find(app(), "Connect SimpleFIN", pyatspi.ROLE_PUSH_BUTTON)))
+        wait_for("bridge host confirmation", lambda: find(app(), "Connect to bridge.simplefin.org?"))
+        press(wait_for("Connect", lambda: find(app(), "Connect", pyatspi.ROLE_PUSH_BUTTON)))
+        picker = wait_for("Cedar Everyday", lambda: find(app(), "Cedar Everyday", pyatspi.ROLE_COMBO_BOX))
+        click(picker)
+        click(wait_for("Cedar Checking", lambda: find(app(), "Cedar Checking")))
+        press(wait_for("Sync", lambda: find(app(), "Sync", pyatspi.ROLE_PUSH_BUTTON)))
+        press(wait_for("Review", lambda: find(app(), "Review", pyatspi.ROLE_PUSH_BUTTON)))
+        wait_for("reviewed transaction", lambda: find(app(), "Harbor Street Cafe"))
+        press(wait_for("Import", lambda: find(app(), "Import", pyatspi.ROLE_PUSH_BUTTON)))
+        press(wait_for("Categorize", lambda: find(app(), "Categorize", pyatspi.ROLE_PUSH_BUTTON)))
+        wait_for("uncategorized transaction", lambda: label_starting("Harbor Street Cafe"))
     elif command == "statement-import":
         account, path = args
         goto("Transactions")

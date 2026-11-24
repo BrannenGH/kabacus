@@ -196,6 +196,98 @@ msgstr "Knjiženja"
 msgid "Any two accounts"
 msgstr "Bilo koja dva računa"
 
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml
+#, kde-format
+msgid "Bank connections"
+msgstr "Veze sa bankama"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Your bank connection"
+msgstr "Vaša veza sa bankom"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Checking with the server…"
+msgstr "Proveravam sa serverom…"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgctxt "%1 is the remaining request count"
+msgid "Requests remaining today: %1"
+msgstr "Preostali zahtevi za danas: %1"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml
+#, kde-format
+msgid "Sync"
+msgstr "Sinhronizuj"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Load bank accounts"
+msgstr "Učitaj bankovne račune"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Replace connection"
+msgstr "Zameni vezu"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Disconnect"
+msgstr "Prekini vezu"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Get a SimpleFIN setup token"
+msgstr "Preuzmi token za podešavanje SimpleFIN-a"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Setup token"
+msgstr "Token za podešavanje"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgctxt "%1 is the hostname"
+msgid "Connect to %1?"
+msgstr "Povezati se sa %1?"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Anyone with this file can read your connected bank transactions until you revoke access at your SimpleFIN server."
+msgstr "Svako ko ima ovaj fajl može da čita povezane bankovne transakcije dok ne opozovete pristup na svom SimpleFIN serveru."
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "This replaces your current bank connection."
+msgstr "Ovo zamenjuje vašu trenutnu vezu sa bankom."
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Cancel"
+msgstr "Odustani"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connect"
+msgstr "Poveži se"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Connect SimpleFIN"
+msgstr "Poveži SimpleFIN"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml
+#, kde-format
+msgid "Don’t import"
+msgstr "Ne uvozi"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Linked through another member’s connection"
+msgstr "Povezano preko veze drugog člana"
+
 #: crates/kabacus-kde/qml/CardsPage.qml
 #, kde-format
 msgid "Can't load cards"
@@ -543,11 +635,6 @@ msgstr "Prijavi se"
 msgid "Finish signing in in your browser…"
 msgstr "Dovršite prijavu u pregledaču…"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Cancel"
-msgstr "Odustani"
-
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
 msgctxt "%1 is why the server can't be reached, as one sentence"
@@ -665,11 +752,6 @@ msgstr "Privatno sertifikaciono telo"
 #, kde-format
 msgid "Test connection"
 msgstr "Isprobaj vezu"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Connect"
-msgstr "Poveži se"
 
 #: crates/kabacus-kde/qml/MorePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1144,11 +1226,6 @@ msgstr "Čuvam…"
 msgid "Save"
 msgstr "Sačuvaj"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Checking with the server…"
-msgstr "Proveravam sa serverom…"
-
 #: crates/kabacus-kde/qml/ReviewPage.qml
 #, kde-format
 msgctxt "%1 is an account, %2 the balance it's checked against, %3 the balance it would have"
@@ -1219,6 +1296,11 @@ msgstr "Uvoz je završen"
 #, kde-format
 msgid "Review"
 msgstr "Pregledaj"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Sync bank transactions"
+msgstr "Sinhronizuj bankovne transakcije"
 
 #: crates/kabacus-kde/qml/StatementImportPage.qml
 #, kde-format
@@ -1322,6 +1404,16 @@ msgid "Reverse amount signs"
 msgstr "Obrni predznake iznosa"
 
 #: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This account is unavailable"
+msgstr "Ovaj račun nije dostupan"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Start date"
+msgstr "Datum početka"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
 #, kde-format
 msgid "New transactions"
 msgstr "Nove transakcije"

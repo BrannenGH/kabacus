@@ -7,17 +7,25 @@ import QtQuick.Layouts
 import QtQuick.Controls as Controls
 import QtQuick.Dialogs
 import org.kde.kirigami as Kirigami
+import me.hallb.kabacus
 
 Kirigami.ScrollablePage {
     id: page
     objectName: "statementImport"
-    title: saved ? i18n("Import complete") : result ? i18n("Review") : i18n("Import statement…")
+    title: saved ? i18n("Import complete") : result ? i18n("Review") : syncMode ? i18n("Sync bank transactions") : i18n("Import statement…")
     required property var app
     required property string account
     required property string accountName
     readonly property var ledger: app.ledger
+    property Fetch targets: Fetch { ledger: page.ledger; view: page.syncMode ? "picker" : "" }
+    function targetName(account) {
+        return (targets.value?.accounts || []).find(item => item.account === account)?.name || account
+    }
     globalToolBarStyle: app.narrow ? Kirigami.ApplicationHeaderStyle.None : Kirigami.ApplicationHeaderStyle.ToolBar
 
+    property bool syncMode: false
+    property var starts: ({})
+    property bool rangeChanged: false
     property var file: null
     property var statements: null
     property var inspection: null
@@ -32,7 +40,7 @@ Kirigami.ScrollablePage {
     property bool splitAmounts: false
     property bool needsReview: false
     readonly property bool busy: stage !== ""
-    readonly property bool ready: file !== null && (!inspection || (mapping.date != null && mapping.description?.length > 0 &&
+    readonly property bool ready: syncMode || file !== null && (!inspection || (mapping.date != null && mapping.description?.length > 0 &&
         (splitAmounts ? mapping.debit != null && mapping.credit != null : mapping.amount != null)))
     readonly property bool canSave: result !== null && !needsReview && result.counts.new + result.counts.matched > 0
 
@@ -40,8 +48,16 @@ Kirigami.ScrollablePage {
         stage = phase
         ticket = ledger.startRequest(JSON.stringify({ method, path, head, body }))
     }
-    function importRequest(commit, cursor) {
+    function importRequest(commit, cursor, group) {
         problem = ""
+        if (syncMode) {
+            const choices = {}
+            for (const account of Object.keys(decisions)) choices[account] = Object.values(decisions[account])
+            const cursors = {}
+            if (group && cursor) cursors[group] = cursor
+            send("POST", "/simplefin/sync", {dry_run:!commit, limit:100, snapshot:rangeChanged ? null : result?.snapshot, starts, decisions:choices, cursors}, commit ? "commit" : "preview")
+            return
+        }
         const body = Object.assign({}, file, { dry_run: !commit, limit: 100, cursor: cursor || null, decisions: Object.values(decisions) })
         if (inspection) body.mapping = mapping
         if (statements) body.statement = statements[statementColumn.currentIndex].statement
@@ -57,12 +73,16 @@ Kirigami.ScrollablePage {
         else next[key] = value
         mapping = next
     }
-    function reviewChoice(row: var, value: string) {
+    function reviewChoice(group: var, row: var, value: string) {
         const next = Object.assign({}, decisions)
         const components = value.split(":")
         const decision = {import_id: row.import_id, action: components[0]}
         if (components.length === 2) decision.transaction = Number(components[1])
-        next[row.import_id] = decision
+        if (syncMode) {
+            const rows = Object.assign({}, next[group])
+            rows[row.import_id] = decision
+            next[group] = rows
+        } else next[row.import_id] = decision
         decisions = next
         needsReview = true
     }
@@ -80,7 +100,12 @@ Kirigami.ScrollablePage {
             const body = response.body
             if (response.status >= 400) {
                 page.problem = body.message || body.error || ""
-                if (response.status === 409) { page.head = ""; page.needsReview = true }
+                if (response.status === 409 || body.code === "snapshot_expired") {
+                    page.head = ""
+                    page.needsReview = true
+                    page.rangeChanged = true
+                    if (page.syncMode) page.decisions = ({})
+                }
                 return
             }
             if (phase === "head") {
@@ -101,6 +126,7 @@ Kirigami.ScrollablePage {
             } else {
                 page.result = body
                 page.needsReview = false
+                page.rangeChanged = false
                 page.head = body.head
                 if (page.inspection) page.ledger.rememberStatementMapping(page.account, JSON.stringify({columns: page.inspection.columns, mapping: page.mapping}))
             }
@@ -154,7 +180,7 @@ Kirigami.ScrollablePage {
     ColumnLayout {
         spacing: Kirigami.Units.largeSpacing
         Controls.Label { text: page.accountName; font.bold: true; Layout.fillWidth: true; wrapMode: Text.Wrap }
-        Kirigami.InlineMessage { Layout.fillWidth: true; visible: page.problem !== ""; text: page.problem; type: Kirigami.MessageType.Error }
+        Controls.Label { Layout.fillWidth: true; visible: page.problem !== ""; text: page.problem; textFormat: Text.PlainText; wrapMode: Text.Wrap; color: Kirigami.Theme.negativeTextColor }
         Controls.Label { visible: page.busy; text: i18n("Checking with the server…"); Accessible.name: text }
         Controls.Label {
             visible: page.saved !== null
@@ -163,11 +189,11 @@ Kirigami.ScrollablePage {
         }
         Controls.Button {
             text: i18n("Statement file")
-            visible: page.saved === null && page.result === null
+            visible: !page.syncMode && page.saved === null && page.result === null
             enabled: !page.busy && page.app.canWrite
             onClicked: chooser.open()
         }
-        Controls.Label { text: page.file?.filename || ""; textFormat: Text.PlainText; visible: page.saved === null && page.result === null; Layout.fillWidth: true; wrapMode: Text.WrapAnywhere }
+        Controls.Label { text: page.file?.filename || ""; textFormat: Text.PlainText; visible: !page.syncMode && page.saved === null && page.result === null; Layout.fillWidth: true; wrapMode: Text.WrapAnywhere }
         Controls.ComboBox {
             id: statementColumn
             visible: page.statements !== null && page.result === null && page.saved === null
@@ -242,82 +268,121 @@ Kirigami.ScrollablePage {
                 onToggled: page.mapping = Object.assign({}, page.mapping, {invert: checked})
             }
         }
-        ColumnLayout {
-            visible: page.result !== null
-            Layout.fillWidth: true
-            Kirigami.Heading { level: 2; text: i18n("Review before saving") }
-            GridLayout {
-                columns: 2
+        Repeater {
+            model: page.syncMode ? page.result?.warnings || [] : []
+            delegate: Controls.Label { required property var modelData; text: modelData.message; textFormat: Text.PlainText; Layout.fillWidth: true; wrapMode: Text.Wrap }
+        }
+        Repeater {
+            model: page.syncMode ? page.result?.accounts || [] : page.result ? [page.result] : []
+            delegate: ColumnLayout {
+                id: group
+                required property var modelData
                 Layout.fillWidth: true
-                Repeater {
-                    model: page.result ? [
-                        {label: i18n("New transactions"), value: page.result.counts.new},
-                        {label: i18n("Matched"), value: page.result.counts.matched},
-                        {label: i18n("Already imported"), value: page.result.counts.duplicate},
-                        {label: i18n("Skipped"), value: page.result.counts.skipped}
-                    ] : []
-                    delegate: RowLayout {
-                        id: countRow
-                        required property var modelData
-                        Layout.fillWidth: true
-                        Controls.Label { text: countRow.modelData.label; Layout.fillWidth: true; wrapMode: Text.Wrap }
-                        Controls.Label { text: countRow.modelData.value; font.bold: true }
+                Kirigami.Heading { level: 2; visible: page.syncMode; text: page.targetName(group.modelData.account || ""); textFormat: Text.PlainText; Layout.fillWidth: true; wrapMode: Text.Wrap }
+                Controls.Label {
+                    visible: page.syncMode && !group.modelData.counts
+                    text: group.modelData.other_connection ? i18n("Linked through another member’s connection") : i18n("This account is unavailable")
+                    Layout.fillWidth: true; wrapMode: Text.Wrap
+                }
+                Controls.Label { text: i18n("Start date"); visible: page.syncMode && !!group.modelData.counts }
+                Controls.TextField {
+                    visible: page.syncMode && !!group.modelData.counts
+                    Accessible.name: i18n("Start date")
+                    placeholderText: "YYYY-MM-DD"
+                    validator: RegularExpressionValidator { regularExpression: /[0-9]{4}-[0-9]{2}-[0-9]{2}/ }
+                    text: page.starts[group.modelData.account] || group.modelData.since || ""
+                    enabled: !page.busy
+                    onTextEdited: {
+                        if (!acceptableInput && text !== "") return
+                        const next = Object.assign({}, page.starts)
+                        if (text === "") delete next[group.modelData.account]
+                        else next[group.modelData.account] = text
+                        page.starts = next
+                        const choices = Object.assign({}, page.decisions)
+                        delete choices[group.modelData.account]
+                        page.decisions = choices
+                        page.needsReview = true
+                        page.rangeChanged = true
                     }
                 }
-            }
-            Repeater {
-                model: page.result?.warnings || []
-                delegate: Kirigami.InlineMessage { required property var modelData; text: modelData.message; visible: true; Layout.fillWidth: true; type: Kirigami.MessageType.Warning }
-            }
-            Kirigami.Heading { level: 3; text: i18n("Balance check"); visible: page.result?.balance_check !== undefined }
-            Repeater {
-                model: page.result?.balance_check ? [
-                    {label: i18n("Statement balance"), value: page.result.balance_check.reported},
-                    {label: i18n("Books balance"), value: page.result.balance_check.books},
-                    {label: i18n("Difference"), value: page.result.balance_check.difference}
-                ] : []
-                delegate: RowLayout {
-                    id: balanceRow
-                    required property var modelData
+                ColumnLayout {
+                    visible: !!group.modelData.counts
                     Layout.fillWidth: true
-                    Controls.Label { text: balanceRow.modelData.label; Layout.fillWidth: true; wrapMode: Text.Wrap }
-                    Controls.Label { text: balanceRow.modelData.value }
-                }
-            }
-            Repeater {
-                model: page.result?.rows || []
-                delegate: ColumnLayout {
-                    id: row
-                    required property var modelData
-                    Layout.fillWidth: true
-                    RowLayout {
+                    Kirigami.Heading { level: 2; text: i18n("Review before saving") }
+                    GridLayout {
+                        columns: 2
                         Layout.fillWidth: true
-                        Controls.Label { text: row.modelData.description; textFormat: Text.PlainText; Layout.fillWidth: true; wrapMode: Text.WrapAnywhere }
-                        Controls.Label { text: row.modelData.amount }
-                    }
-                    Controls.Label { text: row.modelData.date; font: Kirigami.Theme.smallFont }
-                    Controls.ComboBox {
-                        Layout.fillWidth: true
-                        Accessible.name: i18n("Action")
-                        textRole: "label"
-                        readonly property var choices: (row.modelData.candidates || []).map(id => ({key: "match:" + id, label: i18nc("%1 is a transaction number", "Match transaction %1", id)}))
-                            .concat([{key: "add", label: i18n("Import as new")}, {key: "skip", label: i18n("Skip")}])
-                        model: choices
-                        currentIndex: {
-                            const decision = page.decisions[row.modelData.import_id]
-                            const key = decision ? (decision.action === "match" ? "match:" + decision.transaction : decision.action)
-                                : row.modelData.outcome === "matched" ? "match:" + row.modelData.transaction : row.modelData.outcome === "skipped" ? "skip" : "add"
-                            return choices.findIndex(choice => choice.key === key)
+                        Repeater {
+                            model: group.modelData.counts ? [
+                                {label: i18n("New transactions"), value: group.modelData.counts.new},
+                                {label: i18n("Matched"), value: group.modelData.counts.matched},
+                                {label: i18n("Already imported"), value: group.modelData.counts.duplicate},
+                                {label: i18n("Skipped"), value: group.modelData.counts.skipped}
+                            ] : []
+                            delegate: RowLayout {
+                                id: countRow
+                                required property var modelData
+                                Layout.fillWidth: true
+                                Controls.Label { text: countRow.modelData.label; Layout.fillWidth: true; wrapMode: Text.Wrap }
+                                Controls.Label { text: countRow.modelData.value; font.bold: true }
+                            }
                         }
-                        onActivated: index => page.reviewChoice(row.modelData, choices[index].key)
+                    }
+                    Repeater {
+                        model: group.modelData?.warnings || []
+                        delegate: Kirigami.InlineMessage { required property var modelData; text: modelData.message; visible: true; Layout.fillWidth: true; type: Kirigami.MessageType.Warning }
+                    }
+                    Kirigami.Heading { level: 3; text: i18n("Balance check"); visible: group.modelData?.balance_check !== undefined }
+                    Repeater {
+                        model: group.modelData?.balance_check ? [
+                            {label: i18n("Statement balance"), value: group.modelData.balance_check.reported},
+                            {label: i18n("Books balance"), value: group.modelData.balance_check.books},
+                            {label: i18n("Difference"), value: group.modelData.balance_check.difference}
+                        ] : []
+                        delegate: RowLayout {
+                            id: balanceRow
+                            required property var modelData
+                            Layout.fillWidth: true
+                            Controls.Label { text: balanceRow.modelData.label; Layout.fillWidth: true; wrapMode: Text.Wrap }
+                            Controls.Label { text: balanceRow.modelData.value }
+                        }
+                    }
+                    Repeater {
+                        model: group.modelData?.rows || []
+                        delegate: ColumnLayout {
+                            id: row
+                            required property var modelData
+                            Layout.fillWidth: true
+                            RowLayout {
+                                Layout.fillWidth: true
+                                Controls.Label { text: row.modelData.description; textFormat: Text.PlainText; Layout.fillWidth: true; wrapMode: Text.WrapAnywhere }
+                                Controls.Label { text: row.modelData.amount }
+                            }
+                            Controls.Label { text: row.modelData.date; font: Kirigami.Theme.smallFont }
+                            Controls.ComboBox {
+                                Layout.fillWidth: true
+                                Accessible.name: i18n("Action")
+                                textRole: "label"
+                                readonly property var choices: (row.modelData.candidates || []).map(id => ({key: "match:" + id, label: i18nc("%1 is a transaction number", "Match transaction %1", id)}))
+                                    .concat([{key: "add", label: i18n("Import as new")}, {key: "skip", label: i18n("Skip")}])
+                                model: choices
+                                currentIndex: {
+                                    const decision = page.syncMode ? page.decisions[group.modelData.account]?.[row.modelData.import_id] : page.decisions[row.modelData.import_id]
+                                    const key = decision ? (decision.action === "match" ? "match:" + decision.transaction : decision.action)
+                                        : row.modelData.outcome === "matched" ? "match:" + row.modelData.transaction : row.modelData.outcome === "skipped" ? "skip" : "add"
+                                    return choices.findIndex(choice => choice.key === key)
+                                }
+                                onActivated: index => page.reviewChoice(group.modelData.account, row.modelData, choices[index].key)
+                            }
+                        }
+                    }
+                    Controls.Button {
+                        text: i18n("Load more")
+                        visible: !!group.modelData?.next_cursor && !page.needsReview
+                        enabled: !page.busy
+                        onClicked: page.importRequest(false, group.modelData.next_cursor, group.modelData.account)
                     }
                 }
-            }
-            Controls.Button {
-                text: i18n("Load more")
-                visible: !!page.result?.next_cursor && !page.needsReview
-                enabled: !page.busy
-                onClicked: page.importRequest(false, page.result.next_cursor)
             }
         }
     }
