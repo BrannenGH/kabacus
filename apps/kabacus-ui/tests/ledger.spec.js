@@ -89,10 +89,14 @@ const cash = {
   unreserved_count: 0,
   warnings: [],
 };
-async function setup(page, conflict = false, shownTransaction = transaction, suppliedAccounts = accounts, suppliedCommodity = { symbol: "USD", places: 2 }) {
+async function setup(page, conflict = false, shownTransaction = transaction, suppliedAccounts = accounts, suppliedCommodity = { symbol: "USD", places: 2 }, simplefin = false) {
   const writes = [];
   const currentAccounts = structuredClone(suppliedAccounts);
   const currentVersion = { ...version };
+  let bankConnected = false;
+  const bank = { host: "bridge.simplefin.org", connections: [{ conn_id: "Cedar Bank", name: "Cedar Bank" }], accounts: [
+    { id: "Everyday Checking", conn_id: "Cedar Bank", name: "Everyday Checking", balance: "-18.40", currency: "USD", linked: null },
+  ], warnings: [] };
   await page.route("**/*", async (route) => {
     const path = new URL(route.request().url()).pathname;
     if (
@@ -102,9 +106,36 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
       path.startsWith("/src/")
     )
       return route.continue();
+    if (simplefin && path === "/simplefin/connection") {
+      if (route.request().method() === "GET") return route.fulfill({ json: { connected: bankConnected, host: bank.host, remaining: 19 } });
+      const body = route.request().postDataJSON();
+      writes.push({ body, path });
+      if (body.dry_run) return route.fulfill({ json: { host: bank.host, connected: false } });
+      bankConnected = true;
+      return route.fulfill({ json: bank });
+    }
+    if (simplefin && path === "/simplefin/accounts") return route.fulfill({ json: bank });
     if (["POST", "PATCH", "PUT"].includes(route.request().method())) {
       const body = route.request().postDataJSON();
       writes.push({ body, headers: route.request().headers(), path });
+      if (simplefin && path.endsWith("/simplefin-link")) {
+        bank.accounts[0].linked = accounts[0].account;
+        currentAccounts[0].simplefin_linked = true;
+        currentVersion.head = "43";
+        return route.fulfill({ json: { head: "43", linked: true } });
+      }
+      if (simplefin && path === "/simplefin/sync") {
+        const counts = { new: 1, matched: 0, duplicate: 0, skipped: 0 };
+        if (!body.dry_run) {
+          currentVersion.head = "44";
+          currentAccounts.push({ account: "expenses:uncategorized", display_name: "Uncategorized", kind: "expense" });
+        }
+        return route.fulfill({ json: { head: currentVersion.head, snapshot: "cedar-snapshot", counts, warnings: [], accounts: [{
+          account: accounts[0].account, counts, since: "2026-10-01", warnings: [], rows: [{
+            import_id: "simplefin:HC7862", date: "2026-10-25", description: "Harbor Street Cafe", amount: "-18.40", outcome: "new",
+          }],
+        }] } });
+      }
       if (path.endsWith("/import")) {
         return route.fulfill({ json: {
           head: body.dry_run ? "42" : "43", dry_run: body.dry_run,
@@ -146,7 +177,7 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
       });
     }
     const fixtures = {
-      "/commands": {add: [
+      "/commands": {commands: simplefin ? [{tool:"get_simplefin_connection"}] : [], add: [
         ["transaction.spent","Spent"],["transaction.received","Received"],["transaction.transfer","Transfer"],["reserve.setAside","Set aside"],["card.pay","Pay a card"],["split.record","Split with someone"],["settle.record","Settle up with someone"],["transaction.postings","Postings"]
       ].map(([id,label],i)=>({id,label,key:String(i+1)}))},
       "/version": currentVersion,
@@ -200,6 +231,10 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
           balance: amount("6200.75"),
         },
       ],
+      "/register/expenses%3Auncategorized": simplefin && currentVersion.head === "44" ? [{
+        id: 5088, date: "2026-10-25", payee: "Harbor Street Cafe", status: "*",
+        other_account: accounts[0].account, amount: amount("18.40"), balance: amount("18.40"),
+      }] : [],
       "/register/assets%3Abank%3Achecking%3Atravel": [],
       "/register/assets%3Ainvestments%3Amonero": [],
     };
@@ -1961,3 +1996,31 @@ test("phone date field fits the form", async ({ page }) => {
   await expect(date).toHaveValue("2026-12-01");
   expect(await page.locator(".bookkeeping-dialog").evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
 });
+
+
+for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
+  test(`SimpleFIN connects and reviews one snapshot on ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    const writes = await setup(page, false, transaction, accounts, { symbol: "USD", places: 2 }, true);
+    if (viewport.width === 390) await page.locator("nav").getByRole("button", { name: "More", exact: true }).click();
+    await page.getByRole("button", { name: /^Settings/ }).click();
+    const section = page.getByRole("region", { name: "Bank connections" });
+    await section.getByLabel("Setup token").fill("cedar-demo-token");
+    await section.getByRole("button", { name: "Connect SimpleFIN" }).click();
+    await expect(section.getByText("Connect to bridge.simplefin.org?", { exact: true })).toBeVisible();
+    await section.getByRole("button", { name: "Connect", exact: true }).click();
+    await section.getByRole("combobox", { name: /Everyday Checking/ }).selectOption(accounts[0].account);
+    await section.getByRole("button", { name: "Sync", exact: true }).click();
+    const review = page.getByRole("dialog");
+    await review.getByRole("button", { name: "Review", exact: true }).click();
+    await expect(review.getByText("Harbor Street Cafe", { exact: true })).toBeVisible();
+    await review.getByRole("button", { name: "Import", exact: true }).click();
+    await review.getByRole("button", { name: "Categorize" }).click();
+    await expect(review).not.toBeVisible();
+    await expect(page.getByText("Harbor Street Cafe", { exact: true })).toBeVisible();
+    const sync = writes.filter(write => write.path === "/simplefin/sync");
+    expect(sync.map(write => !!write.body.dry_run)).toEqual([true, false]);
+    expect(sync[1].body.snapshot).toBe("cedar-snapshot");
+    expect(sync[1].headers["if-match"]).toBe('"43"');
+  });
+}

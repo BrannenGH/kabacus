@@ -1306,6 +1306,7 @@ pub struct Pick {
     pub kind: String,
     pub home: String,
     pub synthetic: bool,
+    pub simplefin_linked: bool,
     pub balance: String,
 }
 
@@ -1344,6 +1345,7 @@ pub async fn picker(client: &KabacusClient) -> Result<Pickers, ModelError> {
             kind: a.kind,
             home: a.home,
             synthetic: a.synthetic,
+            simplefin_linked: a.simplefin_linked,
         })
         .collect();
     Ok(Pickers {

@@ -9,6 +9,7 @@ export class ApiError extends Error {
         : body.message || t("The server had a problem."),
     );
     this.status = status;
+    this.code = body.code;
     this.detail = JSON.stringify(body, null, 2);
   }
 }

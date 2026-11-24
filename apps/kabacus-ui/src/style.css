@@ -1233,3 +1233,10 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
 .statement-rows { list-style:none;padding:0; }
 .statement-rows li { border-top:1px solid var(--border);padding-block:0.75rem; }
 .statement-rows small { display:block; }
+
+.bank-connections { margin-block:1.5rem;border-block-start:1px solid var(--border);padding-block-start:1rem; }
+.bank-actions { display:flex;flex-wrap:wrap;gap:0.5rem; }
+.bank-sync-account { margin-block:0.75rem 1.5rem; }
+.statement-link-row { padding-block:0.5rem; }
+.statement-link-row small { display:block; }
+.bank-sync-entry { margin-block:0.5rem; }

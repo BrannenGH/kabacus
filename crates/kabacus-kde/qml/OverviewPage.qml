@@ -33,6 +33,8 @@ Kirigami.ScrollablePage {
         else if (w.target === "settings") app.openSettings()
     }
 
+    actions: [Kirigami.Action { text: page.app.bankStatus?.connected ? i18n("Sync") : i18n("Connect"); icon.name: "view-refresh"; visible: page.app.narrow && page.app.bankStatus !== null; enabled: page.app.canWrite; onTriggered: page.app.openBankSync() }]
+
     ColumnLayout {
         spacing: Kirigami.Units.largeSpacing
 
@@ -44,6 +46,7 @@ Kirigami.ScrollablePage {
             actions: [
                 Kirigami.Action { text: i18n("Add"); icon.name: "list-add"; displayHint: Kirigami.DisplayHint.KeepVisible; enabled: page.app.canWrite; shortcut: StandardKey.New; onTriggered: page.app.openChooser() },
                 Kirigami.Action { text: i18n("Set aside"); icon.name: "folder-text"; enabled: page.app.canWrite; onTriggered: page.app.openForm("set_aside") },
+                Kirigami.Action { text: page.app.bankStatus?.connected ? i18n("Sync") : i18n("Connect"); icon.name: "view-refresh"; visible: page.app.bankStatus !== null; enabled: page.app.canWrite; onTriggered: page.app.openBankSync() },
                 Kirigami.Action { text: i18n("Refresh"); icon.name: "view-refresh"; shortcut: StandardKey.Refresh; onTriggered: page.ledger.refresh() }
             ]
         }

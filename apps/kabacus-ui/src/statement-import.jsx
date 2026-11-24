@@ -35,7 +35,7 @@ function Mapping({ inspection, value, onChange }) {
   </div>;
 }
 
-function ImportReview({ result, decisions, onDecision }) {
+export function ImportReview({ result, decisions, onDecision }) {
   const { counts, balance_check: balance } = result;
   return <div className="preview">
     <h3>{t("Review before saving")}</h3>

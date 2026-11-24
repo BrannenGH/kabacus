@@ -823,6 +823,40 @@ async fn importing_a_statement_shows_review_and_categorize_on_desktop_and_phone(
     }
 }
 
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn simplefin_reviews_one_snapshot_on_desktop_and_phone() {
+    for (index, size) in [DESKTOP, "390x844"].into_iter().enumerate() {
+        let bank = kabacus_testkit::simplefin::books().await;
+        let client = KabacusClient::connect_unix(&bank.socket_path);
+        let head = client
+            .version()
+            .await
+            .unwrap()
+            .head
+            .unwrap()
+            .parse::<u64>()
+            .unwrap();
+        let _app = launch_sized(
+            &bank.socket_path,
+            &config_dir(&format!("bank-sync{index}")),
+            size,
+        );
+        drive(&["simplefin-sync", &kabacus_testkit::simplefin::token()]).await;
+        assert_eq!(
+            client
+                .version()
+                .await
+                .unwrap()
+                .head
+                .unwrap()
+                .parse::<u64>()
+                .unwrap(),
+            head + 2
+        );
+    }
+}
+
 // Setting money aside in a fund.
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]

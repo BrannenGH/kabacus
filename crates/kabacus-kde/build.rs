@@ -91,6 +91,7 @@ fn main() {
             "qml/TransactionForm.qml",
             "qml/ReviewPage.qml",
             "qml/StatementImportPage.qml",
+            "qml/BankConnectionsPage.qml",
         ];
         for page in pages
             .iter()

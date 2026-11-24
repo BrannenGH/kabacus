@@ -56,6 +56,7 @@ Kirigami.ScrollablePage {
     readonly property bool reconcilable: (kinds.value ? kinds.value.accounts : [])
         .some(a => a.account === page.account && !a.account.startsWith("equity")
             && ["money", "revolving-debt", "term-liability", "non-liquid"].includes(a.kind))
+    readonly property bool linked: (kinds.value?.accounts || []).some(account => account.account === page.account && account.simplefin_linked)
     readonly property bool importable: (kinds.value ? kinds.value.accounts : [])
         .some(a => a.account === page.account && !a.synthetic && ["money", "revolving-debt"].includes(a.kind))
 
@@ -87,6 +88,7 @@ Kirigami.ScrollablePage {
             enabled: page.app.canWrite
             onTriggered: page.app.openStatementImport(page.account, page.title)
         },
+        Kirigami.Action { text: page.app.bankStatus?.connected ? i18n("Sync") : i18n("Connect"); icon.name: "view-refresh"; visible: page.linked && page.app.bankStatus !== null; enabled: page.app.canWrite; onTriggered: page.app.openBankSync() },
         Kirigami.Action { text: i18n("Refresh"); icon.name: "view-refresh"; shortcut: StandardKey.Refresh; onTriggered: page.ledger.refresh() }
     ]
 

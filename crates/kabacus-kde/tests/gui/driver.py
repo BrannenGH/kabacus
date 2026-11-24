@@ -728,6 +728,36 @@ def main():
         loan, payee = args
         goto("Loans")
         open_list_item(f"the {loan} loan", lambda: find(app(), loan, pyatspi.ROLE_LIST_ITEM), lambda: row(payee))
+    elif command == "simplefin-sync":
+        token, = args
+
+        def choose_action(name):
+            def enabled():
+                button = find(app(), name, pyatspi.ROLE_PUSH_BUTTON)
+                return button if button and button.getState().contains(pyatspi.STATE_ENABLED) else None
+
+            press(wait_for(name, enabled))
+
+        goto("Settings")
+        choose_action("Bank connections")
+        help_link = wait_for("setup instructions", lambda: find(app(), "Get a SimpleFIN setup token", pyatspi.ROLE_PUSH_BUTTON))
+        help_link.queryComponent().grabFocus()
+        key(0xFF09)  # Tab to the password field.
+        for character in token:
+            pyatspi.Registry.generateKeyboardEvent(0, character, pyatspi.KEY_STRING)
+            time.sleep(0.02)
+        choose_action("Connect SimpleFIN")
+        wait_for("bridge host confirmation", lambda: find(app(), "Connect to bridge.simplefin.org?"))
+        choose_action("Connect")
+        picker = wait_for("Cedar Everyday", lambda: find(app(), "Cedar Everyday", pyatspi.ROLE_COMBO_BOX))
+        click(picker)
+        click(wait_for("Cedar Checking", lambda: find(app(), "Cedar Checking")))
+        choose_action("Sync")
+        choose_action("Review")
+        wait_for("reviewed transaction", lambda: find(app(), "Harbor Street Cafe"))
+        choose_action("Import")
+        choose_action("Categorize")
+        wait_for("uncategorized transaction", lambda: label_starting("Harbor Street Cafe"))
     elif command == "statement-import":
         account, path = args
         goto("Transactions")
