@@ -92,6 +92,8 @@ pub struct Workspace {
     #[serde(default)]
     pub recent: Vec<Source>,
     #[serde(default)]
+    pub statement_mappings: std::collections::BTreeMap<String, serde_json::Value>,
+    #[serde(default)]
     pub automation: bool,
     #[serde(default)]
     pub control_port: u16,
@@ -105,6 +107,7 @@ impl Default for Workspace {
             reopen: true,
             windows: Vec::new(),
             recent: Vec::new(),
+            statement_mappings: Default::default(),
             automation: false,
             control_port: 7979,
         }

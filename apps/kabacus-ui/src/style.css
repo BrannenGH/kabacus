@@ -1227,3 +1227,9 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
 .cash-summary dt,.cash-summary dd { font-size:14px; margin:0; }
 .cash-summary dt { align-items:center; }
 .cash-breakdown dl { margin-bottom:0; }
+
+.statement-counts { display:grid;grid-template-columns:repeat(auto-fit,minmax(8rem,1fr));gap:1rem; }
+.statement-counts dd { margin-inline-start:0;font-variant-numeric:tabular-nums;font-weight:600; }
+.statement-rows { list-style:none;padding:0; }
+.statement-rows li { border-top:1px solid var(--border);padding-block:0.75rem; }
+.statement-rows small { display:block; }

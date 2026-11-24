@@ -23,6 +23,7 @@ required-features = ["gui"]
 
 [dependencies]
 anyhow.workspace = true
+base64 = "0.22"
 kabacus-service = { path = "../kabacus-service" }
 kabacus-client = { path = "../kabacus-client" }
 kabacus-core = { path = "../kabacus-core" }
