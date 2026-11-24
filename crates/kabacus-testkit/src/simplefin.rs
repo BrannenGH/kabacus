@@ -51,6 +51,7 @@ impl Transport for Bridge {
                     "id": "HH 2386",
                     "posted": chrono::Utc::now().timestamp() - 86_400,
                     "amount": "-18.40",
+                    "description": "Harbor Street Cafe",
                     "payee": "Harbor Street Cafe"
                 }])
             } else {
@@ -66,6 +67,7 @@ impl Transport for Bridge {
                         "name": "Cedar Everyday",
                         "currency": "USD",
                         "balance": "981.60",
+                        "balance-date": chrono::Utc::now().timestamp(),
                         "transactions": rows
                     }]
                 }))
