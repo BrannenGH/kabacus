@@ -229,6 +229,10 @@ Kirigami.ApplicationWindow {
         pageStack.layers.push(reconcilePage, { account: account, accountName: name })
     }
 
+    function openStatementImport(account, name) {
+        pageStack.layers.push(statementImportPage, { account: account, accountName: name })
+    }
+
     function openSettings() {
         if (settingsOpen) return
         const open = () => {
@@ -672,6 +676,7 @@ Kirigami.ApplicationWindow {
     Component { id: peoplePage; PeoplePage { app: root } }
     Component { id: reportsPage; ReportsPage { app: root } }
     Component { id: reconcilePage; ReconcilePage { app: root } }
+    Component { id: statementImportPage; StatementImportPage { app: root } }
     Component { id: activityPage; ActivityPage { app: root } }
     Component { id: morePage; MorePage { app: root } }
     Component { id: settingsPage; SettingsPage { app: root } }

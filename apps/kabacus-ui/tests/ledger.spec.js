@@ -105,6 +105,14 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
     if (["POST", "PATCH", "PUT"].includes(route.request().method())) {
       const body = route.request().postDataJSON();
       writes.push({ body, headers: route.request().headers(), path });
+      if (path.endsWith("/import")) {
+        return route.fulfill({ json: {
+          head: body.dry_run ? "42" : "43", dry_run: body.dry_run,
+          counts: { new: 1, matched: 0, duplicate: 0, skipped: 0 },
+          rows: [{ import_id: "ofx:HB0291", date: "2026-10-25", description: "Harbor Street Cafe", amount: "-18.40", outcome: "new" }],
+          warnings: [],
+        } });
+      }
       if (path === "/reconcile" && body.mode === "check")
         return route.fulfill({
           json: {
@@ -562,6 +570,28 @@ test("reconciliation is opened from a register and freezes the reviewed head", a
   expect(writes.at(-1).body.head).toBe("42");
   expect(writes.at(-1).body.dry_run).toBe(false);
 });
+
+for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
+  test(`statement import reviews and saves on ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    const writes = await setup(page);
+    await page.locator("nav").getByRole("button", { name: "Transactions", exact: true }).click();
+    if (viewport.width === 390) {
+      await page.getByRole("button", { name: new RegExp(accounts[0].display_name) }).first().click();
+      await page.getByRole("banner").getByRole("button", { name: "More", exact: true }).click();
+    } else {
+      await page.getByRole("combobox", { name: "Account", exact: true }).selectOption(accounts[0].account);
+    }
+    await page.getByRole("button", { name: "Import statement…", exact: true }).click();
+    const dialog = page.getByRole("dialog");
+    await dialog.locator('input[type="file"]').setInputFiles({ name: "October.qfx", mimeType: "application/x-ofx", buffer: Buffer.from("<OFX>Harbor Street Cafe</OFX>") });
+    await expect(dialog.getByText("Harbor Street Cafe", { exact: true })).toBeVisible();
+    await dialog.getByRole("button", { name: "Import", exact: true }).click();
+    await expect(dialog.getByRole("button", { name: "Categorize", exact: true })).toBeVisible();
+    expect(writes.map(write => write.body.dry_run)).toEqual([true, false]);
+    expect(writes[1].headers["if-match"]).toBe('"42"');
+  });
+}
 test("a lost connection keeps balances readable and prevents writes", async ({
   page,
 }) => {

@@ -56,6 +56,8 @@ Kirigami.ScrollablePage {
     readonly property bool reconcilable: (kinds.value ? kinds.value.accounts : [])
         .some(a => a.account === page.account && !a.account.startsWith("equity")
             && ["money", "revolving-debt", "term-liability", "non-liquid"].includes(a.kind))
+    readonly property bool importable: (kinds.value ? kinds.value.accounts : [])
+        .some(a => a.account === page.account && !a.synthetic && ["money", "revolving-debt"].includes(a.kind))
 
     // Add and Reconcile stay on a phone's narrow toolbar; Refresh can go
     // to its overflow (pulling the list down refreshes too).
@@ -77,6 +79,13 @@ Kirigami.ScrollablePage {
             displayHint: page.app.narrow ? Kirigami.DisplayHint.AlwaysHide : Kirigami.DisplayHint.KeepVisible
             visible: page.reconcilable
             onTriggered: page.app.openReconcile(page.account, page.title)
+        },
+        Kirigami.Action {
+            text: i18n("Import statement…")
+            icon.name: "document-import"
+            visible: page.importable
+            enabled: page.app.canWrite
+            onTriggered: page.app.openStatementImport(page.account, page.title)
         },
         Kirigami.Action { text: i18n("Refresh"); icon.name: "view-refresh"; shortcut: StandardKey.Refresh; onTriggered: page.ledger.refresh() }
     ]

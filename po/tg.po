@@ -541,7 +541,7 @@ msgstr "Ворид шудан"
 msgid "Finish signing in in your browser…"
 msgstr "Ворид шуданро дар браузер анҷом диҳед…"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cancel"
 msgstr "Бекор кардан"
@@ -624,7 +624,7 @@ msgstr "Боз пешнамоиш"
 msgid "Books"
 msgstr "Дафтарҳо"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Close"
 msgstr "Пӯшидан"
@@ -879,7 +879,7 @@ msgctxt "@label"
 msgid "Statement balance:"
 msgstr "Бақияи иқтибос:"
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Statement balance"
 msgstr "Бақияи иқтибос"
@@ -944,6 +944,11 @@ msgstr "Навъи ҳисоб"
 msgctxt "@action compare an account with its statement"
 msgid "Reconcile…"
 msgstr "Мутобиқ кардан…"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Import statement…"
+msgstr "Ҳисоботи бонкиро ворид кунед…"
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1117,12 +1122,12 @@ msgctxt "@action:button"
 msgid "Review"
 msgstr "Санҷидан"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
 msgstr "Санҷиш пеш аз нигоҳдорӣ"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Back to edit"
 msgstr "Бозгашт ба таҳрир"
@@ -1137,7 +1142,7 @@ msgstr "Нигоҳ дошта истодааст…"
 msgid "Save"
 msgstr "Нигоҳ доштан"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Checking with the server…"
 msgstr "Бо сервер санҷида истодааст…"
@@ -1202,6 +1207,178 @@ msgstr "Дар бораи барнома"
 #, kde-format
 msgid "Open the source code"
 msgstr "Кушодани рамзи сарчашма"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Import complete"
+msgstr "Воридот анҷом ёфт"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Review"
+msgstr "Санҷидан"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statements (%1)"
+msgstr "Ҳисоботи бонкӣ (%1)"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "All files (%1)"
+msgstr "Ҳама файлҳо (%1)"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Categorize"
+msgstr "Категориябандӣ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Import"
+msgstr "Амалиётҳои воридотӣ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is the number of new transactions, %2 is the number matched"
+msgid "Imported %1 new and matched %2 transactions."
+msgstr "Муомилоти %1-и воридотӣ ва мувофиқи %2."
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Statement file"
+msgstr "Файли ҳисоботи бонкӣ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Statement"
+msgstr "Ҳисоботи бонкӣ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Match CSV columns"
+msgstr "Сутунҳои CSV-ро таъин кунед"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Separate debit and credit columns"
+msgstr "Сутунҳои дебетӣ ва кредитии алоҳида"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Date"
+msgstr "Сана"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Маблағ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Debit"
+msgstr "Дебет"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Credit"
+msgstr "Кредит"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transaction ID"
+msgstr "ID транзаксия"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Balance"
+msgstr "Бақияи ҳисоб"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "None"
+msgstr "Ҳеҷ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Date format"
+msgstr "Формати сана"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Automatic"
+msgstr "Автоматӣ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Description"
+msgstr "Тавсифи"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Reverse amount signs"
+msgstr "Аломатҳои баръакс"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "New transactions"
+msgstr "Муомилоти нав"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Matched"
+msgstr "Муомилоти мувофиқ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Already imported"
+msgstr "Амалиётҳои қаблан воридшуда"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Skipped"
+msgstr "Амалиёт гузаронидашуда"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Balance check"
+msgstr "Санҷиши тавозун"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Books balance"
+msgstr "Мувозинат дар китобҳо"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Difference"
+msgstr "Фарқият"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Action"
+msgstr "Амал"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is a transaction number"
+msgid "Match transaction %1"
+msgstr "Бо муомилоти %1 мувофиқат кунед"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Import as new"
+msgstr "Ҳамчун нав ворид кунед"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Skip"
+msgstr "Гузаштан"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Load more"
+msgstr "Бештар бор кунед"
 
 #: crates/kabacus-kde/qml/StatementPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1293,11 +1470,6 @@ msgstr "Ҳамагӣ:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "Маблағ:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Маблағ"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1458,11 +1630,6 @@ msgctxt "@label"
 msgid "Date:"
 msgstr "Сана:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Date"
-msgstr "Сана"
-
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1573,6 +1740,11 @@ msgstr "Танзимотро нигоҳ доштан нашуд: %1"
 #, kde-format
 msgid "Can't reach the server to find out how to sign in"
 msgstr "Барои донистани тарзи воридшавӣ ба сервер пайваст шудан ғайриимкон аст"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgid "The statement exceeds the import limit"
+msgstr "Ҳисоботи бонк аз маҳдудияти воридот зиёд аст"
 
 #: crates/kabacus-kde/src/model.rs
 #, kde-format
@@ -1761,11 +1933,6 @@ msgstr "Ба сервер пайваст шудан ғайриимкон аст:
 msgctxt "@action fix a card"
 msgid "Fix"
 msgstr "Ислоҳ кардан"
-
-#: crates/kabacus-kde/src/views.rs
-#, kde-format
-msgid "Categorize"
-msgstr "Категориябандӣ"
 
 #: crates/kabacus-kde/src/views.rs
 #, kde-format
@@ -2352,11 +2519,6 @@ msgstr "Санҷидан"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Review"
-msgstr "Санҷидан"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Unknown"
 msgstr "Номаълум"
 
@@ -2452,11 +2614,6 @@ msgstr "Пайваст шуд"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Credit"
-msgstr "Кредит"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Free money by account"
 msgstr "Пули озод аз рӯи ҳисоб"
 
@@ -2484,6 +2641,16 @@ msgstr "Ҷудошуда"
 #, kde-format
 msgid "Reserves hold money for later, like property tax or car repairs. It stays in your bank account."
 msgstr "Захираҳо пулро барои баъд, масалан андози амвол ё таъмири мошин, нигоҳ медоранд. Пул дар ҳисоби бонкии шумо мемонад."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Imported %1 new and matched %2 transactions."
+msgstr "Муомилоти %1-и воридотӣ ва мувофиқи %2."
+
+#: apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Match transaction %1"
+msgstr "Бо муомилоти %1 мувофиқат кунед"
 
 #, kde-format
 #~ msgid "Adds the reserve lines for you"

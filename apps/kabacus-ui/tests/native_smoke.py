@@ -54,7 +54,7 @@ def stop(process):
 
 with tempfile.TemporaryDirectory(prefix="kabacus-native-smoke-") as folder:
     root = Path(folder)
-    env = dict(os.environ, LANGUAGE="en", LANG="C.UTF-8", XDG_CONFIG_HOME=str(root / "config"), XDG_DATA_HOME=str(root / "data"), XDG_CACHE_HOME=str(root / "cache"))
+    env = dict(os.environ, LANGUAGE="en", LANG="C.UTF-8", MESA_SHADER_CACHE_DISABLE="true", XDG_CONFIG_HOME=str(root / "config"), XDG_DATA_HOME=str(root / "data"), XDG_CACHE_HOME=str(root / "cache"))
     binary = str(Path(sys.argv[1]).resolve())
     process = subprocess.Popen([binary], env=env)
     try:

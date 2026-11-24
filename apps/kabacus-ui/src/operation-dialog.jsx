@@ -7,6 +7,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { AmountField } from "./amount-field";
 import { operation, accountCurrency, cardPurchase } from "./operations";
 import { t } from "./i18n";
+import { StatementImport } from "./statement-import";
 const titles = {
   postings: "Postings",
   transfer: "Transfer",
@@ -21,7 +22,10 @@ const titles = {
   settle: "Settle up with someone",
   "account-type": "Account type",
 };
-export function OperationDialog({
+export function OperationDialog(props) {
+  return props.kind === "statement-import" ? <StatementImport {...props} /> : <WriteOperationDialog {...props} />;
+}
+function WriteOperationDialog({
   disabled,
   kind: initialKind,
   data,

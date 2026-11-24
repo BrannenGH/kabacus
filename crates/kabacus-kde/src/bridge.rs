@@ -23,7 +23,9 @@ use crate::secrets::{SecretServiceStore, SecretStore};
 use crate::settings::{self, ConnectionKind, Settings};
 use crate::views;
 use crate::writes;
+use base64::{engine::general_purpose::STANDARD, Engine};
 use kabacus_client::KabacusClient;
+use kabacus_client::{Books, BooksRequest};
 use std::pin::Pin;
 use std::sync::{Arc, OnceLock};
 use std::time::Duration;
@@ -125,6 +127,26 @@ pub mod qobject {
 
         #[qsignal]
         fn previewed(self: Pin<&mut Ledger>, ticket: i32, reply: QString);
+
+        #[qinvokable]
+        #[cxx_name = "readStatement"]
+        fn read_statement(self: &Ledger, path: &QString) -> QString;
+
+        #[qinvokable]
+        #[cxx_name = "statementMapping"]
+        fn statement_mapping(self: &Ledger, account: &QString) -> QString;
+
+        #[qinvokable]
+        #[cxx_name = "rememberStatementMapping"]
+        fn remember_statement_mapping(self: &Ledger, account: &QString, mapping: &QString);
+
+        #[qinvokable]
+        #[cxx_name = "startRequest"]
+        fn start_request(self: Pin<&mut Ledger>, request: &QString) -> i32;
+
+        #[qsignal]
+        #[cxx_name = "requestFinished"]
+        fn request_finished(self: Pin<&mut Ledger>, ticket: i32, reply: QString);
 
         /// The preview's Save: commit the draft against the preview's
         /// `head`, without blocking. `saving` holds until `committed`
@@ -826,6 +848,73 @@ impl qobject::Ledger {
 }
 
 impl qobject::Ledger {
+    fn statement_mapping(&self, account: &QString) -> QString {
+        let _lock = workspace_lock().lock().unwrap_or_else(|p| p.into_inner());
+        let workspace = kabacus_client::workspace::Workspace::load(&workspace_path());
+        let key = format!("{}\0{}", self.rust().settings.server_id(), account);
+        json(&workspace.statement_mappings.get(&key))
+    }
+
+    fn remember_statement_mapping(&self, account: &QString, mapping: &QString) {
+        let _lock = workspace_lock().lock().unwrap_or_else(|p| p.into_inner());
+        let mut workspace = kabacus_client::workspace::Workspace::load(&workspace_path());
+        if let Ok(mapping) = serde_json::from_str(&mapping.to_string()) {
+            let key = format!("{}\0{}", self.rust().settings.server_id(), account);
+            workspace.statement_mappings.insert(key, mapping);
+            let _ = workspace.save(&workspace_path());
+        }
+    }
+
+    fn read_statement(&self, path: &QString) -> QString {
+        use std::io::Read;
+        let read = || -> std::io::Result<serde_json::Value> {
+            let path = std::path::PathBuf::from(path.to_string());
+            let limit = kabacus_service::bank_import::Limits::default().max_bytes;
+            let mut bytes = Vec::new();
+            std::fs::File::open(&path)?
+                .take(limit as u64 + 1)
+                .read_to_end(&mut bytes)?;
+            if bytes.len() > limit {
+                return Err(std::io::Error::other(crate::i18n!(
+                    "The statement exceeds the import limit"
+                )));
+            }
+            Ok(
+                serde_json::json!({"filename": path.file_name().and_then(std::ffi::OsStr::to_str),
+                "format": path.extension().and_then(std::ffi::OsStr::to_str).unwrap_or_default().to_ascii_lowercase(),
+                "content_base64": STANDARD.encode(bytes)}),
+            )
+        };
+        let reply = match read() {
+            Ok(file) => serde_json::json!({"ok": file}),
+            Err(error) => serde_json::json!({"error": error.to_string()}),
+        };
+        json(&reply)
+    }
+
+    fn start_request(mut self: Pin<&mut Self>, request: &QString) -> i32 {
+        let ticket = self.rust().preview_ticket.wrapping_add(1);
+        self.as_mut().rust_mut().preview_ticket = ticket;
+        let (request, client) = (request.to_string(), self.rust().client.clone());
+        let thread = self.qt_thread();
+        runtime().spawn(async move {
+            let reply = async {
+                let request: BooksRequest = serde_json::from_str(&request)?;
+                let response = client.request(request).await?;
+                let body: serde_json::Value = serde_json::from_slice(&response.body)?;
+                Ok::<_, anyhow::Error>(serde_json::json!({"status": response.status, "body": body}))
+            }
+            .await
+            .unwrap_or_else(
+                |error| serde_json::json!({"status": 500, "body": {"message": error.to_string()}}),
+            );
+            let _ = thread.queue(move |ledger: Pin<&mut qobject::Ledger>| {
+                ledger.request_finished(ticket, json(&reply));
+            });
+        });
+        ticket
+    }
+
     fn start_preview(mut self: Pin<&mut Self>, draft: &QString) -> i32 {
         let ticket = self.rust().preview_ticket.wrapping_add(1);
         self.as_mut().rust_mut().preview_ticket = ticket;
