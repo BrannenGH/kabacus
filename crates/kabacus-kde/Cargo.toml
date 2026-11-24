@@ -14,7 +14,7 @@ license.workspace = true
 # - the Kirigami UI (feature `gui`): a thin cxx-qt bridge plus QML. Build
 #   it in the gui container, scripts/dev --gui (see README.md).
 [features]
-gui = ["dep:cxx", "dep:cxx-qt", "dep:cxx-qt-lib", "dep:cxx-qt-build"]
+gui = ["dep:cxx", "dep:cxx-qt", "dep:cxx-qt-lib", "dep:cxx-qt-build", "dep:qt-build-utils"]
 
 [[bin]]
 name = "kabacus"
@@ -43,6 +43,7 @@ cxx-qt-lib = { version = "0.10", features = ["qt_full"], optional = true }
 
 [build-dependencies]
 cxx-qt-build = { version = "0.10", optional = true }
+qt-build-utils = { version = "0.10", optional = true }
 
 [dev-dependencies]
 kabacus-store = { path = "../kabacus-store" }

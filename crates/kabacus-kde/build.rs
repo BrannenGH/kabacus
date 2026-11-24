@@ -45,6 +45,11 @@ impl Ki18n {
         let mut include_dirs = vec![kf6.join("KI18n")];
         if qml {
             include_dirs.push(qml_dir);
+            include_dirs.extend(
+                qt_build_utils::QtBuild::new(vec!["QmlIntegration".into()])
+                    .expect("locate Qt QML integration headers")
+                    .include_paths(),
+            );
         }
         Ki18n { include_dirs, qml }
     }

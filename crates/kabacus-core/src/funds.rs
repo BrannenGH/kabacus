@@ -28,7 +28,7 @@ use chrono::NaiveDate;
 use serde::Serialize;
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
-/// The account whose balance means something wasn't categorized.
+/// The account for postings that still need a category.
 pub const UNCATEGORIZED: &str = "expenses:uncategorized";
 
 /// The default card-reserve naming: the reserve for
@@ -423,7 +423,13 @@ fn overdrawn_in(
         .sum()
 }
 
-fn warnings(chart: &Chart, balances: &Balances, cards: &[CardLine]) -> Vec<Warning> {
+fn warnings(
+    chart: &Chart,
+    balances: &Balances,
+    cards: &[CardLine],
+    transactions: &[Transaction],
+    as_of: Option<NaiveDate>,
+) -> Vec<Warning> {
     let mut out = Vec::new();
     for fund in chart.of_kind(AccountKind::PreAllocation) {
         let balance = balances.exclusive(&fund.account);
@@ -525,15 +531,23 @@ fn warnings(chart: &Chart, balances: &Balances, cards: &[CardLine]) -> Vec<Warni
             accounts: vec![c.account.to_string()],
         });
     }
-    let uncategorized = AccountName::new(UNCATEGORIZED);
-    let balance = balances.inclusive(&uncategorized);
-    if !balance.money.is_zero() {
+    let uncategorized = transactions
+        .iter()
+        .filter(|tx| as_of.is_none_or(|date| tx.date <= date))
+        .filter(|tx| {
+            tx.postings
+                .iter()
+                .any(|p| p.account.as_str() == UNCATEGORIZED)
+        })
+        .count();
+    if uncategorized > 0 {
         out.push(Warning {
             code: "uncategorized",
-            message: format!(
-                "{UNCATEGORIZED} holds {}; categorize those transactions",
-                format_money(&balance)
-            ),
+            message: if uncategorized == 1 {
+                "1 transaction needs a category".into()
+            } else {
+                format!("{uncategorized} transactions need a category")
+            },
             accounts: vec![UNCATEGORIZED.to_string()],
         });
     }
@@ -555,7 +569,7 @@ pub fn validation_warnings(
 ) -> Vec<Warning> {
     let balances = Balances::compute(transactions, commodity, None);
     let cards = card_lines(chart, transactions, &balances, None);
-    warnings(chart, &balances, &cards)
+    warnings(chart, &balances, &cards, transactions, None)
 }
 
 /// An account and its balance.
@@ -704,7 +718,7 @@ pub fn cash_on_hand(
         })
         .collect();
     let cards = card_lines(chart, transactions, &balances, as_of);
-    let warnings = warnings(chart, &balances, &cards);
+    let warnings = warnings(chart, &balances, &cards, transactions, as_of);
     CashOnHand {
         as_of,
         money_on_hand: balances.amount(money_on_hand.clone()),
@@ -1107,7 +1121,10 @@ impl PurchaseSource {
     }
 }
 
-fn card_and_reserve(chart: &Chart, card: &str) -> Result<(AccountName, AccountName), FundsError> {
+pub(crate) fn card_and_reserve(
+    chart: &Chart,
+    card: &str,
+) -> Result<(AccountName, AccountName), FundsError> {
     let card = AccountName::new(card);
     let kind = chart.kind_of(&card);
     if kind != AccountKind::RevolvingDebt {
@@ -1792,6 +1809,40 @@ mod tests {
             .find(|w| w.code == "negative-reserve")
             .expect("negative-reserve warning");
         assert!(warning.message.contains("in credit"), "{}", warning.message);
+    }
+
+    #[test]
+    fn uncategorized_warning_counts_transactions_even_when_postings_net_to_zero() {
+        let txs = vec![
+            tx(
+                "2026-10-04",
+                "Harbor Street Cafe",
+                &[
+                    (UNCATEGORIZED, 700),
+                    (UNCATEGORIZED, 1140),
+                    (CHECKING, -1840),
+                ],
+            ),
+            tx(
+                "2026-10-06",
+                "Harbor Street Cafe | Refund",
+                &[(UNCATEGORIZED, -1840), (CHECKING, 1840)],
+            ),
+        ];
+        let chart = chart(&txs, &[]);
+        let warning = |as_of| {
+            cash_on_hand(&chart, &txs, "USD", as_of)
+                .warnings
+                .into_iter()
+                .find(|warning| warning.code == "uncategorized")
+                .map(|warning| warning.message)
+        };
+        assert_eq!(
+            warning(Some(txs[0].date)),
+            Some("1 transaction needs a category".into())
+        );
+        assert_eq!(warning(None), Some("2 transactions need a category".into()));
+        assert_eq!(warning(txs[0].date.pred_opt()), None);
     }
 
     #[test]
