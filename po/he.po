@@ -543,7 +543,7 @@ msgstr "כניסה"
 msgid "Finish signing in in your browser…"
 msgstr "יש להשלים את הכניסה בדפדפן…"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cancel"
 msgstr "ביטול"
@@ -626,7 +626,7 @@ msgstr "תצוגה מקדימה חוזרת"
 msgid "Books"
 msgstr "ספרים"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Close"
 msgstr "סגירה"
@@ -881,7 +881,7 @@ msgctxt "@label"
 msgid "Statement balance:"
 msgstr "יתרת הדף:"
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/StatementImportPage.qml
 #, kde-format
 msgid "Statement balance"
 msgstr "יתרת הדף"
@@ -946,6 +946,11 @@ msgstr "סוג חשבון"
 msgctxt "@action compare an account with its statement"
 msgid "Reconcile…"
 msgstr "התאמה…"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import statement…"
+msgstr "ייבוא דף חשבון בנק..."
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1119,12 +1124,12 @@ msgctxt "@action:button"
 msgid "Review"
 msgstr "בדיקה"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
 msgstr "בדיקה לפני שמירה"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Back to edit"
 msgstr "חזרה לעריכה"
@@ -1139,7 +1144,7 @@ msgstr "בשמירה…"
 msgid "Save"
 msgstr "שמירה"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Checking with the server…"
 msgstr "בבדיקה מול השרת…"
@@ -1204,6 +1209,178 @@ msgstr "על אודות"
 #, kde-format
 msgid "Open the source code"
 msgstr "פתיחת קוד המקור"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import complete"
+msgstr "הייבוא הושלם"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Review"
+msgstr "בדיקה"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statements (%1)"
+msgstr "דפי בנק (%1)"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "All files (%1)"
+msgstr "כל הקבצים (%1)"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Categorize"
+msgstr "סיווג"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import"
+msgstr "עסקאות ייבוא"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is the number of new transactions, %2 is the number matched"
+msgid "Imported %1 new and matched %2 transactions."
+msgstr "יבוא %1 עסקאות %2 חדשות ותואמות."
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statement file"
+msgstr "תיק דף חשבון בנק"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statement"
+msgstr "הצהרת בנק"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Match CSV columns"
+msgstr "הקצה את עמודות ה-CSV"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Separate debit and credit columns"
+msgstr "עמודות חיוב ואשראי נפרדות"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Date"
+msgstr "תאריך"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "סכום"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Debit"
+msgstr "חיוב"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Credit"
+msgstr "אשראי"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Transaction ID"
+msgstr "מזהה עסקה"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Balance"
+msgstr "יתרת חשבון"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "None"
+msgstr "אין"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Date format"
+msgstr "פורמט תאריך"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Automatic"
+msgstr "אוטומטי"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Description"
+msgstr "תיאור"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Reverse amount signs"
+msgstr "סימני כמות הפוכים"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "New transactions"
+msgstr "עסקאות חדשות"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Matched"
+msgstr "עסקאות מותאמות"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Already imported"
+msgstr "עסקאות שיובאו בעבר"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Skipped"
+msgstr "דילוג על עסקאות"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Balance check"
+msgstr "בדיקת איזון"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Books balance"
+msgstr "איזון בספרים"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Difference"
+msgstr "הבדל"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Action"
+msgstr "פעולה"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is a transaction number"
+msgid "Match transaction %1"
+msgstr "התאמה לעסקה %1"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import as new"
+msgstr "ייבוא כחדש"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Skip"
+msgstr "דלג"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Load more"
+msgstr "טען עוד"
 
 #: crates/kabacus-kde/qml/StatementPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1295,11 +1472,6 @@ msgstr "סך הכול:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "סכום:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "סכום"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1460,11 +1632,6 @@ msgctxt "@label"
 msgid "Date:"
 msgstr "תאריך:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Date"
-msgstr "תאריך"
-
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1577,6 +1744,11 @@ msgstr "אי אפשר לשמור את ההגדרות: %1"
 #, kde-format
 msgid "Can't reach the server to find out how to sign in"
 msgstr "אין גישה לשרת כדי לברר איך להיכנס"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgid "The statement exceeds the import limit"
+msgstr "תדפיס הבנק חורג ממגבלת הייבוא"
 
 #: crates/kabacus-kde/src/model.rs
 #, kde-format
@@ -1767,11 +1939,6 @@ msgstr "אין גישה לשרת: %1"
 msgctxt "@action fix a card"
 msgid "Fix"
 msgstr "תיקון"
-
-#: crates/kabacus-kde/src/views.rs
-#, kde-format
-msgid "Categorize"
-msgstr "סיווג"
 
 #: crates/kabacus-kde/src/views.rs
 #, kde-format
@@ -2366,11 +2533,6 @@ msgstr "בדיקה"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Review"
-msgstr "בדיקה"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Unknown"
 msgstr "לא ידוע"
 
@@ -2463,11 +2625,6 @@ msgstr "יש לבחור מה קרה. הטופס ממלא את שורות הרי�
 #, kde-format
 msgid "Connected"
 msgstr "מחובר"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Credit"
-msgstr "אשראי"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

@@ -540,7 +540,7 @@ msgstr "登录"
 msgid "Finish signing in in your browser…"
 msgstr "请在浏览器中完成登录…"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cancel"
 msgstr "取消"
@@ -623,7 +623,7 @@ msgstr "重新预览"
 msgid "Books"
 msgstr "账簿"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Close"
 msgstr "关闭"
@@ -878,7 +878,7 @@ msgctxt "@label"
 msgid "Statement balance:"
 msgstr "对账单余额："
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/StatementImportPage.qml
 #, kde-format
 msgid "Statement balance"
 msgstr "对账单余额"
@@ -943,6 +943,11 @@ msgstr "账户类型"
 msgctxt "@action compare an account with its statement"
 msgid "Reconcile…"
 msgstr "对账…"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import statement…"
+msgstr "导入银行对账单..."
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1116,12 +1121,12 @@ msgctxt "@action:button"
 msgid "Review"
 msgstr "检查"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
 msgstr "保存前检查"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Back to edit"
 msgstr "返回编辑"
@@ -1136,7 +1141,7 @@ msgstr "正在保存…"
 msgid "Save"
 msgstr "保存"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Checking with the server…"
 msgstr "正在与服务器核对…"
@@ -1201,6 +1206,178 @@ msgstr "关于"
 #, kde-format
 msgid "Open the source code"
 msgstr "打开源代码"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import complete"
+msgstr "导入完成"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Review"
+msgstr "检查"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statements (%1)"
+msgstr "银行对账单 (%1)"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "All files (%1)"
+msgstr "所有文件 (%1)"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Categorize"
+msgstr "分类"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import"
+msgstr "进口交易"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is the number of new transactions, %2 is the number matched"
+msgid "Imported %1 new and matched %2 transactions."
+msgstr "导入%1新的和匹配的%2交易。"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statement file"
+msgstr "银行对账单文件"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statement"
+msgstr "银行对账单"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Match CSV columns"
+msgstr "分配 CSV 列"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Separate debit and credit columns"
+msgstr "单独的借方和贷方栏"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Date"
+msgstr "日期"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "金额"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Debit"
+msgstr "借方"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Credit"
+msgstr "信用卡"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Transaction ID"
+msgstr "交易ID"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Balance"
+msgstr "账户余额"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "None"
+msgstr "无"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Date format"
+msgstr "日期格式"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Automatic"
+msgstr "自动"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Description"
+msgstr "描述"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Reverse amount signs"
+msgstr "反向数量符号"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "New transactions"
+msgstr "新交易"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Matched"
+msgstr "匹配交易"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Already imported"
+msgstr "之前导入的交易"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Skipped"
+msgstr "跳过的交易"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Balance check"
+msgstr "余额检查"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Books balance"
+msgstr "账簿余额"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Difference"
+msgstr "差异"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Action"
+msgstr "行动"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is a transaction number"
+msgid "Match transaction %1"
+msgstr "与交易%1匹配"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import as new"
+msgstr "导入为新的"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Skip"
+msgstr "跳过"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Load more"
+msgstr "加载更多"
 
 #: crates/kabacus-kde/qml/StatementPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1292,11 +1469,6 @@ msgstr "总计："
 msgctxt "@label"
 msgid "Amount:"
 msgstr "金额："
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "金额"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1457,11 +1629,6 @@ msgctxt "@label"
 msgid "Date:"
 msgstr "日期："
 
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Date"
-msgstr "日期"
-
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1571,6 +1738,11 @@ msgstr "无法保存设置：%1"
 #, kde-format
 msgid "Can't reach the server to find out how to sign in"
 msgstr "无法连接服务器以确定登录方式"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgid "The statement exceeds the import limit"
+msgstr "银行对账单超出进口限额"
 
 #: crates/kabacus-kde/src/model.rs
 #, kde-format
@@ -1758,11 +1930,6 @@ msgstr "无法连接服务器：%1"
 msgctxt "@action fix a card"
 msgid "Fix"
 msgstr "修复"
-
-#: crates/kabacus-kde/src/views.rs
-#, kde-format
-msgid "Categorize"
-msgstr "分类"
 
 #: crates/kabacus-kde/src/views.rs
 #, kde-format
@@ -2345,11 +2512,6 @@ msgstr "检查"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Review"
-msgstr "检查"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Unknown"
 msgstr "未知"
 
@@ -2442,11 +2604,6 @@ msgstr "选择发生的事情。表单会填写分录，保存前即可查看更
 #, kde-format
 msgid "Connected"
 msgstr "已连接"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Credit"
-msgstr "信用卡"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

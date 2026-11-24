@@ -541,7 +541,7 @@ msgstr "Oturum aç"
 msgid "Finish signing in in your browser…"
 msgstr "Oturum açmayı tarayıcınızda tamamlayın…"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cancel"
 msgstr "İptal"
@@ -624,7 +624,7 @@ msgstr "Yeniden önizle"
 msgid "Books"
 msgstr "Defterler"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Close"
 msgstr "Kapat"
@@ -879,7 +879,7 @@ msgctxt "@label"
 msgid "Statement balance:"
 msgstr "Ekstre bakiyesi:"
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/StatementImportPage.qml
 #, kde-format
 msgid "Statement balance"
 msgstr "Ekstre bakiyesi"
@@ -944,6 +944,11 @@ msgstr "Hesap türü"
 msgctxt "@action compare an account with its statement"
 msgid "Reconcile…"
 msgstr "Mutabakat…"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import statement…"
+msgstr "Bir banka ekstresini içe aktarın…"
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1117,12 +1122,12 @@ msgctxt "@action:button"
 msgid "Review"
 msgstr "İncele"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
 msgstr "Kaydetmeden önce incele"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Back to edit"
 msgstr "Düzenlemeye dön"
@@ -1137,7 +1142,7 @@ msgstr "Kaydediliyor…"
 msgid "Save"
 msgstr "Kaydet"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Checking with the server…"
 msgstr "Sunucuyla denetleniyor…"
@@ -1202,6 +1207,178 @@ msgstr "Hakkında"
 #, kde-format
 msgid "Open the source code"
 msgstr "Kaynak kodunu aç"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import complete"
+msgstr "İçe aktarma tamamlandı"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Review"
+msgstr "İncele"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statements (%1)"
+msgstr "Banka ekstreleri (%1)"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "All files (%1)"
+msgstr "Tüm dosyalar (%1)"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Categorize"
+msgstr "Kategorilere ayır"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import"
+msgstr "İşlemleri içe aktar"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is the number of new transactions, %2 is the number matched"
+msgid "Imported %1 new and matched %2 transactions."
+msgstr "İçe aktarılan %1 yeni ve eşleşen %2 işlemleri."
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statement file"
+msgstr "Banka ekstresi dosyası"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statement"
+msgstr "Banka ekstresi"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Match CSV columns"
+msgstr "CSV sütunlarını atayın"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Separate debit and credit columns"
+msgstr "Ayrı borç ve alacak sütunları"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Date"
+msgstr "Tarih"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Tutar"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Debit"
+msgstr "Borç"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Credit"
+msgstr "Kredi"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Transaction ID"
+msgstr "İşlem Kimliği"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Balance"
+msgstr "Hesap bakiyesi"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "None"
+msgstr "Yok"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Date format"
+msgstr "Tarih formatı"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Automatic"
+msgstr "Otomatik"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Description"
+msgstr "Açıklama"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Reverse amount signs"
+msgstr "Ters miktar işaretleri"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "New transactions"
+msgstr "Yeni işlemler"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Matched"
+msgstr "Eşleşen işlemler"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Already imported"
+msgstr "Daha önce içe aktarılan işlemler"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Skipped"
+msgstr "Atlanan işlemler"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Balance check"
+msgstr "Bakiye kontrolü"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Books balance"
+msgstr "Kitaplardaki denge"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Difference"
+msgstr "Fark"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Action"
+msgstr "Eylem"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is a transaction number"
+msgid "Match transaction %1"
+msgstr "%1 işlemiyle eşleştir"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import as new"
+msgstr "Yeni olarak içe aktar"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Skip"
+msgstr "Atla"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Load more"
+msgstr "Daha fazlasını yükle"
 
 #: crates/kabacus-kde/qml/StatementPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1293,11 +1470,6 @@ msgstr "Toplam:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "Tutar:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Tutar"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1458,11 +1630,6 @@ msgctxt "@label"
 msgid "Date:"
 msgstr "Tarih:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Date"
-msgstr "Tarih"
-
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1573,6 +1740,11 @@ msgstr "Ayarlar kaydedilemedi: %1"
 #, kde-format
 msgid "Can't reach the server to find out how to sign in"
 msgstr "Nasıl oturum açılacağını öğrenmek için sunucuya ulaşılamıyor"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgid "The statement exceeds the import limit"
+msgstr "Banka ekstresi ithalat sınırını aşıyor"
 
 #: crates/kabacus-kde/src/model.rs
 #, kde-format
@@ -1761,11 +1933,6 @@ msgstr "Sunucuya ulaşılamıyor: %1"
 msgctxt "@action fix a card"
 msgid "Fix"
 msgstr "Onar"
-
-#: crates/kabacus-kde/src/views.rs
-#, kde-format
-msgid "Categorize"
-msgstr "Kategorilere ayır"
 
 #: crates/kabacus-kde/src/views.rs
 #, kde-format
@@ -2352,11 +2519,6 @@ msgstr "Denetle"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Review"
-msgstr "İncele"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Unknown"
 msgstr "Bilinmiyor"
 
@@ -2449,11 +2611,6 @@ msgstr "Ne olduğunu seçin. Form kayıt satırlarını doldurur; kaydetmeden ö
 #, kde-format
 msgid "Connected"
 msgstr "Bağlandı"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Credit"
-msgstr "Kredi"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

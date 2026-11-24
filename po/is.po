@@ -541,7 +541,7 @@ msgstr "Skrá inn"
 msgid "Finish signing in in your browser…"
 msgstr "Ljúktu innskráningu í vafranum…"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cancel"
 msgstr "Hætta við"
@@ -624,7 +624,7 @@ msgstr "Forskoða aftur"
 msgid "Books"
 msgstr "Bókhald"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Close"
 msgstr "Loka"
@@ -879,7 +879,7 @@ msgctxt "@label"
 msgid "Statement balance:"
 msgstr "Staða á yfirliti:"
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/StatementImportPage.qml
 #, kde-format
 msgid "Statement balance"
 msgstr "Staða á yfirliti"
@@ -944,6 +944,11 @@ msgstr "Tegund reiknings"
 msgctxt "@action compare an account with its statement"
 msgid "Reconcile…"
 msgstr "Afstemma…"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import statement…"
+msgstr "Flytja inn bankayfirlit..."
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1117,12 +1122,12 @@ msgctxt "@action:button"
 msgid "Review"
 msgstr "Fara yfir"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
 msgstr "Fara yfir áður en vistað er"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Back to edit"
 msgstr "Aftur í breytingar"
@@ -1137,7 +1142,7 @@ msgstr "Vista…"
 msgid "Save"
 msgstr "Vista"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Checking with the server…"
 msgstr "Athuga með þjóninum…"
@@ -1202,6 +1207,178 @@ msgstr "Um"
 #, kde-format
 msgid "Open the source code"
 msgstr "Opna frumkóðann"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import complete"
+msgstr "Innflutningi lokið"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Review"
+msgstr "Fara yfir"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statements (%1)"
+msgstr "Bankayfirlit (%1)"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "All files (%1)"
+msgstr "Allar skrár (%1)"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Categorize"
+msgstr "Flokka"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import"
+msgstr "Innflutningsviðskipti"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is the number of new transactions, %2 is the number matched"
+msgid "Imported %1 new and matched %2 transactions."
+msgstr "Innflutt %1 ný og samsvarandi %2 viðskipti."
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statement file"
+msgstr "Bankayfirlitsskrá"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statement"
+msgstr "Bankayfirlit"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Match CSV columns"
+msgstr "Úthlutaðu CSV dálkunum"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Separate debit and credit columns"
+msgstr "Aðskildir debet- og kreditdálkar"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Date"
+msgstr "Dagsetning"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Upphæð"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Debit"
+msgstr "Debet"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Credit"
+msgstr "Kredit"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Transaction ID"
+msgstr "Auðkenni færslu"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Balance"
+msgstr "Inneign á reikningi"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "None"
+msgstr "Engin"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Date format"
+msgstr "Dagsetningarsnið"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Automatic"
+msgstr "Sjálfvirk"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Description"
+msgstr "Lýsing"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Reverse amount signs"
+msgstr "Öfug upphæð merki"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "New transactions"
+msgstr "Ný viðskipti"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Matched"
+msgstr "Samsvörun viðskipti"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Already imported"
+msgstr "Áður innflutt viðskipti"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Skipped"
+msgstr "Sleppt viðskiptum"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Balance check"
+msgstr "Jafnvægisskoðun"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Books balance"
+msgstr "Jafnvægi í bókunum"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Difference"
+msgstr "Mismunur"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Action"
+msgstr "Aðgerð"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is a transaction number"
+msgid "Match transaction %1"
+msgstr "Passa við viðskipti %1"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import as new"
+msgstr "Flytja inn sem nýtt"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Skip"
+msgstr "Sleppa"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Load more"
+msgstr "Hlaða meira"
 
 #: crates/kabacus-kde/qml/StatementPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1293,11 +1470,6 @@ msgstr "Samtals:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "Upphæð:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Upphæð"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1458,11 +1630,6 @@ msgctxt "@label"
 msgid "Date:"
 msgstr "Dagsetning:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Date"
-msgstr "Dagsetning"
-
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1573,6 +1740,11 @@ msgstr "Ekki tókst að vista stillingar: %1"
 #, kde-format
 msgid "Can't reach the server to find out how to sign in"
 msgstr "Næ ekki sambandi við þjóninn til að vita hvernig á að skrá inn"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgid "The statement exceeds the import limit"
+msgstr "Bankayfirlitið fer yfir innflutningsmörk"
 
 #: crates/kabacus-kde/src/model.rs
 #, kde-format
@@ -1761,11 +1933,6 @@ msgstr "Næ ekki sambandi við þjóninn: %1"
 msgctxt "@action fix a card"
 msgid "Fix"
 msgstr "Laga"
-
-#: crates/kabacus-kde/src/views.rs
-#, kde-format
-msgid "Categorize"
-msgstr "Flokka"
 
 #: crates/kabacus-kde/src/views.rs
 #, kde-format
@@ -2352,11 +2519,6 @@ msgstr "Athuga"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Review"
-msgstr "Fara yfir"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Unknown"
 msgstr "Óþekkt"
 
@@ -2449,11 +2611,6 @@ msgstr "Veldu hvað gerðist. Eyðublaðið fyllir út færslulínurnar; þú s�
 #, kde-format
 msgid "Connected"
 msgstr "Tengt"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Credit"
-msgstr "Kredit"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

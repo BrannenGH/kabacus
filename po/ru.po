@@ -543,7 +543,7 @@ msgstr "Войти"
 msgid "Finish signing in in your browser…"
 msgstr "Завершите вход в браузере…"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cancel"
 msgstr "Отмена"
@@ -626,7 +626,7 @@ msgstr "Повторить предпросмотр"
 msgid "Books"
 msgstr "Книги"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Close"
 msgstr "Закрыть"
@@ -881,7 +881,7 @@ msgctxt "@label"
 msgid "Statement balance:"
 msgstr "Остаток по выписке:"
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/StatementImportPage.qml
 #, kde-format
 msgid "Statement balance"
 msgstr "Остаток по выписке"
@@ -946,6 +946,11 @@ msgstr "Тип счёта"
 msgctxt "@action compare an account with its statement"
 msgid "Reconcile…"
 msgstr "Сверка…"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import statement…"
+msgstr "Импортировать выписку по счету…"
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1119,12 +1124,12 @@ msgctxt "@action:button"
 msgid "Review"
 msgstr "Проверить"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
 msgstr "Проверка перед сохранением"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Back to edit"
 msgstr "Назад к редактированию"
@@ -1139,7 +1144,7 @@ msgstr "Сохранение…"
 msgid "Save"
 msgstr "Сохранить"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Checking with the server…"
 msgstr "Проверка на сервере…"
@@ -1204,6 +1209,178 @@ msgstr "О программе"
 #, kde-format
 msgid "Open the source code"
 msgstr "Открыть исходный код"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import complete"
+msgstr "Импорт завершен"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Review"
+msgstr "Проверить"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statements (%1)"
+msgstr "Выписки из банковского счета (%1)"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "All files (%1)"
+msgstr "Все файлы (%1)"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Categorize"
+msgstr "Указать категорию"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import"
+msgstr "Импорт транзакций"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is the number of new transactions, %2 is the number matched"
+msgid "Imported %1 new and matched %2 transactions."
+msgstr "Импортированы новые транзакции %1 и сопоставленные транзакции %2."
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statement file"
+msgstr "Файл выписки из банка"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statement"
+msgstr "Выписка из банка"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Match CSV columns"
+msgstr "Назначьте столбцы CSV"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Separate debit and credit columns"
+msgstr "Отдельные столбцы дебета и кредита"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Date"
+msgstr "Дата"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "Сумма"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Debit"
+msgstr "Дебет"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Credit"
+msgstr "Кредит"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Transaction ID"
+msgstr "Идентификатор транзакции"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Balance"
+msgstr "Баланс счета"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "None"
+msgstr "Нет"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Date format"
+msgstr "Формат даты"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Automatic"
+msgstr "Автоматический"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Description"
+msgstr "Описание"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Reverse amount signs"
+msgstr "Знаки обратной суммы"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "New transactions"
+msgstr "Новые транзакции"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Matched"
+msgstr "Сопоставленные транзакции"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Already imported"
+msgstr "Ранее импортированные транзакции"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Skipped"
+msgstr "Пропущенные транзакции"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Balance check"
+msgstr "Проверка баланса"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Books balance"
+msgstr "Баланс в книгах"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Difference"
+msgstr "Разница"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Action"
+msgstr "Действие"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is a transaction number"
+msgid "Match transaction %1"
+msgstr "Соответствие с транзакцией %1"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import as new"
+msgstr "Импортировать как новый"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Skip"
+msgstr "Пропустить"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Load more"
+msgstr "Загрузить больше"
 
 #: crates/kabacus-kde/qml/StatementPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1295,11 +1472,6 @@ msgstr "Всего:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "Сумма:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "Сумма"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1460,11 +1632,6 @@ msgctxt "@label"
 msgid "Date:"
 msgstr "Дата:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Date"
-msgstr "Дата"
-
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1577,6 +1744,11 @@ msgstr "Не удалось сохранить параметры: %1"
 #, kde-format
 msgid "Can't reach the server to find out how to sign in"
 msgstr "Не удаётся связаться с сервером, чтобы узнать, как войти"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgid "The statement exceeds the import limit"
+msgstr "Выписка из банка превышает лимит импорта"
 
 #: crates/kabacus-kde/src/model.rs
 #, kde-format
@@ -1767,11 +1939,6 @@ msgstr "Не удаётся связаться с сервером: %1"
 msgctxt "@action fix a card"
 msgid "Fix"
 msgstr "Исправить"
-
-#: crates/kabacus-kde/src/views.rs
-#, kde-format
-msgid "Categorize"
-msgstr "Указать категорию"
 
 #: crates/kabacus-kde/src/views.rs
 #, kde-format
@@ -2366,11 +2533,6 @@ msgstr "Проверить"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Review"
-msgstr "Проверить"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Unknown"
 msgstr "Неизвестно"
 
@@ -2463,11 +2625,6 @@ msgstr "Выберите, что произошло. Форма заполнит
 #, kde-format
 msgid "Connected"
 msgstr "Подключено"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Credit"
-msgstr "Кредит"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

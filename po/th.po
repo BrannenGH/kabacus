@@ -540,7 +540,7 @@ msgstr "เข้าสู่ระบบ"
 msgid "Finish signing in in your browser…"
 msgstr "ทำการเข้าสู่ระบบให้เสร็จในเบราว์เซอร์…"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cancel"
 msgstr "ยกเลิก"
@@ -623,7 +623,7 @@ msgstr "ดูตัวอย่างอีกครั้ง"
 msgid "Books"
 msgstr "สมุดบัญชี"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Close"
 msgstr "ปิด"
@@ -878,7 +878,7 @@ msgctxt "@label"
 msgid "Statement balance:"
 msgstr "ยอดคงเหลือในใบแจ้งยอด:"
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/StatementImportPage.qml
 #, kde-format
 msgid "Statement balance"
 msgstr "ยอดคงเหลือในใบแจ้งยอด"
@@ -943,6 +943,11 @@ msgstr "ประเภทบัญชี"
 msgctxt "@action compare an account with its statement"
 msgid "Reconcile…"
 msgstr "กระทบยอด…"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import statement…"
+msgstr "นำเข้าใบแจ้งยอดจากธนาคาร..."
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1116,12 +1121,12 @@ msgctxt "@action:button"
 msgid "Review"
 msgstr "ตรวจทาน"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
 msgstr "ตรวจทานก่อนบันทึก"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Back to edit"
 msgstr "กลับไปแก้ไข"
@@ -1136,7 +1141,7 @@ msgstr "กำลังบันทึก…"
 msgid "Save"
 msgstr "บันทึก"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Checking with the server…"
 msgstr "กำลังตรวจสอบกับเซิร์ฟเวอร์…"
@@ -1201,6 +1206,178 @@ msgstr "เกี่ยวกับ"
 #, kde-format
 msgid "Open the source code"
 msgstr "เปิดซอร์สโค้ด"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import complete"
+msgstr "นำเข้าเสร็จสมบูรณ์"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Review"
+msgstr "ตรวจทาน"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statements (%1)"
+msgstr "ใบแจ้งยอดจากธนาคาร (%1)"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "All files (%1)"
+msgstr "ไฟล์ทั้งหมด (%1)"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Categorize"
+msgstr "จัดหมวดหมู่"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import"
+msgstr "ธุรกรรมนำเข้า"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is the number of new transactions, %2 is the number matched"
+msgid "Imported %1 new and matched %2 transactions."
+msgstr "นำเข้าธุรกรรม %2 ใหม่และที่ตรงกันของ %1"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statement file"
+msgstr "ไฟล์ใบแจ้งยอดธนาคาร"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statement"
+msgstr "ใบแจ้งยอดธนาคาร"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Match CSV columns"
+msgstr "กำหนดคอลัมน์ CSV"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Separate debit and credit columns"
+msgstr "แยกคอลัมน์เดบิตและเครดิต"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Date"
+msgstr "วันที่"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "จำนวนเงิน"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Debit"
+msgstr "เดบิต"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Credit"
+msgstr "เครดิต"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Transaction ID"
+msgstr "รหัสธุรกรรม"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Balance"
+msgstr "ยอดเงินในบัญชี"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "None"
+msgstr "ไม่มี"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Date format"
+msgstr "รูปแบบวันที่"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Automatic"
+msgstr "อัตโนมัติ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Description"
+msgstr "คำอธิบาย"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Reverse amount signs"
+msgstr "เครื่องหมายจำนวนเงินย้อนกลับ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "New transactions"
+msgstr "การทำธุรกรรมใหม่"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Matched"
+msgstr "ธุรกรรมที่ตรงกัน"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Already imported"
+msgstr "ธุรกรรมนำเข้าก่อนหน้านี้"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Skipped"
+msgstr "ข้ามการทำธุรกรรม"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Balance check"
+msgstr "ตรวจสอบยอดเงินคงเหลือ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Books balance"
+msgstr "ยอดคงเหลือในหนังสือ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Difference"
+msgstr "ความแตกต่าง"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Action"
+msgstr "การดำเนินการ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is a transaction number"
+msgid "Match transaction %1"
+msgstr "ตรงกับธุรกรรม %1"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import as new"
+msgstr "นำเข้าเหมือนใหม่"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Skip"
+msgstr "ข้าม"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Load more"
+msgstr "โหลดเพิ่ม"
 
 #: crates/kabacus-kde/qml/StatementPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1292,11 +1469,6 @@ msgstr "รวม:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "จำนวนเงิน:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "จำนวนเงิน"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1457,11 +1629,6 @@ msgctxt "@label"
 msgid "Date:"
 msgstr "วันที่:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Date"
-msgstr "วันที่"
-
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1571,6 +1738,11 @@ msgstr "บันทึกการตั้งค่าไม่ได้: %1"
 #, kde-format
 msgid "Can't reach the server to find out how to sign in"
 msgstr "ติดต่อเซิร์ฟเวอร์เพื่อหาวิธีเข้าสู่ระบบไม่ได้"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgid "The statement exceeds the import limit"
+msgstr "ใบแจ้งยอดจากธนาคารเกินขีดจำกัดการนำเข้า"
 
 #: crates/kabacus-kde/src/model.rs
 #, kde-format
@@ -1758,11 +1930,6 @@ msgstr "ติดต่อเซิร์ฟเวอร์ไม่ได้: %
 msgctxt "@action fix a card"
 msgid "Fix"
 msgstr "ซ่อม"
-
-#: crates/kabacus-kde/src/views.rs
-#, kde-format
-msgid "Categorize"
-msgstr "จัดหมวดหมู่"
 
 #: crates/kabacus-kde/src/views.rs
 #, kde-format
@@ -2345,11 +2512,6 @@ msgstr "ตรวจสอบ"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Review"
-msgstr "ตรวจทาน"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Unknown"
 msgstr "ไม่ทราบ"
 
@@ -2442,11 +2604,6 @@ msgstr "เลือกสิ่งที่เกิดขึ้น แบบ�
 #, kde-format
 msgid "Connected"
 msgstr "เชื่อมต่อแล้ว"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Credit"
-msgstr "เครดิต"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

@@ -90,6 +90,7 @@ fn main() {
             "qml/AddChooser.qml",
             "qml/TransactionForm.qml",
             "qml/ReviewPage.qml",
+            "qml/StatementImportPage.qml",
         ];
         for page in pages
             .iter()

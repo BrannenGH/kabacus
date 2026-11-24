@@ -796,6 +796,26 @@ async fn reconcile_is_on_an_accounts_register() {
     }
 }
 
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn importing_a_statement_shows_review_and_categorize_on_desktop_and_phone() {
+    let directory = tempfile::tempdir().unwrap();
+    let statement = directory.path().join("October.qfx");
+    std::fs::write(&statement, "<OFX><BANKMSGSRSV1><STMTTRNRS><STMTRS><CURDEF>USD<BANKTRANLIST><STMTTRN><DTPOSTED>20261025<TRNAMT>-18.40<FITID>HC0286<NAME>Harbor Street Cafe</STMTTRN></BANKTRANLIST></STMTRS></STMTTRNRS></BANKMSGSRSV1></OFX>").unwrap();
+    for (index, size) in [DESKTOP, "390x844"].into_iter().enumerate() {
+        let name = format!("statement-import{index}");
+        let server = books(&name).await;
+        let client = KabacusClient::connect_unix(&server.socket_path);
+        let head = client.version().await.unwrap().head;
+        let _app = launch_sized(&server.socket_path, &config_dir(&name), size);
+        drive(&["statement-import", "Checking", statement.to_str().unwrap()]).await;
+        assert_eq!(
+            client.version().await.unwrap().head.parse::<u64>().unwrap(),
+            head.parse::<u64>().unwrap() + 1
+        );
+    }
+}
+
 // Setting money aside in a fund.
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]

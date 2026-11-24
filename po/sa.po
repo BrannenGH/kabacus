@@ -541,7 +541,7 @@ msgstr "प्रविशतु"
 msgid "Finish signing in in your browser…"
 msgstr "स्वजालदर्शके प्रवेशं समापयतु…"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cancel"
 msgstr "निरस्यतु"
@@ -624,7 +624,7 @@ msgstr "पुनः पूर्वावलोकनम्"
 msgid "Books"
 msgstr "लेखापुस्तकानि"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Close"
 msgstr "पिधेहि"
@@ -879,7 +879,7 @@ msgctxt "@label"
 msgid "Statement balance:"
 msgstr "विवरणपत्रस्य शेषः:"
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/StatementImportPage.qml
 #, kde-format
 msgid "Statement balance"
 msgstr "विवरणपत्रस्य शेषः"
@@ -944,6 +944,11 @@ msgstr "लेखाप्रकारः"
 msgctxt "@action compare an account with its statement"
 msgid "Reconcile…"
 msgstr "मेलनम्…"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import statement…"
+msgstr "एकं बैंकविवरणं आयातयन्तु..."
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1117,12 +1122,12 @@ msgctxt "@action:button"
 msgid "Review"
 msgstr "परीक्षताम्"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
 msgstr "रक्षणात् पूर्वं परीक्षताम्"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Back to edit"
 msgstr "सम्पादनं प्रति प्रत्यागच्छतु"
@@ -1137,7 +1142,7 @@ msgstr "रक्ष्यते…"
 msgid "Save"
 msgstr "रक्षतु"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Checking with the server…"
 msgstr "सेवकेन सह परीक्ष्यते…"
@@ -1202,6 +1207,178 @@ msgstr "परिचयः"
 #, kde-format
 msgid "Open the source code"
 msgstr "स्रोतःसङ्केतं उद्घाटयतु"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import complete"
+msgstr "९. आयातः सम्पन्नः"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Review"
+msgstr "परीक्षताम्"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statements (%1)"
+msgstr "९. बैंक विवरण (%1) 1.1."
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "All files (%1)"
+msgstr "९. सर्वाणि सञ्चिकाः (%1) ."
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Categorize"
+msgstr "वर्गीकरोतु"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import"
+msgstr "९. आयात लेनदेन"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is the number of new transactions, %2 is the number matched"
+msgid "Imported %1 new and matched %2 transactions."
+msgstr "९. %1 नवीनं तथा मेलितं %2 लेनदेनं आयातितवान्।"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statement file"
+msgstr "९. बैंक स्टेटमेंट फाइल"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statement"
+msgstr "९. बैंक विवरण"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Match CSV columns"
+msgstr "९. CSV स्तम्भान् नियुक्तं कुर्वन्तु"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Separate debit and credit columns"
+msgstr "९. डेबिट् तथा क्रेडिट् स्तम्भान् पृथक् कुर्वन्तु"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Date"
+msgstr "दिनाङ्कः"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "राशिः"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Debit"
+msgstr "९. डेबिट्"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Credit"
+msgstr "क्रेडिट्"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Transaction ID"
+msgstr "९. लेनदेन आईडी"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Balance"
+msgstr "९. खाता शेष"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "None"
+msgstr "९. न कश्चित्"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Date format"
+msgstr "९. तिथि प्रारूप"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Automatic"
+msgstr "९. स्वतः"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Description"
+msgstr "९. वर्णनम्"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Reverse amount signs"
+msgstr "९. विपर्यय राशि चिह्न"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "New transactions"
+msgstr "९. नवीनव्यापाराः"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Matched"
+msgstr "९. मेलकृताः व्यवहाराः"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Already imported"
+msgstr "९. पूर्वं आयातिताः व्यवहाराः"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Skipped"
+msgstr "९. व्यवहाराः त्यक्ताः"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Balance check"
+msgstr "९. शेषपरीक्षा"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Books balance"
+msgstr "९. पुस्तकेषु संतुलनम्"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Difference"
+msgstr "९. भेदः"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Action"
+msgstr "९. कर्म"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is a transaction number"
+msgid "Match transaction %1"
+msgstr "९. लेनदेनेन सह मेलनं %1"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import as new"
+msgstr "९. नवीनरूपेण आयातयन्तु"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Skip"
+msgstr "९. Skip"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Load more"
+msgstr "९. अधिकं लोडं कुर्वन्तु"
 
 #: crates/kabacus-kde/qml/StatementPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1293,11 +1470,6 @@ msgstr "आहत्य:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "राशिः:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "राशिः"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1458,11 +1630,6 @@ msgctxt "@label"
 msgid "Date:"
 msgstr "दिनाङ्कः:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Date"
-msgstr "दिनाङ्कः"
-
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1573,6 +1740,11 @@ msgstr "विन्यासाः रक्षितुं न शक्ता
 #, kde-format
 msgid "Can't reach the server to find out how to sign in"
 msgstr "कथं प्रवेष्टव्यम् इति ज्ञातुं सेवकं प्राप्तुं न शक्यते"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgid "The statement exceeds the import limit"
+msgstr "९. बैंकविवरणं आयातसीमाम् अतिक्रमयति"
 
 #: crates/kabacus-kde/src/model.rs
 #, kde-format
@@ -1761,11 +1933,6 @@ msgstr "सेवकं प्राप्तुं न शक्यते: %1"
 msgctxt "@action fix a card"
 msgid "Fix"
 msgstr "संशोधयतु"
-
-#: crates/kabacus-kde/src/views.rs
-#, kde-format
-msgid "Categorize"
-msgstr "वर्गीकरोतु"
 
 #: crates/kabacus-kde/src/views.rs
 #, kde-format
@@ -2352,11 +2519,6 @@ msgstr "परीक्षताम्"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Review"
-msgstr "परीक्षताम्"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Unknown"
 msgstr "अज्ञातम्"
 
@@ -2449,11 +2611,6 @@ msgstr "किं जातम् इति चिनु। प्रपत्�
 #, kde-format
 msgid "Connected"
 msgstr "संयुक्तम्"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Credit"
-msgstr "क्रेडिट्"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

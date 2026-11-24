@@ -541,7 +541,7 @@ msgstr "ਸਾਈਨ ਇਨ ਕਰੋ"
 msgid "Finish signing in in your browser…"
 msgstr "ਆਪਣੇ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਸਾਈਨ ਇਨ ਪੂਰਾ ਕਰੋ…"
 
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Cancel"
 msgstr "ਰੱਦ ਕਰੋ"
@@ -624,7 +624,7 @@ msgstr "ਮੁੜ ਝਲਕ ਵੇਖੋ"
 msgid "Books"
 msgstr "ਵਹੀਖਾਤੇ"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Close"
 msgstr "ਬੰਦ ਕਰੋ"
@@ -879,7 +879,7 @@ msgctxt "@label"
 msgid "Statement balance:"
 msgstr "ਸਟੇਟਮੈਂਟ ਦਾ ਬਕਾਇਆ:"
 
-#: crates/kabacus-kde/qml/ReconcilePage.qml
+#: crates/kabacus-kde/qml/ReconcilePage.qml crates/kabacus-kde/qml/StatementImportPage.qml
 #, kde-format
 msgid "Statement balance"
 msgstr "ਸਟੇਟਮੈਂਟ ਦਾ ਬਕਾਇਆ"
@@ -944,6 +944,11 @@ msgstr "ਖਾਤੇ ਦੀ ਕਿਸਮ"
 msgctxt "@action compare an account with its statement"
 msgid "Reconcile…"
 msgstr "ਮਿਲਾਨ…"
+
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import statement…"
+msgstr "ਬੈਂਕ ਸਟੇਟਮੈਂਟ ਆਯਾਤ ਕਰੋ..."
 
 #: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1117,12 +1122,12 @@ msgctxt "@action:button"
 msgid "Review"
 msgstr "ਜਾਂਚੋ"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Review before saving"
 msgstr "ਸੰਭਾਲਣ ਤੋਂ ਪਹਿਲਾਂ ਜਾਂਚੋ"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Back to edit"
 msgstr "ਸੋਧ ਵੱਲ ਵਾਪਸ"
@@ -1137,7 +1142,7 @@ msgstr "ਸੰਭਾਲ ਰਹੇ ਹਾਂ…"
 msgid "Save"
 msgstr "ਸੰਭਾਲੋ"
 
-#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/ReviewPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Checking with the server…"
 msgstr "ਸਰਵਰ ਨਾਲ ਜਾਂਚ ਰਹੇ ਹਾਂ…"
@@ -1202,6 +1207,178 @@ msgstr "ਇਸ ਬਾਰੇ"
 #, kde-format
 msgid "Open the source code"
 msgstr "ਸਰੋਤ ਕੋਡ ਖੋਲ੍ਹੋ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import complete"
+msgstr "ਆਯਾਤ ਪੂਰਾ ਹੋਇਆ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Review"
+msgstr "ਜਾਂਚੋ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statements (%1)"
+msgstr "ਬੈਂਕ ਸਟੇਟਮੈਂਟਸ (%1)"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "All files (%1)"
+msgstr "ਸਾਰੀਆਂ ਫ਼ਾਈਲਾਂ (%1)"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/src/views.rs
+#, kde-format
+msgid "Categorize"
+msgstr "ਸ਼੍ਰੇਣੀਬੱਧ ਕਰੋ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import"
+msgstr "ਆਯਾਤ ਲੈਣ-ਦੇਣ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is the number of new transactions, %2 is the number matched"
+msgid "Imported %1 new and matched %2 transactions."
+msgstr "ਆਯਾਤ ਕੀਤੇ %1 ਨਵੇਂ ਅਤੇ ਮੇਲ ਖਾਂਦੇ %2 ਲੈਣ-ਦੇਣ।"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statement file"
+msgstr "ਬੈਂਕ ਸਟੇਟਮੈਂਟ ਫਾਈਲ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Statement"
+msgstr "ਬੈਂਕ ਸਟੇਟਮੈਂਟ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Match CSV columns"
+msgstr "CSV ਕਾਲਮ ਨਿਰਧਾਰਤ ਕਰੋ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Separate debit and credit columns"
+msgstr "ਡੈਬਿਟ ਅਤੇ ਕ੍ਰੈਡਿਟ ਕਾਲਮ ਵੱਖਰੇ ਕਰੋ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Date"
+msgstr "ਤਾਰੀਖ਼"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Amount"
+msgstr "ਰਕਮ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Debit"
+msgstr "ਡੈਬਿਟ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Credit"
+msgstr "ਕ੍ਰੈਡਿਟ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Transaction ID"
+msgstr "ਲੈਣ-ਦੇਣ ਆਈ.ਡੀ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Balance"
+msgstr "ਖਾਤਾ ਬਕਾਇਆ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "None"
+msgstr "ਕੋਈ ਨਹੀਂ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Date format"
+msgstr "ਮਿਤੀ ਫਾਰਮੈਟ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Automatic"
+msgstr "ਆਟੋਮੈਟਿਕ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Description"
+msgstr "ਵਰਣਨ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Reverse amount signs"
+msgstr "ਉਲਟ ਰਾਸ਼ੀ ਦੇ ਚਿੰਨ੍ਹ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "New transactions"
+msgstr "ਨਵੇਂ ਲੈਣ-ਦੇਣ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Matched"
+msgstr "ਮੇਲ ਖਾਂਦਾ ਲੈਣ-ਦੇਣ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Already imported"
+msgstr "ਪਹਿਲਾਂ ਆਯਾਤ ਕੀਤੇ ਲੈਣ-ਦੇਣ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Skipped"
+msgstr "ਛੱਡੇ ਗਏ ਲੈਣ-ਦੇਣ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Balance check"
+msgstr "ਬਕਾਇਆ ਚੈੱਕ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Books balance"
+msgstr "ਕਿਤਾਬਾਂ ਵਿੱਚ ਸੰਤੁਲਨ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Difference"
+msgstr "ਅੰਤਰ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Action"
+msgstr "ਕਾਰਵਾਈ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgctxt "%1 is a transaction number"
+msgid "Match transaction %1"
+msgstr "ਲੈਣ-ਦੇਣ %1 ਨਾਲ ਮੇਲ ਕਰੋ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Import as new"
+msgstr "ਨਵੇਂ ਵਜੋਂ ਆਯਾਤ ਕਰੋ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Skip"
+msgstr "ਛੱਡੋ"
+
+#: crates/kabacus-kde/qml/StatementImportPage.qml
+#, kde-format
+msgid "Load more"
+msgstr "ਹੋਰ ਲੋਡ ਕਰੋ"
 
 #: crates/kabacus-kde/qml/StatementPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1293,11 +1470,6 @@ msgstr "ਕੁੱਲ:"
 msgctxt "@label"
 msgid "Amount:"
 msgstr "ਰਕਮ:"
-
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Amount"
-msgstr "ਰਕਮ"
 
 #: crates/kabacus-kde/qml/TransactionForm.qml crates/kabacus-kde/src/writes.rs apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1458,11 +1630,6 @@ msgctxt "@label"
 msgid "Date:"
 msgstr "ਤਾਰੀਖ਼:"
 
-#: crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Date"
-msgstr "ਤਾਰੀਖ਼"
-
 #: crates/kabacus-kde/qml/TransactionForm.qml
 #, kde-format
 msgctxt "@label"
@@ -1573,6 +1740,11 @@ msgstr "ਸੈਟਿੰਗਾਂ ਸੰਭਾਲੀਆਂ ਨਹੀਂ ਜਾ �
 #, kde-format
 msgid "Can't reach the server to find out how to sign in"
 msgstr "ਸਾਈਨ ਇਨ ਕਰਨ ਦਾ ਤਰੀਕਾ ਜਾਣਨ ਲਈ ਸਰਵਰ ਤੱਕ ਨਹੀਂ ਪਹੁੰਚ ਸਕਦੇ"
+
+#: crates/kabacus-kde/src/bridge.rs
+#, kde-format
+msgid "The statement exceeds the import limit"
+msgstr "ਬੈਂਕ ਸਟੇਟਮੈਂਟ ਆਯਾਤ ਸੀਮਾ ਤੋਂ ਵੱਧ ਹੈ"
 
 #: crates/kabacus-kde/src/model.rs
 #, kde-format
@@ -1761,11 +1933,6 @@ msgstr "ਸਰਵਰ ਤੱਕ ਨਹੀਂ ਪਹੁੰਚ ਸਕਦੇ: %1"
 msgctxt "@action fix a card"
 msgid "Fix"
 msgstr "ਠੀਕ ਕਰੋ"
-
-#: crates/kabacus-kde/src/views.rs
-#, kde-format
-msgid "Categorize"
-msgstr "ਸ਼੍ਰੇਣੀਬੱਧ ਕਰੋ"
 
 #: crates/kabacus-kde/src/views.rs
 #, kde-format
@@ -2352,11 +2519,6 @@ msgstr "ਜਾਂਚੋ"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Review"
-msgstr "ਜਾਂਚੋ"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "Unknown"
 msgstr "ਅਣਜਾਣ"
 
@@ -2449,11 +2611,6 @@ msgstr "ਚੁਣੋ ਕਿ ਕੀ ਹੋਇਆ। ਫਾਰਮ ਇੰਦਰਾ�
 #, kde-format
 msgid "Connected"
 msgstr "ਜੁੜਿਆ"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Credit"
-msgstr "ਕ੍ਰੈਡਿਟ"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

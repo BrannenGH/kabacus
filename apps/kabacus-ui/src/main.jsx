@@ -186,6 +186,7 @@ export function App({ auth, book, onFileAction }) {
         <button className="quiet overflow-button" aria-label={t("More")} popoverTarget="phone-overflow"><Icon name="Overflow" /></button>
         <div id="phone-overflow" className="phone-overflow" popover="auto" onClick={(event) => { if (event.target.closest("button")) event.currentTarget.hidePopover(); }}>
           <button className="quiet" data-action="refresh" onClick={refresh}>{t("Refresh")}</button>
+          {registerOpen && data?.accounts.some(item => item.account === openedAccount && !item.synthetic && ["money", "revolving-debt"].includes(item.kind)) && <button className="quiet" disabled={!!error || loading} onClick={() => setOperationForm({kind: "statement-import", account: openedAccount})}>{t("Import statement…")}</button>}
           {registerOpen && <button className="quiet" onClick={() => setOperationForm({kind: "reconcile", account: openedAccount})}>{t("Reconcile…")}</button>}
           <button className="quiet" onClick={() => setBookMenu(true)}>{t("Books")}</button>
         </div>
@@ -291,7 +292,7 @@ export function App({ auth, book, onFileAction }) {
                   </button>
                 </div>
               ))}
-              {page === "Overview" && <Overview data={data} api={api} onFix={warning => go(warning.code?.includes("reserve") ? "Cards" : warning.code?.includes("fund") ? "Funds" : "Register")} onAccount={openRegister} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} />}
+              {page === "Overview" && <Overview data={data} api={api} onFix={warning => warning.code === "uncategorized" ? openRegister("expenses:uncategorized") : go(warning.code?.includes("reserve") ? "Cards" : warning.code?.includes("fund") ? "Funds" : "Register")} onAccount={openRegister} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} />}
               {page === "Loans" && (
                 <Loans data={data} onOpen={openRegister} />
               )}
@@ -455,6 +456,8 @@ export function App({ auth, book, onFileAction }) {
           api={api}
           onClose={() => setOperationForm(null)}
           onSaved={(result) => { setOperationForm(null); saved(result); }}
+          onUpdated={saved}
+          onCategorize={() => { setOperationForm(null); openRegister("expenses:uncategorized"); }}
           onSwitch={(values) => {
             setOperationForm(null);
             setForm({ kind: "transaction", keepSpent: true, from: values.card, to: values.category, description: values.description, memo: values.memo, amount: values.amount });
@@ -605,6 +608,9 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, accou
             >
               {t("Account type")}
             </button>
+            {data.accounts.some(item => item.account === account && !item.synthetic && ["money", "revolving-debt"].includes(item.kind)) && (
+              <button className="secondary" onClick={() => onOperation({ kind: "statement-import", account })}>{t("Import statement…")}</button>
+            )}
             <button
               onClick={() =>
                 onOperation({
