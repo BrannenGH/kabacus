@@ -7,6 +7,8 @@ use kabacus_service::local::LocalCaller;
 use kabacus_store::{AnyStore, SqliteStore};
 use serde_json::{json, Value};
 
+const IMPORT_ACCOUNTS: &str = "account assets:bank:checking\n";
+
 async fn request(
     books: &impl Books,
     method: &str,
@@ -68,19 +70,63 @@ async fn contract(books: &impl Books) {
     assert!(report.is_object());
 }
 
+async fn statement_import_contract(books: &impl Books) {
+    let (_, version) = request(books, "GET", "/version", None, Value::Null).await;
+    let head = version["head"].as_str().unwrap();
+    let path = "/accounts/assets%3Abank%3Achecking/import";
+    let mut import = json!({
+        "format": "csv",
+        "content": "Date,Payee,Amount,ID\n2026-02-03,Harbor Street Cafe,-18.40,HC0261\n2026-02-04,Linden Corner Market,-62.18,HC0262\n",
+        "mapping": {"date": 0, "description": [1], "amount": 2, "id": 3},
+        "limit": 1,
+    });
+    let (status, preview) = request(books, "POST", path, Some(head), import.clone()).await;
+    assert_eq!(status, 200, "{preview}");
+    assert_eq!(preview["dry_run"], true);
+    assert_eq!(preview["counts"]["new"], 2);
+    assert_eq!(preview["rows"].as_array().unwrap().len(), 1);
+    assert!(preview["rows"][0].get("transaction").is_none());
+    import["cursor"] = preview["next_cursor"].clone();
+    let (_, second) = request(books, "POST", path, Some(head), import.clone()).await;
+    assert_eq!(second["rows"][0]["import_id"], "csv:HC0262");
+    import["cursor"] = Value::Null;
+    import["dry_run"] = json!(false);
+    let (status, committed) = request(books, "POST", path, Some(head), import.clone()).await;
+    assert_eq!(status, 200, "{committed}");
+    let saved = committed["head"].as_str().unwrap();
+    assert_eq!(
+        saved.parse::<u64>().unwrap(),
+        head.parse::<u64>().unwrap() + 1
+    );
+    assert!(committed["rows"][0]["transaction"].is_number());
+    let (status, conflict) = request(books, "POST", path, Some(head), import.clone()).await;
+    assert_eq!(status, 409, "{conflict}");
+    let (_, repeated) = request(books, "POST", path, Some(saved), import).await;
+    assert_eq!(repeated["head"], saved);
+    assert_eq!(repeated["counts"]["duplicate"], 2);
+    assert_eq!(repeated["rows"], json!([]));
+}
+
 #[tokio::test]
 async fn local_and_remote_books_share_previews_revisions_errors_and_reports() {
     let store = AnyStore::Sqlite(SqliteStore::in_memory().unwrap());
-    kabacus_testkit::import_journal(&store, None, &kabacus_testkit::scratch_journal("")).await;
+    kabacus_testkit::import_journal(
+        &store,
+        None,
+        &kabacus_testkit::scratch_journal(IMPORT_ACCOUNTS),
+    )
+    .await;
     let books = LocalBooks::from_store(store, LocalCaller::new("Dana Okafor", "app"))
         .await
         .unwrap();
     contract(&books).await;
     let (_, history) = request(&books, "GET", "/history", None, Value::Null).await;
     assert_eq!(history[0]["user"], "Dana Okafor");
-    let server = kabacus_testkit::spawn_server(|_| {}).await;
+    let server = kabacus_testkit::spawn_server_with_journal(IMPORT_ACCOUNTS, |_| {}).await;
     let client = KabacusClient::connect_unix(&server.socket_path).with_client_hint("app");
     contract(&client).await;
+    statement_import_contract(&books).await;
+    statement_import_contract(&client).await;
 }
 
 #[tokio::test]

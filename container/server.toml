@@ -48,6 +48,11 @@ socket_path = "/run/kabacus/server.sock"
 # resource_url = "https://books.example.org/mcp"
 # scopes       = ["openid", "kabacus"]
 
+# Statement parser input limits.
+# [import]
+# max_bytes = 5242880
+# max_rows  = 5000
+
 # Account kinds: every account's kind (money, fund, card reserve, card, ...)
 # comes from its path, by the first matching rule here; `*` is one segment
 # (or part of one, as in `card-*`) and `**` one or more. Kept outside the

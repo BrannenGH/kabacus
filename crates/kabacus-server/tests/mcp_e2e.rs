@@ -905,3 +905,74 @@ async fn journal_import_is_not_exposed() {
     assert_eq!(response.status(), axum::http::StatusCode::NOT_FOUND);
     client.cancel().await.unwrap();
 }
+
+#[tokio::test]
+async fn statement_import_previews_and_commits_one_revision_over_mcp() {
+    let server = spawn_server_with_journal("account assets:bank:checking\n", |_| {}).await;
+    let client = connect(&server).await;
+    let head = support::head(&client).await;
+    let mut args = json!({
+        "account": "assets:bank:checking", "head": head, "format": "qfx",
+        "content": "<OFX><BANKMSGSRSV1><STMTTRNRS><STMTRS><CURDEF>USD<BANKACCTFROM><ACCTID>3186042</BANKACCTFROM><BANKTRANLIST><STMTTRN><DTPOSTED>20260203<TRNAMT>84.75<FITID>HB0291<NAME>Cedar Neighborhood Market</STMTTRN></BANKTRANLIST><LEDGERBAL><BALAMT>84.75<DTASOF>20260203</LEDGERBAL></STMTRS></STMTTRNRS></BANKMSGSRSV1></OFX>"
+    });
+    let preview = call(&client, "import_statement", args.clone()).await;
+    assert_eq!(preview["counts"]["new"], 1);
+    assert_eq!(preview["source"]["account_hint"], "…6042");
+    assert_eq!(preview["balance_check"]["difference"], "0.00");
+    assert_eq!(support::head(&client).await, head);
+    let (committed, saved_head) = support::commit(&client, "import_statement", args.clone()).await;
+    assert_eq!(
+        saved_head.parse::<u64>().unwrap(),
+        head.parse::<u64>().unwrap() + 1
+    );
+    let change = support::change(&server, &saved_head).await;
+    assert_eq!(change.kind, "import");
+    assert!(committed["rows"][0]["transaction"].is_number());
+    args["head"] = json!(saved_head);
+    args["include_duplicates"] = json!(true);
+    let (duplicate, same_head) = support::commit(&client, "import_statement", args).await;
+    assert_eq!(duplicate["rows"][0]["outcome"], "duplicate");
+    assert_eq!(same_head, saved_head);
+    client.cancel().await.unwrap();
+}
+
+#[tokio::test]
+async fn statement_import_commits_once_with_postgres() {
+    use kabacus_server::state::{find_or_create_ledger, KindTable};
+    use kabacus_service::{
+        bank_import::import_statement, local::LocalCaller, state::Settings, Service,
+    };
+    use kabacus_store::{AnyStore, BookStore, PostgresStore};
+    let Some(url) = kabacus_store::testing::database().await else {
+        return;
+    };
+    let store = AnyStore::Postgres(PostgresStore::connect(&url, 4).await.unwrap());
+    let journal = kabacus_testkit::scratch_journal("account assets:bank:checking\n");
+    kabacus_testkit::import_journal(&store, None, &journal).await;
+    let ledger = find_or_create_ledger(&store, None).await.unwrap();
+    let state = Service::new(
+        store,
+        ledger,
+        Settings::default(),
+        KindTable {
+            rules: kabacus_core::default_kind_rules(),
+            reserve_template: kabacus_core::DEFAULT_RESERVE_TEMPLATE.into(),
+        },
+    );
+    let head = state.store.revision(ledger).await.unwrap();
+    let caller = LocalCaller::new("Dana Okafor", "cli");
+    let body = serde_json::from_value(json!({"format":"csv", "dry_run":false,
+        "content":"Date,Payee,Amount\n2026-02-03,Northside Hardware,-18.40\n2026-02-04,Northside Hardware,18.40\n",
+        "mapping":{"date":0,"description":[1],"amount":2}})).unwrap();
+    let result = import_statement(
+        &state,
+        &caller,
+        "assets:bank:checking",
+        &head.to_string(),
+        body,
+    )
+    .await
+    .unwrap();
+    assert_eq!(result["counts"]["new"], 2);
+    assert_eq!(state.store.revision(ledger).await.unwrap(), head + 1);
+}

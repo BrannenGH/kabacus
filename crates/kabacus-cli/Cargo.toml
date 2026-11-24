@@ -17,6 +17,7 @@ kabacus-ledger = { path = "../kabacus-ledger" }
 kabacus-mcp = { path = "../kabacus-mcp" }
 serde_json.workspace = true
 anyhow.workspace = true
+base64 = "0.22"
 tokio.workspace = true
 clap = { version = "4", features = ["derive"] }
 clap_complete = "4"

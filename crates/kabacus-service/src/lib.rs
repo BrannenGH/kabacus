@@ -9,6 +9,7 @@
 pub const VERSION: &str = kabacus_ledger::VERSION;
 
 pub mod account_edit;
+pub mod bank_import;
 pub mod batch;
 pub mod books;
 pub mod cache;

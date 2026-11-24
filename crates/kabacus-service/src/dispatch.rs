@@ -42,7 +42,7 @@ impl Response {
             "role_required" | "rewrite_disabled" => 403,
             "not_found" => 404,
             "head_conflict" | "account_in_use" | "reconcile_mismatch" => 409,
-            "batch_too_large" => 413,
+            "batch_too_large" | "import_too_large" => 413,
             "internal" => 500,
             _ => 422,
         };
@@ -167,6 +167,13 @@ pub async fn dispatch(
         }
         ("POST", ["splits"]) => result!(crate::split::record(state, caller, parse(body)?, head)),
         ("POST", ["batch"]) => result!(crate::batch::batch(state, caller, parse(body)?)),
+        ("POST", ["accounts", account, "import"]) => result!(crate::bank_import::import_statement(
+            state,
+            caller,
+            account,
+            head,
+            parse(body)?
+        )),
         ("POST", ["reconcile"]) => {
             let mut q: reports::ReconcileParams = parse(body)?;
             if q.head.is_none() && !head.is_empty() {

@@ -1473,6 +1473,7 @@ name = "kabacus-cli"
 version = "0.2.0"
 dependencies = [
  "anyhow",
+ "base64 0.22.1",
  "clap",
  "clap_complete",
  "clap_mangen",
@@ -1522,6 +1523,7 @@ dependencies = [
  "num-traits",
  "proptest",
  "quick-xml",
+ "schemars",
  "serde",
  "serde_json",
  "sha2",
