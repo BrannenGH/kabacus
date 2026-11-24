@@ -22,7 +22,23 @@ use std::sync::Arc;
 pub use kabacus_service::catalog::{Endpoint, ENDPOINTS};
 
 pub fn router(state: Arc<AppState>) -> Router {
-    Router::new()
+    let mut router = Router::new();
+    if kabacus_service::simplefin::enabled(&state) {
+        router = router
+            .route(
+                "/simplefin/connection",
+                get(simplefin_connection)
+                    .put(simplefin_connect)
+                    .delete(simplefin_disconnect),
+            )
+            .route("/simplefin/accounts", get(simplefin_accounts))
+            .route(
+                "/accounts/{account}/simplefin-link",
+                axum::routing::put(simplefin_link),
+            )
+            .route("/simplefin/sync", post(simplefin_sync));
+    }
+    router
         .route("/splits", post(record_shared_expense))
         .route("/settlements", post(settle_up))
         .route("/version", get(get_version))
@@ -63,7 +79,7 @@ pub fn router(state: Arc<AppState>) -> Router {
         .route(
             "/accounts/{account}/import",
             post(import_statement).layer(axum::extract::DefaultBodyLimit::max(
-                state.config.import.max_request_bytes(),
+                state.config.import.limits.max_request_bytes(),
             )),
         )
         .route("/accounts/kinds", get(get_account_kinds))
@@ -833,5 +849,106 @@ async fn get_commands(
 ) -> Result<Response, ApiError> {
     let caller = authenticate(&state, &headers).await?;
     service::require(&caller, Role::Read)?;
-    Ok(Json(kabacus_service::catalog::commands()).into_response())
+    Ok(Json(kabacus_service::catalog::commands_with_simplefin(
+        kabacus_service::simplefin::enabled(&state),
+    ))
+    .into_response())
+}
+
+async fn simplefin_connection(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+) -> Result<Response, ApiError> {
+    let caller = authenticate(&state, &headers).await?;
+    Ok(Json(kabacus_service::simplefin::connection(&state, &caller).await?).into_response())
+}
+
+async fn simplefin_connect(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+    Json(body): Json<kabacus_service::simplefin::ConnectBody>,
+) -> Result<Response, ApiError> {
+    use kabacus_service::simplefin::connect;
+    let caller = authenticate(&state, &headers).await?;
+    Ok(
+        Json(connect(&state, &caller, state.simplefin_transport.as_ref(), body).await?)
+            .into_response(),
+    )
+}
+
+async fn simplefin_disconnect(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+) -> Result<Response, ApiError> {
+    let caller = authenticate(&state, &headers).await?;
+    Ok(Json(kabacus_service::simplefin::disconnect(&state, &caller).await?).into_response())
+}
+
+#[derive(Deserialize)]
+struct SimplefinAccountsQuery {
+    #[serde(default)]
+    refresh: bool,
+}
+
+async fn simplefin_accounts(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+    Query(query): Query<SimplefinAccountsQuery>,
+) -> Result<Response, ApiError> {
+    use kabacus_service::simplefin::list_accounts;
+    let caller = authenticate(&state, &headers).await?;
+    Ok(Json(
+        list_accounts(
+            &state,
+            &caller,
+            state.simplefin_transport.as_ref(),
+            query.refresh,
+        )
+        .await?,
+    )
+    .into_response())
+}
+
+async fn simplefin_link(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+    Path(account): Path<String>,
+    Json(body): Json<kabacus_service::simplefin::LinkBody>,
+) -> Result<Response, ApiError> {
+    use kabacus_service::simplefin::link;
+    let caller = authenticate(&state, &headers).await?;
+    let head = if_match_header(&headers)?;
+    Ok(Json(
+        link(
+            &state,
+            &caller,
+            state.simplefin_transport.as_ref(),
+            &account,
+            &head,
+            body,
+        )
+        .await?,
+    )
+    .into_response())
+}
+
+async fn simplefin_sync(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+    Json(body): Json<kabacus_service::simplefin::SyncBody>,
+) -> Result<Response, ApiError> {
+    use kabacus_service::simplefin::sync;
+    let caller = authenticate(&state, &headers).await?;
+    let head = if_match_header(&headers)?;
+    Ok(Json(
+        sync(
+            &state,
+            &caller,
+            state.simplefin_transport.as_ref(),
+            &head,
+            body,
+        )
+        .await?,
+    )
+    .into_response())
 }

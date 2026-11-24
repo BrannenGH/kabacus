@@ -15,6 +15,7 @@ use kabacus_service::ops::WriteOp;
 use kabacus_service::search::SearchQuery;
 use kabacus_service::service::{self, WriteResultDto};
 use kabacus_service::Service;
+use kabacus_service::{catalog::SIMPLEFIN_TOOLS, simplefin};
 use rmcp::handler::server::router::tool::ToolRouter;
 use rmcp::handler::server::tool::Extension;
 use rmcp::handler::server::wrapper::Parameters;
@@ -227,7 +228,8 @@ impl KabacusMcp {
             .list_all()
             .into_iter()
             .filter(|t| {
-                (rewrites_open || !REWRITE_TOOLS.contains(&t.name.as_ref()))
+                (simplefin::enabled(&self.state) || !SIMPLEFIN_TOOLS.contains(&t.name.as_ref()))
+                    && (rewrites_open || !REWRITE_TOOLS.contains(&t.name.as_ref()))
                     && (!read_only
                         || t.annotations
                             .as_ref()
@@ -301,7 +303,9 @@ impl KabacusMcp {
         Parameters(_): Parameters<NoParams>,
     ) -> Result<CallToolResult, McpError> {
         service::require(principal(&parts)?, Permission::Read).map_err(to_mcp_error)?;
-        structured(&kabacus_service::catalog::commands())
+        structured(&kabacus_service::catalog::commands_with_simplefin(
+            simplefin::enabled(&self.state),
+        ))
     }
 
     // --- read tools ---------------------------------------------------------
@@ -946,6 +950,112 @@ impl KabacusMcp {
         .await
         .map_err(to_mcp_error)?;
         structured(&result)
+    }
+
+    #[tool(
+        description = "Show the caller's own SimpleFIN connection and remaining request budget.",
+        annotations(read_only_hint = true)
+    )]
+    async fn get_simplefin_connection(
+        &self,
+        Extension(parts): Extension<Parts>,
+    ) -> Result<CallToolResult, McpError> {
+        structured(
+            &simplefin::connection(&self.state, principal(&parts)?)
+                .await
+                .map_err(to_mcp_error)?,
+        )
+    }
+
+    #[tool(
+        description = "Connect SimpleFIN with the person's one-time setup token. Preview with dry_run true to confirm the host. Use replace only after confirmation.",
+        annotations(read_only_hint = false, destructive_hint = false)
+    )]
+    async fn connect_simplefin(
+        &self,
+        Extension(parts): Extension<Parts>,
+        Parameters(body): Parameters<simplefin::ConnectBody>,
+    ) -> Result<CallToolResult, McpError> {
+        structured(
+            &simplefin::connect(&self.state, principal(&parts)?, &simplefin::Http, body)
+                .await
+                .map_err(to_mcp_error)?,
+        )
+    }
+
+    #[tool(
+        description = "Forget the caller's SimpleFIN credential. The person can revoke that credential at their SimpleFIN server.",
+        annotations(read_only_hint = false, destructive_hint = true)
+    )]
+    async fn disconnect_simplefin(
+        &self,
+        Extension(parts): Extension<Parts>,
+    ) -> Result<CallToolResult, McpError> {
+        structured(
+            &simplefin::disconnect(&self.state, principal(&parts)?)
+                .await
+                .map_err(to_mcp_error)?,
+        )
+    }
+
+    #[tool(
+        description = "List the caller's remote SimpleFIN accounts and links. An uncached list uses a request from the daily budget.",
+        annotations(read_only_hint = true)
+    )]
+    async fn list_simplefin_accounts(
+        &self,
+        Extension(parts): Extension<Parts>,
+    ) -> Result<CallToolResult, McpError> {
+        structured(
+            &simplefin::list_accounts(&self.state, principal(&parts)?, &simplefin::Http, false)
+                .await
+                .map_err(to_mcp_error)?,
+        )
+    }
+
+    #[tool(
+        description = "Link a SimpleFIN account to a bank or credit card account at the current head. Set remote to null to unlink.",
+        annotations(read_only_hint = false, destructive_hint = false)
+    )]
+    async fn link_simplefin_account(
+        &self,
+        Extension(parts): Extension<Parts>,
+        Parameters(params): Parameters<simplefin::LinkParams>,
+    ) -> Result<CallToolResult, McpError> {
+        structured(
+            &simplefin::link(
+                &self.state,
+                principal(&parts)?,
+                &simplefin::Http,
+                &params.account,
+                &params.head,
+                params.body,
+            )
+            .await
+            .map_err(to_mcp_error)?,
+        )
+    }
+
+    #[tool(
+        description = "Review transactions from all of the caller's linked SimpleFIN accounts. Show counts, matches, balance differences and all warnings. Commit the same snapshot on the previewed head after the person explicitly confirms.",
+        annotations(read_only_hint = false, destructive_hint = false)
+    )]
+    async fn sync_simplefin(
+        &self,
+        Extension(parts): Extension<Parts>,
+        Parameters(params): Parameters<simplefin::SyncParams>,
+    ) -> Result<CallToolResult, McpError> {
+        structured(
+            &simplefin::sync(
+                &self.state,
+                principal(&parts)?,
+                &simplefin::Http,
+                &params.head,
+                params.body,
+            )
+            .await
+            .map_err(to_mcp_error)?,
+        )
     }
 
     // --- rewrite tools (gated; listed only when usable) ---------------------

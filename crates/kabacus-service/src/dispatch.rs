@@ -82,6 +82,15 @@ pub async fn dispatch(
     caller: &dyn Caller,
     request: Request,
 ) -> Result<Response, Error> {
+    dispatch_with_transport(state, caller, request, &crate::simplefin::Http).await
+}
+
+pub async fn dispatch_with_transport(
+    state: &Service,
+    caller: &dyn Caller,
+    request: Request,
+    transport: &dyn crate::simplefin::Transport,
+) -> Result<Response, Error> {
     let (path, qs) = request.path.split_once('?').unwrap_or((&request.path, ""));
     let segments: Vec<String> = path
         .trim_matches('/')
@@ -166,6 +175,47 @@ pub async fn dispatch(
             result!(crate::settle::record(state, caller, parse(body)?, head))
         }
         ("POST", ["splits"]) => result!(crate::split::record(state, caller, parse(body)?, head)),
+        ("GET", ["simplefin", "connection"]) => {
+            result!(crate::simplefin::connection(state, caller))
+        }
+        ("PUT", ["simplefin", "connection"]) => result!(crate::simplefin::connect(
+            state,
+            caller,
+            transport,
+            parse(body)?
+        )),
+        ("DELETE", ["simplefin", "connection"]) => {
+            result!(crate::simplefin::disconnect(state, caller))
+        }
+        ("GET", ["simplefin", "accounts"]) => {
+            #[derive(Deserialize)]
+            struct AccountsQuery {
+                #[serde(default)]
+                refresh: bool,
+            }
+            let options: AccountsQuery = query(qs)?;
+            result!(crate::simplefin::list_accounts(
+                state,
+                caller,
+                transport,
+                options.refresh
+            ))
+        }
+        ("PUT", ["accounts", account, "simplefin-link"]) => result!(crate::simplefin::link(
+            state,
+            caller,
+            transport,
+            account,
+            head,
+            parse(body)?
+        )),
+        ("POST", ["simplefin", "sync"]) => result!(crate::simplefin::sync(
+            state,
+            caller,
+            transport,
+            head,
+            parse(body)?
+        )),
         ("POST", ["batch"]) => result!(crate::batch::batch(state, caller, parse(body)?)),
         ("POST", ["accounts", account, "import"]) => result!(crate::bank_import::import_statement(
             state,

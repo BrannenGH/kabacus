@@ -1800,6 +1800,8 @@ pub fn statement_file(
 #[derive(Debug, Clone, Serialize)]
 pub struct AccountDto {
     pub account: String,
+    pub simplefin_linked: bool,
+    pub simplefin_served: Option<bool>,
     /// From the declaration's `ynab-account` / `ynab-envelope` tag.
     pub friendly_name: Option<String>,
     /// The friendly name or readable leaf, with a kind qualifier
@@ -1834,6 +1836,9 @@ pub async fn accounts(
         .await
         .map_err(ApiError::Internal)?;
     let txs = ops::read_all_transactions(state).await?;
+
+    let books = state.books_snapshot().await.map_err(ApiError::Internal)?;
+    let simplefin = crate::simplefin::account_links(state, principal, &books.book).await;
 
     let mut balances: std::collections::BTreeMap<
         String,
@@ -1889,6 +1894,8 @@ pub async fn accounts(
             }
             let classified = chart.get(account);
             AccountDto {
+                simplefin_linked: simplefin.contains_key(account),
+                simplefin_served: simplefin.get(account).copied().flatten(),
                 friendly_name: friendly.get(account).cloned(),
                 display_name: chart.display_name(&name),
                 kind: chart.kind_of(&name),

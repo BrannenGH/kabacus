@@ -13,6 +13,7 @@ publish = false
 # a stand-in OIDC provider, a private CA, and a scratch-books server.
 # Synthetic data only.
 [dependencies]
+kabacus-service = { path = "../kabacus-service" }
 kabacus-server = { path = "../kabacus-server" }
 kabacus-ledger = { path = "../kabacus-ledger" }
 kabacus-store = { path = "../kabacus-store" }

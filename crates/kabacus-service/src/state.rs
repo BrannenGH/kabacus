@@ -14,6 +14,7 @@ pub struct Service {
     pub store: AnyStore,
     pub ledger: LedgerId,
     pub settings: Settings,
+    pub(crate) bank_connections: crate::simplefin::BankConnections,
     pub books_cache: crate::cache::BooksCache,
     kinds: RwLock<KindTable>,
 }
@@ -22,6 +23,8 @@ pub struct Service {
 pub struct Settings {
     pub allow_rewrite: bool,
     pub import_max_bytes: usize,
+    pub simplefin: Option<crate::simplefin::Config>,
+    pub simplefin_per_member: bool,
     pub statement_limits: crate::bank_import::Limits,
     pub app_client_id: Option<String>,
 }
@@ -31,6 +34,8 @@ impl Default for Settings {
         Self {
             allow_rewrite: true,
             import_max_bytes: 256 * 1024 * 1024,
+            simplefin: None,
+            simplefin_per_member: false,
             statement_limits: Default::default(),
             app_client_id: None,
         }
@@ -75,6 +80,7 @@ impl Service {
             store,
             ledger,
             settings,
+            bank_connections: Default::default(),
             kinds: RwLock::new(kinds),
             books_cache: Default::default(),
         }

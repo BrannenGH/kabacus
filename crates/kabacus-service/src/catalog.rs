@@ -15,6 +15,36 @@ pub struct Endpoint {
 /// [`router`] is added here too, with the tools that mirror it.
 pub const ENDPOINTS: &[Endpoint] = &[
     Endpoint {
+        method: "GET",
+        path: "/simplefin/connection",
+        mcp_tools: &["get_simplefin_connection"],
+    },
+    Endpoint {
+        method: "PUT",
+        path: "/simplefin/connection",
+        mcp_tools: &["connect_simplefin"],
+    },
+    Endpoint {
+        method: "DELETE",
+        path: "/simplefin/connection",
+        mcp_tools: &["disconnect_simplefin"],
+    },
+    Endpoint {
+        method: "GET",
+        path: "/simplefin/accounts",
+        mcp_tools: &["list_simplefin_accounts"],
+    },
+    Endpoint {
+        method: "PUT",
+        path: "/accounts/{account}/simplefin-link",
+        mcp_tools: &["link_simplefin_account"],
+    },
+    Endpoint {
+        method: "POST",
+        path: "/simplefin/sync",
+        mcp_tools: &["sync_simplefin"],
+    },
+    Endpoint {
         method: "POST",
         path: "/accounts/{account}/import",
         mcp_tools: &["import_statement"],
@@ -314,9 +344,32 @@ pub const ADD_COMMANDS: &[Command] = &[
     },
 ];
 
+pub const SIMPLEFIN_TOOLS: &[&str] = &[
+    "get_simplefin_connection",
+    "connect_simplefin",
+    "disconnect_simplefin",
+    "list_simplefin_accounts",
+    "link_simplefin_account",
+    "sync_simplefin",
+];
+
 pub fn commands() -> serde_json::Value {
+    commands_with_simplefin(true)
+}
+
+pub fn commands_with_simplefin(enabled: bool) -> serde_json::Value {
     let mut actions = Vec::new();
-    for endpoint in ENDPOINTS {
+    let endpoints: Vec<_> = ENDPOINTS
+        .iter()
+        .filter(|endpoint| {
+            enabled
+                || endpoint
+                    .mcp_tools
+                    .iter()
+                    .all(|tool| !SIMPLEFIN_TOOLS.contains(tool))
+        })
+        .collect();
+    for endpoint in &endpoints {
         for &tool in endpoint.mcp_tools {
             let id = match tool {
                 "add_transaction" => "transaction.postings",
@@ -351,7 +404,7 @@ pub fn commands() -> serde_json::Value {
     ] {
         actions.push(serde_json::json!({"id":id,"label":label,"menu":"File","shortcut":key,"method":null,"path":null,"tool":null,"parameters":{"type":"object"}}));
     }
-    serde_json::json!({"add": ADD_COMMANDS, "commands":actions,"endpoints": ENDPOINTS})
+    serde_json::json!({"add": ADD_COMMANDS, "commands":actions,"endpoints": endpoints})
 }
 
 fn parameters(tool: &str) -> serde_json::Value {
@@ -374,6 +427,9 @@ fn parameters(tool: &str) -> serde_json::Value {
         "settle_up" => schema!(crate::settle::SettleBody),
         "reconcile" => schema!(crate::reports::ReconcileParams),
         "batch" => schema!(crate::batch::BatchBody),
+        "connect_simplefin" => schema!(crate::simplefin::ConnectBody),
+        "link_simplefin_account" => schema!(crate::simplefin::LinkParams),
+        "sync_simplefin" => schema!(crate::simplefin::SyncParams),
         "import_statement" => schema!(crate::bank_import::ImportParams),
         "search_transactions" => schema!(crate::search::SearchQuery),
         "declare_account" => schema!(DeclareAccountParams),

@@ -45,6 +45,51 @@ impl BrowserBooks {
         })
     }
 }
+#[cfg(target_arch = "wasm32")]
+struct BrowserTransport<'a> {
+    store: &'a SqliteStore,
+    write: js_sys::Function,
+}
+
+#[cfg(target_arch = "wasm32")]
+impl kabacus_service::simplefin::Transport for BrowserTransport<'_> {
+    fn send(
+        &self,
+        request: kabacus_service::simplefin::Request,
+    ) -> std::pin::Pin<
+        Box<
+            dyn std::future::Future<
+                    Output = Result<
+                        kabacus_service::simplefin::Response,
+                        kabacus_service::error::Error,
+                    >,
+                > + '_,
+        >,
+    > {
+        use kabacus_service::simplefin::Http;
+        Http.send(request)
+    }
+
+    fn checkpoint(&self) -> kabacus_service::simplefin::Checkpoint<'_> {
+        Box::pin(async {
+            let failed = || kabacus_service::error::Error::Import {
+                code: "simplefin_store",
+                message: "The SimpleFIN request budget could not be saved".into(),
+            };
+            let bytes = self.store.to_bytes().await.map_err(|_| failed())?;
+            let image = js_sys::Uint8Array::from(bytes.as_slice());
+            let result = self
+                .write
+                .call1(&JsValue::NULL, &image)
+                .map_err(|_| failed())?;
+            wasm_bindgen_futures::JsFuture::from(js_sys::Promise::resolve(&result))
+                .await
+                .map_err(|_| failed())?;
+            Ok(())
+        })
+    }
+}
+
 #[wasm_bindgen]
 impl BrowserBooks {
     pub async fn open(bytes: Vec<u8>, username: String) -> Result<BrowserBooks, JsValue> {
@@ -75,6 +120,27 @@ impl BrowserBooks {
         let response = kabacus_service::dispatch::dispatch(&self.service, &self.caller, request)
             .await
             .unwrap_or_else(kabacus_service::dispatch::Response::error);
+        serde_json::to_string(&response).map_err(error)
+    }
+    #[cfg(target_arch = "wasm32")]
+    pub async fn request_with_checkpoint(
+        &self,
+        request: String,
+        write: js_sys::Function,
+    ) -> Result<String, JsValue> {
+        let request = serde_json::from_str(&request).map_err(error)?;
+        let transport = BrowserTransport {
+            store: &self.store,
+            write,
+        };
+        let response = kabacus_service::dispatch::dispatch_with_transport(
+            &self.service,
+            &self.caller,
+            request,
+            &transport,
+        )
+        .await
+        .unwrap_or_else(kabacus_service::dispatch::Response::error);
         serde_json::to_string(&response).map_err(error)
     }
     pub async fn bytes(&self) -> Result<Vec<u8>, JsValue> {
