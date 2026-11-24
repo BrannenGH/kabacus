@@ -126,7 +126,10 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
       }
       if (simplefin && path === "/simplefin/sync") {
         const counts = { new: 1, matched: 0, duplicate: 0, skipped: 0 };
-        if (!body.dry_run) currentVersion.head = "44";
+        if (!body.dry_run) {
+          currentVersion.head = "44";
+          currentAccounts.push({ account: "expenses:uncategorized", display_name: "Uncategorized", kind: "expense" });
+        }
         return route.fulfill({ json: { head: currentVersion.head, snapshot: "cedar-snapshot", counts, warnings: [], accounts: [{
           account: accounts[0].account, counts, since: "2026-10-01", warnings: [], rows: [{
             import_id: "simplefin:HC7862", date: "2026-10-25", description: "Harbor Street Cafe", amount: "-18.40", outcome: "new",
@@ -228,6 +231,10 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
           balance: amount("6200.75"),
         },
       ],
+      "/register/expenses%3Auncategorized": simplefin && currentVersion.head === "44" ? [{
+        id: 5088, date: "2026-10-25", payee: "Harbor Street Cafe", status: "*",
+        other_account: accounts[0].account, amount: amount("18.40"), balance: amount("18.40"),
+      }] : [],
       "/register/assets%3Abank%3Achecking%3Atravel": [],
       "/register/assets%3Ainvestments%3Amonero": [],
     };
@@ -2008,7 +2015,9 @@ for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 
     await review.getByRole("button", { name: "Review", exact: true }).click();
     await expect(review.getByText("Harbor Street Cafe", { exact: true })).toBeVisible();
     await review.getByRole("button", { name: "Import", exact: true }).click();
-    await expect(review.getByRole("button", { name: "Categorize" })).toBeVisible();
+    await review.getByRole("button", { name: "Categorize" }).click();
+    await expect(review).not.toBeVisible();
+    await expect(page.getByText("Harbor Street Cafe", { exact: true })).toBeVisible();
     const sync = writes.filter(write => write.path === "/simplefin/sync");
     expect(sync.map(write => !!write.body.dry_run)).toEqual([true, false]);
     expect(sync[1].body.snapshot).toBe("cedar-snapshot");

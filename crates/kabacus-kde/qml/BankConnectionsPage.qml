@@ -99,16 +99,16 @@ Kirigami.ScrollablePage {
                 spacing: Kirigami.Units.smallSpacing
                 Layout.fillWidth: true
                 Layout.preferredHeight: implicitHeight
-                Controls.Button { implicitHeight: page.app.narrow ? 48 : implicitContentHeight + topPadding + bottomPadding; text: i18n("Sync"); enabled: !page.busy; highlighted: true; onClicked: page.app.openBankSync() }
-                Controls.Button { implicitHeight: page.app.narrow ? 48 : implicitContentHeight + topPadding + bottomPadding; text: i18n("Load bank accounts"); enabled: !page.busy; onClicked: page.request("GET", "/simplefin/accounts", null, "list") }
-                Controls.Button { implicitHeight: page.app.narrow ? 48 : implicitContentHeight + topPadding + bottomPadding; text: i18n("Replace connection"); enabled: !page.busy; onClicked: page.replacing = true }
-                Controls.Button { implicitHeight: page.app.narrow ? 48 : implicitContentHeight + topPadding + bottomPadding; text: i18n("Disconnect"); enabled: !page.busy; onClicked: page.request("DELETE", "/simplefin/connection", null, "disconnected") }
+                Controls.Button { height: page.app.narrow ? 48 : implicitHeight; text: i18n("Sync"); enabled: !page.busy; highlighted: true; onClicked: page.app.openBankSync() }
+                Controls.Button { height: page.app.narrow ? 48 : implicitHeight; text: i18n("Load bank accounts"); enabled: !page.busy; onClicked: page.request("GET", "/simplefin/accounts", null, "list") }
+                Controls.Button { height: page.app.narrow ? 48 : implicitHeight; text: i18n("Replace connection"); enabled: !page.busy; onClicked: page.replacing = true }
+                Controls.Button { height: page.app.narrow ? 48 : implicitHeight; text: i18n("Disconnect"); enabled: !page.busy; onClicked: page.request("DELETE", "/simplefin/connection", null, "disconnected") }
             }
         }
         ColumnLayout {
             visible: !page.status?.connected || page.replacing
             Layout.fillWidth: true
-            Controls.Button { implicitHeight: page.app.narrow ? 48 : implicitContentHeight + topPadding + bottomPadding; text: i18n("Get a SimpleFIN setup token"); flat: true; onClicked: Qt.openUrlExternally("https://bridge.simplefin.org/simplefin/create") }
+            Controls.Button { Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight; text: i18n("Get a SimpleFIN setup token"); flat: true; onClicked: Qt.openUrlExternally("https://bridge.simplefin.org/simplefin/create") }
             Controls.Label { text: i18n("Setup token") }
             Controls.TextField {
                 id: token

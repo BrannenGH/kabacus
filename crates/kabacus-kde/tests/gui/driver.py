@@ -732,8 +732,12 @@ def main():
         token, = args
         goto("Settings")
         press(wait_for("Bank connections", lambda: find(app(), "Bank connections", pyatspi.ROLE_PUSH_BUTTON)))
-        field = wait_for("Setup token", lambda: find(app(), "Setup token", pyatspi.ROLE_PASSWORD_TEXT) or find(app(), "Setup token", pyatspi.ROLE_TEXT))
-        set_text(field, token)
+        help_link = wait_for("setup instructions", lambda: find(app(), "Get a SimpleFIN setup token", pyatspi.ROLE_PUSH_BUTTON))
+        help_link.queryComponent().grabFocus()
+        key(0xFF09)  # Tab to the password field.
+        for character in token:
+            pyatspi.Registry.generateKeyboardEvent(0, character, pyatspi.KEY_STRING)
+            time.sleep(0.02)
         press(wait_for("Connect SimpleFIN", lambda: find(app(), "Connect SimpleFIN", pyatspi.ROLE_PUSH_BUTTON)))
         wait_for("bridge host confirmation", lambda: find(app(), "Connect to bridge.simplefin.org?"))
         press(wait_for("Connect", lambda: find(app(), "Connect", pyatspi.ROLE_PUSH_BUTTON)))
