@@ -16,7 +16,7 @@ pub fn token() -> String {
 
 pub async fn books() -> TestServer {
     spawn_scratch(
-        "",
+        "account assets:bank:checking ; ynab-account:Cedar Checking\n",
         |cfg| cfg.import.simplefin.enabled = true,
         Some(Arc::new(Bridge)),
     )
