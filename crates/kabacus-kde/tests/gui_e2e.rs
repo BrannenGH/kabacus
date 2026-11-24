@@ -810,8 +810,15 @@ async fn importing_a_statement_shows_review_and_categorize_on_desktop_and_phone(
         let _app = launch_sized(&server.socket_path, &config_dir(&name), size);
         drive(&["statement-import", "Checking", statement.to_str().unwrap()]).await;
         assert_eq!(
-            client.version().await.unwrap().head.parse::<u64>().unwrap(),
-            head.parse::<u64>().unwrap() + 1
+            client
+                .version()
+                .await
+                .unwrap()
+                .head
+                .unwrap()
+                .parse::<u64>()
+                .unwrap(),
+            head.unwrap().parse::<u64>().unwrap() + 1
         );
     }
 }

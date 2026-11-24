@@ -24,6 +24,7 @@ test("all static React messages reuse the translated catalog vocabulary", () => 
     "overview.jsx",
     "phone-picker.jsx",
     "phone-history.js",
+    "statement-import.jsx",
   ]) {
     const source = readFileSync(new URL(file, import.meta.url), "utf8");
     for (const match of source.matchAll(/\bt\((['"])(.*?)\1/g)) {
