@@ -53,7 +53,7 @@ export class BrowserApi extends Api {
   }
   async persist(bytes){
     if(this.record.handle){const writable=await this.record.handle.createWritable({mode:"exclusive"});try{await writable.write(bytes);await writable.close();}catch(error){await writable.abort().catch(()=>{});throw error;}}
-    this.record={...this.record,bytes,stamp:Date.now()};this.stamp=this.record.stamp;await stored("books","put",undefined,this.record);
+    this.record={...this.record,bytes:this.record.handle?undefined:bytes,stamp:Date.now()};this.stamp=this.record.stamp;await stored("books","put",undefined,this.record);
   }
   async reload(){
     const latest=await stored("books","get",this.record.id);
@@ -80,7 +80,7 @@ export class BrowserApi extends Api {
   async text(path,options){return decode(await this.raw(path,options)).text;}
   async download(path,filename){const response=await this.raw(path);downloadBytes(decode(response).bytes,response.filename||filename);}
   async saveCopy(){
-    await this.reload();const bytes=await this.books.bytes();
+    await this.reload();const bytes=await this.books.copy_bytes();
     if(window.showSaveFilePicker){
       const handle=await window.showSaveFilePicker({suggestedName:this.record.filename.replace(/\.kabacus$/i," copy.kabacus"),types:[{description:"Kabacus",accept:{"application/x-kabacus":[".kabacus"]}}]});
       if(this.record.handle&&await handle.isSameEntry(this.record.handle))throw new Error(t("Choose a new file name; these books already exist."));

@@ -8,6 +8,7 @@
 pub mod schema;
 
 use crate::rows::{AccountRow, CommodityRow, PostingRow, Row, RowChange, TxRow};
+use crate::simplefin::{Access, Owner, RequestBudget};
 use crate::{
     now, AuditPayload, AuditRow, BookStore, ChangeInfo, ChangeRecord, ChangeSet, LedgerDump,
     LedgerId, LedgerInfo, Loaded, Result, Revision, Role, StoreError, UserId, Who,
@@ -716,6 +717,15 @@ fn restore(conn: &mut Connection, dump: &LedgerDump, owner: UserId) -> Result<Le
     Ok(ledger)
 }
 
+fn read_simplefin_access(conn: &Connection, ledger: LedgerId, slot: i64) -> Result<Option<Access>> {
+    let row: Option<(String, i64, String)> = conn.query_row(
+        "SELECT access_url, claimed_at, requests FROM simplefin_access WHERE ledger_id = ?1 AND slot = ?2",
+        params![ledger, slot], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+    ).optional()?;
+    row.map(|(url, claimed_at, requests)| Access::stored(url, claimed_at, &requests))
+        .transpose()
+}
+
 impl BookStore for SqliteStore {
     async fn create_ledger(&self, name: &str, owner: UserId) -> Result<LedgerId> {
         let name = name.to_string();
@@ -925,6 +935,70 @@ impl BookStore for SqliteStore {
                 )?,
             };
             Ok(())
+        })
+        .await
+    }
+
+    async fn simplefin_access(&self, ledger: LedgerId, owner: Owner) -> Result<Option<Access>> {
+        let slot = owner.user()?.unwrap_or_default();
+        self.call(move |conn| read_simplefin_access(conn, ledger, slot))
+            .await
+    }
+
+    async fn set_simplefin_access(
+        &self,
+        ledger: LedgerId,
+        owner: Owner,
+        access: &Access,
+    ) -> Result<()> {
+        let user = owner.user()?;
+        let slot = user.unwrap_or_default();
+        let access = access.clone();
+        self.call(move |conn| {
+            conn.execute("INSERT INTO simplefin_access (ledger_id, slot, user_id, access_url, claimed_at, requests)
+                VALUES (?1, ?2, ?3, ?4, ?5, ?6)
+                ON CONFLICT (ledger_id, slot) DO UPDATE SET access_url = excluded.access_url,
+                    claimed_at = excluded.claimed_at, requests = excluded.requests",
+                params![ledger, slot, user, access.url(), access.claimed_at, access.timestamps()?])?;
+            Ok(())
+        }).await
+    }
+
+    async fn delete_simplefin_access(&self, ledger: LedgerId, owner: Owner) -> Result<()> {
+        let slot = owner.user()?.unwrap_or_default();
+        self.call(move |conn| {
+            conn.execute(
+                "DELETE FROM simplefin_access WHERE ledger_id = ?1 AND slot = ?2",
+                params![ledger, slot],
+            )?;
+            Ok(())
+        })
+        .await
+    }
+
+    async fn reserve_simplefin_request(
+        &self,
+        ledger: LedgerId,
+        owner: Owner,
+        expected: &Access,
+        now: i64,
+    ) -> Result<RequestBudget> {
+        let slot = owner.user()?.unwrap_or_default();
+        let expected = expected.clone();
+        self.call(move |conn| {
+            let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
+            let Some(mut access) = read_simplefin_access(&tx, ledger, slot)? else {
+                return Ok(RequestBudget::Changed);
+            };
+            let budget = access.reserve(&expected, now);
+            if matches!(budget, RequestBudget::Allowed { .. }) {
+                tx.execute(
+                    "UPDATE simplefin_access SET requests = ?3 WHERE ledger_id = ?1 AND slot = ?2",
+                    params![ledger, slot, access.timestamps()?],
+                )?;
+                tx.commit()?;
+            }
+            Ok(budget)
         })
         .await
     }
