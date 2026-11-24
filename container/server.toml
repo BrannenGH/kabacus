@@ -52,6 +52,10 @@ socket_path = "/run/kabacus/server.sock"
 # [import]
 # max_bytes = 5242880
 # max_rows  = 5000
+#
+# [import.simplefin]
+# enabled = true
+# allowed_hosts = ["bridge.simplefin.org", "beta-bridge.simplefin.org"]
 
 # Account kinds: every account's kind (money, fund, card reserve, card, ...)
 # comes from its path, by the first matching rule here; `*` is one segment

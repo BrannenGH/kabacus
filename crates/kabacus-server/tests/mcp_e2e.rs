@@ -55,7 +55,11 @@ async fn spawn_rewrite_server() -> TestServer {
 /// the app can.
 #[tokio::test]
 async fn there_is_a_tool_for_every_api_endpoint() {
-    let server = spawn_rewrite_server().await;
+    let server = spawn_server(|config| {
+        support::rewrites(config);
+        config.import.simplefin.enabled = true;
+    })
+    .await;
     let client = connect(&server).await;
     let names = tool_names(&client).await;
 

@@ -62,7 +62,8 @@ pub fn routes(state: Arc<AppState>) -> Router<Arc<AppState>> {
         .enforce_origin_validation()
         // A batch may be 10 MB; leave room for the envelope.
         .with_max_request_body_bytes(
-            (crate::batch::MAX_BYTES + 1024 * 1024).max(state.config.import.max_request_bytes()),
+            (crate::batch::MAX_BYTES + 1024 * 1024)
+                .max(state.config.import.limits.max_request_bytes()),
         );
     let service = StreamableHttpService::new(
         move || Ok(tools::for_server(tool_state.clone())),

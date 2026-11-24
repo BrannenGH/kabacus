@@ -24,7 +24,7 @@ pub struct Config {
     pub ledger: Option<String>,
     /// The largest `.kabacus` file `POST /ledgers/import` takes, in bytes.
     pub import_max_bytes: usize,
-    pub import: kabacus_service::bank_import::Limits,
+    pub import: ImportConfig,
     /// The store in use. Set by [`Config::resolve_store`], not in the
     /// config file.
     #[serde(skip)]
@@ -53,6 +53,14 @@ pub struct Config {
     /// The file this config was loaded from, re-read on SIGHUP.
     #[serde(skip)]
     pub config_file: Option<PathBuf>,
+}
+
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(default)]
+pub struct ImportConfig {
+    #[serde(flatten)]
+    pub limits: kabacus_service::bank_import::Limits,
+    pub simplefin: kabacus_service::simplefin::Config,
 }
 
 /// Where the books are kept.

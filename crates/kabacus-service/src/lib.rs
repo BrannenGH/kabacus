@@ -23,6 +23,7 @@ pub mod reports;
 pub mod search;
 pub mod service;
 pub mod settle;
+pub mod simplefin;
 pub mod split;
 pub mod state;
 
