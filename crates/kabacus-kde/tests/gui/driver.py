@@ -731,17 +731,18 @@ def main():
     elif command == "statement-import":
         account, path = args
         goto("Transactions")
-        click(wait_for(account, lambda: find(app(), account, pyatspi.ROLE_LIST_ITEM)))
-        if find_any("More", {pyatspi.ROLE_PAGE_TAB}):
-            press(wait_for("register actions", lambda: find(app(), "More", pyatspi.ROLE_PUSH_BUTTON)))
+        open_list_item(f"the {account} account", lambda: find(app(), account, pyatspi.ROLE_LIST_ITEM),
+                       lambda: find(app(), account, pyatspi.ROLE_PAGE_TAB))
+        if not find(app(), "Import statement…"):
+            click(wait_for("register actions", lambda: find(app(), "More Actions") or find(app(), "More", pyatspi.ROLE_PUSH_BUTTON)))
         click(wait_for("Import statement…", lambda: find(app(), "Import statement…")))
         press(wait_for("Statement file", lambda: find(app(), "Statement file", pyatspi.ROLE_PUSH_BUTTON)))
-        chooser = wait_for("file chooser", lambda: pyatspi.findDescendant(pyatspi.Registry.getDesktop(0), lambda n: n is not None and n.name.startswith("Import statement…") and n.getRole() in (pyatspi.ROLE_DIALOG, pyatspi.ROLE_FILE_CHOOSER) and n.getState().contains(pyatspi.STATE_SHOWING)))
-        filename = wait_for("file name", lambda: find(chooser, "File name:", pyatspi.ROLE_TEXT) or find(chooser, "File name", pyatspi.ROLE_TEXT) or find(chooser, "Name", pyatspi.ROLE_TEXT))
-        click(filename)
-        set_text(filename, path)
-        key(0xFF09)
-        click(wait_for("Open", lambda: find(chooser, "Open", pyatspi.ROLE_PUSH_BUTTON)))
+        wait_for("file chooser", lambda: pyatspi.findDescendant(pyatspi.Registry.getDesktop(0), lambda n: n is not None and n.name.startswith("Import statement…") and n.getRole() in (pyatspi.ROLE_DIALOG, pyatspi.ROLE_FILE_CHOOSER, pyatspi.ROLE_FRAME) and n.getState().contains(pyatspi.STATE_SHOWING)))
+        # Plasma's picker opens with the filename entry focused.
+        for character in path:
+            pyatspi.Registry.generateKeyboardEvent(0, character, pyatspi.KEY_STRING)
+            time.sleep(0.02)
+        key(0xFF0D)  # Return
         wait_for("reviewed transaction", lambda: find(app(), "Harbor Street Cafe"))
         press(wait_for("Import", lambda: find(app(), "Import", pyatspi.ROLE_PUSH_BUTTON)))
         press(wait_for("Categorize", lambda: find(app(), "Categorize", pyatspi.ROLE_PUSH_BUTTON)))
