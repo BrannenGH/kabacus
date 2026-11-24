@@ -712,6 +712,17 @@ def main():
         wait_for(f"the {transfer!r} fund transfer", lambda: row(transfer))
         if not row(real):
             fail(f"{real!r} went missing with fund transfers on")
+    elif command == "categorize":
+        goto("Transactions")
+        open_list_item("All transactions", lambda: find(app(), "All transactions", pyatspi.ROLE_LIST_ITEM),
+                       lambda: row("Coffee Roasters"))
+        goto("Transactions")
+        wait_for("the category warning", lambda: label_starting("2 transactions need a category"))
+        press(wait_for("Fix", lambda: find(app(), "Fix", pyatspi.ROLE_PUSH_BUTTON)))
+        wait_for("the uncategorized purchase", lambda: row("Harbor Street Cafe", "2026-09-12"))
+        wait_for("the uncategorized refund", lambda: row("Harbor Street Cafe Refund", "2026-09-13"))
+        if row("Coffee Roasters"):
+            fail("a categorized purchase is shown in the category register")
     elif command == "cleared-mark":
         # A cleared transaction says so to a screen reader; the filled dot
         # alone only shows it to the eye.

@@ -29,6 +29,7 @@ const today = () => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 };
 const name = (account) => account.display_name || account.account;
+const uncategorizedAccount = "expenses:uncategorized";
 function Empty({ children }) {
   return <p className="empty">{children}</p>;
 }
@@ -51,6 +52,10 @@ export function App({ auth, book, onFileAction }) {
   const [phoneSearch, setPhoneSearch] = useState(false);
   const [registerQuery, setRegisterQuery] = useState("");
   const [registerOpen, setRegisterOpen] = useState(!!book?.state?.account);
+  const categorizing = openedAccount === uncategorizedAccount;
+  const registerTitle = categorizing ? t("Categorize") : openedAccount
+    ? name(data?.accounts.find(a => a.account === openedAccount) || { account: openedAccount })
+    : t("All transactions");
   useEffect(() => {
     if (!phone) return;
     const state = { kabacus: true, page, account: openedAccount, registerOpen };
@@ -104,6 +109,11 @@ export function App({ auth, book, onFileAction }) {
   const go = (destination) => {
     if (keepsUnsavedChange()) return;
     setForm(null); setOperationForm(null); navigate(destination, phone ? "" : openedAccount);
+  };
+  const fixWarning = (warning) => {
+    if (warning.code === "uncategorized") {
+      if (!keepsUnsavedChange()) openRegister(uncategorizedAccount);
+    } else go(warning.code?.includes("reserve") ? "Cards" : warning.code?.includes("fund") ? "Funds" : "Register");
   };
   const beginAdd=()=>{
     if(keepsUnsavedChange())return;
@@ -194,7 +204,7 @@ export function App({ auth, book, onFileAction }) {
     <div className="shell">
       {phone && <header className="phone-appbar">
         {registerOpen || ["Loans", "People", "Reports", "Activity", "Settings"].includes(page)
-          ? <><button className="quiet" aria-label={t("Back")} onClick={() => history.back()}><Icon name="Back" /></button><strong>{registerOpen ? name(data?.accounts.find(a => a.account === openedAccount) || { account: openedAccount }) : t(pageLabels[page])}</strong></>
+          ? <><button className="quiet" aria-label={t("Back")} onClick={() => history.back()}><Icon name="Back" /></button><strong>{registerOpen ? registerTitle : t(pageLabels[page])}</strong></>
           : <button className="quiet phone-books-name" aria-haspopup="dialog" onClick={() => setBookMenu(true)}><span>{book?.name || "Kabacus"}</span><Icon name="Chevron" /></button>}
         <button className="quiet" aria-label={t("Search")} onClick={() => { if (page !== "Register") navigate("Register"); setPhoneSearch(!phoneSearch); }}><Icon name="Search" /></button>
         {/* A native popover closes on Esc, a tap outside or a choice. */}
@@ -289,33 +299,25 @@ export function App({ auth, book, onFileAction }) {
             !error && <Empty>{t("Loading…")}</Empty>
           ) : (
             <>
-              {(!phone || page !== "Overview") && data.cash.warnings.map((warning, i) => (
-                <div className="banner warning" key={i}>
-                  {warning.message}
-                  <button
-                    className="quiet"
-                    onClick={() =>
-                      go(
-                        warning.code?.includes("reserve")
-                          ? "Cards"
-                          : warning.code?.includes("fund")
-                            ? "Funds"
-                            : "Register",
-                      )
-                    }
-                  >
-                    {t("Fix")}
-                  </button>
-                </div>
-              ))}
-              {page === "Overview" && <Overview data={data} api={api} onFix={warning => warning.code === "uncategorized" ? openRegister("expenses:uncategorized") : go(warning.code?.includes("reserve") ? "Cards" : warning.code?.includes("fund") ? "Funds" : "Register")} onAccount={openRegister} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} bankStatus={bankStatus} onBankSync={openBankSync} />}
+              {page !== "Overview" && data.cash.warnings
+                .filter(warning => warning.code !== "uncategorized" || page !== "Register" || !categorizing)
+                .map((warning, i) => (
+                  <div className="banner warning" key={i}>
+                    {warning.message}
+                    <button className="quiet" onClick={() => fixWarning(warning)}>
+                      {t("Fix")}
+                    </button>
+                  </div>
+                ))}
+              {page === "Overview" && <Overview data={data} api={api} onFix={fixWarning} onAccount={openRegister} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} bankStatus={bankStatus} onBankSync={openBankSync} />}
               {page === "Loans" && (
                 <Loans data={data} onOpen={openRegister} />
               )}
               {page === "People" && <People api={api} />}
               {page === "Reports" && <Reports api={api} data={data} />}
               {page === "Register" && (
-                <div className="transactions-workspace">{(!phone || !registerOpen) && <AccountList data={registerQuery ? {...data, accounts: data.accounts.filter(a => `${a.display_name} ${a.account}`.toLowerCase().includes(registerQuery.toLowerCase()))} : data} selected={openedAccount} onSelect={phone ? openRegister : setOpenedAccount} />}{(!phone || registerOpen) && <Register
+                <div className="transactions-workspace">{(!phone || !registerOpen) && <AccountList data={registerQuery ? {...data, accounts: data.accounts.filter(a => `${a.display_name} ${a.account}`.toLowerCase().includes(registerQuery.toLowerCase()))} : data} selected={phone ? null : openedAccount} onSelect={phone ? openRegister : setOpenedAccount} />}{(!phone || registerOpen) && <Register
+                  key={categorizing ? "categorize" : "register"}
                   phone={phone} query={registerQuery}
                   data={data}
                   api={api}
@@ -474,7 +476,7 @@ export function App({ auth, book, onFileAction }) {
           onClose={() => setOperationForm(null)}
           onSaved={(result) => { setOperationForm(null); saved(result); }}
           onUpdated={saved}
-          onCategorize={() => { setOperationForm(null); openRegister("expenses:uncategorized"); }}
+          onCategorize={() => { setOperationForm(null); openRegister(uncategorizedAccount); }}
           onSwitch={(values) => {
             setOperationForm(null);
             setForm({ kind: "transaction", keepSpent: true, from: values.card, to: values.category, description: values.description, memo: values.memo, amount: values.amount });
@@ -597,7 +599,7 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, accou
     <section className="panel">
       <div className="panel-heading">
         <div>
-          <h2>{t("Transactions")}</h2>
+          <h2>{t(account === uncategorizedAccount ? "Categorize" : "Transactions")}</h2>
           <p>{t("Search payee, memo, account")}</p>
         </div>
       </div>
@@ -678,6 +680,8 @@ function Register({ phone, query: phoneQuery = "", data, api, onOperation, accou
         />
       ) : !lines ? (
         <Empty>{t("Loading…")}</Empty>
+      ) : account === uncategorizedAccount && !lines.length ? (
+        <Empty>{t("No transactions")}</Empty>
       ) : (
         phone ? <RegisterDays rows={lines.filter(line => `${line.payee} ${line.memo} ${line.other_account}`.toLowerCase().includes(searchQuery))} row={(line, i) => <button className="register-row quiet" key={`${line.id}-${i}`} onClick={() => {onSelect?.(String(line.id)); const tx = byId.get(line.id); if (tx && onOperation) onOperation({kind: "edit", tx});}}>
             <ClearedMark status={byId.get(line.id)?.status} />

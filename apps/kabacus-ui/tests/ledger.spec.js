@@ -245,6 +245,55 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
   await expect(page.locator(".overview-layout")).toBeVisible();
   return writes;
 }
+for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
+  test(`Fix opens only transactions needing a category at ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    const category = "expenses:uncategorized";
+    const needsCategory = [
+      { ...transaction, id: 13, payee: "Harbor Street Cafe", memo: "", postings: [
+        { account: category, amount: amount("18.40") }, { account: accounts[0].account, amount: amount("-18.40") },
+      ] },
+      { ...transaction, id: 14, payee: "Harbor Street Cafe Refund", memo: "", postings: [
+        { account: category, amount: amount("-18.40") }, { account: accounts[0].account, amount: amount("18.40") },
+      ] },
+    ];
+    await setup(page, false, transaction, [...accounts, { account: category, display_name: "Uncategorized", kind: "expense" }]);
+    await page.route("**/cash-on-hand?*", route => route.fulfill({ json: {
+      ...cash, warnings: [{ code: "uncategorized", message: "2 transactions need a category", accounts: [category] }],
+    } }));
+    await page.route("**/transactions", route => route.fulfill({ json: [transaction, ...needsCategory] }));
+    await page.route("**/register/expenses%3Auncategorized", route => route.fulfill({ json: needsCategory.map(tx => ({
+      id: tx.id, date: tx.date, payee: tx.payee, memo: tx.memo, other_account: accounts[0].account,
+      amount: tx.postings[0].amount, balance: amount(tx.id === 13 ? "18.40" : "0.00"),
+    })) }));
+    await page.reload();
+
+    const main = page.getByRole("main");
+    const overviewFix = main.locator(".overview-warnings").getByRole("button", { name: "Fix" });
+    const register = main.locator(".transactions-workspace > section");
+    const expectFiltered = async () => {
+      await expect(register.getByText("Harbor Street Cafe", { exact: true })).toBeVisible();
+      await expect(register.getByText("Harbor Street Cafe Refund", { exact: true })).toBeVisible();
+      await expect(register.getByText("Maple Market", { exact: true })).toHaveCount(0);
+    };
+    await overviewFix.click();
+    await expectFiltered();
+    if (viewport.width === 390) await page.getByRole("button", { name: "Back", exact: true }).click();
+    await page.getByRole("navigation", { name: "Go" }).getByRole("button", { name: "Transactions", exact: true }).click();
+
+    const all = main.getByRole("button", { name: "All transactions", exact: true });
+    await all.click();
+    await expect(register.getByText("Maple Market", { exact: true })).toBeVisible();
+    if (viewport.width === 390) await page.getByRole("button", { name: "Back", exact: true }).click();
+    await main.getByRole("button", { name: "Fix", exact: true }).click();
+    await expectFiltered();
+    await expect(register.getByRole("heading", { name: "Categorize", exact: true })).toBeVisible();
+    if (viewport.width === 390) await page.getByRole("button", { name: "Back", exact: true }).click();
+    await expect(all).toHaveClass(/\bpanel\b/);
+    await expect(all.locator("svg[aria-hidden=true]")).toBeVisible();
+  });
+}
+
 async function fillTransaction(page) {
   await page.getByRole("button", { name: "Add", exact: true }).click();
   await page.getByRole("button", { name: /^Spent/ }).click();

@@ -25,12 +25,14 @@ Kirigami.ScrollablePage {
     // `null`: nothing chosen yet; "" is the all-transactions entry.
     property var selected: null
     property Fetch fetch: Fetch { ledger: page.ledger; view: "accounts"; owner: page }
+    property Fetch overview: Fetch { ledger: page.ledger; view: "overview" }
+    readonly property var categoryWarning: overview.value?.warnings.find(w => w.code === "uncategorized")
     readonly property string problem: fetch.problem
     // The groups flattened; each group's first row carries its heading,
     // drawn before it, so screen readers meet the heading first.
     // ListView sections are created after their first item.
     readonly property var rows: {
-        const out = [{ account: "", name: i18n("All transactions"), detail: "", warn: false, balance: null, group: "" }]
+        const out = []
         for (const g of fetch.value || []) {
             g.rows.forEach((row, i) => {
                 row.group = i === 0 ? g.title : ""
@@ -57,6 +59,53 @@ Kirigami.ScrollablePage {
         bottomMargin: page.app.narrow ? Kirigami.Units.gridUnit * 4 : 0
         spacing: page.app.narrow ? 8 : 0
         model: page.rows
+        header: ColumnLayout {
+            width: list.width
+            spacing: Kirigami.Units.largeSpacing
+
+            Kirigami.InlineMessage {
+                Layout.fillWidth: true
+                visible: !!page.categoryWarning
+                type: Kirigami.MessageType.Warning
+                text: page.categoryWarning?.message || ""
+                actions: [Kirigami.Action {
+                    text: i18n("Fix")
+                    onTriggered: {
+                        const account = page.categoryWarning.account
+                        page.selected = account
+                        page.app.showRegister(account, account)
+                    }
+                }]
+            }
+            Kirigami.AbstractCard {
+                id: allTransactions
+                Layout.bottomMargin: Kirigami.Units.largeSpacing
+                Layout.minimumHeight: page.app.narrow ? 56 : implicitHeight
+                text: i18n("All transactions")
+                Accessible.name: text
+                highlighted: activeFocus || page.selected === ""
+                showClickFeedback: true
+                onClicked: {
+                    page.selected = ""
+                    page.app.showRegister("", text)
+                }
+                Keys.onReturnPressed: clicked()
+                Keys.onEnterPressed: clicked()
+                contentItem: RowLayout {
+                    Controls.Label {
+                        Layout.fillWidth: true
+                        text: allTransactions.text
+                        font.bold: true
+                        wrapMode: Text.Wrap
+                    }
+                    Kirigami.Icon {
+                        source: page.LayoutMirroring.enabled ? "go-previous" : "go-next"
+                        Layout.preferredWidth: Kirigami.Units.iconSizes.small
+                        Layout.preferredHeight: Layout.preferredWidth
+                    }
+                }
+            }
+        }
         delegate: ColumnLayout {
             id: groupDelegate
             required property var modelData

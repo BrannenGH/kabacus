@@ -39,15 +39,20 @@ msgctxt "%1 is the closest account to what was typed"
 msgid "Use %1"
 msgstr "Úsáid %1"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "All transactions"
-msgstr "Gach idirbheart"
-
 #: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add"
 msgstr "Cuir leis"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Fix"
+msgstr "Deisigh"
+
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/src/model.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "All transactions"
+msgstr "Gach idirbheart"
 
 #: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/LoansPage.qml crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -1002,6 +1007,11 @@ msgstr "Mínithe dóchúla"
 msgid "Edit"
 msgstr "Cuir in eagar"
 
+#: crates/kabacus-kde/qml/RegisterPage.qml crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Categorize"
+msgstr "Catagóiraigh"
+
 #: crates/kabacus-kde/qml/RegisterPage.qml
 #, kde-format
 msgctxt "a card transaction without its reserve lines"
@@ -1312,11 +1322,6 @@ msgstr "Ráitis bhainc (%1)"
 #, kde-format
 msgid "All files (%1)"
 msgstr "Gach comhad (%1)"
-
-#: crates/kabacus-kde/qml/StatementImportPage.qml crates/kabacus-kde/src/views.rs apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Categorize"
-msgstr "Catagóiraigh"
 
 #: crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2489,11 +2494,6 @@ msgstr "MCP"
 #, kde-format
 msgid "External edit"
 msgstr "Eagarthóireacht sheachtrach"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Fix"
-msgstr "Deisigh"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

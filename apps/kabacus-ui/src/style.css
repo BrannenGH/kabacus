@@ -989,10 +989,22 @@ nav button.active { border: 1px solid #ad915b; background: #e1e6d5; box-shadow: 
 .amount { font-variant-numeric: lining-nums tabular-nums; }
 .amount.negative { color: var(--negative); }
 .transactions-workspace { display: grid; grid-template-columns: minmax(200px,260px) minmax(0,1fr); align-items: start; gap: 16px; }
+.account-sidebar .all-transactions {
+  display: flex;
+  width: 100%;
+  min-height: 48px;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 8px 16px;
+  color: inherit;
+  font-weight: 600;
+  text-align: start;
+}
 .account-list { padding: 12px; }
 .account-list h2 { font: 600 12px Inter,sans-serif; letter-spacing: normal; color: var(--muted); margin: 14px 8px 4px; }
 .account-list button { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 10px; font: 13px Inter,sans-serif; text-align: start; background: transparent; color: inherit; padding: 8px; }
-.account-list button.selected { background: #e1e6d5; font-weight: 600; }
+.account-list button.selected, .account-sidebar .all-transactions.selected { background: #e1e6d5; font-weight: 600; }
 .account-list .account-child { padding-inline-start: 23px; }
 .card-actions { justify-content: flex-start; flex-wrap: wrap; }
 .row-actions { display: flex; gap: 4px; margin-top: 6px; }
@@ -1017,7 +1029,7 @@ th { background: #efead8; color: var(--muted); font-size: 12px; }
 .agent-changed { outline: 2px solid #ad915b; outline-offset: -2px; }
 @media (prefers-color-scheme: dark) {
  :root { color: #edf3ee; background: #151c19; --surface: #202b25; --border: #4b5f53; --muted: #b3c1b7; --accent: #8ad5ab; --negative: #ff9185; --positive: #8ad5ab; }
- aside { background: #1a231e; } nav button.active,.account-list button.selected,.choice-grid button:first-child { background: #394c39; }
+ aside { background: #1a231e; } nav button.active,.account-list button.selected,.account-sidebar .all-transactions.selected,.choice-grid button:first-child { background: #394c39; }
  button { color: #15271f; } .quiet,.secondary,.book-menu button,.account-list button,.choice-grid button { color: inherit; }
  .book-menu button:hover { background: #394c39; } th,.preview { background: #263e35; } .metric.primary { color: inherit; }
 }

@@ -17,7 +17,7 @@ Kirigami.ScrollablePage {
     objectName: "register"
     // Empty `account`: every real account's transactions together.
     readonly property bool all: account === ""
-    title: all ? i18n("All transactions") : accountName !== "" ? accountName : account
+    title: all ? i18n("All transactions") : account === "expenses:uncategorized" ? i18n("Categorize") : accountName !== "" ? accountName : account
 
     property string account: ""
     property string accountName: ""
