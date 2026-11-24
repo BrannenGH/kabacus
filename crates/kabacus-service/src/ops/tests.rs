@@ -905,3 +905,45 @@ async fn wallet_reconciliation_compares_and_asserts_the_selected_commodity() {
         assert_eq!(result["commodity"], commodity);
     }
 }
+
+#[tokio::test]
+async fn statement_import_checks_currency_and_keeps_existing_match_details() {
+    use crate::bank_import::{import_statement, ImportBody};
+    let state = state("\naccount assets:bank:checking\n\n2026-02-01 Harbor Street Cafe | Lunch\n    assets:bank:checking  -18.40 USD\n    expenses:household\n").await;
+    let head = state
+        .store
+        .revision(state.ledger)
+        .await
+        .unwrap()
+        .to_string();
+    let mut body: ImportBody = serde_json::from_value(serde_json::json!({
+        "format": "ofx", "content": "<OFX><BANKMSGSRSV1><STMTTRNRS><STMTRS><CURDEF>EUR<BANKTRANLIST><STMTTRN><DTPOSTED>20260203<TRNAMT>-18.40<FITID>HF0271<NAME>HARBOR STREET CAFE</STMTTRN></BANKTRANLIST></STMTRS></STMTTRNRS></BANKMSGSRSV1></OFX>",
+        "dry_run": false,
+    })).unwrap();
+    let target = "assets:bank:checking";
+    let failure = import_statement(&state, &local(), target, &head, body.clone())
+        .await
+        .unwrap_err();
+    assert_eq!(failure.code(), "currency_mismatch");
+    assert_eq!(
+        state
+            .store
+            .revision(state.ledger)
+            .await
+            .unwrap()
+            .to_string(),
+        head
+    );
+    body.content = body.content.map(|content| content.replace("EUR", "USD"));
+    let output = import_statement(&state, &local(), target, &head, body)
+        .await
+        .unwrap();
+    assert_eq!(output["counts"]["matched"], 1);
+    let stored = state.books_snapshot().await.unwrap();
+    let tx = stored.book.transactions.last().unwrap();
+    assert_eq!(tx.description, "Harbor Street Cafe | Lunch");
+    assert_eq!(tx.date, date("2026-02-01"));
+    assert_eq!(tx.status, Status::Cleared);
+    assert_eq!(tx.postings[1].account.as_str(), "expenses:household");
+    assert_eq!(tx.tag("import-id"), Some("ofx:HF0271"));
+}

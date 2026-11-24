@@ -720,6 +720,22 @@ impl KabacusClient {
         Ok(serde_json::from_slice(&resp)?)
     }
 
+    /// Preview or commit a bank or card statement against the given head.
+    pub async fn import_statement(
+        &self,
+        account: &str,
+        head: &str,
+        body: &kabacus_service::bank_import::ImportBody,
+    ) -> Result<serde_json::Value, ClientError> {
+        self.write_json(
+            Method::POST,
+            &format!("/accounts/{}/import", urlencode(account)),
+            head,
+            body,
+        )
+        .await
+    }
+
     /// Several writes checked together and committed as one.
     pub async fn batch(
         &self,

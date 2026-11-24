@@ -30,6 +30,7 @@ pub static SKILLS: &[Skill] = &[Skill {
     files: &[
         skill_file!("kabacus-bookkeeping", "SKILL.md"),
         skill_file!("kabacus-bookkeeping", "references/workflow.md"),
+        skill_file!("kabacus-bookkeeping", "references/importing.md"),
         skill_file!(
             "kabacus-bookkeeping",
             "references/recording-transactions.md"

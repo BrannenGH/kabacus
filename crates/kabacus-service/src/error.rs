@@ -37,6 +37,10 @@ pub enum Error {
     },
     /// Over the batch limits.
     BatchTooLarge(String),
+    Import {
+        code: &'static str,
+        message: String,
+    },
     /// `assert` refused because the balances differ.
     ReconcileMismatch(serde_json::Value),
     /// A batch refused in atomic mode, naming the operation.
@@ -71,6 +75,7 @@ impl Error {
             Error::AmountFormat { .. } => "amount_format",
             Error::AccountInUse { .. } => "account_in_use",
             Error::BatchTooLarge(_) => "batch_too_large",
+            Error::Import { code, .. } => code,
             Error::ReconcileMismatch(_) => "reconcile_mismatch",
             Error::BatchFailed { error, .. } => error.code(),
         }
@@ -127,6 +132,7 @@ impl Error {
                 Some(serde_json::json!({ "account": account, "counts": counts })),
             ),
             Error::BatchTooLarge(message) => (message.clone(), None, None),
+            Error::Import { message, .. } => (message.clone(), None, None),
             Error::ReconcileMismatch(result) => (
                 "the ledger balance doesn't match the statement; nothing was written".to_string(),
                 None,

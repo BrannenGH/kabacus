@@ -24,7 +24,7 @@ const DATE_FORMATS: &[&str] = &[
     "%d %b %Y",
 ];
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, schemars::JsonSchema)]
 pub struct CsvMapping {
     pub date: usize,
     pub description: Vec<usize>,

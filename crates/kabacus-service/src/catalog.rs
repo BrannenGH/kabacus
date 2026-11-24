@@ -15,6 +15,11 @@ pub struct Endpoint {
 /// [`router`] is added here too, with the tools that mirror it.
 pub const ENDPOINTS: &[Endpoint] = &[
     Endpoint {
+        method: "POST",
+        path: "/accounts/{account}/import",
+        mcp_tools: &["import_statement"],
+    },
+    Endpoint {
         method: "GET",
         path: "/commands",
         mcp_tools: &["get_commands"],
@@ -324,6 +329,7 @@ pub fn commands() -> serde_json::Value {
                 "record_shared_expense" => "split.record",
                 "settle_up" => "settle.record",
                 "reconcile" => "reconcile.finish",
+                "import_statement" => "statement.import",
                 other => other,
             };
             actions.push(serde_json::json!({"id":id,"label":tool.replace('_'," "),"menu":"Books","shortcut":"","method":endpoint.method,"path":endpoint.path,"tool":tool,"parameters":parameters(tool)}));
@@ -368,6 +374,7 @@ fn parameters(tool: &str) -> serde_json::Value {
         "settle_up" => schema!(crate::settle::SettleBody),
         "reconcile" => schema!(crate::reports::ReconcileParams),
         "batch" => schema!(crate::batch::BatchBody),
+        "import_statement" => schema!(crate::bank_import::ImportParams),
         "search_transactions" => schema!(crate::search::SearchQuery),
         "declare_account" => schema!(DeclareAccountParams),
         "rename_account" => schema!(RenameAccountParams),

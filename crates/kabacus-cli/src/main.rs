@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 use anyhow::{bail, Context, Result};
+use base64::{engine::general_purpose::STANDARD, Engine};
 use clap::{CommandFactory, Parser, Subcommand};
 use kabacus_client::{books::computer_user, Books, BooksRequest, LocalBooks};
 use kabacus_service::local::LocalCaller;
@@ -71,6 +72,20 @@ enum Command {
     Commands {
         #[arg(long)]
         filter: Option<String>,
+    },
+    /// Preview or save a bank or card statement import.
+    ImportStatement {
+        books: PathBuf,
+        statement: PathBuf,
+        #[arg(long)]
+        account: String,
+        #[arg(long)]
+        head: String,
+        /// JSON file with CSV mapping, statement selection, or review decisions.
+        #[arg(long)]
+        options: Option<PathBuf>,
+        #[arg(long)]
+        save: bool,
     },
     Mcp {
         #[arg(long, required_unless_present = "attach", conflicts_with = "attach")]
@@ -305,6 +320,55 @@ async fn run(args: Args) -> Result<()> {
                 }
             }
             print(&catalog, args.json);
+        }
+        Command::ImportStatement {
+            books,
+            statement,
+            account,
+            head,
+            options,
+            save,
+        } => {
+            use std::io::Read;
+            let format = statement
+                .extension()
+                .and_then(std::ffi::OsStr::to_str)
+                .context("Choose a file with an OFX, QFX, or CSV extension")?
+                .to_ascii_lowercase();
+            let mut body = match options {
+                Some(path) => serde_json::from_reader(std::fs::File::open(path)?)?,
+                None => json!({}),
+            };
+            let fields = body
+                .as_object_mut()
+                .context("Import options must be a JSON object")?;
+            let max_bytes = kabacus_service::bank_import::Limits::default().max_bytes;
+            let mut bytes = Vec::new();
+            std::fs::File::open(&statement)?
+                .take(max_bytes as u64 + 1)
+                .read_to_end(&mut bytes)?;
+            if bytes.len() > max_bytes {
+                bail!("The statement exceeds the import limit");
+            }
+            fields.insert("format".into(), json!(format));
+            fields.insert("content_base64".into(), json!(STANDARD.encode(bytes)));
+            fields.insert(
+                "filename".into(),
+                json!(statement.file_name().and_then(std::ffi::OsStr::to_str)),
+            );
+            fields.insert("dry_run".into(), json!(!save));
+            let body = serde_json::from_value(body)?;
+            let local = LocalBooks::open(books, local).await?;
+            let result = kabacus_service::bank_import::import_statement(
+                &local.service,
+                &local.caller,
+                &account,
+                &head,
+                body,
+            )
+            .await
+            .map_err(|error| anyhow::anyhow!(error.body().message))?;
+            print(&result, args.json);
         }
         Command::Mcp {
             books,

@@ -24,6 +24,7 @@ pub struct Config {
     pub ledger: Option<String>,
     /// The largest `.kabacus` file `POST /ledgers/import` takes, in bytes.
     pub import_max_bytes: usize,
+    pub import: kabacus_service::bank_import::Limits,
     /// The store in use. Set by [`Config::resolve_store`], not in the
     /// config file.
     #[serde(skip)]
@@ -75,6 +76,7 @@ impl Default for Config {
             database_connections: 16,
             ledger: None,
             import_max_bytes: 256 * 1024 * 1024,
+            import: Default::default(),
             store: Database::default(),
             socket_path: default_socket_path(),
             allow_rewrite: true,

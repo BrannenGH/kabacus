@@ -927,6 +927,27 @@ impl KabacusMcp {
         structured(&result)
     }
 
+    #[tool(
+        description = "Import an OFX, QFX, or mapped CSV statement into one bank or card account. Supply a current head and preview (dry_run defaults to true). Review counts, per-row outcomes and match candidates, warnings, and the reported balance difference. For a CSV without a mapping, preview detected columns and example rows. Save with dry_run false and the same head after the person explicitly confirms. All adds and matches commit in one revision.",
+        annotations(read_only_hint = false, destructive_hint = false)
+    )]
+    async fn import_statement(
+        &self,
+        Extension(parts): Extension<Parts>,
+        Parameters(p): Parameters<kabacus_service::bank_import::ImportParams>,
+    ) -> Result<CallToolResult, McpError> {
+        let result = kabacus_service::bank_import::import_statement(
+            &self.state,
+            principal(&parts)?,
+            &p.account,
+            &p.head,
+            p.body,
+        )
+        .await
+        .map_err(to_mcp_error)?;
+        structured(&result)
+    }
+
     // --- rewrite tools (gated; listed only when usable) ---------------------
 
     #[tool(
