@@ -57,9 +57,9 @@ Kirigami.ScrollablePage {
         else next[key] = value
         mapping = next
     }
-    function reviewChoice(row, text) {
+    function reviewChoice(row: var, value: string) {
         const next = Object.assign({}, decisions)
-        const components = text.split(":")
+        const components = value.split(":")
         const decision = {import_id: row.import_id, action: components[0]}
         if (components.length === 2) decision.transaction = Number(components[1])
         next[row.import_id] = decision
