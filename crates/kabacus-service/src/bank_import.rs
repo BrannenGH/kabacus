@@ -147,9 +147,7 @@ pub async fn import_statement(
     if head.is_empty() {
         return Err(invalid("head", "The current head is required".into()));
     }
-    let mut wc = WorkingCopy::load(state, head)
-        .await
-        .map_err(ops::OpError::from)?;
+    let mut wc = WorkingCopy::load(state, head).await?;
     let limits = state.settings.statement_limits;
     let bytes = file_content(&mut body, limits)?;
     let commodity = wc.commodity();
@@ -297,31 +295,29 @@ pub(crate) fn apply_statement(
                     wc.declare(UNCATEGORIZED, "");
                 }
                 kabacus_core::check_description(&tx.description).map_err(ops::OpError::from)?;
-                let change = wc
-                    .add(Transaction {
-                        id: 0,
-                        date: row.date,
-                        status: Status::Cleared,
-                        code: String::new(),
-                        description: tx.description,
-                        comment: String::new(),
-                        tags: core::import_tags(target, &row.import_id).into(),
-                        postings: tx
-                            .postings
-                            .into_iter()
-                            .map(|(account, money)| Posting {
-                                account,
-                                amount: Amount::new(&commodity, money),
-                                status: Status::Unmarked,
-                                kind: PostingKind::Real,
-                                comment: String::new(),
-                                tags: vec![],
-                                cost: None,
-                                balance_assertion: None,
-                            })
-                            .collect(),
-                    })
-                    .map_err(ops::OpError::from)?;
+                let change = wc.add(Transaction {
+                    id: 0,
+                    date: row.date,
+                    status: Status::Cleared,
+                    code: String::new(),
+                    description: tx.description,
+                    comment: String::new(),
+                    tags: core::import_tags(target, &row.import_id).into(),
+                    postings: tx
+                        .postings
+                        .into_iter()
+                        .map(|(account, money)| Posting {
+                            account,
+                            amount: Amount::new(&commodity, money),
+                            status: Status::Unmarked,
+                            kind: PostingKind::Real,
+                            comment: String::new(),
+                            tags: vec![],
+                            cost: None,
+                            balance_assertion: None,
+                        })
+                        .collect(),
+                })?;
                 ("new", change.id.filter(|_| !dry_run))
             }
             Outcome::Matched(id) => {
@@ -330,7 +326,7 @@ pub(crate) fn apply_statement(
                 let mut tx = wc.tx(index).clone();
                 tx.tags.extend(core::import_tags(target, &row.import_id));
                 tx.status = Status::Cleared;
-                wc.replace(index, tx).map_err(ops::OpError::from)?;
+                wc.replace(index, tx)?;
                 ("matched", Some(id))
             }
             Outcome::Duplicate => {
