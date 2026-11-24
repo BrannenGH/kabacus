@@ -7,6 +7,7 @@
 //! `SET LOCAL`, and the same tables and behaviour as the SQLite store.
 
 use crate::rows::{AccountRow, CommodityRow, PostingRow, Row, RowChange, TxRow};
+use crate::simplefin::{Access, Owner, RequestBudget};
 use crate::sqlite::next_id_after;
 use crate::{
     now, AuditPayload, AuditRow, BookStore, ChangeInfo, ChangeRecord, ChangeSet, LedgerDump,
@@ -19,7 +20,10 @@ use tokio_postgres::{IsolationLevel, NoTls, Transaction as PgTx};
 
 /// Migrations in order; entry `i` takes the schema from version `i` to
 /// `i + 1`, recorded in `kabacus_schema`.
-const MIGRATIONS: &[&str] = &[include_str!("migrations/0001_initial.sql")];
+const MIGRATIONS: &[&str] = &[
+    include_str!("migrations/0001_initial.sql"),
+    include_str!("migrations/0002_simplefin.sql"),
+];
 
 /// Serializes migrations between replicas starting together.
 const MIGRATION_LOCK: i64 = 0x4B42_4353;
@@ -36,6 +40,7 @@ fn pool_error(e: impl std::fmt::Display) -> StoreError {
 /// Which rows a transaction may see.
 enum Scope {
     Ledger(LedgerId),
+    Access(LedgerId, i64),
     All,
 }
 
@@ -115,7 +120,7 @@ impl PostgresStore {
             .start()
             .await?;
         match scope {
-            Scope::Ledger(ledger) => {
+            Scope::Ledger(ledger) | Scope::Access(ledger, _) => {
                 tx.execute(
                     "SELECT set_config('kabacus.ledger', $1, true)",
                     &[&ledger.to_string()],
@@ -127,6 +132,13 @@ impl PostgresStore {
                     .await?
             }
         };
+        if let Scope::Access(_, slot) = scope {
+            tx.execute(
+                "SELECT set_config('kabacus.simplefin_user', $1, true)",
+                &[&slot.to_string()],
+            )
+            .await?;
+        }
         let out = f(&tx).await?;
         tx.commit().await?;
         Ok(out)
@@ -960,6 +972,74 @@ impl BookStore for PostgresStore {
             },
         )
         .await
+    }
+
+    async fn simplefin_access(&self, ledger: LedgerId, owner: Owner) -> Result<Option<Access>> {
+        let slot = owner.user()?.unwrap_or_default();
+        self.with(Scope::Access(ledger, slot), IsolationLevel::ReadCommitted, move |tx| Box::pin(async move {
+            let row = tx.query_opt("SELECT access_url, claimed_at, requests FROM simplefin_access WHERE ledger_id = $1 AND slot = $2", &[&ledger, &slot]).await?;
+            row.map(|row| Access::stored(row.get(0), row.get(1), row.get(2))).transpose()
+        })).await
+    }
+
+    async fn set_simplefin_access(
+        &self,
+        ledger: LedgerId,
+        owner: Owner,
+        access: &Access,
+    ) -> Result<()> {
+        let user = owner.user()?;
+        let slot = user.unwrap_or_default();
+        let access = access.clone();
+        self.with(Scope::Access(ledger, slot), IsolationLevel::ReadCommitted, move |tx| Box::pin(async move {
+            tx.execute("INSERT INTO simplefin_access (ledger_id, slot, user_id, access_url, claimed_at, requests)
+                VALUES ($1, $2, $3, $4, $5, $6)
+                ON CONFLICT (ledger_id, slot) DO UPDATE SET access_url = excluded.access_url,
+                    claimed_at = excluded.claimed_at, requests = excluded.requests",
+                &[&ledger, &slot, &user, &access.url(), &access.claimed_at, &access.timestamps()?]).await?;
+            Ok(())
+        })).await
+    }
+
+    async fn delete_simplefin_access(&self, ledger: LedgerId, owner: Owner) -> Result<()> {
+        let slot = owner.user()?.unwrap_or_default();
+        self.with(
+            Scope::Access(ledger, slot),
+            IsolationLevel::ReadCommitted,
+            move |tx| {
+                Box::pin(async move {
+                    tx.execute(
+                        "DELETE FROM simplefin_access WHERE ledger_id = $1 AND slot = $2",
+                        &[&ledger, &slot],
+                    )
+                    .await?;
+                    Ok(())
+                })
+            },
+        )
+        .await
+    }
+
+    async fn reserve_simplefin_request(
+        &self,
+        ledger: LedgerId,
+        owner: Owner,
+        expected: &Access,
+        now: i64,
+    ) -> Result<RequestBudget> {
+        let slot = owner.user()?.unwrap_or_default();
+        let expected = expected.clone();
+        self.with(Scope::Access(ledger, slot), IsolationLevel::ReadCommitted, move |tx| Box::pin(async move {
+            let Some(row) = tx.query_opt("SELECT access_url, claimed_at, requests FROM simplefin_access
+                    WHERE ledger_id = $1 AND slot = $2 FOR UPDATE", &[&ledger, &slot]).await? else { return Ok(RequestBudget::Changed); };
+            let mut access = Access::stored(row.get(0), row.get(1), row.get(2))?;
+            let budget = access.reserve(&expected, now);
+            if matches!(budget, RequestBudget::Allowed { .. }) {
+                tx.execute("UPDATE simplefin_access SET requests = $3 WHERE ledger_id = $1 AND slot = $2",
+                    &[&ledger, &slot, &access.timestamps()?]).await?;
+            }
+            Ok(budget)
+        })).await
     }
 
     async fn dump(&self, ledger: LedgerId) -> Result<LedgerDump> {

@@ -16,6 +16,7 @@ use wasm_bindgen::prelude::*;
 #[wasm_bindgen]
 pub struct BrowserBooks {
     service: Arc<Service>,
+    store: SqliteStore,
     caller: LocalCaller,
 }
 fn error(e: impl std::fmt::Display) -> JsValue {
@@ -23,15 +24,15 @@ fn error(e: impl std::fmt::Display) -> JsValue {
 }
 impl BrowserBooks {
     async fn with_store(store: SqliteStore, username: String) -> Result<Self, JsValue> {
-        let store = AnyStore::Sqlite(store);
-        let ledgers = store.ledgers().await.map_err(error)?;
+        let books = AnyStore::Sqlite(store.clone());
+        let ledgers = books.ledgers().await.map_err(error)?;
         let ledger = ledgers
             .first()
             .ok_or_else(|| error("The file holds no ledger"))?
             .id;
         Ok(Self {
             service: Arc::new(Service::new(
-                store,
+                books,
                 ledger,
                 Settings::default(),
                 KindTable {
@@ -39,6 +40,7 @@ impl BrowserBooks {
                     reserve_template: kabacus_core::DEFAULT_RESERVE_TEMPLATE.into(),
                 },
             )),
+            store,
             caller: LocalCaller::for_app(username),
         })
     }
@@ -76,6 +78,9 @@ impl BrowserBooks {
         serde_json::to_string(&response).map_err(error)
     }
     pub async fn bytes(&self) -> Result<Vec<u8>, JsValue> {
+        self.store.to_bytes().await.map_err(error)
+    }
+    pub async fn copy_bytes(&self) -> Result<Vec<u8>, JsValue> {
         let ids = self
             .service
             .store
