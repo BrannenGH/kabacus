@@ -82,6 +82,7 @@ Read only the file for the task at hand.
 |---|---|
 | Heads, dry runs, error codes, paging, batches | [references/workflow.md](references/workflow.md) |
 | Recording a purchase, income or transfer | [references/recording-transactions.md](references/recording-transactions.md) |
+| Importing a bank or card statement | [references/importing.md](references/importing.md) |
 | Fixing, editing, voiding, marking cleared, deleting, updating a balance assertion, or one blocking a write | [references/changing-transactions.md](references/changing-transactions.md) |
 | Money lent, borrowed, split with or owed to a person | [references/counterparties.md](references/counterparties.md) |
 | Funds, credit cards and their reserves, Cash on Hand, account kinds | [references/budget.md](references/budget.md) |

@@ -60,6 +60,12 @@ pub fn router(state: Arc<AppState>) -> Router {
         .route("/counterparties", get(list_counterparties))
         .route("/counterparties/{name}/statement", get(get_statement))
         .route("/accounts", get(list_accounts).post(declare_account))
+        .route(
+            "/accounts/{account}/import",
+            post(import_statement).layer(axum::extract::DefaultBodyLimit::max(
+                state.config.import.max_request_bytes(),
+            )),
+        )
         .route("/accounts/kinds", get(get_account_kinds))
         .route("/accounts/rename", post(rename_account))
         .route(
@@ -265,13 +271,17 @@ impl IntoResponse for ApiError {
                 Error::Conflict { .. } => StatusCode::CONFLICT,
                 Error::Internal(_) => StatusCode::INTERNAL_SERVER_ERROR,
                 Error::BatchTooLarge(_) => StatusCode::PAYLOAD_TOO_LARGE,
+                Error::Import {
+                    code: "import_too_large",
+                    ..
+                } => StatusCode::PAYLOAD_TOO_LARGE,
                 Error::AccountInUse { .. } | Error::ReconcileMismatch(_) => StatusCode::CONFLICT,
                 Error::BatchFailed { error, .. } => match error.code() {
                     "head_conflict" => StatusCode::CONFLICT,
                     "not_found" => StatusCode::NOT_FOUND,
                     _ => StatusCode::UNPROCESSABLE_ENTITY,
                 },
-                Error::Invalid { .. } | Error::AmountFormat { .. } => {
+                Error::Invalid { .. } | Error::AmountFormat { .. } | Error::Import { .. } => {
                     StatusCode::UNPROCESSABLE_ENTITY
                 }
             },
@@ -334,6 +344,20 @@ async fn get_transaction(
     let principal = authenticate(&state, &headers).await?;
     let tx = crate::search::get_transaction(&state, &principal, &id, q.include_history).await?;
     Ok(Json(tx).into_response())
+}
+
+async fn import_statement(
+    State(state): State<Arc<AppState>>,
+    Path(account): Path<String>,
+    headers: HeaderMap,
+    Json(body): Json<kabacus_service::bank_import::ImportBody>,
+) -> Result<Response, ApiError> {
+    let principal = authenticate(&state, &headers).await?;
+    let head = if_match_header(&headers)?;
+    let result =
+        kabacus_service::bank_import::import_statement(&state, &principal, &account, &head, body)
+            .await?;
+    Ok(Json(result).into_response())
 }
 
 /// A batch. Its head is in the body, like MCP's.

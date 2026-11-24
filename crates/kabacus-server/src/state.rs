@@ -64,6 +64,7 @@ impl AppState {
                 kabacus_service::state::Settings {
                     allow_rewrite: config.allow_rewrite,
                     import_max_bytes: config.import_max_bytes,
+                    statement_limits: config.import,
                     app_client_id: config.auth.clients.app.clone(),
                 },
                 kinds,

@@ -15,6 +15,8 @@ write if the books changed since (another app or another agent).
 
 ## Dry runs
 
+For statement import, follow [references/importing.md](importing.md) to review the rows and balance check.
+
 Every write tool defaults to `dry_run: true`. The preview is exactly what the
 server would do:
 

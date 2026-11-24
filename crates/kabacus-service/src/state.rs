@@ -22,6 +22,7 @@ pub struct Service {
 pub struct Settings {
     pub allow_rewrite: bool,
     pub import_max_bytes: usize,
+    pub statement_limits: crate::bank_import::Limits,
     pub app_client_id: Option<String>,
 }
 
@@ -30,6 +31,7 @@ impl Default for Settings {
         Self {
             allow_rewrite: true,
             import_max_bytes: 256 * 1024 * 1024,
+            statement_limits: Default::default(),
             app_client_id: None,
         }
     }
