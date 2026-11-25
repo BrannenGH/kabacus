@@ -884,16 +884,10 @@ async fn simplefin_disconnect(
     Ok(Json(kabacus_service::simplefin::disconnect(&state, &caller).await?).into_response())
 }
 
-#[derive(Deserialize)]
-struct SimplefinAccountsQuery {
-    #[serde(default)]
-    refresh: bool,
-}
-
 async fn simplefin_accounts(
     State(state): State<Arc<AppState>>,
     headers: HeaderMap,
-    Query(query): Query<SimplefinAccountsQuery>,
+    Query(query): Query<kabacus_service::simplefin::ListAccounts>,
 ) -> Result<Response, ApiError> {
     use kabacus_service::simplefin::list_accounts;
     let caller = authenticate(&state, &headers).await?;

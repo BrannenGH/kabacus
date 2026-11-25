@@ -982,6 +982,7 @@ impl BookStore for SqliteStore {
         owner: Owner,
         expected: &Access,
         now: i64,
+        recent_since: Option<i64>,
     ) -> Result<RequestBudget> {
         let slot = owner.user()?.unwrap_or_default();
         let expected = expected.clone();
@@ -990,7 +991,7 @@ impl BookStore for SqliteStore {
             let Some(mut access) = read_simplefin_access(&tx, ledger, slot)? else {
                 return Ok(RequestBudget::Changed);
             };
-            let budget = access.reserve(&expected, now);
+            let budget = access.reserve(&expected, now, recent_since);
             if matches!(budget, RequestBudget::Allowed { .. }) {
                 tx.execute(
                     "UPDATE simplefin_access SET requests = ?3 WHERE ledger_id = ?1 AND slot = ?2",

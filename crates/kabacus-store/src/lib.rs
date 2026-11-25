@@ -300,6 +300,7 @@ pub trait BookStore: Send + Sync {
         owner: simplefin::Owner,
         access: &simplefin::Access,
         now: i64,
+        recent_since: Option<i64>,
     ) -> impl Future<Output = Result<simplefin::RequestBudget>> + Send;
 
     /// Every stored row of `ledger`, read consistently.
@@ -497,8 +498,9 @@ impl BookStore for AnyStore {
         owner: simplefin::Owner,
         access: &simplefin::Access,
         now: i64,
+        recent_since: Option<i64>,
     ) -> Result<simplefin::RequestBudget> {
-        delegate!(self, s => s.reserve_simplefin_request(ledger, owner, access, now))
+        delegate!(self, s => s.reserve_simplefin_request(ledger, owner, access, now, recent_since))
     }
     async fn dump(&self, ledger: LedgerId) -> Result<LedgerDump> {
         delegate!(self, s => s.dump(ledger))

@@ -111,6 +111,7 @@ pub use kabacus_service::commands::*;
 #[derive(Clone)]
 pub struct KabacusMcp {
     state: Arc<Service>,
+    simplefin_transport: Arc<dyn simplefin::Transport>,
     metadata: Option<Arc<dyn Metadata>>,
     local: Option<kabacus_service::local::LocalCaller>,
     lists: Arc<ToolLists>,
@@ -169,12 +170,18 @@ impl KabacusMcp {
     ) -> Self {
         Self {
             state,
+            simplefin_transport: Arc::new(simplefin::Http),
             local,
             metadata,
             lists,
             books: Default::default(),
             tool_router: Self::tool_router(),
         }
+    }
+
+    pub fn with_simplefin_transport(mut self, transport: Arc<dyn simplefin::Transport>) -> Self {
+        self.simplefin_transport = transport;
+        self
     }
 
     /// Additional stores are selected through protocol metadata, without changing tool schemas.
@@ -977,9 +984,14 @@ impl KabacusMcp {
         Parameters(body): Parameters<simplefin::ConnectBody>,
     ) -> Result<CallToolResult, McpError> {
         structured(
-            &simplefin::connect(&self.state, principal(&parts)?, &simplefin::Http, body)
-                .await
-                .map_err(to_mcp_error)?,
+            &simplefin::connect(
+                &self.state,
+                principal(&parts)?,
+                self.simplefin_transport.as_ref(),
+                body,
+            )
+            .await
+            .map_err(to_mcp_error)?,
         )
     }
 
@@ -999,22 +1011,28 @@ impl KabacusMcp {
     }
 
     #[tool(
-        description = "List the caller's remote SimpleFIN accounts and links. An uncached list uses a request from the daily budget.",
+        description = "List the caller's remote SimpleFIN accounts and links. Set refresh to true to fetch the latest list. An uncached list uses a request from the daily budget.",
         annotations(read_only_hint = true)
     )]
     async fn list_simplefin_accounts(
         &self,
         Extension(parts): Extension<Parts>,
+        Parameters(options): Parameters<simplefin::ListAccounts>,
     ) -> Result<CallToolResult, McpError> {
         structured(
-            &simplefin::list_accounts(&self.state, principal(&parts)?, &simplefin::Http, false)
-                .await
-                .map_err(to_mcp_error)?,
+            &simplefin::list_accounts(
+                &self.state,
+                principal(&parts)?,
+                self.simplefin_transport.as_ref(),
+                options.refresh,
+            )
+            .await
+            .map_err(to_mcp_error)?,
         )
     }
 
     #[tool(
-        description = "Link a SimpleFIN account to a bank or credit card account at the current head. Set remote to null to unlink.",
+        description = "Link a SimpleFIN account to a bank or credit card account at the current head. Set create to money or revolving-debt to declare a new account and link it in one revision. Set remote to null to unlink.",
         annotations(read_only_hint = false, destructive_hint = false)
     )]
     async fn link_simplefin_account(
@@ -1026,7 +1044,7 @@ impl KabacusMcp {
             &simplefin::link(
                 &self.state,
                 principal(&parts)?,
-                &simplefin::Http,
+                self.simplefin_transport.as_ref(),
                 &params.account,
                 &params.head,
                 params.body,
@@ -1037,7 +1055,7 @@ impl KabacusMcp {
     }
 
     #[tool(
-        description = "Review transactions from all of the caller's linked SimpleFIN accounts. Show counts, matches, balance differences and all warnings. Commit the same snapshot on the previewed head after the person explicitly confirms.",
+        description = "Review transactions from all of the caller's linked SimpleFIN accounts. Show counts, matches, balance differences and all warnings. Commit the same snapshot on the previewed head after the person explicitly confirms. Set automatic to true to check whether an already reviewed mapping is due and import its new activity at the supplied head.",
         annotations(read_only_hint = false, destructive_hint = false)
     )]
     async fn sync_simplefin(
@@ -1049,7 +1067,7 @@ impl KabacusMcp {
             &simplefin::sync(
                 &self.state,
                 principal(&parts)?,
-                &simplefin::Http,
+                self.simplefin_transport.as_ref(),
                 &params.head,
                 params.body,
             )

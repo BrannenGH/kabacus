@@ -7,6 +7,7 @@ use base64::{engine::general_purpose::STANDARD, Engine as _};
 use kabacus_server::config::Config;
 use kabacus_service::simplefin::{Reply, Request, Response, Transport};
 use serde_json::json;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
 const CLAIM_URL: &str = "https://bridge.simplefin.org/simplefin/claim/cedar-demo";
@@ -23,24 +24,39 @@ pub fn token() -> String {
     STANDARD.encode(CLAIM_URL)
 }
 
-pub async fn books() -> TestServer {
-    books_with(|_| {}).await
-}
-
-pub async fn books_with(customize: impl FnOnce(&mut Config)) -> TestServer {
-    spawn_scratch(
-        "account assets:bank:checking  ; ynab-account:Cedar Checking\n\
-         account assets:bank:savings  ; ynab-account:Harbor Savings\n",
-        |cfg| {
-            cfg.import.simplefin.enabled = true;
-            customize(cfg);
+pub async fn books_requiring_payment_on_first_fetch() -> TestServer {
+    books_with_bridge(
+        |_| {},
+        Bridge {
+            unpaid: AtomicBool::new(true),
         },
-        Some(Arc::new(Bridge)),
     )
     .await
 }
 
-struct Bridge;
+pub async fn books_with(customize: impl FnOnce(&mut Config)) -> TestServer {
+    books_with_bridge(customize, Bridge::default()).await
+}
+
+async fn books_with_bridge(customize: impl FnOnce(&mut Config), bridge: Bridge) -> TestServer {
+    spawn_scratch(
+        "account assets:bank:checking  ; ynab-account:Cedar Checking\n\
+         account assets:bank:savings  ; ynab-account:Harbor Savings\n\
+         account liabilities:credit-card:cedar  ; ynab-account:Cedar Rewards\n\
+         account assets:bank:checking:card-cedar\n",
+        |cfg| {
+            cfg.import.simplefin.enabled = true;
+            customize(cfg);
+        },
+        Some(Arc::new(bridge)),
+    )
+    .await
+}
+
+#[derive(Default)]
+struct Bridge {
+    unpaid: AtomicBool,
+}
 
 impl Transport for Bridge {
     fn send(&self, request: Request) -> Reply<'_> {
@@ -72,6 +88,12 @@ impl Transport for Bridge {
                 }
                 _ => panic!("Unexpected fixture credentials"),
             };
+            if self.unpaid.swap(false, Ordering::Relaxed) {
+                return Ok(Response {
+                    status: 402,
+                    body: br#"{"errlist":[{"code":"gen.","msg":"Payment required."}],"accounts":[],"connections":[]}"#.to_vec(),
+                });
+            }
             let rows = if request
                 .url
                 .query_pairs()

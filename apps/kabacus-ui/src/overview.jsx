@@ -6,7 +6,7 @@ import { OverviewDetails } from "./overview-details";
 import { Amount } from "./amount";
 import { Icon } from "./navigation";
 const nonzero = (a) => a && !/^[-+]?0(?:\.0+)?$/.test(a.exact);
-export function Overview({ data, api, onAccount, onReserve, onCredit, onFix, bankStatus, onBankSync }) {
+export function Overview({ data, api, onAccount, onReserve, onCredit, onFix }) {
   const cash = data.cash;
   const funds = cash.funds.filter(fund => nonzero(fund.balance));
   const change = cash.change;
@@ -22,7 +22,6 @@ export function Overview({ data, api, onAccount, onReserve, onCredit, onFix, ban
           <p>{t("Free money you can spend right now, after reserves and card reserves.")}</p>
         </details>
       </div>
-      {bankStatus && <button className="secondary bank-sync-entry" onClick={onBankSync}>{bankStatus.connected ? t("Sync") : t("Connect")}</button>}
       <div className="cash-total"><Amount value={cash.cash_on_hand} /></div>
       {changeAmount && change.compare_to && <p className="cash-change">{t("%1 since %2", signedChange, change.compare_to)}</p>}
       <details className="cash-breakdown">

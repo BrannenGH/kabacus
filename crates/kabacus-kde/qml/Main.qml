@@ -112,6 +112,9 @@ Kirigami.ApplicationWindow {
     readonly property bool offline: serverBooks && ledger.error !== "" && !needsSignIn
     property var bankStatus: null
     property int bankStatusTicket: 0
+    property int bankSyncTicket: 0
+    property bool bankSyncNeedsHead: false
+    property string bankSyncProblem: ""
     readonly property bool canWrite: hasBooks && ledger.error === "" && !needsSignIn
     // The current destination: a key of `pages`, never the label shown
     // for it, which is translated.
@@ -235,6 +238,18 @@ Kirigami.ApplicationWindow {
         if (!canWrite) { bankStatus = null; return }
         bankStatusTicket = ledger.startRequest(JSON.stringify({method:"GET", path:"/simplefin/connection"}))
     }
+    Timer {
+        interval: 15 * 60 * 1000
+        repeat: true
+        triggeredOnStart: true
+        running: root.active && !root.offline && root.canWrite && root.bankStatus?.automatic_sync === true
+            && root.pageStack.layers.depth === 1
+        onTriggered: {
+            if (root.bankSyncTicket) return
+            root.bankSyncNeedsHead = true
+            root.bankSyncTicket = root.ledger.startRequest(JSON.stringify({method:"GET", path:"/version"}))
+        }
+    }
     function openBankConnections() { pageStack.layers.push(bankConnectionsPage) }
     function openBankSync() {
         if (bankStatus?.connected) pageStack.layers.push(statementImportPage, {account:"", accountName:"", syncMode:true})
@@ -245,9 +260,31 @@ Kirigami.ApplicationWindow {
         target: root.ledger
         function onRevisionChanged() { root.loadBankStatus() }
         function onRequestFinished(ticket: int, reply: string) {
-            if (ticket !== root.bankStatusTicket) return
-            const response = JSON.parse(reply)
-            root.bankStatus = response.status === 200 ? response.body : null
+            if (ticket === root.bankStatusTicket) {
+                root.bankStatusTicket = 0
+                const response = JSON.parse(reply)
+                root.bankStatus = response.status === 200 ? response.body : null
+                if (!root.bankStatus?.connected) root.bankSyncProblem = ""
+            } else if (ticket === root.bankSyncTicket) {
+                root.bankSyncTicket = 0
+                const response = JSON.parse(reply)
+                if (root.bankSyncNeedsHead) {
+                    root.bankSyncNeedsHead = false
+                    if (response.status === 200 && root.canWrite && root.bankStatus?.connected === true) {
+                        root.bankSyncTicket = root.ledger.startRequest(JSON.stringify({
+                            method:"POST", path:"/simplefin/sync", head:response.body.head, body:{automatic:true}
+                        }))
+                    }
+                } else if (response.status === 200 && !response.body.skipped) {
+                    root.bankSyncProblem = ""
+                    if (response.body.counts.new + response.body.counts.matched > 0) root.ledger.refresh()
+                    else root.loadBankStatus()
+                } else if (response.status >= 400 && response.status !== 409 && response.status !== 403) {
+                    root.bankSyncProblem = response.body.code === "simplefin_payment"
+                        ? i18n("Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required")
+                        : response.body.message || ""
+                }
+            }
         }
     }
 

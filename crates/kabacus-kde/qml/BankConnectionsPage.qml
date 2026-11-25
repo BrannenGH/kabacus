@@ -38,8 +38,8 @@ Kirigami.ScrollablePage {
         send(method, path, body, nextPhase)
     }
     property var linkChange: null
-    function link(remote, target) {
-        linkChange = { remote: target ? {conn_id:remote.conn_id, id:remote.id} : null, target:target || remote.linked }
+    function link(remote, target, create) {
+        linkChange = { account: remote, target, path: target || remote.linked, create }
         request("GET", "/version", null, "head")
     }
     function name(account) {
@@ -55,13 +55,30 @@ Kirigami.ScrollablePage {
             page.phase = ""
             const response = JSON.parse(reply)
             if (response.status >= 400) {
-                page.problem = response.body.message || ""
-                if (operation === "connected") page.app.loadBankStatus()
+                if (operation === "connected" && response.body.code === "simplefin_connected") {
+                    page.confirmation = {host: page.confirmation.host, connected: true}
+                    page.replacing = true
+                    page.app.loadBankStatus()
+                    return
+                }
+                if (response.body.code === "simplefin_payment") {
+                    page.problem = i18n("Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required")
+                    if (operation === "connected") {
+                        page.listed = null
+                        page.confirmation = null
+                        token.text = ""
+                        page.replacing = false
+                    }
+                } else {
+                    page.problem = response.body.message || ""
+                }
+                if (operation === "connected" || operation === "list") page.app.loadBankStatus()
                 return
             }
             if (operation === "head") {
                 const change = page.linkChange
-                page.send("PUT", "/accounts/" + encodeURIComponent(change.target) + "/simplefin-link", {remote:change.remote}, "link", response.body.head)
+                const remote = change.target ? {conn_id: change.account.conn_id, id: change.account.id} : null
+                page.send("PUT", "/accounts/" + encodeURIComponent(change.path) + "/simplefin-link", {remote, create: change.create}, "link", response.body.head)
             } else if (operation === "preview") {
                 page.confirmation = response.body
             } else if (operation === "connected") {
@@ -75,8 +92,12 @@ Kirigami.ScrollablePage {
                 page.notice = response.body.message
                 page.app.loadBankStatus()
             } else if (operation === "link") {
+                const change = page.linkChange
+                const updated = page.listed.accounts.map(account =>
+                    account.conn_id === change.account.conn_id && account.id === change.account.id
+                        ? Object.assign({}, account, {linked: change.target || null}) : account)
+                page.listed = Object.assign({}, page.listed, {accounts: updated})
                 page.ledger.refresh()
-                page.send("GET", "/simplefin/accounts", null, "list")
             } else {
                 page.listed = response.body
                 page.app.loadBankStatus()
@@ -87,7 +108,7 @@ Kirigami.ScrollablePage {
     ColumnLayout {
         spacing: Kirigami.Units.largeSpacing
         Kirigami.Heading { text: i18n("Your bank connection"); visible: page.app.serverBooks; level: 2 }
-        Controls.Label { text: page.problem; visible: text !== ""; textFormat: Text.PlainText; color: Kirigami.Theme.negativeTextColor; wrapMode: Text.Wrap; Layout.fillWidth: true }
+        Controls.Label { text: page.problem || page.app.bankSyncProblem; visible: text !== ""; textFormat: Text.PlainText; color: Kirigami.Theme.negativeTextColor; wrapMode: Text.Wrap; Layout.fillWidth: true }
         Controls.Label { text: page.notice; visible: text !== ""; textFormat: Text.PlainText; wrapMode: Text.Wrap; Layout.fillWidth: true }
         Controls.Label { text: i18n("Checking with the server…"); visible: page.busy }
         ColumnLayout {
@@ -100,9 +121,14 @@ Kirigami.ScrollablePage {
                 Layout.fillWidth: true
                 Layout.preferredHeight: implicitHeight
                 Controls.Button { height: page.app.narrow ? 48 : implicitHeight; text: i18n("Sync"); enabled: !page.busy; highlighted: true; onClicked: page.app.openBankSync() }
-                Controls.Button { height: page.app.narrow ? 48 : implicitHeight; text: i18n("Load bank accounts"); enabled: !page.busy; onClicked: page.request("GET", "/simplefin/accounts", null, "list") }
-                Controls.Button { height: page.app.narrow ? 48 : implicitHeight; text: i18n("Replace connection"); enabled: !page.busy; onClicked: page.replacing = true }
-                Controls.Button { height: page.app.narrow ? 48 : implicitHeight; text: i18n("Disconnect"); enabled: !page.busy; onClicked: page.request("DELETE", "/simplefin/connection", null, "disconnected") }
+                Controls.Button { height: page.app.narrow ? 48 : implicitHeight; text: i18n("Refresh accounts"); enabled: !page.busy; onClicked: page.request("GET", "/simplefin/accounts?refresh=true", null, "list") }
+            }
+            Flow {
+                spacing: Kirigami.Units.smallSpacing
+                Layout.fillWidth: true
+                Layout.preferredHeight: implicitHeight
+                Controls.Button { height: page.app.narrow ? 48 : implicitHeight; text: i18n("Replace connection"); enabled: !page.busy; flat: true; onClicked: page.replacing = true }
+                Controls.Button { height: page.app.narrow ? 48 : implicitHeight; text: i18n("Disconnect"); enabled: !page.busy; flat: true; onClicked: page.request("DELETE", "/simplefin/connection", null, "disconnected") }
             }
         }
         ColumnLayout {
@@ -119,15 +145,16 @@ Kirigami.ScrollablePage {
                 enabled: !page.busy
                 Layout.fillWidth: true
                 Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
-                onTextEdited: page.confirmation = null
+                onTextEdited: { page.confirmation = null; page.problem = "" }
             }
             Controls.Label { text: page.confirmation ? i18nc("%1 is the hostname", "Connect to %1?", page.confirmation.host) : ""; visible: page.confirmation !== null; wrapMode: Text.Wrap; Layout.fillWidth: true }
             Controls.Label { text: i18n("Anyone with this file can read your connected bank transactions until you revoke access at your SimpleFIN server."); visible: page.confirmation !== null && !page.app.serverBooks; Layout.fillWidth: true; wrapMode: Text.Wrap }
             Controls.Label { text: i18n("This replaces your current bank connection."); visible: page.confirmation?.connected === true; Layout.fillWidth: true; wrapMode: Text.Wrap }
             RowLayout {
-                Controls.Button { text: i18n("Cancel"); visible: page.replacing; onClicked: { page.replacing = false; page.confirmation = null; token.text = "" } }
+                Controls.Button { text: i18n("Cancel"); visible: page.replacing || page.confirmation !== null; Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight; enabled: !page.busy; onClicked: { page.replacing = false; page.confirmation = null; page.problem = ""; token.text = "" } }
                 Controls.Button {
-                    text: page.confirmation ? i18n("Connect") : i18n("Connect SimpleFIN")
+                    text: !page.confirmation ? i18n("Connect SimpleFIN")
+                        : page.confirmation.connected ? i18n("Replace connection") : i18n("Connect")
                     enabled: !page.busy && token.text.trim() !== "" && page.app.canWrite
                     highlighted: true
                     Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
@@ -140,7 +167,7 @@ Kirigami.ScrollablePage {
             delegate: Controls.Label { required property var modelData; text: modelData.message; textFormat: Text.PlainText; Layout.fillWidth: true; wrapMode: Text.Wrap }
         }
         Repeater {
-            model: page.listed?.connections || []
+            model: page.replacing ? [] : page.listed?.connections || []
             delegate: ColumnLayout {
                 id: institution
                 required property var modelData
@@ -154,14 +181,79 @@ Kirigami.ScrollablePage {
                         Layout.fillWidth: true
                         Controls.Label { text: remote.modelData.name; textFormat: Text.PlainText; Layout.fillWidth: true; wrapMode: Text.Wrap }
                         Controls.Label { text: remote.modelData.balance + " " + remote.modelData.currency; textFormat: Text.PlainText }
+                        readonly property bool compatible: remote.modelData.currency === page.accounts.value?.commodity
+                        property string createKind: ""
+                        readonly property var choices: {
+                            const skip = {label: i18n("Don’t import"), account: ""}
+                            if (remote.modelData.linked)
+                                return [skip, {label: page.name(remote.modelData.linked), account: remote.modelData.linked}]
+                            const occupied = new Set((page.listed.other_links || []).concat(page.listed.accounts.map(item => item.linked)))
+                            return [skip].concat(page.targets.filter(item => !occupied.has(item.account))
+                                .map(item => ({label: item.name || item.account, account: item.account})),
+                                [{label: i18n("New bank account…"), account: ":money"},
+                                 {label: i18n("New credit card…"), account: ":revolving-debt"}])
+                        }
+                        function selectedIndex() {
+                            const selected = createKind ? ":" + createKind : modelData.linked || ""
+                            return choices.findIndex(item => item.account === selected)
+                        }
                         Controls.ComboBox {
+                            id: mapping
                             Layout.fillWidth: true
                             Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
                             Accessible.name: remote.modelData.name
-                            model: [i18n("Don’t import")].concat(page.targets.map(item => item.name || item.account))
-                            currentIndex: page.targets.findIndex(item => item.account === remote.modelData.linked) + 1
-                            enabled: !page.busy && page.app.canWrite
-                            onActivated: index => page.link(remote.modelData, index === 0 ? "" : page.targets[index-1].account)
+                            model: remote.choices
+                            textRole: "label"
+                            currentIndex: remote.selectedIndex()
+                            enabled: !page.busy && page.app.canWrite && remote.compatible
+                            onActivated: index => {
+                                const choice = remote.choices[index].account
+                                if (choice.startsWith(":")) {
+                                    remote.createKind = choice.slice(1)
+                                    accountName.forceActiveFocus()
+                                } else {
+                                    remote.createKind = ""
+                                    if (choice || remote.modelData.linked)
+                                        page.link(remote.modelData, choice)
+                                }
+                                currentIndex = Qt.binding(() => remote.selectedIndex())
+                            }
+                        }
+                        Controls.Label {
+                            text: i18n("This account uses a different currency from your books.")
+                            visible: !!page.accounts.value && !remote.compatible
+                            Layout.fillWidth: true
+                            wrapMode: Text.Wrap
+                        }
+                        ColumnLayout {
+                            visible: remote.createKind !== ""
+                            Layout.fillWidth: true
+                            Controls.Label { text: i18n("Name") }
+                            Controls.TextField {
+                                id: accountName
+                                Accessible.name: i18n("Name")
+                                Layout.fillWidth: true
+                                Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
+                                enabled: !page.busy
+                            }
+                            RowLayout {
+                                Controls.Button {
+                                    text: i18n("Cancel")
+                                    enabled: !page.busy
+                                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
+                                    onClicked: { remote.createKind = ""; accountName.clear(); mapping.forceActiveFocus() }
+                                }
+                                Controls.Button {
+                                    text: i18n("Add")
+                                    highlighted: true
+                                    enabled: !page.busy && accountName.text.trim() !== "" && !accountName.text.includes(":")
+                                    Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
+                                    onClicked: {
+                                        const prefix = remote.createKind === "money" ? "assets:bank:" : "liabilities:credit-card:"
+                                        page.link(remote.modelData, prefix + accountName.text.trim(), remote.createKind)
+                                    }
+                                }
+                            }
                         }
                     }
                 }

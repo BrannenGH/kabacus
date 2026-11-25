@@ -17,6 +17,8 @@ struct Bridge {
     claimed: AtomicUsize,
     fetched: AtomicUsize,
     synced: AtomicUsize,
+    unpaid: bool,
+    recent: Option<(i64, bool)>,
 }
 
 impl Transport for Bridge {
@@ -46,6 +48,12 @@ impl Transport for Bridge {
             let query: BTreeMap<_, _> = request.url.query_pairs().into_owned().collect();
             assert_eq!(query.get("version").map(String::as_str), Some("2"));
             self.fetched.fetch_add(1, Ordering::Relaxed);
+            if self.unpaid {
+                return Ok(Response {
+                    status: 402,
+                    body: br#"{"errlist":[{"code":"gen.","msg":"Payment required."}],"accounts":[],"connections":[]}"#.to_vec(),
+                });
+            }
             let syncing = query.contains_key("start-date");
             if syncing {
                 self.synced.fetch_add(1, Ordering::Relaxed);
@@ -61,6 +69,21 @@ impl Transport for Bridge {
                 ])
             } else {
                 json!([])
+            };
+            let rows = if syncing {
+                if let Some((posted, extra)) = self.recent {
+                    let mut recent = vec![
+                        json!({"id":"HH 2388","posted":posted,"amount":"-18.40","description":"Harbor Street Cafe"}),
+                    ];
+                    if extra {
+                        recent.push(json!({"id":"HH 2389","posted":posted + 86400,"amount":"-12.10","description":"Oak Bakery"}));
+                    }
+                    json!(recent)
+                } else {
+                    rows
+                }
+            } else {
+                rows
             };
             let body = json!({ "connections": [{"conn_id":"Cedar Bank","name":"Cedar Bank"},{"conn_id":"Harbor Bank","name":"Harbor Bank"}],
                 "errlist": [{"code":"gen.api","msg": format!("Window warning: {ACCESS}")},{"code":"act.missingdata","msg":"Listing is incomplete","account_id":"Everyday Account"}],
@@ -131,6 +154,204 @@ fn body(value: Value) -> SyncBody {
 }
 
 #[tokio::test]
+async fn payment_error_keeps_claim_for_refresh_and_rejects_unconfirmed_replacement() {
+    let (state, dana, _) = scratch(false).await;
+    let mut bridge = Bridge {
+        unpaid: true,
+        ..Default::default()
+    };
+    let setup = || ConnectBody {
+        token: STANDARD.encode(CLAIM),
+        replace: false,
+        dry_run: false,
+    };
+    let failure = connect(&state, &dana, &bridge, setup()).await.unwrap_err();
+    assert_eq!(failure.code(), "simplefin_payment");
+    assert_eq!(failure.to_string(), "Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required");
+    assert_eq!(connection(&state, &dana).await.unwrap()["connected"], true);
+    assert_eq!(
+        connect(&state, &dana, &bridge, setup())
+            .await
+            .unwrap_err()
+            .code(),
+        "simplefin_connected"
+    );
+    bridge.unpaid = false;
+    let result = list_accounts(&state, &dana, &bridge, true).await.unwrap();
+    assert_eq!(result["accounts"].as_array().unwrap().len(), 2);
+    assert_eq!(bridge.claimed.load(Ordering::Relaxed), 1);
+    assert_eq!(bridge.fetched.load(Ordering::Relaxed), 2);
+}
+
+#[tokio::test]
+async fn creates_and_links_a_card_in_one_revision() {
+    let (state, dana, _) = scratch(false).await;
+    let bridge = Bridge::default();
+    connect(
+        &state,
+        &dana,
+        &bridge,
+        ConnectBody {
+            token: STANDARD.encode(CLAIM),
+            replace: false,
+            dry_run: false,
+        },
+    )
+    .await
+    .unwrap();
+    let head = state.store.revision(state.ledger).await.unwrap();
+    let link_body = || {
+        serde_json::from_value(json!({
+            "create": "revolving-debt", "remote": {"conn_id":"Cedar Bank", "id":"Everyday Account"}
+        }))
+        .unwrap()
+    };
+    let target = "liabilities:credit-card:Cedar Rewards";
+    assert!(link(
+        &state,
+        &dana,
+        &bridge,
+        TARGET,
+        &head.to_string(),
+        link_body()
+    )
+    .await
+    .is_err());
+    assert!(link(
+        &state,
+        &dana,
+        &bridge,
+        "liabilities:credit-card:Invalid; Name",
+        &head.to_string(),
+        link_body()
+    )
+    .await
+    .is_err());
+    assert_eq!(state.store.revision(state.ledger).await.unwrap(), head);
+    let result = link(
+        &state,
+        &dana,
+        &bridge,
+        target,
+        &head.to_string(),
+        link_body(),
+    )
+    .await
+    .unwrap();
+    assert_eq!(result["head"], (head + 1).to_string());
+    assert_eq!(result["linked"], true);
+    assert_eq!(
+        list_accounts(&state, &dana, &bridge, false).await.unwrap()["accounts"][0]["linked"],
+        target
+    );
+    let review = sync(
+        &state,
+        &dana,
+        &bridge,
+        result["head"].as_str().unwrap(),
+        body(json!({"since": "2026-10-01", "end_date": "2026-11-01"})),
+    )
+    .await
+    .unwrap();
+    assert_eq!(review["counts"]["new"], 1);
+}
+
+#[tokio::test]
+async fn automatic_sync_waits_for_review_and_observes_the_shared_request_interval() {
+    let (state, dana, _) = scratch(false).await;
+    let first = Utc::now().date_naive() - Days::new(2);
+    let posted = first.and_hms_opt(0, 0, 0).unwrap().and_utc().timestamp();
+    let mut bridge = Bridge {
+        recent: Some((posted, false)),
+        ..Default::default()
+    };
+    connect(
+        &state,
+        &dana,
+        &bridge,
+        ConnectBody {
+            token: STANDARD.encode(CLAIM),
+            replace: false,
+            dry_run: false,
+        },
+    )
+    .await
+    .unwrap();
+    let head = state
+        .store
+        .revision(state.ledger)
+        .await
+        .unwrap()
+        .to_string();
+    let linked = link(
+        &state,
+        &dana,
+        &bridge,
+        TARGET,
+        &head,
+        LinkBody {
+            create: None,
+            remote: Some(RemoteAccount {
+                conn_id: "Cedar Bank".into(),
+                id: "Everyday Account".into(),
+            }),
+        },
+    )
+    .await
+    .unwrap();
+    let head = linked["head"].as_str().unwrap();
+    let automatic = || body(json!({"automatic": true}));
+    assert_eq!(
+        sync(&state, &dana, &bridge, head, automatic())
+            .await
+            .unwrap()["skipped"],
+        "needs_review"
+    );
+    assert_eq!(bridge.fetched.load(Ordering::Relaxed), 1);
+
+    let mut manual = json!({"since":first, "end_date":first.succ_opt().unwrap()});
+    manual["snapshot"] = sync(&state, &dana, &bridge, head, body(manual.clone()))
+        .await
+        .unwrap()["snapshot"]
+        .clone();
+    manual["dry_run"] = json!(false);
+    let committed = sync(&state, &dana, &bridge, head, body(manual))
+        .await
+        .unwrap();
+    let head = committed["head"].as_str().unwrap();
+    assert_eq!(
+        sync(&state, &dana, &bridge, head, automatic())
+            .await
+            .unwrap()["skipped"],
+        "recent_request"
+    );
+    assert_eq!(bridge.fetched.load(Ordering::Relaxed), 2);
+    state
+        .store
+        .set_simplefin_access(
+            state.ledger,
+            Owner::Local,
+            &Access::new(ACCESS.into(), Utc::now().timestamp() - 86400),
+        )
+        .await
+        .unwrap();
+    bridge.recent = Some((posted, true));
+    let result = sync(&state, &dana, &bridge, head, automatic())
+        .await
+        .unwrap();
+    assert_eq!(result["counts"]["new"], 1);
+    assert_ne!(result["head"], head);
+    let head = result["head"].as_str().unwrap();
+    assert_eq!(bridge.fetched.load(Ordering::Relaxed), 3);
+    assert_eq!(
+        sync(&state, &dana, &bridge, head, automatic())
+            .await
+            .unwrap()["skipped"],
+        "recent_request"
+    );
+}
+
+#[tokio::test]
 async fn linked_simplefin_accounts_commit_one_snapshot_without_a_second_fetch() {
     let (state, dana, _) = scratch(false).await;
     let mock = Bridge::default();
@@ -163,6 +384,7 @@ async fn linked_simplefin_accounts_commit_one_snapshot_without_a_second_fetch() 
             target,
             &head,
             LinkBody {
+                create: None,
                 remote: Some(RemoteAccount {
                     conn_id: conn.into(),
                     id: "Everyday Account".into(),

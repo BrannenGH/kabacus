@@ -51,6 +51,82 @@ async fn spawn_rewrite_server() -> TestServer {
     spawn_server(support::rewrites).await
 }
 
+#[tokio::test]
+async fn simplefin_connection_mapping_and_sync_are_available_through_mcp() {
+    let server = kabacus_testkit::simplefin::books_with(|_| {}).await;
+    let client = connect(&server).await;
+    let token = kabacus_testkit::simplefin::token();
+    let status = call(&client, "get_simplefin_connection", json!({})).await;
+    assert_eq!(status["connected"], false);
+    let preview = call(
+        &client,
+        "connect_simplefin",
+        json!({"token": token, "dry_run": true}),
+    )
+    .await;
+    assert_eq!(preview["host"], "bridge.simplefin.org");
+    let connected = call(&client, "connect_simplefin", json!({"token": token})).await;
+    assert_eq!(connected["accounts"][0]["name"], "Cedar Everyday");
+    let refreshed = call(&client, "list_simplefin_accounts", json!({"refresh": true})).await;
+    assert_eq!(refreshed["accounts"], connected["accounts"]);
+    let status = call(&client, "get_simplefin_connection", json!({})).await;
+    assert_eq!(status["remaining"], 18);
+
+    let version = call(&client, "get_version", json!({})).await;
+    let head = version["head"].as_str().unwrap();
+    let account = "liabilities:credit-card:Cedar Travel";
+    let mapping = call(
+        &client,
+        "link_simplefin_account",
+        json!({
+            "head": head, "account": account, "create": "revolving-debt",
+            "remote": {"conn_id": "Cedar Bank", "id": "Cedar Everyday"}
+        }),
+    )
+    .await;
+    let head = mapping["head"].as_str().unwrap();
+    assert_eq!(mapping["linked"], true);
+    let listed = call(&client, "list_simplefin_accounts", json!({})).await;
+    assert_eq!(listed["accounts"][0]["linked"], account);
+    let auto = call(
+        &client,
+        "sync_simplefin",
+        json!({"head": head, "automatic": true}),
+    )
+    .await;
+    assert_eq!(auto["skipped"], "needs_review");
+    let review = call(&client, "sync_simplefin", json!({"head": head})).await;
+    assert_eq!(review["counts"]["new"], 1);
+    let imported = call(
+        &client,
+        "sync_simplefin",
+        json!({
+            "head": head, "dry_run": false, "snapshot": review["snapshot"]
+        }),
+    )
+    .await;
+    assert_eq!(imported["counts"]["new"], 1);
+    let head = imported["head"].as_str().unwrap();
+    let auto = call(
+        &client,
+        "sync_simplefin",
+        json!({"head": head, "automatic": true}),
+    )
+    .await;
+    assert_eq!(auto["skipped"], "no_new_days");
+    let mapping = call(
+        &client,
+        "link_simplefin_account",
+        json!({
+            "head": head, "account": account, "remote": null
+        }),
+    )
+    .await;
+    assert_eq!(mapping["linked"], false);
+    let disconnected = call(&client, "disconnect_simplefin", json!({})).await;
+    assert_eq!(disconnected["connected"], false);
+}
+
 /// Every API route has its MCP tool(s): the MCP endpoint can do whatever
 /// the app can.
 #[tokio::test]

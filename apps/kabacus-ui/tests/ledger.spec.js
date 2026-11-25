@@ -107,7 +107,7 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
     )
       return route.continue();
     if (simplefin && path === "/simplefin/connection") {
-      if (route.request().method() === "GET") return route.fulfill({ json: { connected: bankConnected, host: bank.host, remaining: 19 } });
+      if (route.request().method() === "GET") return route.fulfill({ json: { connected: bankConnected, automatic_sync: bankConnected, host: bank.host, remaining: 19 } });
       const body = route.request().postDataJSON();
       writes.push({ body, path });
       if (body.dry_run) return route.fulfill({ json: { host: bank.host, connected: false } });
@@ -125,6 +125,7 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
         return route.fulfill({ json: { head: "43", linked: true } });
       }
       if (simplefin && path === "/simplefin/sync") {
+        if (body.automatic) return route.fulfill({ json: { head: currentVersion.head, skipped: "needs_review" } });
         const counts = { new: 1, matched: 0, duplicate: 0, skipped: 0 };
         if (!body.dry_run) {
           currentVersion.head = "44";
@@ -2091,6 +2092,75 @@ for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 
     await expect(bank.getByText("SimpleFIN is unavailable.")).toBeVisible();
   });
 
+  test(`SimpleFIN recovers setup and maps cards on ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    const card = { account: "liabilities:credit-card:cedar", display_name: "Cedar Rewards", kind: "revolving-debt" };
+    await setup(page, false, transaction, [...accounts, card], { symbol: "USD", places: 2 }, true);
+    const connection = { host: "bridge.simplefin.org", connected: false, remaining: 18 };
+    const attempts = [];
+    await page.route("**/simplefin/connection", async route => {
+      if (route.request().method() === "GET") return route.fulfill({ json: connection });
+      const body = route.request().postDataJSON();
+      if (body.dry_run) return route.fulfill({ json: { ...connection } });
+      attempts.push(body);
+      connection.connected = true;
+      if (!body.replace) return route.fulfill({ status: 422, json: { code: "simplefin_connected", message: "Confirm replacing your current SimpleFIN connection" } });
+      return route.fulfill({ status: 422, json: { code: "simplefin_payment", message: '{"errlist":[{"msg":"Payment required."}]}' } });
+    });
+    await page.route("**/simplefin/accounts?refresh=true", route => route.fulfill({ json: {
+      connections: [{ conn_id: "Cedar Cards", name: "Cedar Cards" }],
+      accounts: ["Harbor Rewards", "Maple Travel"].map(name => ({ id: name, conn_id: "Cedar Cards", name, balance: "-87.71", currency: "USD" })),
+    } }));
+    const links = [];
+    await page.route("**/accounts/*/simplefin-link", async route => {
+      links.push({ path: decodeURIComponent(new URL(route.request().url()).pathname), body: route.request().postDataJSON() });
+      await route.fulfill({ json: { head: "43", linked: true } });
+    });
+
+    await visit(page, "Settings", viewport.width === 390);
+    const section = page.getByRole("region", { name: "Bank connections" });
+    await section.getByRole("button", { name: "Connect SimpleFIN", exact: true }).click();
+    await section.getByLabel("Setup token").fill("cedar-demo-token");
+    await section.getByRole("button", { name: "Connect SimpleFIN", exact: true }).click();
+    await section.getByRole("button", { name: "Connect", exact: true }).click();
+    await expect(section.getByText("This replaces your current bank connection.")).toBeVisible();
+    expect(attempts).toHaveLength(1);
+    await section.getByRole("button", { name: "Replace connection", exact: true }).click();
+    await expect(section.getByRole("alert")).toHaveText("Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required");
+    await expect(section.getByLabel("Setup token")).toBeHidden();
+    expect(attempts.map(body => body.replace)).toEqual([false, true]);
+
+    const syncButton = section.getByRole("button", { name: "Sync", exact: true });
+    const refreshButton = section.getByRole("button", { name: "Refresh accounts", exact: true });
+    const replaceButton = section.getByRole("button", { name: "Replace connection", exact: true });
+    const disconnectButton = section.getByRole("button", { name: "Disconnect", exact: true });
+    const [sync, refresh, replace, disconnect] = await Promise.all(
+      [syncButton, refreshButton, replaceButton, disconnectButton].map(button => button.boundingBox()),
+    );
+    expect(sync.y).toBe(refresh.y);
+    expect(replace.y).toBe(disconnect.y);
+    expect(replace.y).toBeGreaterThanOrEqual(sync.y + sync.height);
+    expect(replace.x).toBe(sync.x);
+    expect(Math.min(sync.height, refresh.height, replace.height, disconnect.height)).toBeGreaterThanOrEqual(44);
+    await section.getByRole("button", { name: "Refresh accounts", exact: true }).click();
+    const existing = section.getByRole("combobox", { name: /Harbor Rewards/ });
+    await existing.selectOption({ label: "Cedar Rewards" });
+    await expect(existing).toHaveValue(card.account);
+
+    const create = section.getByRole("combobox", { name: /Maple Travel/ });
+    await create.selectOption({ label: "New credit card…" });
+    await section.getByRole("textbox", { name: "Name" }).fill("Maple Travel");
+    await section.getByRole("button", { name: "Add", exact: true }).click();
+    await expect(create).toHaveValue("liabilities:credit-card:Maple Travel");
+    expect(links).toEqual([
+      { path: "/accounts/liabilities:credit-card:cedar/simplefin-link", body: { remote: { conn_id: "Cedar Cards", id: "Harbor Rewards" } } },
+      { path: "/accounts/liabilities:credit-card:Maple Travel/simplefin-link", body: { create: "revolving-debt", remote: { conn_id: "Cedar Cards", id: "Maple Travel" } } },
+    ]);
+    await visit(page, "Overview", viewport.width === 390);
+    await expect(page.getByRole("heading", { name: "Available to spend" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Sync", exact: true })).toHaveCount(0);
+  });
+
   test(`SimpleFIN connects and reviews one snapshot on ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);
     const writes = await setup(page, false, transaction, accounts, { symbol: "USD", places: 2 }, true);
@@ -2118,7 +2188,8 @@ for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 
     await review.getByRole("button", { name: "Categorize" }).click();
     await expect(review).not.toBeVisible();
     await expect(page.getByText("Harbor Street Cafe", { exact: true })).toBeVisible();
-    const sync = writes.filter(write => write.path === "/simplefin/sync");
+    await expect.poll(() => writes.some(write => write.path === "/simplefin/sync" && write.body.automatic)).toBe(true);
+    const sync = writes.filter(write => write.path === "/simplefin/sync" && !write.body.automatic);
     expect(sync.map(write => !!write.body.dry_run)).toEqual([true, false]);
     expect(sync[1].body.snapshot).toBe("cedar-snapshot");
     expect(sync[1].headers["if-match"]).toBe('"43"');

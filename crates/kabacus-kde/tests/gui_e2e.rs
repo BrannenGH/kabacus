@@ -870,7 +870,7 @@ async fn simplefin_availability_in_settings_on_desktop_and_phone() {
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
 async fn simplefin_reviews_one_snapshot_on_desktop_and_phone() {
     for (index, size) in [DESKTOP, "390x844"].into_iter().enumerate() {
-        let bank = kabacus_testkit::simplefin::books().await;
+        let bank = kabacus_testkit::simplefin::books_requiring_payment_on_first_fetch().await;
         let client = KabacusClient::connect_unix(&bank.socket_path);
         let head = client
             .version()
@@ -895,7 +895,7 @@ async fn simplefin_reviews_one_snapshot_on_desktop_and_phone() {
                 .unwrap()
                 .parse::<u64>()
                 .unwrap(),
-            head + 2
+            head + 4
         );
     }
 }
