@@ -230,9 +230,10 @@ pub async fn overview(client: &KabacusClient) -> Result<Overview, ModelError> {
 }
 
 async fn panel(client: &KabacusClient) -> Result<serde_json::Value, ModelError> {
+    let filter = RegisterFilter::default();
     let (cash, register) = tokio::try_join!(
         async { Ok::<_, ModelError>(client.cash_on_hand(None, "summary").await?) },
-        register(client, ALL_ACCOUNTS, &RegisterFilter::default()),
+        register(client, ALL_ACCOUNTS, &filter),
     )?;
     let today = ymd(today());
     let recent: Vec<_> = register

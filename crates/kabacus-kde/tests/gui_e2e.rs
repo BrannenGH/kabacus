@@ -1354,25 +1354,32 @@ async fn desktop_split_postings_can_be_edited() {
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
 async fn plasma_panel_reads_the_open_books() {
-    let server = spawn_server_with_journal(
-        "2026-01-12 Cedar Market
-    expenses:groceries  18.50 USD
-    assets:checking  -18.50 USD
-
-\
-         2026-01-15 Willow Hardware
-    expenses:household  24.75 USD
-    assets:checking  -24.75 USD
-",
-        |_| {},
-    )
-    .await;
+    let mut journal = String::new();
+    for (day, payee) in [
+        (12, "Cedar Market"),
+        (15, "Willow Hardware"),
+        (18, "Bluebird Bakery"),
+        (20, "Parkside Books"),
+        (21, "Moss Cafe"),
+        (22, "Juniper Market"),
+    ] {
+        use std::fmt::Write;
+        writeln!(
+            journal,
+            "2026-01-{day} {payee}\n    expenses:groceries  18.50 USD\n    assets:checking  -18.50 USD\n"
+        )
+        .unwrap();
+    }
+    journal.push_str(
+        "2099-01-24 North Coast Market\n    expenses:groceries  26.75 USD\n    assets:checking  -26.75 USD\n",
+    );
+    let server = spawn_server_with_journal(&journal, |_| {}).await;
     let client = KabacusClient::connect_unix(&server.socket_path);
     let balance = views::overview(&client).await.unwrap().cash_on_hand.text;
     let rows = views::register(&client, views::ALL_ACCOUNTS, &Default::default())
         .await
         .unwrap();
-    assert!(!rows.is_empty());
+    assert_eq!(rows[0].payee, "North Coast Market");
 
     for size in [DESKTOP, "390x844"] {
         let app = launch_sized(&server.socket_path, &config_dir(size), size);
@@ -1400,8 +1407,8 @@ async fn plasma_panel_reads_the_open_books() {
         }
         assert_eq!(snapshot["available"], balance, "{size}: {snapshot}");
         let recent = snapshot["recent"].as_array().unwrap();
-        assert_eq!(recent.len(), rows.len().min(5));
-        for (actual, expected) in recent.iter().zip(&rows) {
+        assert_eq!(recent.len(), 5);
+        for (actual, expected) in recent.iter().zip(&rows[1..]) {
             assert_eq!(actual["payee"], expected.payee);
             assert_eq!(actual["date"], expected.date);
             assert_eq!(actual["amount"], expected.amount.text);

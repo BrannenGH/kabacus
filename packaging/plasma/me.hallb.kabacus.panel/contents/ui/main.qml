@@ -75,6 +75,7 @@ PlasmoidItem {
         text: widget.available
         display: vertical || text === "" ? PlasmaComponents.ToolButton.IconOnly : PlasmaComponents.ToolButton.TextBesideIcon
         Layout.minimumWidth: vertical ? 0 : implicitWidth
+        Layout.maximumWidth: vertical ? Infinity : implicitWidth
         Accessible.name: widget.available
             ? i18ndc("kabacus", "%1 is an amount", "Available to spend %1", widget.available)
             : widget.balanceLabel
