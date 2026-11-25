@@ -278,7 +278,7 @@ msgstr "Ακύρωση"
 msgid "Connect"
 msgstr "Σύνδεση"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect SimpleFIN"
 msgstr "Συνδέστε το SimpleFIN"
@@ -1274,6 +1274,11 @@ msgstr "Να επιτρέπεται σε πράκτορες ο έλεγχος α
 #, kde-format
 msgid "Control port"
 msgstr "Θύρα ελέγχου"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "SimpleFIN is unavailable."
+msgstr "Το SimpleFIN δεν είναι διαθέσιμο."
 
 #: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format

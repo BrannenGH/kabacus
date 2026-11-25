@@ -53,8 +53,9 @@ socket_path = "/run/kabacus/server.sock"
 # max_bytes = 5242880
 # max_rows  = 5000
 #
+# SimpleFIN is available by default. Set enabled = false to turn it off.
 # [import.simplefin]
-# enabled = true
+# enabled = false
 # allowed_hosts = ["bridge.simplefin.org", "beta-bridge.simplefin.org"]
 
 # Account kinds: every account's kind (money, fund, card reserve, card, ...)

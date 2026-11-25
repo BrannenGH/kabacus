@@ -41,7 +41,7 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         Self {
-            enabled: false,
+            enabled: true,
             allowed_hosts: BRIDGE_HOSTS.iter().map(|s| s.to_string()).collect(),
         }
     }

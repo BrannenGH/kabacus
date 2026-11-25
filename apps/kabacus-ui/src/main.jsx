@@ -289,7 +289,7 @@ export function App({ auth, book, onFileAction }) {
           </section>}
           {page === "Settings" && (
             <Settings
-              data={data || { version: { auth: {}, server_version: "—" } }}
+              data={data}
               api={api}
               auth={auth} book={book} bankStatus={bankStatus} onBankChanged={() => { reloadBankStatus(); refresh(); }} onBankSync={openBankSync}
             />

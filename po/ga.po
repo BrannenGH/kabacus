@@ -278,7 +278,7 @@ msgstr "Cealaigh"
 msgid "Connect"
 msgstr "Ceangail"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect SimpleFIN"
 msgstr "Ceangail SimpleFIN"
@@ -1277,6 +1277,11 @@ msgstr "Lig do ghníomhairí an fhuinneog seo a rialú"
 #, kde-format
 msgid "Control port"
 msgstr "Port rialaithe"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "SimpleFIN is unavailable."
+msgstr "Níl SimpleFIN ar fáil."
 
 #: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format

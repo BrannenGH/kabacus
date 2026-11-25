@@ -278,7 +278,7 @@ msgstr "निरस्यतु"
 msgid "Connect"
 msgstr "संयोजय"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect SimpleFIN"
 msgstr "९. SimpleFIN संयोजयन्तु"
@@ -1274,6 +1274,11 @@ msgstr "अभिकर्तॄन् एतद्वातायनं नि�
 #, kde-format
 msgid "Control port"
 msgstr "नियन्त्रणद्वारम्"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "SimpleFIN is unavailable."
+msgstr "SimpleFIN उपलब्धं नास्ति।"
 
 #: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format

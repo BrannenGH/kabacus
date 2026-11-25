@@ -24,10 +24,23 @@ Kirigami.ScrollablePage {
         Controls.SpinBox { id: port; Kirigami.FormData.label: i18n("Control port"); from: 1; to: 65535; value: page.preferences.control_port || 7979; enabled: automation.checked; onValueModified: page.save() }
         Controls.Label { text: page.problem; visible: text !== ""; wrapMode: Text.Wrap; Layout.fillWidth: true }
         Kirigami.Separator { Kirigami.FormData.isSection: true }
+        Controls.Button {
+            Kirigami.FormData.label: i18n("Bank connections")
+            Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight
+            text: page.app.bankStatus?.connected ? i18n("Bank connections") : i18n("Connect SimpleFIN")
+            enabled: page.app.bankStatus !== null
+            onClicked: page.app.openBankConnections()
+        }
+        Controls.Label {
+            visible: page.app.bankStatus === null
+            text: i18n("SimpleFIN is unavailable.")
+            wrapMode: Text.Wrap
+            Layout.fillWidth: true
+        }
+        Kirigami.Separator { Kirigami.FormData.isSection: true }
         Controls.Label { Kirigami.FormData.label: i18n("Account"); text: page.app.auth.username || i18n("On this computer"); wrapMode: Text.Wrap; Layout.fillWidth: true }
         Controls.Button { Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight; text: i18n("Sign out"); visible: page.app.auth.status === "signed_in"; onClicked: page.app.signOut() }
         Kirigami.Separator { Kirigami.FormData.isSection: true }
-        Controls.Button { visible: page.app.bankStatus !== null; text: i18n("Bank connections"); onClicked: page.app.openBankConnections() }
         Controls.Label { Kirigami.FormData.label: i18n("About"); text: "Kabacus " + (page.about.app_version || ""); Layout.fillWidth: true }
         Controls.Button { Layout.minimumHeight: page.app.narrow ? 48 : implicitHeight; text: i18n("Open the source code"); flat: true; onClicked: Qt.openUrlExternally(page.about.source_url || "https://github.com/BrannenGH/kabacus") }
     }

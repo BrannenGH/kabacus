@@ -278,7 +278,7 @@ msgstr "Prekliči"
 msgid "Connect"
 msgstr "Poveži se"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect SimpleFIN"
 msgstr "Povežite SimpleFIN"
@@ -1276,6 +1276,11 @@ msgstr "Dovoli agentom upravljanje tega okna"
 #, kde-format
 msgid "Control port"
 msgstr "Nadzorna vrata"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "SimpleFIN is unavailable."
+msgstr "SimpleFIN ni na voljo."
 
 #: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
