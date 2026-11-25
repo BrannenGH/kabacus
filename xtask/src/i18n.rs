@@ -33,6 +33,7 @@ const DOMAIN: &str = "kabacus";
 
 /// Where the strings are.
 const QML_DIR: &str = "crates/kabacus-kde/qml";
+const PLASMA_QML_DIR: &str = "packaging/plasma/me.hallb.kabacus.panel/contents/ui";
 const RUST_DIR: &str = "crates/kabacus-kde/src";
 /// The macros' own definitions and tests.
 const RUST_SKIP: &[&str] = &["i18n.rs"];
@@ -158,8 +159,8 @@ impl Entry {
 /// context?, singular, plural?.
 fn arity(name: &str) -> Option<(bool, bool)> {
     match name {
-        "i18n" => Some((false, false)),
-        "i18nc" => Some((true, false)),
+        "i18n" | "i18nd" => Some((false, false)),
+        "i18nc" | "i18ndc" => Some((true, false)),
         "i18np" => Some((false, true)),
         "i18ncp" => Some((true, true)),
         _ => None,
@@ -240,7 +241,9 @@ fn extract(text: &str, lang: Lang, file: &str) -> Result<Vec<(Entry, usize)>> {
             }
             j += 1;
             let line = line_of(start);
-            let wanted = 1 + usize::from(has_context) + usize::from(has_plural);
+            let has_domain = matches!(name.as_str(), "i18nd" | "i18ndc");
+            let wanted =
+                1 + usize::from(has_context) + usize::from(has_plural) + usize::from(has_domain);
             let mut args = vec![];
             for n in 0..wanted {
                 j = skip_space(&chars, j);
@@ -265,6 +268,9 @@ fn extract(text: &str, lang: Lang, file: &str) -> Result<Vec<(Entry, usize)>> {
                 }
             }
             let mut args = args.into_iter();
+            if has_domain && args.next().as_deref() != Some(DOMAIN) {
+                bail!("{file}:{line}: {name} must use the {DOMAIN} catalog");
+            }
             let context = if has_context {
                 args.next().unwrap_or_default()
             } else {
@@ -408,7 +414,11 @@ fn string_literal(chars: &[char], i: usize, lang: Lang) -> Result<(String, usize
 /// each once with all the places it's used.
 fn collect(root: &Path) -> Result<Vec<Entry>> {
     let mut files = vec![];
-    for (dir, ext, lang) in [(QML_DIR, "qml", Lang::Qml), (RUST_DIR, "rs", Lang::Rust)] {
+    for (dir, ext, lang) in [
+        (QML_DIR, "qml", Lang::Qml),
+        (PLASMA_QML_DIR, "qml", Lang::Qml),
+        (RUST_DIR, "rs", Lang::Rust),
+    ] {
         let mut found: Vec<PathBuf> = std::fs::read_dir(root.join(dir))
             .with_context(|| format!("reading {dir}"))?
             .filter_map(|e| e.ok().map(|e| e.path()))

@@ -23,6 +23,7 @@ path = [
     ".vscode/**",
     ".claude/settings.json",
     ".mcp.json",
+    "packaging/plasma/me.hallb.kabacus.panel/metadata.json",
     "crates/kabacus-server/tests/fixtures/**",
     ".dockerignore",
 ]

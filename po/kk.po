@@ -652,7 +652,7 @@ msgstr "Есебіңізді көру үшін %1 арқылы кіріңіз."
 msgid "Sign in again"
 msgstr "Қайта кіру"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr "Кіру"
@@ -785,17 +785,17 @@ msgstr "Кітаптарды ауыстыру…"
 msgid "Refresh"
 msgstr "Жаңарту"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr "Жұмсауға болатын ақшаны жүктеу мүмкін емес"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr "Жүктелуде…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Available to spend"
 msgstr "Жұмсауға қолжетімді"
@@ -815,7 +815,7 @@ msgstr "Жұмсауға болатын ақша"
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr "Резервтер мен карта резервтерінен кейін дәл қазір жұмсай алатын бос ақша."
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgctxt "%1 is an amount"
 msgid "Available to spend %1"
@@ -1121,7 +1121,7 @@ msgstr "«%1» сәйкес операциялар жоқ"
 msgid "No unreserved transactions"
 msgstr "Резервсіз операциялар жоқ"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/RegisterPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr "Операциялар жоқ"
@@ -1810,6 +1810,16 @@ msgstr "Kabacus-қа қош келдіңіз"
 #, kde-format
 msgid "Your books, on this computer. Every change is saved."
 msgstr "Кітаптарыңыз осы компьютерде. Әр өзгеріс сақталады."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
+#, kde-format
+msgid "Open a book in Kabacus."
+msgstr "Kabacus қолданбасында есеп кітабын ашыңыз."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
+msgstr "Транзакциялар"
 
 #: crates/kabacus-kde/src/auth.rs
 #, kde-format
@@ -2596,11 +2606,6 @@ msgstr "Ақша"
 #, kde-format
 msgid "Go"
 msgstr "Өту"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Transactions"
-msgstr "Транзакциялар"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

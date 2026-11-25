@@ -653,7 +653,7 @@ msgstr "Барои дидани баҳисобгирии худ бо %1 вори
 msgid "Sign in again"
 msgstr "Аз нав ворид шудан"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr "Ворид шудан"
@@ -786,17 +786,17 @@ msgstr "Иваз кардани дафтарҳо…"
 msgid "Refresh"
 msgstr "Навсозӣ"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr "Пули харҷшавандаро бор кардан ғайриимкон аст"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr "Бор шуда истодааст…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Available to spend"
 msgstr "Барои харҷ дастрас"
@@ -816,7 +816,7 @@ msgstr "Пули харҷшаванда"
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr "Пули озоде, ки ҳозир метавонед харҷ кунед, пас аз захираҳо ва захираҳои кортҳо."
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgctxt "%1 is an amount"
 msgid "Available to spend %1"
@@ -1122,7 +1122,7 @@ msgstr "Амалиёте, ки ба «%1» мувофиқ бошад, нест"
 msgid "No unreserved transactions"
 msgstr "Амалиёти бе захира нест"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/RegisterPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr "Амалиёт нест"
@@ -1812,6 +1812,16 @@ msgstr "Хуш омадед ба Kabacus"
 #, kde-format
 msgid "Your books, on this computer. Every change is saved."
 msgstr "Дафтарҳои шумо дар ин компютер. Ҳар тағйирот сабт мешавад."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
+#, kde-format
+msgid "Open a book in Kabacus."
+msgstr "Дафтари ҳисобро дар Kabacus кушоед."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
+msgstr "Амалиётҳо"
 
 #: crates/kabacus-kde/src/auth.rs
 #, kde-format
@@ -2603,11 +2613,6 @@ msgstr "Пул"
 #, kde-format
 msgid "Go"
 msgstr "Гузаштан"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Transactions"
-msgstr "Амалиётҳо"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

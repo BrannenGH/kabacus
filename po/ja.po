@@ -652,7 +652,7 @@ msgstr "帳簿を表示するには %1 でサインインしてください。"
 msgid "Sign in again"
 msgstr "もう一度サインイン"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr "サインイン"
@@ -785,17 +785,17 @@ msgstr "帳簿を切り替え…"
 msgid "Refresh"
 msgstr "更新"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr "使えるお金を読み込めません"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr "読み込み中…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Available to spend"
 msgstr "支出可能額"
@@ -815,7 +815,7 @@ msgstr "使えるお金"
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr "引当とカード引当を除いた、今すぐ使える自由なお金です。"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgctxt "%1 is an amount"
 msgid "Available to spend %1"
@@ -1121,7 +1121,7 @@ msgstr "「%1」に一致する取引はありません"
 msgid "No unreserved transactions"
 msgstr "引当なしの取引はありません"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/RegisterPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr "取引はありません"
@@ -1810,6 +1810,16 @@ msgstr "Kabacus へようこそ"
 #, kde-format
 msgid "Your books, on this computer. Every change is saved."
 msgstr "このコンピューター上の帳簿です。すべての変更が保存されます。"
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
+#, kde-format
+msgid "Open a book in Kabacus."
+msgstr "Kabacus で帳簿を開いてください。"
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
+msgstr "取引"
 
 #: crates/kabacus-kde/src/auth.rs
 #, kde-format
@@ -2596,11 +2606,6 @@ msgstr "お金"
 #, kde-format
 msgid "Go"
 msgstr "移動"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Transactions"
-msgstr "取引"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

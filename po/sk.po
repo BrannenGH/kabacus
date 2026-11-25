@@ -654,7 +654,7 @@ msgstr "Prihláste sa cez %1, aby ste videli svoje účtovníctvo."
 msgid "Sign in again"
 msgstr "Prihlásiť znova"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr "Prihlásiť"
@@ -787,17 +787,17 @@ msgstr "Prepnúť knihy…"
 msgid "Refresh"
 msgstr "Obnoviť"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr "Dostupné peniaze nemožno načítať"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr "Načítava sa…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Available to spend"
 msgstr "K dispozícii na míňanie"
@@ -817,7 +817,7 @@ msgstr "Dostupné peniaze"
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr "Voľné peniaze, ktoré môžete minúť hneď teraz, po odpočítaní rezerv a rezerv kariet."
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgctxt "%1 is an amount"
 msgid "Available to spend %1"
@@ -1123,7 +1123,7 @@ msgstr "Hľadaniu „%1“ nezodpovedá žiadna transakcia"
 msgid "No unreserved transactions"
 msgstr "Žiadne transakcie bez rezervy"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/RegisterPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr "Žiadne transakcie"
@@ -1814,6 +1814,16 @@ msgstr "Vitajte v Kabacus"
 #, kde-format
 msgid "Your books, on this computer. Every change is saved."
 msgstr "Vaše knihy v tomto počítači. Každá zmena sa uloží."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
+#, kde-format
+msgid "Open a book in Kabacus."
+msgstr "Otvorte účtovnú knihu v Kabacuse."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
+msgstr "Transakcie"
 
 #: crates/kabacus-kde/src/auth.rs
 #, kde-format
@@ -2610,11 +2620,6 @@ msgstr "Peniaze"
 #, kde-format
 msgid "Go"
 msgstr "Prejsť"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Transactions"
-msgstr "Transakcie"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

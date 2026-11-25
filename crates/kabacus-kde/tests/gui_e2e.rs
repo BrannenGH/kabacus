@@ -9,10 +9,10 @@
 
 use kabacus_client::types::BatchOpBody;
 use kabacus_client::KabacusClient;
-use kabacus_kde::model;
+use kabacus_kde::{model, views};
 use kabacus_store::BookStore;
 use kabacus_testkit::provider::{FakeProvider, ProviderOptions};
-use kabacus_testkit::{spawn_oauth_server, spawn_server};
+use kabacus_testkit::{spawn_oauth_server, spawn_server, spawn_server_with_journal};
 use std::path::PathBuf;
 use std::process::{Child, Command};
 
@@ -1349,4 +1349,63 @@ async fn desktop_split_postings_can_be_edited() {
             .collect::<Vec<_>>(),
         vec!["15.00", "5.00", "-20.00"]
     );
+}
+
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn plasma_panel_reads_the_open_books() {
+    let server = spawn_server_with_journal(
+        "2026-01-12 Cedar Market
+    expenses:groceries  18.50 USD
+    assets:checking  -18.50 USD
+
+\
+         2026-01-15 Willow Hardware
+    expenses:household  24.75 USD
+    assets:checking  -24.75 USD
+",
+        |_| {},
+    )
+    .await;
+    let client = KabacusClient::connect_unix(&server.socket_path);
+    let balance = views::overview(&client).await.unwrap().cash_on_hand.text;
+    let rows = views::register(&client, views::ALL_ACCOUNTS, &Default::default())
+        .await
+        .unwrap();
+    assert!(!rows.is_empty());
+
+    for size in [DESKTOP, "390x844"] {
+        let app = launch_sized(&server.socket_path, &config_dir(size), size);
+        let mut snapshot = serde_json::Value::Null;
+        for _ in 0..80 {
+            let reply = tokio::process::Command::new("dbus-send")
+                .args([
+                    "--session",
+                    "--print-reply=literal",
+                    "--reply-timeout=1000",
+                    "--dest=me.hallb.kabacus.Panel",
+                    "/Panel",
+                    "me.hallb.kabacus.Panel.Snapshot",
+                ])
+                .output()
+                .await
+                .unwrap();
+            if reply.status.success() {
+                snapshot = serde_json::from_slice(&reply.stdout).unwrap();
+                if snapshot["available"] == balance {
+                    break;
+                }
+            }
+            tokio::time::sleep(std::time::Duration::from_millis(125)).await;
+        }
+        assert_eq!(snapshot["available"], balance, "{size}: {snapshot}");
+        let recent = snapshot["recent"].as_array().unwrap();
+        assert_eq!(recent.len(), rows.len().min(5));
+        for (actual, expected) in recent.iter().zip(&rows) {
+            assert_eq!(actual["payee"], expected.payee);
+            assert_eq!(actual["date"], expected.date);
+            assert_eq!(actual["amount"], expected.amount.text);
+        }
+        drop(app);
+    }
 }

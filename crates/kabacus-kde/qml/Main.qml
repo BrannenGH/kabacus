@@ -51,6 +51,7 @@ Kirigami.ApplicationWindow {
         if (error !== "") { showPassiveNotification(error, "long"); return }
         if (source.kind === "local") { const info = JSON.parse(ledger.localBooksInfo()); if (info && info.name) source.name = info.name }
         bookSource = source
+        if (active) WindowManager.lastActive = root
         current = "Overview"
         pageStack.clear(); pageStack.push(overviewPage)
         remember()
@@ -709,14 +710,49 @@ Kirigami.ApplicationWindow {
         onRunningChanged: if (!running) backoff = 2000
     }
 
+    property double panelRequested: 0
+    property string panelDate: ""
+    function panelSnapshot(): var {
+        panelRequested = Date.now()
+        panelDate = Qt.formatDate(new Date(), "yyyy-MM-dd")
+        if (needsSignIn) return { status: "sign_in" }
+        if (offline) return { status: "unavailable" }
+        if (panelData.problem !== "") {
+            if (!panelData.pending) panelData.reload()
+            return { status: "unavailable" }
+        }
+        if (!panelData.value || panelData.pending) return { status: "loading" }
+        return {
+            status: "ready",
+            book: bookSource ? bookSource.name : "",
+            available: panelData.value.available,
+            recent: panelData.value.recent,
+        }
+    }
+    Fetch {
+        id: panelData
+        ledger: root.ledger
+        view: root.hasBooks && root.panelDate && !root.needsSignIn ? "panel" : ""
+        args: ({ date: root.panelDate, source: root.bookSource ? (root.bookSource.path || root.bookSource.url) : "" })
+    }
+
     // Pick up changes made elsewhere (a hand edit, MCP, another
     // device) on return to the window and every minute while it's active.
-    onActiveChanged: if (active && hasBooks) ledger.check()
+    onActiveChanged: {
+        if (active && hasBooks) {
+            WindowManager.lastActive = root
+            ledger.check()
+        }
+    }
     Timer {
         interval: 60000
-        running: root.active && root.hasBooks && !root.offline
+        running: root.hasBooks && !root.offline
+            && (root.active || root.panelRequested > 0)
         repeat: true
-        onTriggered: root.ledger.check()
+        onTriggered: {
+            if (root.active || Date.now() - root.panelRequested < interval * 2) root.ledger.check()
+            else root.panelRequested = 0
+        }
     }
 
     // The floating Add button on a phone.

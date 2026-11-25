@@ -652,7 +652,7 @@ msgstr "请使用 %1 登录以查看你的账本。"
 msgid "Sign in again"
 msgstr "重新登录"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr "登录"
@@ -785,17 +785,17 @@ msgstr "切换账簿…"
 msgid "Refresh"
 msgstr "刷新"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr "无法加载可用资金"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr "正在加载…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Available to spend"
 msgstr "可支配金额"
@@ -815,7 +815,7 @@ msgstr "可用资金"
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr "扣除准备金和信用卡准备金后，现在就能花的未分配资金。"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgctxt "%1 is an amount"
 msgid "Available to spend %1"
@@ -1121,7 +1121,7 @@ msgstr "没有与“%1”匹配的交易"
 msgid "No unreserved transactions"
 msgstr "没有无准备金的交易"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/RegisterPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr "没有交易"
@@ -1810,6 +1810,16 @@ msgstr "欢迎使用 Kabacus"
 #, kde-format
 msgid "Your books, on this computer. Every change is saved."
 msgstr "您的账簿保存在此计算机上。每次更改都会保存。"
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
+#, kde-format
+msgid "Open a book in Kabacus."
+msgstr "请在 Kabacus 中打开账簿。"
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
+msgstr "交易"
 
 #: crates/kabacus-kde/src/auth.rs
 #, kde-format
@@ -2596,11 +2606,6 @@ msgstr "资金"
 #, kde-format
 msgid "Go"
 msgstr "转到"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Transactions"
-msgstr "交易"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

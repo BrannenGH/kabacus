@@ -111,6 +111,8 @@ install -Dm644 packaging/desktop/me.hallb.kabacus.desktop %{buildroot}%{_datadir
 install -Dm644 packaging/desktop/me.hallb.kabacus.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/me.hallb.kabacus.svg
 install -Dm644 packaging/desktop/me.hallb.kabacus.metainfo.xml %{buildroot}%{_datadir}/metainfo/me.hallb.kabacus.metainfo.xml
 install -Dm644 packaging/desktop/me.hallb.kabacus.mime.xml %{buildroot}%{_datadir}/mime/packages/me.hallb.kabacus.xml
+install -Dm644 packaging/plasma/me.hallb.kabacus.panel/metadata.json %{buildroot}%{_datadir}/plasma/plasmoids/me.hallb.kabacus.panel/metadata.json
+install -Dm644 packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml %{buildroot}%{_datadir}/plasma/plasmoids/me.hallb.kabacus.panel/contents/ui/main.qml
 install -Dm644 crates/kabacus-kde/kabacus.categories %{buildroot}%{_datadir}/qlogging-categories6/kabacus.categories
 mkdir -p %{buildroot}%{_datadir}/locale
 cp -r target/locale/. %{buildroot}%{_datadir}/locale/
@@ -132,6 +134,7 @@ SOURCE_URL=%{pkg_source_url} SOURCE_COMMIT=%{pkg_commit} scripts/package-source 
 %{_datadir}/icons/hicolor/scalable/apps/me.hallb.kabacus.svg
 %{_datadir}/metainfo/me.hallb.kabacus.metainfo.xml
 %{_datadir}/mime/packages/me.hallb.kabacus.xml
+%{_datadir}/plasma/plasmoids/me.hallb.kabacus.panel/
 %dir %{_datadir}/qlogging-categories6
 %{_datadir}/qlogging-categories6/kabacus.categories
 

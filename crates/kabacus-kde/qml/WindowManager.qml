@@ -5,10 +5,19 @@ import QtQuick
 import QtQuick.Window
 QtObject {
     property var windows: []
+    property var lastActive: null
+    function panelSnapshot(): string {
+        const book = lastActive && lastActive.ready && lastActive.hasBooks ? lastActive
+            : windows.find(w => w.ready && w.hasBooks)
+        return JSON.stringify(book ? book.panelSnapshot() : { status: "closed" })
+    }
     property bool restored: false
     property bool globalMenuAvailable: false
     function add(window) { if (windows.indexOf(window) < 0) windows = windows.concat([window]) }
-    function remove(window) { windows = windows.filter(w => w !== window) }
+    function remove(window) {
+        windows = windows.filter(w => w !== window)
+        if (lastActive === window) lastActive = null
+    }
     function focus(source, except) {
         const other = windows.find(w => w !== except && w.bookSource && w.bookSource.kind === source.kind && (source.kind === "local" ? w.bookSource.path === source.path : w.bookSource.url === source.url))
         if (!other) return false

@@ -229,6 +229,30 @@ pub async fn overview(client: &KabacusClient) -> Result<Overview, ModelError> {
     Ok(overview_from(coh, since, history))
 }
 
+async fn panel(client: &KabacusClient) -> Result<serde_json::Value, ModelError> {
+    let (cash, register) = tokio::try_join!(
+        async { Ok::<_, ModelError>(client.cash_on_hand(None, "summary").await?) },
+        register(client, ALL_ACCOUNTS, &RegisterFilter::default()),
+    )?;
+    let today = ymd(today());
+    let recent: Vec<_> = register
+        .into_iter()
+        .filter(|row| row.date <= today)
+        .take(5)
+        .map(|row| {
+            serde_json::json!({
+                "payee": if row.payee.is_empty() { row.account } else { row.payee },
+                "date": row.date,
+                "amount": row.amount.text,
+            })
+        })
+        .collect();
+    Ok(serde_json::json!({
+        "available": Shown::of(&cash.cash_on_hand).text,
+        "recent": recent,
+    }))
+}
+
 fn overview_from(coh: CashOnHandView, compare_to: String, history: Vec<Point>) -> Overview {
     let funds_total = coh
         .by_kind
@@ -1536,6 +1560,7 @@ pub async fn load(
     let n = |k: &str| args[k].as_i64().unwrap_or_default();
     match view {
         "overview" => value(overview(client).await),
+        "panel" => panel(client).await,
         "accounts" => value(accounts(client).await),
         "loans" => value(loans(client).await),
         "register" => {

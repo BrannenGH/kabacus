@@ -653,7 +653,7 @@ msgstr "Kirjaudu palvelulla %1 nähdäksesi kirjanpitosi."
 msgid "Sign in again"
 msgstr "Kirjaudu uudelleen"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr "Kirjaudu"
@@ -786,17 +786,17 @@ msgstr "Vaihda kirjanpitoa…"
 msgid "Refresh"
 msgstr "Päivitä"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr "Käytettävissä olevaa rahaa ei voi ladata"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr "Ladataan…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Available to spend"
 msgstr "Käytettävissä kulutukseen"
@@ -816,7 +816,7 @@ msgstr "Käytettävissä oleva raha"
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr "Vapaa raha, jonka voit käyttää heti, varausten ja korttien varausten jälkeen."
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgctxt "%1 is an amount"
 msgid "Available to spend %1"
@@ -1122,7 +1122,7 @@ msgstr "Haulla ”%1” ei löydy tapahtumia"
 msgid "No unreserved transactions"
 msgstr "Ei tapahtumia ilman varausta"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/RegisterPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr "Ei tapahtumia"
@@ -1812,6 +1812,16 @@ msgstr "Tervetuloa Kabacusiin"
 #, kde-format
 msgid "Your books, on this computer. Every change is saved."
 msgstr "Kirjasi tällä tietokoneella. Jokainen muutos tallennetaan."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
+#, kde-format
+msgid "Open a book in Kabacus."
+msgstr "Avaa kirjanpito Kabacusissa."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
+msgstr "Tapahtumat"
 
 #: crates/kabacus-kde/src/auth.rs
 #, kde-format
@@ -2603,11 +2613,6 @@ msgstr "Raha"
 #, kde-format
 msgid "Go"
 msgstr "Siirry"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Transactions"
-msgstr "Tapahtumat"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

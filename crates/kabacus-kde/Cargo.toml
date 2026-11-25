@@ -73,6 +73,8 @@ assets = [
     ["../../packaging/desktop/me.hallb.kabacus.desktop", "usr/share/applications/", "644"],
     ["../../packaging/desktop/me.hallb.kabacus.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
     ["../../packaging/desktop/me.hallb.kabacus.metainfo.xml", "usr/share/metainfo/", "644"],
+    ["../../packaging/plasma/me.hallb.kabacus.panel/metadata.json", "usr/share/plasma/plasmoids/me.hallb.kabacus.panel/metadata.json", "644"],
+    ["../../packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml", "usr/share/plasma/plasmoids/me.hallb.kabacus.panel/contents/ui/main.qml", "644"],
     ["kabacus.categories", "usr/share/qlogging-categories6/", "644"],
     # Where the package's source is, which scripts/build-packages writes
     # (scripts/package-source text).

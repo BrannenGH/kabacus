@@ -656,7 +656,7 @@ msgstr "Logáil isteach le %1 chun do leabhair chuntais a fheiceáil."
 msgid "Sign in again"
 msgstr "Logáil isteach arís"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr "Logáil isteach"
@@ -789,17 +789,17 @@ msgstr "Athraigh leabhair…"
 msgid "Refresh"
 msgstr "Athnuaigh"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr "Ní féidir an t-airgead le caitheamh a lódáil"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr "Á lódáil…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Available to spend"
 msgstr "Ar fáil le caitheamh"
@@ -819,7 +819,7 @@ msgstr "Airgead le caitheamh"
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr "Airgead saor is féidir leat a chaitheamh anois, tar éis cúlchistí agus cúlchistí na gcártaí."
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgctxt "%1 is an amount"
 msgid "Available to spend %1"
@@ -1125,7 +1125,7 @@ msgstr "Níl aon idirbheart a mheaitseálann “%1”"
 msgid "No unreserved transactions"
 msgstr "Níl aon idirbheart gan chúlchiste"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/RegisterPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr "Níl aon idirbheart ann"
@@ -1818,6 +1818,16 @@ msgstr "Fáilte go Kabacus"
 #, kde-format
 msgid "Your books, on this computer. Every change is saved."
 msgstr "Do leabhair ar an ríomhaire seo. Sábháiltear gach athrú."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
+#, kde-format
+msgid "Open a book in Kabacus."
+msgstr "Oscail leabhar cuntas in Kabacus."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
+msgstr "Idirbhearta"
 
 #: crates/kabacus-kde/src/auth.rs
 #, kde-format
@@ -2624,11 +2634,6 @@ msgstr "Airgead"
 #, kde-format
 msgid "Go"
 msgstr "Téigh"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Transactions"
-msgstr "Idirbhearta"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
