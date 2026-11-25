@@ -520,11 +520,6 @@ msgstr "Skýrslur"
 
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Settings"
-msgstr "Stillingar"
-
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "On this computer"
 msgstr "Á þessari tölvu"
 
@@ -537,6 +532,11 @@ msgstr "Allar breytingar vistaðar"
 #, kde-format
 msgid "%1 is working in these books"
 msgstr "%1 vinnur í þessum bókum"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settings"
+msgstr "Stillingar"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format

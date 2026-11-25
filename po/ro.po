@@ -521,11 +521,6 @@ msgstr "Rapoarte"
 
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Settings"
-msgstr "Configurare"
-
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "On this computer"
 msgstr "Pe acest calculator"
 
@@ -538,6 +533,11 @@ msgstr "Toate modificările sunt salvate"
 #, kde-format
 msgid "%1 is working in these books"
 msgstr "%1 lucrează în aceste registre"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settings"
+msgstr "Configurare"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format

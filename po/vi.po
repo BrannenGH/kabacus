@@ -519,11 +519,6 @@ msgstr "Báo cáo"
 
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Settings"
-msgstr "Cài đặt"
-
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "On this computer"
 msgstr "Trên máy tính này"
 
@@ -536,6 +531,11 @@ msgstr "Đã lưu mọi thay đổi"
 #, kde-format
 msgid "%1 is working in these books"
 msgstr "%1 đang làm việc với sổ này"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settings"
+msgstr "Cài đặt"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format

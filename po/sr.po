@@ -522,11 +522,6 @@ msgstr "Извештаји"
 
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Settings"
-msgstr "Поставке"
-
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "On this computer"
 msgstr "На овом рачунару"
 
@@ -539,6 +534,11 @@ msgstr "Све измене су сачуване"
 #, kde-format
 msgid "%1 is working in these books"
 msgstr "%1 ради у овим књигама"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settings"
+msgstr "Поставке"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
