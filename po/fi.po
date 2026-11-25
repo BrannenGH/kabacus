@@ -278,7 +278,7 @@ msgstr "Peru"
 msgid "Connect"
 msgstr "Yhdistä"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect SimpleFIN"
 msgstr "Yhdistä SimpleFIN"
@@ -1274,6 +1274,11 @@ msgstr "Salli agenttien ohjata tätä ikkunaa"
 #, kde-format
 msgid "Control port"
 msgstr "Ohjausportti"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "SimpleFIN is unavailable."
+msgstr "SimpleFIN ei ole käytettävissä."
 
 #: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format

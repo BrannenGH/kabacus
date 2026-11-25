@@ -991,6 +991,7 @@ nav button.active { border: 1px solid #ad915b; background: #e1e6d5; box-shadow: 
 .transactions-workspace { display: grid; grid-template-columns: minmax(200px,260px) minmax(0,1fr); align-items: start; gap: 16px; }
 .account-sidebar .all-transactions {
   display: flex;
+  align-items: center;
   width: 100%;
   min-height: 48px;
   justify-content: space-between;
@@ -1246,7 +1247,13 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
 .statement-rows li { border-top:1px solid var(--border);padding-block:0.75rem; }
 .statement-rows small { display:block; }
 
-.bank-connections { margin-block:1.5rem;border-block-start:1px solid var(--border);padding-block-start:1rem; }
+.settings-panel { padding: 16px; }
+.settings-panel > section + section { border-block-start: 1px solid var(--border); margin-block-start: 16px; padding-block-start: 16px; }
+.settings-panel h2 { margin-block-end: 8px; }
+.settings-panel p { margin-block: 8px 12px; }
+.bank-connections button[aria-describedby]:disabled { cursor: default; }
+.bank-connections .bank-setup { grid-template-columns: minmax(0, 1fr); max-width: 32rem; padding: 8px 0 0; }
+.bank-setup .dialog-actions { justify-content: flex-start; border: 0; padding: 0; }
 .bank-actions { display:flex;flex-wrap:wrap;gap:0.5rem; }
 .bank-sync-account { margin-block:0.75rem 1.5rem; }
 .statement-link-row { padding-block:0.5rem; }

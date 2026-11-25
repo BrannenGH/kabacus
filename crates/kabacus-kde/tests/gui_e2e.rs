@@ -853,6 +853,21 @@ async fn importing_a_statement_shows_review_and_categorize_on_desktop_and_phone(
 
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn simplefin_availability_in_settings_on_desktop_and_phone() {
+    for (index, size) in [DESKTOP, "390x844"].into_iter().enumerate() {
+        let name = format!("simplefin-disabled{index}");
+        let server = kabacus_testkit::spawn_server_with_journal(BOOKS, |config| {
+            config.socket_path = socket_path(&name);
+            config.import.simplefin.enabled = false;
+        })
+        .await;
+        let _app = launch_sized(&server.socket_path, &config_dir(&name), size);
+        drive(&["simplefin-unavailable"]).await;
+    }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
 async fn simplefin_reviews_one_snapshot_on_desktop_and_phone() {
     for (index, size) in [DESKTOP, "390x844"].into_iter().enumerate() {
         let bank = kabacus_testkit::simplefin::books().await;

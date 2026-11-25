@@ -278,7 +278,7 @@ msgstr "Anuluj"
 msgid "Connect"
 msgstr "Połącz"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect SimpleFIN"
 msgstr "Połącz SimpleFIN"
@@ -1275,6 +1275,11 @@ msgstr "Pozwól agentom sterować tym oknem"
 #, kde-format
 msgid "Control port"
 msgstr "Port sterowania"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "SimpleFIN is unavailable."
+msgstr "SimpleFIN jest niedostępny."
 
 #: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format

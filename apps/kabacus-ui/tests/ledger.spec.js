@@ -2062,12 +2062,49 @@ for (const width of [1280, 900, 390]) {
 }
 
 for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
+  test(`transaction card and Settings have balanced spacing on ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await setup(page);
+    await visit(page, "Register", viewport.width === 390);
+    const card = page.getByRole("button", { name: "All transactions", exact: true });
+    const offsets = await card.evaluate(button => {
+      const bounds = button.getBoundingClientRect();
+      const text = document.createRange();
+      text.selectNode(button.firstChild);
+      const center = rect => rect.y + rect.height / 2;
+      return [text.getBoundingClientRect(), button.querySelector("svg").getBoundingClientRect()]
+        .map(rect => Math.abs(center(rect) - center(bounds)));
+    });
+    expect(Math.max(...offsets)).toBeLessThanOrEqual(1);
+
+    await visit(page, "Settings", viewport.width === 390);
+    const heading = page.getByRole("heading", { name: "When Kabacus starts" });
+    const inset = await heading.evaluate(element => {
+      const panel = element.closest(".panel").getBoundingClientRect();
+      const bounds = element.getBoundingClientRect();
+      return [bounds.left - panel.left, panel.right - bounds.right, bounds.top - panel.top];
+    });
+    expect(Math.min(...inset)).toBeGreaterThanOrEqual(16);
+    expect(inset[0]).toBe(inset[1]);
+    const bank = page.getByRole("region", { name: "Bank connections" });
+    await expect(bank.getByRole("button", { name: "Connect SimpleFIN", exact: true })).toBeDisabled();
+    await expect(bank.getByText("SimpleFIN is unavailable.")).toBeVisible();
+  });
+
   test(`SimpleFIN connects and reviews one snapshot on ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);
     const writes = await setup(page, false, transaction, accounts, { symbol: "USD", places: 2 }, true);
     if (viewport.width === 390) await page.locator("nav").getByRole("button", { name: "More", exact: true }).click();
     await page.getByRole("button", { name: /^Settings/ }).click();
     const section = page.getByRole("region", { name: "Bank connections" });
+    const openSetup = section.getByRole("button", { name: "Connect SimpleFIN", exact: true });
+    await expect(section.getByLabel("Setup token")).toBeHidden();
+    await openSetup.click();
+    await expect(section.getByRole("link", { name: "Get a SimpleFIN setup token" })).toBeFocused();
+    await section.getByRole("button", { name: "Cancel", exact: true }).click();
+    await expect(section.getByLabel("Setup token")).toBeHidden();
+    await expect(openSetup).toBeFocused();
+    await openSetup.click();
     await section.getByLabel("Setup token").fill("cedar-demo-token");
     await section.getByRole("button", { name: "Connect SimpleFIN" }).click();
     await expect(section.getByText("Connect to bridge.simplefin.org?", { exact: true })).toBeVisible();

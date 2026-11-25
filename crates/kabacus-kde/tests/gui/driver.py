@@ -750,6 +750,12 @@ def main():
         loan, payee = args
         goto("Loans")
         open_list_item(f"the {loan} loan", lambda: find(app(), loan, pyatspi.ROLE_LIST_ITEM), lambda: row(payee))
+    elif command == "simplefin-unavailable":
+        goto("Settings")
+        button = wait_for("SimpleFIN settings action", lambda: find(app(), "Connect SimpleFIN", pyatspi.ROLE_PUSH_BUTTON))
+        if button.getState().contains(pyatspi.STATE_ENABLED):
+            fail("SimpleFIN is offered by a server with the feature disabled")
+        wait_for("SimpleFIN availability message", lambda: find(app(), "SimpleFIN is unavailable."))
     elif command == "simplefin-sync":
         token, = args
 
@@ -761,7 +767,7 @@ def main():
             press(wait_for(name, enabled))
 
         goto("Settings")
-        choose_action("Bank connections")
+        choose_action("Connect SimpleFIN")
         help_link = wait_for("setup instructions", lambda: find(app(), "Get a SimpleFIN setup token", pyatspi.ROLE_PUSH_BUTTON))
         help_link.queryComponent().grabFocus()
         key(0xFF09)  # Tab to the password field.

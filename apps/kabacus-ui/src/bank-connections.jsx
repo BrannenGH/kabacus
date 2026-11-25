@@ -13,6 +13,22 @@ export function BankConnections({ data, api, status, onChanged, onSync, local })
   const [notice, setNotice] = useState("");
   const [problem, setProblem] = useState("");
   const [editing, setEditing] = useState(false);
+  const helpLink = useRef(null);
+  const setupButton = useRef(null);
+  const restoreSetupFocus = useRef(false);
+  useEffect(() => {
+    if (editing) helpLink.current?.focus();
+    else if (restoreSetupFocus.current) {
+      restoreSetupFocus.current = false;
+      setupButton.current?.focus();
+    }
+  }, [editing]);
+  function cancelSetup() {
+    restoreSetupFocus.current = true;
+    setEditing(false);
+    setToken("");
+    setConfirmed(null);
+  }
   const targets = data.accounts.filter(account => !account.synthetic && ["money", "revolving-debt"].includes(account.kind));
   async function perform(run) {
     setNotice(""); setProblem(""); setBusy(true);
@@ -42,24 +58,27 @@ export function BankConnections({ data, api, status, onChanged, onSync, local })
   function accountName(target) { return targets.find(item => item.account === target)?.display_name || target; }
   return <section className="bank-connections" aria-labelledby="bank-connections-title">
     <h2 id="bank-connections-title">{t("Bank connections")}</h2>
-    {!local && <h3>{t("Your bank connection")}</h3>}
+    {status && !local && (status.connected || editing) && <h3>{t("Your bank connection")}</h3>}
     {problem && <p role="alert" className="banner error">{problem}</p>}
     {notice && <p role="status">{notice}</p>}
     {busy && <p role="status">{t("Checking with the server…")}</p>}
-    {status?.connected && !editing ? <>
+    {!status || (!status.connected && !editing) ? <>
+      <button ref={setupButton} disabled={!status} aria-describedby={!status ? "simplefin-unavailable" : undefined} onClick={() => setEditing(true)}>{t("Connect SimpleFIN")}</button>
+      {!status && <p id="simplefin-unavailable" className="muted">{t("SimpleFIN is unavailable.")}</p>}
+    </> : !editing ? <>
       <p>{status.host}</p>
       <p className="muted">{t("Requests remaining today: %1", status.remaining)}</p>
       <div className="dialog-actions bank-actions">
         <button disabled={busy} onClick={onSync}>{t("Sync")}</button>
         <button className="secondary" disabled={busy} onClick={() => perform(async () => { setRemote(await api.request("/simplefin/accounts")); onChanged(); })}>{t("Load bank accounts")}</button>
-        <button className="quiet" disabled={busy} onClick={() => setEditing(true)}>{t("Replace connection")}</button>
+        <button ref={setupButton} className="quiet" disabled={busy} onClick={() => setEditing(true)}>{t("Replace connection")}</button>
         <button className="quiet" disabled={busy} onClick={() => perform(async () => {
           const reply = await api.request("/simplefin/connection", { method: "DELETE" });
           setRemote(null); setNotice(reply.message); onChanged();
         })}>{t("Disconnect")}</button>
       </div>
-    </> : <form className="form-fields" onSubmit={event => { event.preventDefault(); connect(!confirmed); }}>
-      <a href="https://bridge.simplefin.org/simplefin/create" target="_blank" rel="noreferrer">{t("Get a SimpleFIN setup token")}</a>
+    </> : <form className="form-fields bank-setup" onSubmit={event => { event.preventDefault(); connect(!confirmed); }}>
+      <a ref={helpLink} href="https://bridge.simplefin.org/simplefin/create" target="_blank" rel="noreferrer">{t("Get a SimpleFIN setup token")}</a>
       <label>{t("Setup token")}<input type="password" autoComplete="off" spellCheck={false} value={token} disabled={busy} onChange={event => { setToken(event.target.value); setConfirmed(null); }}/></label>
       {confirmed && <>
         <p>{t("Connect to %1?", confirmed.host)}</p>
@@ -67,7 +86,7 @@ export function BankConnections({ data, api, status, onChanged, onSync, local })
         {confirmed.connected && <p>{t("This replaces your current bank connection.")}</p>}
       </>}
       <div className="dialog-actions bank-actions">
-        {editing && <button type="button" className="secondary" disabled={busy} onClick={() => { setEditing(false); setToken(""); setConfirmed(null); }}>{t("Cancel")}</button>}
+        <button type="button" className="secondary" disabled={busy} onClick={cancelSetup}>{t("Cancel")}</button>
         <button disabled={busy || !token.trim()}>{confirmed ? t("Connect") : t("Connect SimpleFIN")}</button>
       </div>
     </form>}

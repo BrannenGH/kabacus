@@ -464,4 +464,16 @@ mod tests {
         .unwrap();
         assert!(both.resolve_store().is_err());
     }
+
+    #[test]
+    fn simplefin_is_enabled_by_default_and_can_be_disabled() {
+        let defaults: Config = toml::from_str("").unwrap();
+        assert!(defaults.import.simplefin.enabled);
+        assert_eq!(
+            defaults.import.simplefin.allowed_hosts,
+            kabacus_service::simplefin::BRIDGE_HOSTS
+        );
+        let opted_out: Config = toml::from_str("[import.simplefin]\nenabled = false").unwrap();
+        assert!(!opted_out.import.simplefin.enabled);
+    }
 }

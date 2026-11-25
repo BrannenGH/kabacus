@@ -278,7 +278,7 @@ msgstr "İmtina"
 msgid "Connect"
 msgstr "Qoşul"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect SimpleFIN"
 msgstr "SimpleFIN-ə qoşulun"
@@ -1274,6 +1274,11 @@ msgstr "Agentlərin bu pəncərəni idarə etməsinə icazə ver"
 #, kde-format
 msgid "Control port"
 msgstr "İdarəetmə portu"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "SimpleFIN is unavailable."
+msgstr "SimpleFIN əlçatan deyil."
 
 #: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format

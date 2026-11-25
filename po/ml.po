@@ -278,7 +278,7 @@ msgstr "റദ്ദാക്കുക"
 msgid "Connect"
 msgstr "ബന്ധിപ്പിക്കുക"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect SimpleFIN"
 msgstr "SimpleFIN ബന്ധിപ്പിക്കുക"
@@ -1274,6 +1274,11 @@ msgstr "ഈ ജാലകം നിയന്ത്രിക്കാൻ ഏജന
 #, kde-format
 msgid "Control port"
 msgstr "നിയന്ത്രണ പോർട്ട്"
+
+#: crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "SimpleFIN is unavailable."
+msgstr "SimpleFIN ലഭ്യമല്ല."
 
 #: crates/kabacus-kde/qml/SettingsPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format

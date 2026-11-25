@@ -236,6 +236,7 @@ export const messages = [
   "Books balance",
   "Categorize",
   "Connect SimpleFIN",
+  "SimpleFIN is unavailable.",
   "Connect to %1?",
   "Date format",
   "Debit",
