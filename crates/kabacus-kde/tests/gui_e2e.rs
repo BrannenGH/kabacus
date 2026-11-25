@@ -1189,6 +1189,24 @@ async fn the_app_speaks_the_users_language_on_every_form_factor() {
 
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn sidebar_keeps_settings_accessible_and_status_out_of_the_rail() {
+    let server = books("sidebar").await;
+    for (size, layout) in [
+        (DESKTOP, "desktop"),
+        ("900x800", "rail"),
+        ("390x844", "phone"),
+    ] {
+        let _app = launch_sized(
+            &server.socket_path,
+            &config_dir(&format!("sidebar-{layout}")),
+            size,
+        );
+        drive(&["sidebar", layout]).await;
+    }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
 async fn phone_navigation_sheets_and_register_back() {
     let server = books("phone-navigation").await;
     let _app = launch_sized(

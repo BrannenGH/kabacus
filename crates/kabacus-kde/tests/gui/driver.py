@@ -312,6 +312,17 @@ def fill_fields(**fields):
 def main():
     command, args = sys.argv[1], sys.argv[2:]
     wait_for("the Kabacus window", app)
+    if command == "sidebar":
+        books_loaded()
+        status = find(app(), "All changes saved")
+        if (status is not None) != (args[0] == "desktop"):
+            fail("save status should only be visible in the expanded sidebar")
+        if find(app(), "Settings", pyatspi.ROLE_PUSH_BUTTON):
+            fail("Settings is duplicated outside the navigation list")
+        goto("Settings")
+        wait_for("the Settings page", lambda: find(app(), "Reopen my windows", pyatspi.ROLE_CHECK_BOX))
+        print("ok")
+        return
     if command == "phone-navigation":
         labels = ["Overview", "Transactions", "Reserves", "Credit", "More"]
         tabs = [wait_for(f"the {label} tab", lambda label=label: find_any(label, {pyatspi.ROLE_PAGE_TAB})) for label in labels]

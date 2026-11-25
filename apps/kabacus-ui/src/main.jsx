@@ -244,7 +244,7 @@ export function App({ auth, book, onFileAction }) {
           ))}
         </nav>
         <div className="sidebar-bottom">
-          <button className="quiet settings-action" onClick={() => go("Settings")}><Icon name="Settings" />{t("Settings")}<Key>Ctrl+,</Key></button>
+          <button className="quiet settings-action" aria-label={t("Settings")} title={t("Settings")} onClick={() => go("Settings")}><Icon name="Settings" />{t("Settings")}<Key>Ctrl+,</Key></button>
           <div className="location"><span className="status-dot" /> <strong>{book?.local ? t("On this computer") : location.host}</strong><small>{book?.location || auth.username ? t("%1 · %2", book?.location || auth.username, t("All changes saved")) : t("All changes saved")}</small></div>
           {book?.activity?.agent && <p role="status">{t("%1 is working in these books", book.activity.agent)}</p>}
           {auth.signOut && <button className="quiet" onClick={auth.signOut}>{t("Sign out")}</button>}

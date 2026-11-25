@@ -520,11 +520,6 @@ msgstr "Raporte"
 
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Settings"
-msgstr "Rregullime"
-
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "On this computer"
 msgstr "Në këtë kompjuter"
 
@@ -537,6 +532,11 @@ msgstr "U ruajtën të gjitha ndryshimet"
 #, kde-format
 msgid "%1 is working in these books"
 msgstr "%1 po punon në këta libra"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settings"
+msgstr "Rregullime"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format

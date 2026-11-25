@@ -519,11 +519,6 @@ msgstr "รายงาน"
 
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Settings"
-msgstr "ตั้งค่า"
-
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "On this computer"
 msgstr "บนคอมพิวเตอร์เครื่องนี้"
 
@@ -536,6 +531,11 @@ msgstr "บันทึกการเปลี่ยนแปลงทั้ง
 #, kde-format
 msgid "%1 is working in these books"
 msgstr "%1 กำลังทำงานในสมุดบัญชีนี้"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settings"
+msgstr "ตั้งค่า"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format

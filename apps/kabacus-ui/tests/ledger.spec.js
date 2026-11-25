@@ -2047,6 +2047,20 @@ test("phone date field fits the form", async ({ page }) => {
 });
 
 
+for (const width of [1280, 900, 390]) {
+  test(`sidebar status and Settings work at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: width === 390 ? 844 : 800 });
+    await setup(page);
+    const status = page.locator(".sidebar-bottom .location");
+    if (width === 1280) await expect(status).toBeVisible();
+    else await expect(status).toBeHidden();
+    if (width === 390) await page.locator("nav").getByRole("button", { name: "More", exact: true }).click();
+    await page.getByRole("button", { name: "Settings", exact: true }).click();
+    if (width === 390) await expect(page.locator(".phone-appbar").getByText("Settings", { exact: true })).toBeVisible();
+    else await expect(page.getByRole("heading", { name: "Settings", exact: true })).toBeVisible();
+  });
+}
+
 for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
   test(`SimpleFIN connects and reviews one snapshot on ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);

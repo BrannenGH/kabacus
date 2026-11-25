@@ -520,11 +520,6 @@ msgstr "प्रतिवेदनानि"
 
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Settings"
-msgstr "विन्यासाः"
-
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "On this computer"
 msgstr "अस्मिन् सङ्गणके"
 
@@ -537,6 +532,11 @@ msgstr "सर्वे परिवर्तनाः रक्षिताः"
 #, kde-format
 msgid "%1 is working in these books"
 msgstr "%1 एतेषु लेखापुस्तकेषु कार्यं करोति"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settings"
+msgstr "विन्यासाः"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format

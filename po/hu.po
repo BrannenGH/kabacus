@@ -520,11 +520,6 @@ msgstr "Jelentések"
 
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Settings"
-msgstr "Beállítások"
-
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "On this computer"
 msgstr "Ezen a számítógépen"
 
@@ -537,6 +532,11 @@ msgstr "Minden módosítás mentve"
 #, kde-format
 msgid "%1 is working in these books"
 msgstr "%1 ezekben a könyvekben dolgozik"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settings"
+msgstr "Beállítások"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format

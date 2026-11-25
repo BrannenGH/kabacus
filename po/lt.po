@@ -522,11 +522,6 @@ msgstr "Ataskaitos"
 
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Settings"
-msgstr "Nuostatos"
-
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "On this computer"
 msgstr "Šiame kompiuteryje"
 
@@ -539,6 +534,11 @@ msgstr "Visi pakeitimai įrašyti"
 #, kde-format
 msgid "%1 is working in these books"
 msgstr "%1 dirba su šiomis knygomis"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settings"
+msgstr "Nuostatos"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format

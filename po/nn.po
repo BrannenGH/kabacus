@@ -520,11 +520,6 @@ msgstr "Rapportar"
 
 #: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Settings"
-msgstr "Innstillingar"
-
-#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
 msgid "On this computer"
 msgstr "På denne datamaskinen"
 
@@ -537,6 +532,11 @@ msgstr "Alle endringar lagra"
 #, kde-format
 msgid "%1 is working in these books"
 msgstr "%1 arbeider i desse bøkene"
+
+#: crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/MorePage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Settings"
+msgstr "Innstillingar"
 
 #: crates/kabacus-kde/qml/Main.qml
 #, kde-format
