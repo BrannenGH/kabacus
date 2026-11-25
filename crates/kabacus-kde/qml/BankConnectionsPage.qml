@@ -108,7 +108,7 @@ Kirigami.ScrollablePage {
     ColumnLayout {
         spacing: Kirigami.Units.largeSpacing
         Kirigami.Heading { text: i18n("Your bank connection"); visible: page.app.serverBooks; level: 2 }
-        Controls.Label { text: page.problem; visible: text !== ""; textFormat: Text.PlainText; color: Kirigami.Theme.negativeTextColor; wrapMode: Text.Wrap; Layout.fillWidth: true }
+        Controls.Label { text: page.problem || page.app.bankSyncProblem; visible: text !== ""; textFormat: Text.PlainText; color: Kirigami.Theme.negativeTextColor; wrapMode: Text.Wrap; Layout.fillWidth: true }
         Controls.Label { text: page.notice; visible: text !== ""; textFormat: Text.PlainText; wrapMode: Text.Wrap; Layout.fillWidth: true }
         Controls.Label { text: i18n("Checking with the server…"); visible: page.busy }
         ColumnLayout {

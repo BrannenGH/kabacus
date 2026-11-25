@@ -206,7 +206,7 @@ msgstr "ஏதேனும் இரண்டு கணக்குகள்"
 msgid "Bank connections"
 msgstr "வங்கி இணைப்புகள்"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required"
 msgstr "மன்னிக்கவும், உங்கள் கணக்குக்கான கட்டணம் செலுத்தப்படவில்லை என SimpleFIN தெரிவிக்கிறது. கட்டணம் செலுத்திய SimpleFIN கணக்கு தேவை."

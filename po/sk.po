@@ -206,7 +206,7 @@ msgstr "Ľubovoľné dva účty"
 msgid "Bank connections"
 msgstr "Bankové spojenia"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required"
 msgstr "Je nám ľúto, SimpleFIN hlási, že váš účet nie je zaplatený. Potrebujete platený účet SimpleFIN."

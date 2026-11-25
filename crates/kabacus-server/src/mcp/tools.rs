@@ -11,4 +11,5 @@ pub fn for_server(state: std::sync::Arc<crate::state::AppState>) -> KabacusMcp {
         Some(state.clone()),
         state.tool_lists.clone(),
     )
+    .with_simplefin_transport(state.simplefin_transport.clone())
 }

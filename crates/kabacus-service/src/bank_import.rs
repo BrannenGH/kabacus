@@ -44,6 +44,8 @@ impl Limits {
 
 #[derive(Debug, Default, Clone, Deserialize, Serialize, JsonSchema)]
 pub struct ImportOptions {
+    #[serde(skip)]
+    pub(crate) require_unambiguous: bool,
     /// Defaults to true. Save by sending false with the previewed head.
     pub dry_run: Option<bool>,
     pub since: Option<NaiveDate>,
@@ -257,6 +259,12 @@ pub(crate) fn apply_statement(
         },
         statement.rows,
     )?;
+    if options.require_unambiguous && planned.iter().any(|item| item.candidates.len() > 1) {
+        return Err(crate::simplefin::problem(
+            "simplefin_review",
+            "Review bank sync in Settings to choose between matching transactions",
+        ));
+    }
     let classified = chart
         .get(target)
         .ok_or_else(|| ImportError::AccountKind(target.into()))?;

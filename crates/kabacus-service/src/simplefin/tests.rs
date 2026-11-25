@@ -18,6 +18,7 @@ struct Bridge {
     fetched: AtomicUsize,
     synced: AtomicUsize,
     unpaid: bool,
+    recent: Option<(i64, bool)>,
 }
 
 impl Transport for Bridge {
@@ -68,6 +69,21 @@ impl Transport for Bridge {
                 ])
             } else {
                 json!([])
+            };
+            let rows = if syncing {
+                if let Some((posted, extra)) = self.recent {
+                    let mut recent = vec![
+                        json!({"id":"HH 2388","posted":posted,"amount":"-18.40","description":"Harbor Street Cafe"}),
+                    ];
+                    if extra {
+                        recent.push(json!({"id":"HH 2389","posted":posted + 86400,"amount":"-12.10","description":"Oak Bakery"}));
+                    }
+                    json!(recent)
+                } else {
+                    rows
+                }
+            } else {
+                rows
             };
             let body = json!({ "connections": [{"conn_id":"Cedar Bank","name":"Cedar Bank"},{"conn_id":"Harbor Bank","name":"Harbor Bank"}],
                 "errlist": [{"code":"gen.api","msg": format!("Window warning: {ACCESS}")},{"code":"act.missingdata","msg":"Listing is incomplete","account_id":"Everyday Account"}],
@@ -238,6 +254,101 @@ async fn creates_and_links_a_card_in_one_revision() {
     .await
     .unwrap();
     assert_eq!(review["counts"]["new"], 1);
+}
+
+#[tokio::test]
+async fn automatic_sync_waits_for_review_and_observes_the_shared_request_interval() {
+    let (state, dana, _) = scratch(false).await;
+    let first = Utc::now().date_naive() - Days::new(2);
+    let posted = first.and_hms_opt(0, 0, 0).unwrap().and_utc().timestamp();
+    let mut bridge = Bridge {
+        recent: Some((posted, false)),
+        ..Default::default()
+    };
+    connect(
+        &state,
+        &dana,
+        &bridge,
+        ConnectBody {
+            token: STANDARD.encode(CLAIM),
+            replace: false,
+            dry_run: false,
+        },
+    )
+    .await
+    .unwrap();
+    let head = state
+        .store
+        .revision(state.ledger)
+        .await
+        .unwrap()
+        .to_string();
+    let linked = link(
+        &state,
+        &dana,
+        &bridge,
+        TARGET,
+        &head,
+        LinkBody {
+            create: None,
+            remote: Some(RemoteAccount {
+                conn_id: "Cedar Bank".into(),
+                id: "Everyday Account".into(),
+            }),
+        },
+    )
+    .await
+    .unwrap();
+    let head = linked["head"].as_str().unwrap();
+    let automatic = || body(json!({"automatic": true}));
+    assert_eq!(
+        sync(&state, &dana, &bridge, head, automatic())
+            .await
+            .unwrap()["skipped"],
+        "needs_review"
+    );
+    assert_eq!(bridge.fetched.load(Ordering::Relaxed), 1);
+
+    let mut manual = json!({"since":first, "end_date":first.succ_opt().unwrap()});
+    manual["snapshot"] = sync(&state, &dana, &bridge, head, body(manual.clone()))
+        .await
+        .unwrap()["snapshot"]
+        .clone();
+    manual["dry_run"] = json!(false);
+    let committed = sync(&state, &dana, &bridge, head, body(manual))
+        .await
+        .unwrap();
+    let head = committed["head"].as_str().unwrap();
+    assert_eq!(
+        sync(&state, &dana, &bridge, head, automatic())
+            .await
+            .unwrap()["skipped"],
+        "recent_request"
+    );
+    assert_eq!(bridge.fetched.load(Ordering::Relaxed), 2);
+    state
+        .store
+        .set_simplefin_access(
+            state.ledger,
+            Owner::Local,
+            &Access::new(ACCESS.into(), Utc::now().timestamp() - 86400),
+        )
+        .await
+        .unwrap();
+    bridge.recent = Some((posted, true));
+    let result = sync(&state, &dana, &bridge, head, automatic())
+        .await
+        .unwrap();
+    assert_eq!(result["counts"]["new"], 1);
+    assert_ne!(result["head"], head);
+    let head = result["head"].as_str().unwrap();
+    assert_eq!(bridge.fetched.load(Ordering::Relaxed), 3);
+    assert_eq!(
+        sync(&state, &dana, &bridge, head, automatic())
+            .await
+            .unwrap()["skipped"],
+        "recent_request"
+    );
 }
 
 #[tokio::test]

@@ -206,7 +206,7 @@ msgstr "任意两个账户"
 msgid "Bank connections"
 msgstr "银行联系"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required"
 msgstr "抱歉，SimpleFIN 显示您的账户尚未付费。需要使用付费的 SimpleFIN 账户。"

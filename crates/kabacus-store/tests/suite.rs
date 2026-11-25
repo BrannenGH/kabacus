@@ -898,7 +898,7 @@ async fn simplefin_access_contract(fixture: Fixture) {
     for remaining in (0..20).rev() {
         assert_eq!(
             store
-                .reserve_simplefin_request(ledger, dana, &access, access.claimed_at)
+                .reserve_simplefin_request(ledger, dana, &access, access.claimed_at, None)
                 .await
                 .unwrap(),
             RequestBudget::Allowed { remaining }
@@ -906,12 +906,25 @@ async fn simplefin_access_contract(fixture: Fixture) {
     }
     assert_eq!(
         store
-            .reserve_simplefin_request(ledger, dana, &access, access.claimed_at + 1)
+            .reserve_simplefin_request(ledger, dana, &access, access.claimed_at + 1, None)
             .await
             .unwrap(),
         RequestBudget::Exhausted {
             next_at: access.claimed_at + 86_400
         }
+    );
+    assert_eq!(
+        store
+            .reserve_simplefin_request(
+                ledger,
+                dana,
+                &access,
+                access.claimed_at + 1,
+                Some(access.claimed_at - 1)
+            )
+            .await
+            .unwrap(),
+        RequestBudget::Deferred
     );
     store
         .set_simplefin_access(ledger, riley, &access)
@@ -919,7 +932,7 @@ async fn simplefin_access_contract(fixture: Fixture) {
         .unwrap();
     assert_eq!(
         store
-            .reserve_simplefin_request(ledger, riley, &access, access.claimed_at)
+            .reserve_simplefin_request(ledger, riley, &access, access.claimed_at, None)
             .await
             .unwrap(),
         RequestBudget::Allowed { remaining: 19 }

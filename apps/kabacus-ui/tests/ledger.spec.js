@@ -107,7 +107,7 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
     )
       return route.continue();
     if (simplefin && path === "/simplefin/connection") {
-      if (route.request().method() === "GET") return route.fulfill({ json: { connected: bankConnected, host: bank.host, remaining: 19 } });
+      if (route.request().method() === "GET") return route.fulfill({ json: { connected: bankConnected, automatic_sync: bankConnected, host: bank.host, remaining: 19 } });
       const body = route.request().postDataJSON();
       writes.push({ body, path });
       if (body.dry_run) return route.fulfill({ json: { host: bank.host, connected: false } });
@@ -125,6 +125,7 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
         return route.fulfill({ json: { head: "43", linked: true } });
       }
       if (simplefin && path === "/simplefin/sync") {
+        if (body.automatic) return route.fulfill({ json: { head: currentVersion.head, skipped: "needs_review" } });
         const counts = { new: 1, matched: 0, duplicate: 0, skipped: 0 };
         if (!body.dry_run) {
           currentVersion.head = "44";
@@ -2187,7 +2188,8 @@ for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 
     await review.getByRole("button", { name: "Categorize" }).click();
     await expect(review).not.toBeVisible();
     await expect(page.getByText("Harbor Street Cafe", { exact: true })).toBeVisible();
-    const sync = writes.filter(write => write.path === "/simplefin/sync");
+    await expect.poll(() => writes.some(write => write.path === "/simplefin/sync" && write.body.automatic)).toBe(true);
+    const sync = writes.filter(write => write.path === "/simplefin/sync" && !write.body.automatic);
     expect(sync.map(write => !!write.body.dry_run)).toEqual([true, false]);
     expect(sync[1].body.snapshot).toBe("cedar-snapshot");
     expect(sync[1].headers["if-match"]).toBe('"43"');

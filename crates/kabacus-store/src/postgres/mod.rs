@@ -1026,6 +1026,7 @@ impl BookStore for PostgresStore {
         owner: Owner,
         expected: &Access,
         now: i64,
+        recent_since: Option<i64>,
     ) -> Result<RequestBudget> {
         let slot = owner.user()?.unwrap_or_default();
         let expected = expected.clone();
@@ -1033,7 +1034,7 @@ impl BookStore for PostgresStore {
             let Some(row) = tx.query_opt("SELECT access_url, claimed_at, requests FROM simplefin_access
                     WHERE ledger_id = $1 AND slot = $2 FOR UPDATE", &[&ledger, &slot]).await? else { return Ok(RequestBudget::Changed); };
             let mut access = Access::stored(row.get(0), row.get(1), row.get(2))?;
-            let budget = access.reserve(&expected, now);
+            let budget = access.reserve(&expected, now, recent_since);
             if matches!(budget, RequestBudget::Allowed { .. }) {
                 tx.execute("UPDATE simplefin_access SET requests = $3 WHERE ledger_id = $1 AND slot = $2",
                     &[&ledger, &slot, &access.timestamps()?]).await?;

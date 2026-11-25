@@ -13,7 +13,7 @@ function bankError(error) {
 
 const newAccountPrefixes = { money: "assets:bank:", "revolving-debt": "liabilities:credit-card:" };
 
-export function BankConnections({ data, api, status, onChanged, onSync, local }) {
+export function BankConnections({ data, api, status, automaticProblem, onChanged, onSync, local }) {
   const [token, setToken] = useState("");
   const [confirmed, setConfirmed] = useState(null);
   const [remote, setRemote] = useState(null);
@@ -84,7 +84,7 @@ export function BankConnections({ data, api, status, onChanged, onSync, local })
   return <section className="bank-connections" aria-labelledby="bank-connections-title">
     <h2 id="bank-connections-title">{t("Bank connections")}</h2>
     {status && !local && (status.connected || editing) && <h3>{t("Your bank connection")}</h3>}
-    {problem && <p role="alert" className="banner error">{problem}</p>}
+    {(problem || automaticProblem) && <p role="alert" className="banner error">{problem || t(automaticProblem)}</p>}
     {notice && <p role="status">{notice}</p>}
     {busy && <p role="status">{t("Checking with the server…")}</p>}
     {!status || (!status.connected && !editing) ? <>

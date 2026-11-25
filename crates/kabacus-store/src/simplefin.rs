@@ -45,6 +45,7 @@ pub enum RequestBudget {
     Allowed { remaining: usize },
     Exhausted { next_at: i64 },
     Changed,
+    Deferred,
 }
 
 impl Access {
@@ -83,9 +84,17 @@ impl Access {
         })
     }
 
-    pub(crate) fn reserve(&mut self, expected: &Self, now: i64) -> RequestBudget {
+    pub(crate) fn reserve(
+        &mut self,
+        expected: &Self,
+        now: i64,
+        recent_since: Option<i64>,
+    ) -> RequestBudget {
         if !self.same_claim(expected) {
             return RequestBudget::Changed;
+        }
+        if recent_since.is_some_and(|since| self.requests.iter().any(|&at| at > since)) {
+            return RequestBudget::Deferred;
         }
         self.requests.retain(|&at| at > now.saturating_sub(WINDOW));
         if self.requests.len() >= REQUEST_LIMIT {

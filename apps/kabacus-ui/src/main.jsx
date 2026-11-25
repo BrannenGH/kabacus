@@ -44,6 +44,7 @@ export function App({ auth, book, onFileAction }) {
   const [form, setForm] = useState(null);
   const [operationForm, setOperationForm] = useState(null);
   const [bankStatus, setBankStatus] = useState(null);
+  const [bankSyncProblem, setBankSyncProblem] = useState("");
   const [openedAccount, setOpenedAccount] = useState(book?.state?.account || "");
   const [selectedRow,setSelectedRow]=useState(book?.state?.selected||"");
   const [chooser, setChooser] = useState(false);
@@ -170,6 +171,40 @@ export function App({ auth, book, onFileAction }) {
   }, [api, simplefinOffered]);
 
   useEffect(() => {
+    setBankSyncProblem("");
+    if (!auth.signedIn || !bankStatus?.automatic_sync) return;
+    const abort = new AbortController();
+    let syncing = false;
+    async function run() {
+      if (syncing || document.visibilityState !== "visible" || document.querySelector("dialog[open]")) return;
+      syncing = true;
+      try {
+        const { head } = await api.request("/version", { signal: abort.signal });
+        const result = await api.request("/simplefin/sync", {
+          method: "POST", head, body: { automatic: true }, signal: abort.signal,
+        });
+        if (!abort.signal.aborted && !result.skipped) {
+          setBankSyncProblem("");
+          if (result.head !== head) latestRefresh.current();
+          reloadBankStatus(abort.signal);
+        }
+      } catch (error) {
+        if (!abort.signal.aborted && error.status !== 409 && error.status !== 403) setBankSyncProblem(error.message);
+      } finally {
+        syncing = false;
+      }
+    }
+    run();
+    const timer = setInterval(run, 15 * 60 * 1000);
+    document.addEventListener("visibilitychange", run);
+    return () => {
+      abort.abort();
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", run);
+    };
+  }, [api, auth.signedIn, bankStatus?.automatic_sync]);
+
+  useEffect(() => {
     if (!auth.signedIn) return;
     latestRefresh.current();
     const wake = () => {
@@ -291,7 +326,7 @@ export function App({ auth, book, onFileAction }) {
             <Settings
               data={data}
               api={api}
-              auth={auth} book={book} bankStatus={bankStatus} onBankChanged={() => { reloadBankStatus(); refresh(); }} onBankSync={openBankSync}
+              auth={auth} book={book} bankStatus={bankStatus} bankSyncProblem={bankSyncProblem} onBankChanged={() => { reloadBankStatus(); refresh(); }} onBankSync={openBankSync}
             />
           )}
           {!data ? (

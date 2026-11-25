@@ -206,7 +206,7 @@ msgstr "Ҳар ду ҳисоб"
 msgid "Bank connections"
 msgstr "Пайвастҳои бонкӣ"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required"
 msgstr "Мутаассифона, SimpleFIN мегӯяд, ки ҳаққи ҳисоби шумо пардохт нашудааст. Ҳисоби пулакии SimpleFIN лозим аст."

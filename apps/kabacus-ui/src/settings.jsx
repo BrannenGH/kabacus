@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { t } from "./i18n";
 import { BankConnections } from "./bank-connections";
 
-export function Settings({ data, auth, book, api, bankStatus, onBankChanged, onBankSync }) {
+export function Settings({ data, auth, book, api, bankStatus, bankSyncProblem, onBankChanged, onBankSync }) {
   const [error, setError] = useState("");
   const settings = book?.settings || { reopen: true, automation: false, control_port: 7979 };
   async function change(values) {
@@ -28,7 +28,7 @@ export function Settings({ data, auth, book, api, bankStatus, onBankChanged, onB
       <label>{t("Control port")}<input type="number" min="1" max="65535" defaultValue={settings.control_port || 7979} onBlur={e => change({ control_port: Number(e.target.value) })}/></label>
     </section>}
     {error && <p role="alert" className="banner error">{error}</p>}
-    {data && <BankConnections data={data} api={api} status={bankStatus} onChanged={onBankChanged} onSync={onBankSync} local={book?.local}/>}
+    {data && <BankConnections data={data} api={api} status={bankStatus} automaticProblem={bankSyncProblem} onChanged={onBankChanged} onSync={onBankSync} local={book?.local}/>}
     <section>
       <h2>{t("Account")}</h2>
       <p>{book?.local ? t("On this computer") : auth.identity || book?.location}</p>

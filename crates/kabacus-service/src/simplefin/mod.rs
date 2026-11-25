@@ -29,6 +29,8 @@ pub use transport::{Http, Reply, Request, Response, Transport, BRIDGE_HOSTS};
 
 const LINK: &str = "simplefin-account";
 const HOST: &str = "simplefin-server";
+const REVIEWED: &str = "simplefin-reviewed";
+const AUTO_INTERVAL: i64 = 6 * 60 * 60;
 const SNAPSHOT_TTL: i64 = 15 * 60;
 
 #[derive(Debug, Clone, Deserialize)]
@@ -238,6 +240,7 @@ async fn fetch(
     access: &Access,
     window: Option<Window>,
     refresh: bool,
+    automatic: bool,
 ) -> Result<Snapshot, Error> {
     let now = Utc::now().timestamp();
     if !refresh {
@@ -270,12 +273,24 @@ async fn fetch(
     }
     match state
         .store
-        .reserve_simplefin_request(state.ledger, owner, access, now)
+        .reserve_simplefin_request(
+            state.ledger,
+            owner,
+            access,
+            now,
+            automatic.then_some(now - AUTO_INTERVAL),
+        )
         .await
         .map_err(store_error)?
     {
         RequestBudget::Allowed { .. } => (),
         RequestBudget::Changed => return Err(reconnect()),
+        RequestBudget::Deferred => {
+            return Err(problem(
+                "simplefin_deferred",
+                "SimpleFIN was contacted recently",
+            ))
+        }
         RequestBudget::Exhausted { next_at } => {
             let date = chrono::DateTime::from_timestamp(next_at, 0)
                 .map(|t| t.to_rfc3339())
@@ -463,7 +478,7 @@ pub async fn connect(
         .await
         .map_err(store_error)?;
     state.bank_connections.clear(owner);
-    let snapshot = fetch(state, transport, owner, &access, None, true).await?;
+    let snapshot = fetch(state, transport, owner, &access, None, true, false).await?;
     account_list(state, &snapshot).await
 }
 
@@ -485,7 +500,7 @@ pub async fn connection(state: &Service, caller: &dyn Caller) -> Result<Value, E
     let connections = snapshot.as_ref().map(connection_list).unwrap_or_default();
     let warnings = snapshot.as_ref().map(warning_values).unwrap_or_default();
     Ok(
-        json!({"connected": true, "host": url.host_str(), "claimed_at": access.claimed_at,
+        json!({"connected": true, "automatic_sync": true, "host": url.host_str(), "claimed_at": access.claimed_at,
         "remaining": access.remaining(now), "connections": connections, "warnings": warnings}),
     )
 }
@@ -603,6 +618,12 @@ async fn account_list(state: &Service, snapshot: &Snapshot) -> Result<Value, Err
     )
 }
 
+#[derive(Default, Deserialize, Serialize, JsonSchema)]
+pub struct ListAccounts {
+    #[serde(default)]
+    pub refresh: bool,
+}
+
 pub async fn list_accounts(
     state: &Service,
     caller: &dyn Caller,
@@ -611,7 +632,7 @@ pub async fn list_accounts(
 ) -> Result<Value, Error> {
     let owner = owner(state, caller, Permission::Read).await?;
     let access = access(state, owner).await?;
-    let snapshot = fetch(state, transport, owner, &access, None, refresh).await?;
+    let snapshot = fetch(state, transport, owner, &access, None, refresh, false).await?;
     account_list(state, &snapshot).await
 }
 
@@ -688,7 +709,7 @@ pub async fn link(
     tags.retain(|(key, _)| key != LINK && key != HOST);
     if let Some(remote) = body.remote {
         let access = access(state, owner).await?;
-        let snapshot = fetch(state, transport, owner, &access, None, false).await?;
+        let snapshot = fetch(state, transport, owner, &access, None, false, false).await?;
         let key = link_key(&remote.conn_id, &remote.id);
         let remote = snapshot
             .data
@@ -720,8 +741,12 @@ pub async fn link(
                 "This SimpleFIN account is already linked to another account",
             ));
         }
+        let reviewed = format!("{domain}/{key}");
+        tags.retain(|(name, value)| name != REVIEWED || value.starts_with(&format!("{reviewed} ")));
         tags.push((LINK.into(), key));
         tags.push((HOST.into(), domain.into()));
+    } else {
+        tags.retain(|(key, _)| key != REVIEWED);
     }
     let text = with_tags(original, &tags);
     let changed = original != text;
@@ -775,6 +800,9 @@ pub async fn link(
 
 #[derive(Deserialize, Serialize, JsonSchema)]
 pub struct SyncBody {
+    /// Automatically import new rows on mappings that have completed a manual import.
+    #[serde(default)]
+    pub automatic: bool,
     pub dry_run: Option<bool>,
     pub snapshot: Option<String>,
     pub since: Option<NaiveDate>,
@@ -858,8 +886,52 @@ pub async fn sync(
     let owner = owner(state, caller, Permission::Write).await?;
     let access = access(state, owner).await?;
     let mut wc = WorkingCopy::load(state, head).await?;
-    let dry_run = body.dry_run.unwrap_or(true);
-    let links = links(&wc.book);
+    let automatic = body.automatic;
+    if automatic
+        && (body.snapshot.is_some()
+            || body.since.is_some()
+            || body.end_date.is_some()
+            || !body.starts.is_empty()
+            || !body.decisions.is_empty()
+            || !body.cursors.is_empty()
+            || body.dry_run.is_some()
+            || body.refresh)
+    {
+        return Err(problem(
+            "simplefin_automatic",
+            "Use automatic sync without manual review options",
+        ));
+    }
+    let dry_run = !automatic && body.dry_run.unwrap_or(true);
+    let (url, _) = credentials(&access, allowlist(state))?;
+    let domain = url.host_str().unwrap_or_default();
+    let mut links = links(&wc.book);
+    let mut cutovers = BTreeMap::new();
+    if automatic {
+        links.retain(|target, (key, host)| {
+            if host.as_deref().is_some_and(|host| host != domain) {
+                return false;
+            }
+            let prefix = format!("{domain}/{key} ");
+            let cutover = wc.book.accounts.get(target).and_then(|account| {
+                kabacus_core::declared_tags(&account.tags)
+                    .iter()
+                    .find_map(|(name, value)| {
+                        if name != REVIEWED {
+                            return None;
+                        }
+                        value.strip_prefix(&prefix)?.parse::<NaiveDate>().ok()
+                    })
+            });
+            if let Some(date) = cutover {
+                cutovers.insert(target.clone(), date);
+            }
+            cutover.is_some()
+        });
+        if links.is_empty() {
+            return Ok(json!({"head": wc.head, "skipped": "needs_review"}));
+        }
+    }
     let now = Utc::now();
     let existing = if let Some(id) = &body.snapshot {
         Some(
@@ -870,7 +942,7 @@ pub async fn sync(
                 })
                 .ok_or_else(expired)?,
         )
-    } else if !dry_run {
+    } else if !dry_run && !automatic {
         return Err(expired());
     } else {
         None
@@ -880,8 +952,6 @@ pub async fn sync(
         .or_else(|| existing.as_ref().and_then(|s| s.window.map(|w| w.end)))
         .or_else(|| now.date_naive().succ_opt())
         .unwrap_or(now.date_naive());
-    let (url, _) = credentials(&access, allowlist(state))?;
-    let domain = url.host_str().unwrap_or_default();
     let previous = existing.clone().or_else(|| {
         state
             .bank_connections
@@ -899,7 +969,21 @@ pub async fn sync(
         })
         .map(|(name, link)| (name.clone(), link.clone()))
         .collect();
-    let starts = dates(&wc, &owned, &body, end);
+    let mut starts = dates(&wc, &owned, &body, end);
+    let earliest = end.checked_sub_days(Days::new(90)).unwrap_or(end);
+    if automatic {
+        if owned.is_empty() {
+            return Ok(json!({"head": wc.head, "skipped": "no_accounts"}));
+        }
+        for (account, date) in &mut starts {
+            *date = (*date).max(earliest).max(cutovers[account].min(end));
+        }
+        starts.retain(|_, date| *date < end);
+        if starts.is_empty() {
+            return Ok(json!({"head": wc.head, "skipped": "no_new_days"}));
+        }
+        links.retain(|account, _| starts.contains_key(account));
+    }
     let since = starts
         .values()
         .copied()
@@ -919,9 +1003,28 @@ pub async fn sync(
     let snapshot = match existing {
         Some(snapshot) if snapshot.window == Some(window) => snapshot,
         Some(_) => return Err(expired()),
-        None => fetch(state, transport, owner, &access, Some(window), body.refresh).await?,
+        None => match fetch(
+            state,
+            transport,
+            owner,
+            &access,
+            Some(window),
+            body.refresh || automatic,
+            automatic,
+        )
+        .await
+        {
+            Err(error) if automatic && error.code() == "simplefin_deferred" => {
+                return Ok(json!({"head": wc.head, "skipped": "recent_request"}));
+            }
+            result => result?,
+        },
     };
-    let starts = dates(&wc, &links, &body, end);
+    let starts = if automatic {
+        starts
+    } else {
+        dates(&wc, &links, &body, end)
+    };
     let mut decisions = body.decisions;
     let mut results = Vec::new();
     let mut count = 0usize;
@@ -953,7 +1056,8 @@ pub async fn sync(
             return Err(ImportError::TooLarge.into());
         }
         let options = ImportOptions {
-            dry_run: body.dry_run,
+            dry_run: Some(dry_run),
+            require_unambiguous: automatic,
             since: starts.get(&target).copied(),
             limit: body.limit,
             cursor: body.cursors.get(&target).cloned(),
@@ -963,8 +1067,32 @@ pub async fn sync(
         let mut result = apply_statement(&mut wc, &target, statement, &options)?;
         result["pending"] = json!(pending);
         result["since"] = json!(options.since);
-        added += result["counts"]["new"].as_u64().unwrap_or_default();
-        matched += result["counts"]["matched"].as_u64().unwrap_or_default();
+        let new = result["counts"]["new"].as_u64().unwrap_or_default();
+        let matches = result["counts"]["matched"].as_u64().unwrap_or_default();
+        if !dry_run && !automatic && new + matches > 0 {
+            let original = &wc.book.accounts[&target].tags;
+            let mut tags = kabacus_core::declared_tags(original);
+            let prefix = format!("{domain}/{key} ");
+            let cutoff = tags
+                .iter()
+                .filter_map(|(name, value)| {
+                    if name != REVIEWED {
+                        return None;
+                    }
+                    value.strip_prefix(&prefix)?.parse::<NaiveDate>().ok()
+                })
+                .max()
+                .unwrap_or(end)
+                .max(end);
+            tags.retain(|(key, _)| key != REVIEWED);
+            tags.push((REVIEWED.into(), format!("{prefix}{cutoff}")));
+            let updated = with_tags(original, &tags);
+            if &updated != original {
+                wc.declare(&target, &updated);
+            }
+        }
+        added += new;
+        matched += matches;
         results.push(result);
     }
     if let Some(choice) = decisions.into_values().flatten().next() {
@@ -985,7 +1113,8 @@ pub async fn sync(
             &format!("import: {added} added, {matched} matched (SimpleFIN)"),
         )
         .await?;
-        who.details["source"] = json!({"format":"simplefin", "from": since, "to": end});
+        who.details["source"] =
+            json!({"format":"simplefin", "from": since, "to": end, "automatic": automatic});
         let revision = ops::commit(state, wc.changes(), &who, wc.revision).await?;
         ops::remember(state, &wc, revision).await;
         wc.head = revision.to_string();

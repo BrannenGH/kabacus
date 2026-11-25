@@ -74,7 +74,9 @@ export class BrowserApi extends Api {
       const before=method!=="GET"?await this.books.bytes():null;
       const request=JSON.stringify({method,path,body:body??null,head:head??null});
       const response=JSON.parse(bankRequest?await this.books.request_with_checkpoint(request,bytes=>this.persist(bytes)):await this.books.request(request));
-      if(method!=="GET"&&response.status<400&&body?.dry_run!==true){
+      const automatic = body?.automatic && response.status < 400
+        ? JSON.parse(decode(response).text) : null;
+      if(method!=="GET"&&response.status<400&&body?.dry_run!==true&&(!automatic||automatic.head!==head)){
         try{await this.persist(await this.books.bytes());}
         catch(error){const module=await wasm();const old=this.books;this.books=await module.BrowserBooks.open(before,this.record.username||"local");old.free();throw new ApiError(507,{message:t("Can't save these books. Check the folder's permissions and available space."),details:{reason:String(error)}});}
       }

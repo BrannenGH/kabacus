@@ -206,7 +206,7 @@ msgstr "कोणतीही दोन खाती"
 msgid "Bank connections"
 msgstr "बँक कनेक्शन"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required"
 msgstr "क्षमस्व, SimpleFIN नुसार तुमच्या खात्याचे शुल्क भरलेले नाही. शुल्क भरलेले SimpleFIN खाते आवश्यक आहे."

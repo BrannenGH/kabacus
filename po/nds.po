@@ -206,7 +206,7 @@ msgstr "Twee Konten, ganz egaal welk"
 msgid "Bank connections"
 msgstr "Bankverbinnen"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required"
 msgstr "Deit uns leed, SimpleFIN meldt, dat Dien Konto bi ehr nich betahlt is. Du bruukst en betahlt SimpleFIN-Konto."

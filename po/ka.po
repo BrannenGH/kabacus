@@ -206,7 +206,7 @@ msgstr "ნებისმიერი ორი ანგარიში"
 msgid "Bank connections"
 msgstr "საბანკო კავშირები"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required"
 msgstr "სამწუხაროდ, SimpleFIN გატყობინებთ, რომ თქვენი ანგარიშის საფასური გადახდილი არ არის. საჭიროა ფასიანი SimpleFIN ანგარიში."
