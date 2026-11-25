@@ -759,33 +759,58 @@ def main():
     elif command == "simplefin-sync":
         token, = args
 
-        def choose_action(name):
+        def enabled_control(name, role):
             def enabled():
-                button = find(app(), name, pyatspi.ROLE_PUSH_BUTTON)
-                return button if button and button.getState().contains(pyatspi.STATE_ENABLED) else None
+                control = find(app(), name, role)
+                return control if control and control.getState().contains(pyatspi.STATE_ENABLED) else None
 
-            press(wait_for(name, enabled))
+            return wait_for(name, enabled)
+
+        def choose_action(name):
+            press(enabled_control(name, pyatspi.ROLE_PUSH_BUTTON))
+
+        def preview_connection():
+            help_link = wait_for("setup instructions", lambda: find(app(), "Get a SimpleFIN setup token", pyatspi.ROLE_PUSH_BUTTON))
+            help_link.queryComponent().grabFocus()
+            key(0xFF09)  # Tab to the password field.
+            for character in token:
+                pyatspi.Registry.generateKeyboardEvent(0, character, pyatspi.KEY_STRING)
+                time.sleep(0.02)
+            choose_action("Connect SimpleFIN")
+            wait_for("bridge host confirmation", lambda: find(app(), "Connect to bridge.simplefin.org?"))
 
         goto("Settings")
         choose_action("Connect SimpleFIN")
-        help_link = wait_for("setup instructions", lambda: find(app(), "Get a SimpleFIN setup token", pyatspi.ROLE_PUSH_BUTTON))
-        help_link.queryComponent().grabFocus()
-        key(0xFF09)  # Tab to the password field.
-        for character in token:
-            pyatspi.Registry.generateKeyboardEvent(0, character, pyatspi.KEY_STRING)
-            time.sleep(0.02)
-        choose_action("Connect SimpleFIN")
-        wait_for("bridge host confirmation", lambda: find(app(), "Connect to bridge.simplefin.org?"))
+        preview_connection()
         choose_action("Connect")
-        picker = wait_for("Cedar Everyday", lambda: find(app(), "Cedar Everyday", pyatspi.ROLE_COMBO_BOX))
-        click(picker)
-        click(wait_for("Cedar Checking", lambda: find(app(), "Cedar Checking")))
+        wait_for("payment required message", lambda: find(app(), "Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required"))
+        choose_action("Replace connection")
+        preview_connection()
+        wait_for("replacement confirmation", lambda: find(app(), "This replaces your current bank connection."))
+        wait_for("replacement action", lambda: find(app(), "Replace connection", pyatspi.ROLE_PUSH_BUTTON))
+        choose_action("Cancel")
+        choose_action("Refresh accounts")
+
+        def mapping(label):
+            picker = enabled_control("Cedar Everyday", pyatspi.ROLE_COMBO_BOX)
+            click(picker)
+            click(wait_for(label, lambda: find(app(), label)))
+
+        mapping("Cedar Rewards")
+        mapping("Don’t import")
+        mapping("New credit card…")
+        set_text(wait_for("card name", lambda: find(app(), "Name", pyatspi.ROLE_TEXT)), "Cedar Travel")
+        choose_action("Add")
         choose_action("Sync")
         choose_action("Review")
         wait_for("reviewed transaction", lambda: find(app(), "Harbor Street Cafe"))
         choose_action("Import")
         choose_action("Categorize")
         wait_for("uncategorized transaction", lambda: label_starting("Harbor Street Cafe"))
+        goto("Overview")
+        wait_for("Overview", lambda: find(app(), "Cash on Hand") or find(app(), "Available to spend"))
+        if find(app(), "Sync", pyatspi.ROLE_PUSH_BUTTON):
+            fail("Overview offers manual SimpleFIN sync")
     elif command == "statement-import":
         account, path = args
         goto("Transactions")

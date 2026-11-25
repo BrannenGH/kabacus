@@ -99,7 +99,9 @@ Kirigami.ScrollablePage {
             const response = JSON.parse(reply)
             const body = response.body
             if (response.status >= 400) {
-                page.problem = body.message || body.error || ""
+                page.problem = body.code === "simplefin_payment"
+                    ? i18n("Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required")
+                    : body.message || body.error || ""
                 if (response.status === 409 || body.code === "snapshot_expired") {
                     page.head = ""
                     page.needsReview = true

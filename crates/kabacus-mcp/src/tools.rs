@@ -1014,7 +1014,7 @@ impl KabacusMcp {
     }
 
     #[tool(
-        description = "Link a SimpleFIN account to a bank or credit card account at the current head. Set remote to null to unlink.",
+        description = "Link a SimpleFIN account to a bank or credit card account at the current head. Set create to money or revolving-debt to declare a new account and link it in one revision. Set remote to null to unlink.",
         annotations(read_only_hint = false, destructive_hint = false)
     )]
     async fn link_simplefin_account(

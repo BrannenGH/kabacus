@@ -117,6 +117,13 @@ fn reconnect() -> Error {
     problem("simplefin_reconnect", "Reconnect to SimpleFIN to continue")
 }
 
+fn payment_required() -> Error {
+    problem(
+        "simplefin_payment",
+        "Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required",
+    )
+}
+
 fn expired() -> Error {
     problem(
         "snapshot_expired",
@@ -291,13 +298,7 @@ async fn fetch(
     let wire = match reply.status {
         200 => reply.body,
         403 => return Err(reconnect()),
-        402 => {
-            let body = String::from_utf8_lossy(&reply.body);
-            return Err(problem(
-                "simplefin_payment",
-                message(&body, access, &authorization),
-            ));
-        }
+        402 => return Err(payment_required()),
         _ => {
             return Err(problem(
                 "simplefin_network",
@@ -418,6 +419,9 @@ pub async fn connect(
             claim: true,
         })
         .await?;
+    if result.status == 402 {
+        return Err(payment_required());
+    }
     if result.status == 403 {
         return Err(problem("simplefin_token_used", "This SimpleFIN token was already used or is invalid. It may be compromised. Disable it at your SimpleFIN server and make a new one"));
     }
@@ -617,10 +621,19 @@ pub struct RemoteAccount {
     pub id: String,
 }
 
+#[derive(Clone, Copy, Deserialize, Serialize, JsonSchema)]
+#[serde(rename_all = "kebab-case")]
+pub enum NewAccountKind {
+    Money,
+    RevolvingDebt,
+}
+
 #[derive(Deserialize, Serialize, JsonSchema)]
 pub struct LinkBody {
     /// Null removes the link.
     pub remote: Option<RemoteAccount>,
+    /// Declare a new account of this kind in the same revision as the link.
+    pub create: Option<NewAccountKind>,
 }
 
 #[derive(Deserialize, JsonSchema)]
@@ -641,6 +654,19 @@ pub async fn link(
 ) -> Result<Value, Error> {
     let owner = owner(state, caller, Permission::Write).await?;
     let mut wc = WorkingCopy::load(state, head).await?;
+    let new_kind = body.create.map(|kind| match kind {
+        NewAccountKind::Money => AccountKind::Money,
+        NewAccountKind::RevolvingDebt => AccountKind::RevolvingDebt,
+    });
+    if new_kind.is_some() {
+        if body.remote.is_none() {
+            return Err(problem(
+                "simplefin_account",
+                "Choose a SimpleFIN account to link to the new account",
+            ));
+        }
+        ops::declare_account(&mut wc, target, &[])?;
+    }
     let chart = wc.chart();
     let eligible = chart.get(target).is_some_and(|account| {
         !account.synthetic
@@ -648,6 +674,7 @@ pub async fn link(
                 account.kind,
                 AccountKind::Money | AccountKind::RevolvingDebt
             )
+            && new_kind.is_none_or(|kind| account.kind == kind)
     });
     if !eligible {
         return Err(ImportError::AccountKind(target.into()).into());
@@ -697,7 +724,37 @@ pub async fn link(
         tags.push((HOST.into(), domain.into()));
     }
     let text = with_tags(original, &tags);
-    if original != text {
+    let changed = original != text;
+    if new_kind == Some(AccountKind::RevolvingDebt) {
+        let card = AccountName::new(target);
+        let reserve = chart.reserve_for(&card);
+        let valid_home = reserve.as_str().rsplit_once(':').is_some_and(|(home, _)| {
+            wc.is_declared(home)
+                && chart
+                    .get(home)
+                    .is_some_and(|account| account.kind == AccountKind::Money && !account.synthetic)
+        });
+        if chart.kind_of(&reserve) != AccountKind::DebtReserve || !valid_home {
+            return Err(problem(
+                "simplefin_reserve",
+                "Configure a card reserve under a declared bank account before creating this card",
+            ));
+        }
+        if chart.accounts.iter().any(|account| {
+            account.kind == AccountKind::RevolvingDebt
+                && account.account != card
+                && chart.reserve_for(&account.account) == reserve
+        }) {
+            return Err(problem(
+                "simplefin_reserve",
+                "A different credit card already uses this reserve. Choose another name",
+            ));
+        }
+        if !wc.is_declared(reserve.as_str()) {
+            ops::declare_account(&mut wc, reserve.as_str(), &[])?;
+        }
+    }
+    if changed {
         wc.declare(target, &text);
         ops::check(&wc)?;
         let who = ops::who(

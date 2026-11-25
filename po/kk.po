@@ -39,7 +39,7 @@ msgctxt "%1 is the closest account to what was typed"
 msgid "Use %1"
 msgstr "%1 пайдалану"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add"
 msgstr "Қосу"
@@ -206,6 +206,11 @@ msgstr "Кез келген екі шот"
 msgid "Bank connections"
 msgstr "Банктік байланыстар"
 
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required"
+msgstr "Өкінішке қарай, SimpleFIN тіркелгіңіздің ақысы төленбегенін хабарлады. Ақылы SimpleFIN тіркелгісі қажет."
+
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Your bank connection"
@@ -222,15 +227,15 @@ msgctxt "%1 is the remaining request count"
 msgid "Requests remaining today: %1"
 msgstr "Бүгін қалған сұраулар: %1"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sync"
 msgstr "Синхрондау"
 
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Load bank accounts"
-msgstr "Банк шоттарын жүктеңіз"
+msgid "Refresh accounts"
+msgstr "Шоттарды жаңарту"
 
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -273,20 +278,40 @@ msgstr "Бұл ағымдағы банк байланысын ауыстырад
 msgid "Cancel"
 msgstr "Бас тарту"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Connect"
-msgstr "Қосылу"
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect SimpleFIN"
 msgstr "SimpleFIN қосыңыз"
 
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connect"
+msgstr "Қосылу"
+
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Don’t import"
 msgstr "Импорттамаңыз"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "New bank account…"
+msgstr "Жаңа банк шоты…"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "New credit card…"
+msgstr "Жаңа кредит картасы…"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This account uses a different currency from your books."
+msgstr "Бұл шоттың валютасы есеп кітаптарыңыздағы валютадан өзгеше."
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Name"
+msgstr "Атауы"
 
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -719,11 +744,6 @@ msgstr "Кітаптар"
 #, kde-format
 msgid "Close"
 msgstr "Жабу"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Name"
-msgstr "Атауы"
 
 #: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2751,6 +2771,10 @@ msgstr "%1 транзакциясымен сәйкестендіру"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "Бүгін қалған сұраулар: %1"
+
+#, kde-format
+#~ msgid "Load bank accounts"
+#~ msgstr "Банк шоттарын жүктеңіз"
 
 #, kde-format
 #~ msgid "Adds the reserve lines for you"

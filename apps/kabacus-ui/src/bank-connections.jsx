@@ -5,6 +5,14 @@ import { t } from "./i18n";
 import { ImportReview } from "./statement-import";
 import { useDialogHistory } from "./phone-history";
 
+function bankError(error) {
+  return error.code === "simplefin_payment"
+    ? t("Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required")
+    : error.message;
+}
+
+const newAccountPrefixes = { money: "assets:bank:", "revolving-debt": "liabilities:credit-card:" };
+
 export function BankConnections({ data, api, status, onChanged, onSync, local }) {
   const [token, setToken] = useState("");
   const [confirmed, setConfirmed] = useState(null);
@@ -13,6 +21,7 @@ export function BankConnections({ data, api, status, onChanged, onSync, local })
   const [notice, setNotice] = useState("");
   const [problem, setProblem] = useState("");
   const [editing, setEditing] = useState(false);
+  const [newAccount, setNewAccount] = useState(null);
   const helpLink = useRef(null);
   const setupButton = useRef(null);
   const restoreSetupFocus = useRef(false);
@@ -28,12 +37,16 @@ export function BankConnections({ data, api, status, onChanged, onSync, local })
     setEditing(false);
     setToken("");
     setConfirmed(null);
+    setProblem("");
   }
   const targets = data.accounts.filter(account => !account.synthetic && ["money", "revolving-debt"].includes(account.kind));
-  async function perform(run) {
+  async function perform(run, onError) {
     setNotice(""); setProblem(""); setBusy(true);
     try { await run(); }
-    catch (error) { setProblem(error.message); onChanged(); }
+    catch (error) {
+      if (!onError?.(error)) setProblem(bankError(error));
+      onChanged();
+    }
     finally { setBusy(false); }
   }
   async function connect(dry_run) {
@@ -41,19 +54,31 @@ export function BankConnections({ data, api, status, onChanged, onSync, local })
       const reply = await api.request("/simplefin/connection", { method: "PUT", body: { token, dry_run, replace: !dry_run && !!confirmed?.connected } });
       if (dry_run) setConfirmed(reply);
       else {
-        setRemote(reply); setToken(""); setConfirmed(null); setEditing(false);
+        setRemote(reply); setNewAccount(null); setToken(""); setConfirmed(null); setEditing(false);
         onChanged();
       }
+    }, error => {
+      if (!dry_run && error.code === "simplefin_connected") {
+        setConfirmed({ ...confirmed, connected: true });
+        return true;
+      }
+      if (!dry_run && error.code === "simplefin_payment") {
+        setRemote(null); setNewAccount(null);
+        setToken(""); setConfirmed(null); setEditing(false);
+      }
+      return false;
     });
   }
-  async function link(account, target) {
+  async function link(account, target, create) {
     await perform(async () => {
       const current = await api.request("/version");
-      await api.request(`/accounts/${encodeURIComponent(target || account.linked)}/simplefin-link`, { method: "PUT", head: current.head, body: { remote: target ? { conn_id: account.conn_id, id: account.id } : null } });
+      await api.request(`/accounts/${encodeURIComponent(target || account.linked)}/simplefin-link`, { method: "PUT", head: current.head, body: { remote: target ? { conn_id: account.conn_id, id: account.id } : null, ...(create && { create }) } });
       setRemote(previous => ({ ...previous, accounts: previous.accounts.map(candidate => candidate.id === account.id && candidate.conn_id === account.conn_id ? { ...candidate, linked: target || null } : candidate) }));
+      setNewAccount(null);
       onChanged();
     });
   }
+  const occupied = new Set([...(remote?.other_links || []), ...(remote?.accounts || []).map(account => account.linked)]);
   const groups = remote?.connections || [];
   function accountName(target) { return targets.find(item => item.account === target)?.display_name || target; }
   return <section className="bank-connections" aria-labelledby="bank-connections-title">
@@ -68,18 +93,18 @@ export function BankConnections({ data, api, status, onChanged, onSync, local })
     </> : !editing ? <>
       <p>{status.host}</p>
       <p className="muted">{t("Requests remaining today: %1", status.remaining)}</p>
-      <div className="dialog-actions bank-actions">
+      <div className="bank-controls">
         <button disabled={busy} onClick={onSync}>{t("Sync")}</button>
-        <button className="secondary" disabled={busy} onClick={() => perform(async () => { setRemote(await api.request("/simplefin/accounts")); onChanged(); })}>{t("Load bank accounts")}</button>
+        <button className="secondary" disabled={busy} onClick={() => perform(async () => { setRemote(await api.request("/simplefin/accounts?refresh=true")); setNewAccount(null); onChanged(); })}>{t("Refresh accounts")}</button>
         <button ref={setupButton} className="quiet" disabled={busy} onClick={() => setEditing(true)}>{t("Replace connection")}</button>
         <button className="quiet" disabled={busy} onClick={() => perform(async () => {
           const reply = await api.request("/simplefin/connection", { method: "DELETE" });
-          setRemote(null); setNotice(reply.message); onChanged();
+          setRemote(null); setNewAccount(null); setNotice(reply.message); onChanged();
         })}>{t("Disconnect")}</button>
       </div>
     </> : <form className="form-fields bank-setup" onSubmit={event => { event.preventDefault(); connect(!confirmed); }}>
       <a ref={helpLink} href="https://bridge.simplefin.org/simplefin/create" target="_blank" rel="noreferrer">{t("Get a SimpleFIN setup token")}</a>
-      <label>{t("Setup token")}<input type="password" autoComplete="off" spellCheck={false} value={token} disabled={busy} onChange={event => { setToken(event.target.value); setConfirmed(null); }}/></label>
+      <label>{t("Setup token")}<input type="password" autoComplete="off" spellCheck={false} value={token} disabled={busy} onChange={event => { setToken(event.target.value); setConfirmed(null); setProblem(""); }}/></label>
       {confirmed && <>
         <p>{t("Connect to %1?", confirmed.host)}</p>
         {local && <p className="banner">{t("Anyone with this file can read your connected bank transactions until you revoke access at your SimpleFIN server.")}</p>}
@@ -87,20 +112,44 @@ export function BankConnections({ data, api, status, onChanged, onSync, local })
       </>}
       <div className="dialog-actions bank-actions">
         <button type="button" className="secondary" disabled={busy} onClick={cancelSetup}>{t("Cancel")}</button>
-        <button disabled={busy || !token.trim()}>{confirmed ? t("Connect") : t("Connect SimpleFIN")}</button>
+        <button disabled={busy || !token.trim()}>{confirmed ? (confirmed.connected ? t("Replace connection") : t("Connect")) : t("Connect SimpleFIN")}</button>
       </div>
     </form>}
     {(remote?.warnings || status?.warnings || []).map((warning, index) => <p key={index} className="banner">{warning.message}</p>)}
-    {groups.map(connection => <section key={connection.conn_id}>
+    {!editing && groups.map(connection => <section key={connection.conn_id}>
       <h3>{connection.name}</h3>
-      {remote.accounts.filter(account => account.conn_id === connection.conn_id).map(account => <div key={account.id} className="statement-link-row">
-        <label>{account.name}<small className="muted">{account.balance} {account.currency}</small>
-          <select disabled={busy || account.currency !== data.commodity.symbol} value={account.linked || ""} onChange={event => link(account, event.target.value)}>
-            <option value="">{t("Don’t import")}</option>
-            {targets.map(target => <option key={target.account} value={target.account}>{target.display_name || target.account}</option>)}
-          </select>
-        </label>
-      </div>)}
+      {remote.accounts.filter(account => account.conn_id === connection.conn_id).map(account => {
+        const creating = newAccount?.account === account ? newAccount : null;
+        const compatible = account.currency === data.commodity.symbol;
+        return <div key={account.id} className="statement-link-row">
+          <label>{account.name}<small className="muted">{account.balance} {account.currency}</small>
+            <select disabled={busy || !compatible} value={creating ? ":" + creating.kind : account.linked || ""} onChange={event => {
+              const choice = event.target.value;
+              if (choice.startsWith(":")) setNewAccount({ account, kind: choice.slice(1), name: "" });
+              else if (choice || account.linked) link(account, choice);
+              else setNewAccount(null);
+            }}>
+              <option value="">{t("Don’t import")}</option>
+              {account.linked ? <option value={account.linked}>{accountName(account.linked)}</option> : <>
+                {targets.filter(target => !occupied.has(target.account)).map(target => <option key={target.account} value={target.account}>{target.display_name || target.account}</option>)}
+                <option value=":money">{t("New bank account…")}</option>
+                <option value=":revolving-debt">{t("New credit card…")}</option>
+              </>}
+            </select>
+          </label>
+          {!compatible && <p className="muted">{t("This account uses a different currency from your books.")}</p>}
+          {creating && <form className="form-fields" onSubmit={event => {
+            event.preventDefault();
+            link(account, newAccountPrefixes[creating.kind] + creating.name.trim(), creating.kind);
+          }}>
+            <label>{t("Name")}<input autoFocus value={creating.name} disabled={busy} onChange={event => setNewAccount({ ...creating, name: event.target.value })}/></label>
+            <div className="dialog-actions bank-actions">
+              <button type="button" className="secondary" disabled={busy} onClick={() => setNewAccount(null)}>{t("Cancel")}</button>
+              <button disabled={busy || !creating.name.trim() || creating.name.includes(":")}>{t("Add")}</button>
+            </div>
+          </form>}
+        </div>;
+      })}
     </section>)}
     {!!remote?.other_links?.length && <section><h3>{t("Linked through another member’s connection")}</h3><ul>{remote.other_links.map(account => <li key={account}>{accountName(account)}</li>)}</ul></section>}
   </section>;
@@ -145,7 +194,7 @@ export function BankSync({ api, data, disabled, onClose, onUpdated, onCategorize
       if (dryRun) { setResult(reply); setReviewAgain(false); setRangeChanged(false); }
       else { setConfirmed(reply); onUpdated(); }
     } catch (failure) {
-      setError(failure.message);
+      setError(bankError(failure));
       if (failure.status === 409 || failure.code === "snapshot_expired") {
         setDecisions({});
         setReviewAgain(true);

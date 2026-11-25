@@ -39,7 +39,7 @@ msgctxt "%1 is the closest account to what was typed"
 msgid "Use %1"
 msgstr "Выкарыстаць %1"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add"
 msgstr "Дадаць"
@@ -206,6 +206,11 @@ msgstr "Любыя два рахункі"
 msgid "Bank connections"
 msgstr "Банкаўскія сувязі"
 
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required"
+msgstr "На жаль, SimpleFIN паведамляе, што ваш уліковы запіс не аплачаны. Патрэбны платны ўліковы запіс SimpleFIN."
+
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Your bank connection"
@@ -222,15 +227,15 @@ msgctxt "%1 is the remaining request count"
 msgid "Requests remaining today: %1"
 msgstr "Запыты засталіся сёння: %1"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sync"
 msgstr "Сінхранізацыя"
 
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Load bank accounts"
-msgstr "Загрузіць банкаўскія рахункі"
+msgid "Refresh accounts"
+msgstr "Абнавіць рахункі"
 
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -273,20 +278,40 @@ msgstr "Гэта замяняе ваша бягучае падключэнне �
 msgid "Cancel"
 msgstr "Скасаваць"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Connect"
-msgstr "Падлучыцца"
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect SimpleFIN"
 msgstr "Падключыце SimpleFIN"
 
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connect"
+msgstr "Падлучыцца"
+
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Don’t import"
 msgstr "Не імпартаваць"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "New bank account…"
+msgstr "Новы банкаўскі рахунак…"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "New credit card…"
+msgstr "Новая крэдытная картка…"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This account uses a different currency from your books."
+msgstr "Валюта гэтага рахунку адрозніваецца ад валюты вашых кніг."
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Name"
+msgstr "Назва"
 
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -721,11 +746,6 @@ msgstr "Кнігі"
 #, kde-format
 msgid "Close"
 msgstr "Закрыць"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Name"
-msgstr "Назва"
 
 #: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2765,6 +2785,10 @@ msgstr "Супадзенне з транзакцыяй %1"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "Запыты засталіся сёння: %1"
+
+#, kde-format
+#~ msgid "Load bank accounts"
+#~ msgstr "Загрузіць банкаўскія рахункі"
 
 #, kde-format
 #~ msgid "Adds the reserve lines for you"

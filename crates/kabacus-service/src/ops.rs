@@ -664,7 +664,11 @@ fn declaration_tags(tags: &[Tag]) -> String {
         .join(", ")
 }
 
-fn declare_account(wc: &mut WorkingCopy, account: &str, tags: &[Tag]) -> Result<Applied, OpError> {
+pub(crate) fn declare_account(
+    wc: &mut WorkingCopy,
+    account: &str,
+    tags: &[Tag],
+) -> Result<Applied, OpError> {
     kabacus_core::AccountDeclaration {
         name: AccountName::new(account),
         tags: tags.to_vec(),

@@ -39,7 +39,7 @@ msgctxt "%1 is the closest account to what was typed"
 msgid "Use %1"
 msgstr "Upotrebi %1"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add"
 msgstr "Dodaj"
@@ -206,6 +206,11 @@ msgstr "Bilo koja dva računa"
 msgid "Bank connections"
 msgstr "Veze sa bankama"
 
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required"
+msgstr "Žao nam je, SimpleFIN javlja da vaš korisnički nalog nije plaćen. Potreban je plaćeni SimpleFIN nalog."
+
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Your bank connection"
@@ -222,15 +227,15 @@ msgctxt "%1 is the remaining request count"
 msgid "Requests remaining today: %1"
 msgstr "Preostali zahtevi za danas: %1"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sync"
 msgstr "Sinhronizuj"
 
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Load bank accounts"
-msgstr "Učitaj bankovne račune"
+msgid "Refresh accounts"
+msgstr "Osveži račune"
 
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -273,20 +278,40 @@ msgstr "Ovo zamenjuje vašu trenutnu vezu sa bankom."
 msgid "Cancel"
 msgstr "Odustani"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Connect"
-msgstr "Poveži se"
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect SimpleFIN"
 msgstr "Poveži SimpleFIN"
 
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connect"
+msgstr "Poveži se"
+
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Don’t import"
 msgstr "Ne uvozi"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "New bank account…"
+msgstr "Novi bankovni račun…"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "New credit card…"
+msgstr "Nova kreditna kartica…"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This account uses a different currency from your books."
+msgstr "Ovaj račun koristi valutu različitu od one u vašim knjigama."
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Name"
+msgstr "Naziv"
 
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -722,11 +747,6 @@ msgstr "Knjige"
 #, kde-format
 msgid "Close"
 msgstr "Zatvori"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Name"
-msgstr "Naziv"
 
 #: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2772,6 +2792,10 @@ msgstr "Upari sa transakcijom %1"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "Preostali zahtevi za danas: %1"
+
+#, kde-format
+#~ msgid "Load bank accounts"
+#~ msgstr "Učitaj bankovne račune"
 
 #, kde-format
 #~ msgid "Adds the reserve lines for you"

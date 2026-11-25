@@ -39,7 +39,7 @@ msgctxt "%1 is the closest account to what was typed"
 msgid "Use %1"
 msgstr "%1 ਵਰਤੋ"
 
-#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/AccountsPage.qml crates/kabacus-kde/qml/AddChooser.qml crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/TransactionForm.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Add"
 msgstr "ਜੋੜੋ"
@@ -206,6 +206,11 @@ msgstr "ਕੋਈ ਵੀ ਦੋ ਖਾਤੇ"
 msgid "Bank connections"
 msgstr "ਬੈਂਕ ਕਨੈਕਸ਼ਨ"
 
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required"
+msgstr "ਮਾਫ਼ ਕਰਨਾ, SimpleFIN ਮੁਤਾਬਕ ਤੁਹਾਡੇ ਖਾਤੇ ਦਾ ਭੁਗਤਾਨ ਨਹੀਂ ਹੋਇਆ। ਭੁਗਤਾਨ ਕੀਤਾ SimpleFIN ਖਾਤਾ ਲੋੜੀਂਦਾ ਹੈ।"
+
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Your bank connection"
@@ -222,15 +227,15 @@ msgctxt "%1 is the remaining request count"
 msgid "Requests remaining today: %1"
 msgstr "ਅੱਜ ਬਾਕੀ ਦੀਆਂ ਬੇਨਤੀਆਂ: %1"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sync"
 msgstr "ਸਿੰਕ"
 
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
-msgid "Load bank accounts"
-msgstr "ਬੈਂਕ ਖਾਤੇ ਲੋਡ ਕਰੋ"
+msgid "Refresh accounts"
+msgstr "ਖਾਤੇ ਤਾਜ਼ਾ ਕਰੋ"
 
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -273,20 +278,40 @@ msgstr "ਇਹ ਤੁਹਾਡੇ ਮੌਜੂਦਾ ਬੈਂਕ ਕਨੈਕ�
 msgid "Cancel"
 msgstr "ਰੱਦ ਕਰੋ"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/OverviewPage.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Connect"
-msgstr "ਜੁੜੋ"
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/SettingsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Connect SimpleFIN"
 msgstr "SimpleFIN ਨਾਲ ਜੁੜੋ"
 
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Connect"
+msgstr "ਜੁੜੋ"
+
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Don’t import"
 msgstr "ਆਯਾਤ ਨਾ ਕਰੋ"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "New bank account…"
+msgstr "ਨਵਾਂ ਬੈਂਕ ਖਾਤਾ…"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "New credit card…"
+msgstr "ਨਵਾਂ ਕ੍ਰੈਡਿਟ ਕਾਰਡ…"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "This account uses a different currency from your books."
+msgstr "ਇਸ ਖਾਤੇ ਦੀ ਮੁਦਰਾ ਤੁਹਾਡੀਆਂ ਵਹੀਆਂ ਦੀ ਮੁਦਰਾ ਤੋਂ ਵੱਖਰੀ ਹੈ।"
+
+#: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Name"
+msgstr "ਨਾਂ"
 
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/StatementImportPage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -720,11 +745,6 @@ msgstr "ਵਹੀਖਾਤੇ"
 #, kde-format
 msgid "Close"
 msgstr "ਬੰਦ ਕਰੋ"
-
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Name"
-msgstr "ਨਾਂ"
 
 #: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
@@ -2758,6 +2778,10 @@ msgstr "ਲੈਣ-ਦੇਣ %1 ਨਾਲ ਮੇਲ ਕਰੋ"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "ਅੱਜ ਬਾਕੀ ਦੀਆਂ ਬੇਨਤੀਆਂ: %1"
+
+#, kde-format
+#~ msgid "Load bank accounts"
+#~ msgstr "ਬੈਂਕ ਖਾਤੇ ਲੋਡ ਕਰੋ"
 
 #, kde-format
 #~ msgid "Adds the reserve lines for you"

@@ -212,7 +212,7 @@ export function App({ auth, book, onFileAction }) {
         <div id="phone-overflow" className="phone-overflow" popover="auto" onClick={(event) => { if (event.target.closest("button")) event.currentTarget.hidePopover(); }}>
           <button className="quiet" data-action="refresh" onClick={refresh}>{t("Refresh")}</button>
           {registerOpen && data?.accounts.some(item => item.account === openedAccount && !item.synthetic && ["money", "revolving-debt"].includes(item.kind)) && <button className="quiet" disabled={!!error || loading} onClick={() => setOperationForm({kind: "statement-import", account: openedAccount})}>{t("Import statement…")}</button>}
-          {bankStatus && (page === "Overview" || (registerOpen && data?.accounts.some(item => item.account === openedAccount && item.simplefin_linked))) && <button className="quiet" onClick={openBankSync}>{bankStatus.connected ? t("Sync") : t("Connect")}</button>}
+          {bankStatus && registerOpen && data?.accounts.some(item => item.account === openedAccount && item.simplefin_linked) && <button className="quiet" onClick={openBankSync}>{bankStatus.connected ? t("Sync") : t("Connect")}</button>}
           {registerOpen && <button className="quiet" onClick={() => setOperationForm({kind: "reconcile", account: openedAccount})}>{t("Reconcile…")}</button>}
           <button className="quiet" onClick={() => setBookMenu(true)}>{t("Books")}</button>
         </div>
@@ -309,7 +309,7 @@ export function App({ auth, book, onFileAction }) {
                     </button>
                   </div>
                 ))}
-              {page === "Overview" && <Overview data={data} api={api} onFix={fixWarning} onAccount={openRegister} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} bankStatus={bankStatus} onBankSync={openBankSync} />}
+              {page === "Overview" && <Overview data={data} api={api} onFix={fixWarning} onAccount={openRegister} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} />}
               {page === "Loans" && (
                 <Loans data={data} onOpen={openRegister} />
               )}
