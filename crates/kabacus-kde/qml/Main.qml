@@ -343,13 +343,38 @@ Kirigami.ApplicationWindow {
         collapsible: true
         collapsed: !root.wide
         showHeaderWhenCollapsed: true
-        footer: ColumnLayout {
-            width: parent.width
-            Controls.ToolButton { text: i18n("Settings"); icon.name: "configure"; Layout.fillWidth: true; onClicked: root.openSettings() }
-            Controls.Label { text: root.bookSource && root.bookSource.kind === "remote" ? root.bookSource.url : i18n("On this computer"); font.bold: true; wrapMode: Text.Wrap; Layout.fillWidth: true }
-            Controls.Label { text: root.bookSource && root.bookSource.kind === "local" ? root.bookSource.path.substring(0, root.bookSource.path.lastIndexOf("/")) : root.auth.username || ""; wrapMode: Text.WrapAnywhere; Layout.fillWidth: true; font: Kirigami.Theme.smallFont }
-            Controls.Label { text: i18n("All changes saved"); font: Kirigami.Theme.smallFont }
-            Controls.Label { text: root.agent.agent ? i18n("%1 is working in these books", root.agent.agent) : ""; visible: text !== ""; wrapMode: Text.Wrap; Layout.fillWidth: true }
+        footer: Controls.Pane {
+            visible: !drawer.collapsed
+            // Long server URLs and paths must not widen the drawer.
+            implicitWidth: 0
+            padding: Kirigami.Units.smallSpacing
+            background: null
+            contentItem: ColumnLayout {
+                spacing: Kirigami.Units.smallSpacing
+                Controls.Label {
+                    text: root.bookSource && root.bookSource.kind === "remote" ? root.bookSource.url : i18n("On this computer")
+                    textFormat: Text.PlainText
+                    font.bold: true
+                    elide: Text.ElideRight
+                    Layout.fillWidth: true
+                    HoverHandler { id: locationHover }
+                    Controls.ToolTip.visible: locationHover.hovered && truncated
+                    Controls.ToolTip.text: text
+                }
+                Controls.Label {
+                    text: root.bookSource && root.bookSource.kind === "local" ? root.bookSource.path.substring(0, root.bookSource.path.lastIndexOf("/")) : root.auth.username || ""
+                    textFormat: Text.PlainText
+                    visible: text !== ""
+                    elide: Text.ElideMiddle
+                    Layout.fillWidth: true
+                    font: Kirigami.Theme.smallFont
+                    HoverHandler { id: identityHover }
+                    Controls.ToolTip.visible: identityHover.hovered && truncated
+                    Controls.ToolTip.text: text
+                }
+                Controls.Label { text: i18n("All changes saved"); elide: Text.ElideRight; Layout.fillWidth: true; font: Kirigami.Theme.smallFont }
+                Controls.Label { text: root.agent.agent ? i18n("%1 is working in these books", root.agent.agent) : ""; visible: text !== ""; wrapMode: Text.Wrap; Layout.fillWidth: true }
+            }
         }
         actions: [
             Kirigami.Action { text: root.labels.Overview; icon.name: "go-home"; checked: !root.settingsOpen && root.current === "Overview"; onTriggered: root.go("Overview") },

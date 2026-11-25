@@ -975,7 +975,7 @@ nav button { min-height: 35px; padding: 7px 10px; gap: 9px; color: var(--accent)
 nav button.active { border: 1px solid #ad915b; background: #e1e6d5; box-shadow: inset 3px 0 #ad915b; color: var(--accent); }
 .sidebar-bottom { padding: 0; }
 .settings-action { width: 100%; display: flex; align-items: center; margin-bottom: 8px; gap: 8px; }
-.location { padding: 11px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; font-size: 12px; }
+.location { padding: 11px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; font-size: 12px; overflow-wrap: anywhere; }
 .location small { display: block; color: var(--muted); margin-top: 3px; overflow-wrap: anywhere; }
 .workspace { margin-inline-start: 240px; width: calc(100% - 240px); }
 .workspace>main { padding: 0 28px 30px; }
@@ -1103,10 +1103,10 @@ tr.agent-changed { outline:2px solid var(--gold);outline-offset:-2px; }
 @media (--tablet) {
   aside { width:80px; padding-inline:8px; }
   .workspace,[dir="rtl"] .workspace { margin-inline-start:80px; margin-inline-end:0; width:calc(100% - 80px); }
-  aside .brand span,aside .sidebar-bottom,aside kbd { display:none; }
+  aside .brand span, aside .sidebar-bottom > :not(.settings-action), aside kbd { display:none; }
   aside .brand { justify-content:center; }
-  aside nav button { font-size:0; justify-content:center; }
-  aside nav button .line-icon { width:24px; height:24px; margin:0; }
+  aside nav button, aside .settings-action { font-size:0; justify-content:center; }
+  aside nav button .line-icon, aside .settings-action .line-icon { width:24px; height:24px; margin:0; }
   .bookkeeping-dialog[open] { inset-inline-start:80px; width:calc(100% - 80px); }
 }
 @media (--phone) {
