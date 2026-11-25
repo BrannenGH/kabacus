@@ -113,7 +113,7 @@ async fn simplefin_connection_mapping_and_sync_are_available_through_mcp() {
         json!({"head": head, "automatic": true}),
     )
     .await;
-    assert_eq!(auto["skipped"], "recent_request");
+    assert_eq!(auto["skipped"], "no_new_days");
     let mapping = call(
         &client,
         "link_simplefin_account",
