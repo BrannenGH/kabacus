@@ -761,6 +761,7 @@ def main():
         def button(name):
             return wait_for(name, lambda: find(app(), name, pyatspi.ROLE_PUSH_BUTTON, enabled=True))
 
+        goto("Overview")
         banner = "Transactions to import (1)"
         press(button(banner))
         wait_for("saved bank transaction", lambda: find(app(), "Harbor Street Cafe"))

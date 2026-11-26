@@ -45,7 +45,6 @@ impl Limits {
 
 #[derive(Debug, Default, Clone, Deserialize, Serialize, JsonSchema)]
 pub struct ImportOptions {
-    #[serde(skip)]
     /// Defaults to true. Save by sending false with the previewed head.
     pub dry_run: Option<bool>,
     pub since: Option<NaiveDate>,
