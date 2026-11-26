@@ -97,6 +97,7 @@ fn plan(
             target,
             commodity: "USD",
             source: SourceKind::Ofx,
+            simplefin_feed: None,
             since: None,
             decisions,
         },
@@ -222,6 +223,7 @@ fn review_can_choose_a_different_candidate_or_skip_or_add() {
             target: CHECKING,
             commodity: "USD",
             source: SourceKind::Ofx,
+            simplefin_feed: None,
             since: None,
             decisions: &[invalid]
         },
@@ -338,4 +340,180 @@ fn csv_handles_windows_1252_bom_decimal_commas_and_repeated_rows() {
         parse_csv(bom, &mapping, 2, 5000).unwrap().rows[0].date,
         NaiveDate::from_ymd_opt(2026, 4, 3).unwrap()
     );
+}
+
+fn ofx_transaction(posted: &str, amount: &str, details: &str) -> String {
+    format!(
+        "OFXHEADER:100\nDATA:OFXSGML\nVERSION:102\n\n        <OFX><BANKMSGSRSV1><STMTTRNRS><STMTRS><CURDEF>USD<BANKTRANLIST>        <STMTTRN><DTPOSTED>{posted}<TRNAMT>{amount}<FITID>HBR-1846{details}</STMTTRN>        </BANKTRANLIST></STMTRS></STMTTRNRS></BANKMSGSRSV1></OFX>"
+    )
+}
+
+#[test]
+fn ofx_xml_without_a_prolog_preserves_cdata() {
+    let xml = br#"<OFX><BANKMSGSRSV1><STMTTRNRS><STMTRS><CURDEF>USD</CURDEF>
+        <BANKTRANLIST><STMTTRN><DTPOSTED>20261016</DTPOSTED><TRNAMT>-18.40</TRNAMT>
+        <FITID>HBR-1846</FITID><NAME><![CDATA[Oak & Harbor Market]]></NAME></STMTTRN>
+        </BANKTRANLIST></STMTRS></STMTTRNRS></BANKMSGSRSV1></OFX>"#;
+    let statements = parse_ofx(xml, 2, 5).unwrap();
+    assert_eq!(statements[0].rows[0].description, "Oak & Harbor Market");
+}
+
+#[test]
+fn ofx_sgml_accepts_empty_optional_transaction_fields() {
+    let file = ofx_transaction("20261016", "-18.40", "<CHECKNUM><REFNUM><NAME>Oak Bakery");
+    let (_, headerless) = file.split_once("<OFX>").unwrap();
+    for input in [&file, &format!("<OFX>{headerless}")] {
+        let statements = parse_ofx(input.as_bytes(), 2, 5).unwrap();
+        assert_eq!(statements[0].rows[0].description, "Oak Bakery");
+    }
+}
+
+#[test]
+fn ofx_rejects_invalid_timestamp_suffixes() {
+    for posted in ["20261016TBD", "20261016260100", "20261016130100[-5:EST"] {
+        let file = ofx_transaction(posted, "-18.40", "<NAME>Oak Bakery");
+        assert!(
+            matches!(
+                parse_ofx(file.as_bytes(), 2, 5),
+                Err(ImportError::Field { field, .. }) if field == "DTPOSTED"
+            ),
+            "{posted}"
+        );
+    }
+}
+
+#[test]
+fn bank_feeds_reject_amounts_with_both_signs() {
+    let file = ofx_transaction("20261016", "+-18.40", "<NAME>Oak Bakery");
+    let ofx = parse_ofx(file.as_bytes(), 2, 5);
+    let mut account = simplefin_account("HBR-1846", 1_792_108_800);
+    account.transactions[0].amount = "+-18.40".into();
+    let simplefin = account.statement();
+    assert!(matches!(ofx, Err(ImportError::Field { field, .. }) if field == "TRNAMT"));
+    assert!(matches!(simplefin, Err(ImportError::Field { field, .. }) if field == "amount"));
+    account.transactions[0].amount = "+18.40".into();
+    assert_eq!(
+        account.statement().unwrap().0.rows[0].amount.to_string(),
+        "18.40"
+    );
+}
+
+#[test]
+fn csv_rejects_incomplete_mapping_even_without_data_rows() {
+    let file = b"Date,Payee,Amount\n";
+    let mut mapping = inspect_csv(file, 0).unwrap().mapping.unwrap();
+    mapping.amount = None;
+    assert!(matches!(
+        parse_csv(file, &mapping, 2, 5),
+        Err(ImportError::CsvMapping)
+    ));
+}
+
+#[test]
+fn csv_inspects_header_only_exports_with_recognized_aliases() {
+    let file = b"Booking Date;Merchant;Net Amount\n";
+    let inspection = inspect_csv(file, 0).unwrap();
+    assert!(inspection.header);
+    assert!(inspection.mapping.is_some());
+    assert!(inspection.sample.is_empty());
+}
+
+#[test]
+fn csv_prefers_a_delimiter_that_exposes_recognized_columns() {
+    let file = b"Date\tPayee\tAmount\tCity, State, Country, Branch, Terminal\n        2026-10-16\tOak Bakery\t-18.40\tPortland, ME, US, Old Port, 12\n";
+    let inspection = inspect_csv(file, 0).unwrap();
+    assert_eq!(inspection.delimiter, '\t');
+    let statement = parse_csv(file, &inspection.mapping.unwrap(), 2, 5).unwrap();
+    assert_eq!(statement.rows.len(), 1);
+}
+
+#[test]
+fn review_rejects_match_decisions_on_rows_that_cannot_be_matched() {
+    let txs = [existing(15, 31, CHECKING, -1840)];
+    let chart = chart();
+    for (input, since) in [
+        (row("HBR-1846", 16, 0), None),
+        (row("HBR-1846", 16, -1840), Some(date(17))),
+    ] {
+        let decisions = [Decision {
+            import_id: input.import_id.clone(),
+            action: Action::Match { transaction: 31 },
+        }];
+        assert!(matches!(
+            plan_rows(
+                PlanInput {
+                    chart: &chart,
+                    transactions: &txs,
+                    target: CHECKING,
+                    commodity: "USD",
+                    source: SourceKind::Ofx,
+                    simplefin_feed: None,
+                    since,
+                    decisions: &decisions,
+                },
+                vec![input],
+            ),
+            Err(ImportError::Decision(_))
+        ));
+    }
+}
+
+fn simplefin_account(id: &str, posted: i64) -> simplefin::Account {
+    simplefin::Account {
+        id: "harbor-checking-6042".into(),
+        conn_id: "harbor-credit-union".into(),
+        name: "Harbor Checking".into(),
+        currency: "USD".into(),
+        balance: "2413.07".into(),
+        balance_date: 1_792_108_800,
+        transactions: vec![simplefin::BankTransaction {
+            id: id.into(),
+            posted,
+            amount: "-18.40".into(),
+            description: "Oak Bakery".into(),
+            payee: None,
+            pending: false,
+        }],
+    }
+}
+
+#[test]
+fn simplefin_rejects_posted_rows_without_a_transaction_id() {
+    let account = simplefin_account("", 1_792_108_800);
+    assert!(matches!(
+        account.statement(),
+        Err(ImportError::Field { field, .. }) if field == "ID"
+    ));
+}
+
+#[test]
+fn import_refuses_conflicting_rows_with_the_same_id() {
+    let first = row("HBR-1846", 16, -1840);
+    let second = row("HBR-1846", 16, -1210);
+    let result = plan_rows(
+        PlanInput {
+            chart: &chart(),
+            transactions: &[],
+            target: CHECKING,
+            commodity: "USD",
+            source: SourceKind::Ofx,
+            simplefin_feed: None,
+            since: None,
+            decisions: &[],
+        },
+        vec![first.clone(), second],
+    );
+    assert!(matches!(result, Err(ImportError::Field { field, .. }) if field == "ID"));
+    let decisions = [Decision {
+        import_id: first.import_id.clone(),
+        action: Action::Match { transaction: 31 },
+    }];
+    let repeated = plan(
+        vec![first.clone(), first],
+        CHECKING,
+        &[existing(15, 31, CHECKING, -1840)],
+        &decisions,
+    );
+    assert!(matches!(repeated[0].outcome, Outcome::Matched(31)));
+    assert!(matches!(repeated[1].outcome, Outcome::Duplicate));
 }

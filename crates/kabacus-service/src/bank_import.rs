@@ -10,7 +10,7 @@ use crate::{ops, search, Service};
 use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::NaiveDate;
 use kabacus_core::bank_import::{
-    self as core, CsvMapping, Decision, ImportError, Outcome, PlanInput, Statement,
+    self as core, CsvMapping, Decision, ImportError, Outcome, PlanInput, SimplefinFeed, Statement,
 };
 use kabacus_core::funds::UNCATEGORIZED;
 use kabacus_core::{
@@ -193,7 +193,7 @@ pub async fn import_statement(
             }
         }
     };
-    let mut result = apply_statement(&mut wc, target, statement, &body.options)?;
+    let mut result = apply_statement(&mut wc, target, statement, &body.options, None)?;
     ops::check(&wc)?;
     let changes = wc.changes();
     if !dry_run && !changes.is_empty() {
@@ -227,6 +227,7 @@ pub(crate) fn apply_statement(
     target: &str,
     statement: Statement,
     options: &ImportOptions,
+    simplefin_feed: Option<&SimplefinFeed>,
 ) -> Result<Value, Error> {
     let commodity = wc.commodity();
     let places = wc.places(&commodity);
@@ -254,6 +255,7 @@ pub(crate) fn apply_statement(
             target,
             commodity: &commodity,
             source: statement.source,
+            simplefin_feed,
             since: options.since,
             decisions: &options.decisions,
         },
@@ -310,7 +312,10 @@ pub(crate) fn apply_statement(
                     code: String::new(),
                     description: tx.description,
                     comment: String::new(),
-                    tags: core::import_tags(target, &row.import_id).into(),
+                    tags: core::import_tags(target, &row.import_id)
+                        .into_iter()
+                        .chain(simplefin_feed.map(SimplefinFeed::tag))
+                        .collect(),
                     postings: tx
                         .postings
                         .into_iter()
@@ -333,6 +338,7 @@ pub(crate) fn apply_statement(
                 let index = wc.find(id).ok_or_else(|| Error::NotFound(id.to_string()))?;
                 let mut tx = wc.tx(index).clone();
                 tx.tags.extend(core::import_tags(target, &row.import_id));
+                tx.tags.extend(simplefin_feed.map(SimplefinFeed::tag));
                 tx.status = Status::Cleared;
                 wc.replace(index, tx)?;
                 ("matched", Some(id))

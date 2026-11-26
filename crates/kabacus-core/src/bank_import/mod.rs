@@ -9,7 +9,7 @@ mod ofx;
 mod planner;
 pub mod simplefin;
 
-use crate::{AccountKind, Money};
+use crate::{parse_amount, AccountKind, Money};
 use chrono::NaiveDate;
 use encoding_rs::WINDOWS_1252;
 use serde::{Deserialize, Serialize};
@@ -19,7 +19,9 @@ use thiserror::Error;
 
 pub use csv::{inspect_csv, parse_csv, CsvInspection, CsvMapping};
 pub use ofx::parse_ofx;
-pub use planner::{import_tags, plan_rows, Action, Decision, Outcome, PlanInput, PlannedRow};
+pub use planner::{
+    import_tags, plan_rows, Action, Decision, Outcome, PlanInput, PlannedRow, SimplefinFeed,
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
@@ -143,6 +145,14 @@ fn decode_text(bytes: &[u8]) -> Cow<'_, str> {
         Ok(text) => Cow::Borrowed(text),
         Err(_) => WINDOWS_1252.decode_without_bom_handling(bytes).0,
     }
+}
+
+fn parse_decimal(text: &str, places: u32) -> Option<Money> {
+    let digits = text.strip_prefix(['+', '-']).unwrap_or(text);
+    if !digits.bytes().all(|b| b.is_ascii_digit() || b == b'.') {
+        return None;
+    }
+    parse_amount(text.strip_prefix('+').unwrap_or(text), places).ok()
 }
 
 #[cfg(test)]

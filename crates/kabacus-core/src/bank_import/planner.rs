@@ -14,6 +14,7 @@ use std::collections::{BTreeMap, HashMap, HashSet};
 
 const IMPORT_ID: &str = "import-id";
 const IMPORT_TARGET: &str = "import-target";
+const SIMPLEFIN_FEED: &str = "simplefin-feed";
 
 /// Record the target separately from the public import ID so another posting
 /// in the transaction cannot make the same ID a duplicate in a second account.
@@ -22,6 +23,22 @@ pub fn import_tags(target: &str, id: &str) -> [Tag; 2] {
         (IMPORT_ID.into(), id.into()),
         (IMPORT_TARGET.into(), format!("{}/{id}", encode_id(target))),
     ]
+}
+
+pub struct SimplefinFeed {
+    pub key: String,
+    pub accept_legacy: bool,
+}
+
+impl SimplefinFeed {
+    pub fn tag(&self) -> Tag {
+        (SIMPLEFIN_FEED.into(), self.key.clone())
+    }
+
+    pub fn matches(&self, tx: &Transaction) -> bool {
+        tx.tag(SIMPLEFIN_FEED)
+            .map_or(self.accept_legacy, |key| key == self.key)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, schemars::JsonSchema)]
@@ -60,6 +77,7 @@ pub struct PlanInput<'a> {
     pub target: &'a str,
     pub commodity: &'a str,
     pub source: SourceKind,
+    pub simplefin_feed: Option<&'a SimplefinFeed>,
     pub since: Option<NaiveDate>,
     pub decisions: &'a [Decision],
 }
@@ -71,6 +89,7 @@ pub fn plan_rows(input: PlanInput<'_>, rows: Vec<Row>) -> Result<Vec<PlannedRow>
         target,
         commodity,
         source,
+        simplefin_feed,
         since,
         decisions,
     } = input;
@@ -86,10 +105,22 @@ pub fn plan_rows(input: PlanInput<'_>, rows: Vec<Row>) -> Result<Vec<PlannedRow>
         _ => return Err(ImportError::AccountKind(target.into())),
     }
     let mut overrides = HashMap::new();
-    let row_ids: HashSet<&str> = rows.iter().map(|row| row.import_id.as_str()).collect();
+    let mut row_ids = HashMap::new();
+    for row in &rows {
+        let value = (row.date, &row.amount);
+        if row_ids
+            .insert(row.import_id.as_str(), value)
+            .is_some_and(|prior| prior != value)
+        {
+            return Err(ImportError::Field {
+                location: row.import_id.clone(),
+                field: "ID".into(),
+            });
+        }
+    }
     for decision in decisions {
         let id = decision.import_id.as_str();
-        if !row_ids.contains(id) || overrides.insert(id, &decision.action).is_some() {
+        if !row_ids.contains_key(id) || overrides.insert(id, &decision.action).is_some() {
             return Err(ImportError::Decision(id.into()));
         }
     }
@@ -118,13 +149,15 @@ pub fn plan_rows(input: PlanInput<'_>, rows: Vec<Row>) -> Result<Vec<PlannedRow>
             .filter(|(key, _)| key == IMPORT_TARGET)
             .filter_map(|(_, value)| value.split_once('/').map(|(_, id)| id))
             .collect();
-        for (key, value) in &tx.tags {
-            if key == IMPORT_TARGET {
-                if let Some(id) = value.strip_prefix(&target_prefix) {
-                    ids.insert(id.to_owned());
+        if simplefin_feed.is_none_or(|feed| feed.matches(tx)) {
+            for (key, value) in &tx.tags {
+                if key == IMPORT_TARGET {
+                    if let Some(id) = value.strip_prefix(&target_prefix) {
+                        ids.insert(id.to_owned());
+                    }
+                } else if key == IMPORT_ID && !scoped.contains(value.as_str()) {
+                    ids.insert(value.clone());
                 }
-            } else if key == IMPORT_ID && !scoped.contains(value.as_str()) {
-                ids.insert(value.clone());
             }
         }
         if tx
@@ -160,6 +193,9 @@ pub fn plan_rows(input: PlanInput<'_>, rows: Vec<Row>) -> Result<Vec<PlannedRow>
                 || since.is_some_and(|since| row.date < since)
                 || override_action == Some(&Action::Skip)
             {
+                if matches!(override_action, Some(Action::Match { .. })) {
+                    return Err(ImportError::Decision(row.import_id));
+                }
                 Outcome::Skipped
             } else {
                 if let Some(dates) = eligible.get(&row.amount) {

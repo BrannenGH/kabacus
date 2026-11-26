@@ -80,6 +80,20 @@ async fn statement_import_contract(books: &impl Books) {
         "mapping": {"date": 0, "description": [1], "amount": 2, "id": 3},
         "limit": 1,
     });
+    let mut conflicting = import.clone();
+    conflicting["content"] = json!(import["content"]
+        .as_str()
+        .unwrap()
+        .replace("HC0262", "HC0261"));
+    for dry_run in [true, false] {
+        conflicting["dry_run"] = json!(dry_run);
+        let (status, rejected) =
+            request(books, "POST", path, Some(head), conflicting.clone()).await;
+        assert_eq!(status, 422, "{rejected}");
+        assert_eq!(rejected["code"], "statement_import");
+        let (_, unchanged) = request(books, "GET", "/version", None, Value::Null).await;
+        assert_eq!(unchanged["head"], head);
+    }
     let (status, preview) = request(books, "POST", path, Some(head), import.clone()).await;
     assert_eq!(status, 200, "{preview}");
     assert_eq!(preview["dry_run"], true);
