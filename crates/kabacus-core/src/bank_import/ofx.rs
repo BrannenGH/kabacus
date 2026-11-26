@@ -3,10 +3,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 use super::{
-    decode_text, statement_description, ImportError, ReportedBalance, Row, SourceKind, Statement,
+    decode_text, parse_decimal, statement_description, ImportError, ReportedBalance, Row,
+    SourceKind, Statement,
 };
-use crate::{parse_amount, AccountKind, Money};
-use chrono::NaiveDate;
+use crate::AccountKind;
+use chrono::{NaiveDate, NaiveTime};
 use quick_xml::{events::Event, Reader};
 
 #[derive(Default)]
@@ -62,7 +63,8 @@ impl StatementFields {
         } else {
             Some(ReportedBalance {
                 date: ofx_date(&self.balance_date, "LEDGERBAL", "DTASOF")?,
-                amount: ofx_amount(&self.balance, places, "LEDGERBAL", "BALAMT")?,
+                amount: parse_decimal(&self.balance, places)
+                    .ok_or_else(|| field("LEDGERBAL", "BALAMT"))?,
             })
         };
         Ok(Statement {
@@ -152,7 +154,8 @@ impl OfxParser {
                     statement.rows.push(Row {
                         import_id: SourceKind::Ofx.import_id(&row.id),
                         date: ofx_date(&row.posted, &location, "DTPOSTED")?,
-                        amount: ofx_amount(&row.amount, self.places, &location, "TRNAMT")?,
+                        amount: parse_decimal(&row.amount, self.places)
+                            .ok_or_else(|| field(&location, "TRNAMT"))?,
                         description: statement_description(
                             if row.name.is_empty() {
                                 &row.payee
@@ -209,7 +212,8 @@ impl OfxParser {
                     );
                 }
                 Event::DocType(_) => return Err(ImportError::Ofx),
-                Event::Eof => return Ok(()),
+                Event::Eof if self.stack.is_empty() => return Ok(()),
+                Event::Eof => return Err(ImportError::Ofx),
                 _ => (),
             }
         }
@@ -254,8 +258,18 @@ fn is_field(name: &str) -> bool {
     matches!(
         name,
         "DTPOSTED"
+            | "DTUSER"
+            | "DTAVAIL"
             | "TRNAMT"
+            | "TRNTYPE"
             | "FITID"
+            | "CORRECTFITID"
+            | "CORRECTACTION"
+            | "SRVRTID"
+            | "CHECKNUM"
+            | "REFNUM"
+            | "SIC"
+            | "PAYEEID"
             | "NAME"
             | "MEMO"
             | "ACCTID"
@@ -284,20 +298,26 @@ fn field(location: &str, name: &str) -> ImportError {
 }
 
 fn ofx_date(raw: &str, location: &str, name: &str) -> Result<NaiveDate, ImportError> {
-    raw.get(..8)
-        .and_then(|date| NaiveDate::parse_from_str(date, "%Y%m%d").ok())
-        .ok_or_else(|| field(location, name))
-}
-
-fn ofx_amount(raw: &str, places: u32, location: &str, name: &str) -> Result<Money, ImportError> {
-    let raw = raw.strip_prefix('+').unwrap_or(raw);
-    if !raw
-        .bytes()
-        .all(|b| b.is_ascii_digit() || b"-.".contains(&b))
+    let invalid = || field(location, name);
+    let (date, suffix) = raw.split_at_checked(8).ok_or_else(invalid)?;
+    let clock = match suffix.split_once('[') {
+        Some((clock, zone))
+            if zone
+                .strip_suffix(']')
+                .is_some_and(|zone| !zone.is_empty() && !zone.contains(['[', ']'])) =>
+        {
+            clock.trim_end()
+        }
+        Some(_) => return Err(invalid()),
+        None => suffix,
+    };
+    if !clock.is_empty()
+        && (clock.split('.').next().unwrap_or_default().len() != 6
+            || NaiveTime::parse_from_str(clock, "%H%M%S%.f").is_err())
     {
-        return Err(field(location, name));
+        return Err(invalid());
     }
-    parse_amount(raw, places).map_err(|_| field(location, name))
+    NaiveDate::parse_from_str(date, "%Y%m%d").map_err(|_| invalid())
 }
 
 pub fn parse_ofx(
@@ -307,7 +327,7 @@ pub fn parse_ofx(
 ) -> Result<Vec<Statement>, ImportError> {
     let text = decode_text(bytes);
     let text = text.trim_start();
-    let mut parser = OfxParser {
+    let new_parser = || OfxParser {
         places,
         row_limit,
         total_rows: 0,
@@ -316,8 +336,18 @@ pub fn parse_ofx(
         statement: None,
         statements: vec![],
     };
+    let mut parser = new_parser();
     if text.starts_with("<?") {
         parser.read_xml(text)?;
+    } else if text.starts_with('<') {
+        match parser.read_xml(text) {
+            Ok(()) => (),
+            Err(ImportError::Ofx) => {
+                parser = new_parser();
+                parser.read_sgml(text)?;
+            }
+            Err(error) => return Err(error),
+        }
     } else {
         let start = text.find('<').ok_or(ImportError::Ofx)?;
         parser.read_sgml(&text[start..])?;

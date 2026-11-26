@@ -74,9 +74,17 @@ fn delimiter(text: &str, skip_rows: usize) -> u8 {
         .rev()
         .max_by_key(|&d| {
             let records = read_sample(text, d, skip_rows);
-            let width = records.first().map_or(0, StringRecord::len);
+            let Some(first) = records.first() else {
+                return (false, false, 0, 0);
+            };
+            let width = first.len();
             let same = records.iter().filter(|r| r.len() == width).count();
-            (width > 1 && same > 0, same, width)
+            (
+                guess_mapping(first, d, skip_rows).is_some(),
+                width > 1,
+                same,
+                width,
+            )
         })
         .unwrap_or(b',')
 }
@@ -125,7 +133,7 @@ fn guess_mapping(headers: &StringRecord, delimiter: u8, skip_rows: usize) -> Opt
     })
 }
 
-fn has_header(records: &[StringRecord]) -> bool {
+fn has_header(records: &[StringRecord], recognized: bool) -> bool {
     let date_cell = |cell: &str| {
         DATE_FORMATS
             .iter()
@@ -134,16 +142,17 @@ fn has_header(records: &[StringRecord]) -> bool {
     let Some(first) = records.first() else {
         return false;
     };
-    !first.iter().any(date_cell)
-        && (records
-            .get(1)
-            .is_some_and(|record| record.iter().any(date_cell))
-            || first.iter().any(|cell| {
-                matches!(
-                    cell.trim().to_ascii_lowercase().as_str(),
-                    "date" | "amount" | "description"
-                )
-            }))
+    recognized
+        || !first.iter().any(date_cell)
+            && (records
+                .get(1)
+                .is_some_and(|record| record.iter().any(date_cell))
+                || first.iter().any(|cell| {
+                    matches!(
+                        cell.trim().to_ascii_lowercase().as_str(),
+                        "date" | "amount" | "description"
+                    )
+                }))
 }
 
 pub fn inspect_csv(bytes: &[u8], skip_rows: usize) -> Result<CsvInspection, ImportError> {
@@ -151,7 +160,8 @@ pub fn inspect_csv(bytes: &[u8], skip_rows: usize) -> Result<CsvInspection, Impo
     let delimiter = delimiter(&text, skip_rows);
     let records = read_sample(&text, delimiter, skip_rows);
     let first = records.first().ok_or(ImportError::Csv { line: 1 })?;
-    let header = has_header(&records);
+    let mapping = guess_mapping(first, delimiter, skip_rows);
+    let header = has_header(&records, mapping.is_some());
     Ok(CsvInspection {
         delimiter: char::from(delimiter),
         header,
@@ -166,9 +176,7 @@ pub fn inspect_csv(bytes: &[u8], skip_rows: usize) -> Result<CsvInspection, Impo
             .take(SAMPLE_ROWS)
             .map(|record| record.iter().map(clean_text).collect())
             .collect(),
-        mapping: header
-            .then(|| guess_mapping(first, delimiter, skip_rows))
-            .flatten(),
+        mapping,
     })
 }
 
@@ -313,9 +321,24 @@ pub fn parse_csv(
     if mapping.description.is_empty() {
         return Err(ImportError::CsvMapping);
     }
-    let header = mapping
-        .header
-        .unwrap_or_else(|| has_header(&read_sample(&text, delimiter, mapping.skip_rows)));
+    enum AmountColumns {
+        Signed(usize),
+        Split { debit: usize, credit: usize },
+    }
+    let amount_columns = match (mapping.amount, mapping.debit, mapping.credit) {
+        (Some(column), None, None) => AmountColumns::Signed(column),
+        (None, Some(debit), Some(credit)) if debit != credit => {
+            AmountColumns::Split { debit, credit }
+        }
+        _ => return Err(ImportError::CsvMapping),
+    };
+    let header = mapping.header.unwrap_or_else(|| {
+        let records = read_sample(&text, delimiter, mapping.skip_rows);
+        let recognized = records
+            .first()
+            .is_some_and(|first| guess_mapping(first, delimiter, mapping.skip_rows).is_some());
+        has_header(&records, recognized)
+    });
     let mut records = Vec::new();
     for record in reader(&text, delimiter)
         .into_records()
@@ -344,8 +367,8 @@ pub fn parse_csv(
             .map(|&column| field(record, column, "description").map(|(text, _)| text))
             .collect::<Result<Vec<_>, _>>()?;
         let description = clean_text(&parts.join(" "));
-        let amount = match (mapping.amount, mapping.debit, mapping.credit) {
-            (Some(column), None, None) => {
+        let amount = match amount_columns {
+            AmountColumns::Signed(column) => {
                 let money = amount(record, column, places, false)?;
                 if mapping.invert {
                     -money
@@ -353,11 +376,10 @@ pub fn parse_csv(
                     money
                 }
             }
-            (None, Some(debit), Some(credit)) if debit != credit => {
+            AmountColumns::Split { debit, credit } => {
                 amount(record, credit, places, true)?.abs_value()
                     - amount(record, debit, places, true)?.abs_value()
             }
-            _ => return Err(ImportError::CsvMapping),
         };
         let source = SourceKind::Csv;
         let import_id = if let Some(column) = mapping.id {

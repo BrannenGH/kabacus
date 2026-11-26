@@ -1,7 +1,9 @@
 // SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-use super::{clean_text, encode_id, ImportError, ReportedBalance, Row, SourceKind, Statement};
+use super::{
+    clean_text, encode_id, parse_decimal, ImportError, ReportedBalance, Row, SourceKind, Statement,
+};
 use chrono::{DateTime, NaiveDate};
 use serde::Deserialize;
 
@@ -80,9 +82,13 @@ impl Account {
                 pending += 1;
                 continue;
             }
+            if tx.id.trim().is_empty() {
+                return Err(invalid(&self.key(), "ID"));
+            }
             let import_id = SourceKind::Simplefin.import_id(&tx.id);
             let date = utc_date(tx.posted).ok_or_else(|| invalid(&import_id, "date"))?;
-            let amount = decimal(&tx.amount).ok_or_else(|| invalid(&import_id, "amount"))?;
+            let amount =
+                parse_decimal(&tx.amount, u32::MAX).ok_or_else(|| invalid(&import_id, "amount"))?;
             let description = clean_text(&tx.description);
             let payee = tx
                 .payee
@@ -113,22 +119,14 @@ impl Account {
                 reported_balance: Some(ReportedBalance {
                     date: utc_date(self.balance_date)
                         .ok_or_else(|| invalid(&key, "balance date"))?,
-                    amount: decimal(&self.balance).ok_or_else(|| invalid(&key, "balance"))?,
+                    amount: parse_decimal(&self.balance, u32::MAX)
+                        .ok_or_else(|| invalid(&key, "balance"))?,
                 }),
                 rows,
             },
             pending,
         ))
     }
-}
-
-fn decimal(text: &str) -> Option<crate::Money> {
-    let text = text.strip_prefix('+').unwrap_or(text);
-    text.bytes()
-        .all(|byte| byte.is_ascii_digit() || b"-.".contains(&byte))
-        .then_some(text)?
-        .parse()
-        .ok()
 }
 
 impl Warning {

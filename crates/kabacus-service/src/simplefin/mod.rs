@@ -11,7 +11,7 @@ use crate::{ops, Service};
 use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::{Days, NaiveDate, Utc};
 use kabacus_core::bank_import::simplefin::{link_key, Account, AccountSet};
-use kabacus_core::bank_import::{clean_text, Decision, ImportError};
+use kabacus_core::bank_import::{clean_text, Decision, ImportError, SimplefinFeed};
 use kabacus_core::{AccountKind, AccountName};
 use kabacus_store::simplefin::{Access, Owner, RequestBudget};
 use kabacus_store::BookStore;
@@ -30,6 +30,7 @@ pub use transport::{Http, Reply, Request, Response, Transport, BRIDGE_HOSTS};
 const LINK: &str = "simplefin-account";
 const HOST: &str = "simplefin-server";
 const REVIEWED: &str = "simplefin-reviewed";
+const LEGACY_FEED: &str = "simplefin-legacy-feed";
 const AUTO_INTERVAL: i64 = 6 * 60 * 60;
 const SNAPSHOT_TTL: i64 = 15 * 60;
 
@@ -591,6 +592,20 @@ fn matches_link(key: &str, host: &Option<String>, remote: &Account, domain: &str
     host.as_ref().is_none_or(|host| host == domain) && key == remote.key()
 }
 
+fn feed(wc: &WorkingCopy, target: &str, domain: &str, key: &str) -> SimplefinFeed {
+    let identity = format!("{domain}/{key}");
+    let accept_legacy = wc.book.accounts.get(target).is_none_or(|account| {
+        kabacus_core::declared_tags(&account.tags)
+            .iter()
+            .find(|(name, _)| name == LEGACY_FEED)
+            .is_none_or(|(_, value)| value == &identity || value.strip_prefix('/') == Some(key))
+    });
+    SimplefinFeed {
+        key: identity,
+        accept_legacy,
+    }
+}
+
 async fn account_list(state: &Service, snapshot: &Snapshot) -> Result<Value, Error> {
     let books = state.books_snapshot().await.map_err(Error::Internal)?;
     let links = links(&books.book);
@@ -706,8 +721,15 @@ pub async fn link(
         .get(target)
         .map_or("", |account| account.tags.as_str());
     let mut tags = kabacus_core::declared_tags(original);
+    let old_feed = tags.iter().find(|(name, _)| name == LINK).map(|(_, key)| {
+        let domain = tags
+            .iter()
+            .find(|(name, _)| name == HOST)
+            .map_or("", |(_, value)| value.as_str());
+        format!("{domain}/{key}")
+    });
     tags.retain(|(key, _)| key != LINK && key != HOST);
-    if let Some(remote) = body.remote {
+    let new_feed = if let Some(remote) = body.remote {
         let access = access(state, owner).await?;
         let snapshot = fetch(state, transport, owner, &access, None, false, false).await?;
         let key = link_key(&remote.conn_id, &remote.id);
@@ -745,8 +767,16 @@ pub async fn link(
         tags.retain(|(name, value)| name != REVIEWED || value.starts_with(&format!("{reviewed} ")));
         tags.push((LINK.into(), key));
         tags.push((HOST.into(), domain.into()));
+        Some(reviewed)
     } else {
         tags.retain(|(key, _)| key != REVIEWED);
+        None
+    };
+    if let Some(old) = old_feed.filter(|old| Some(old) != new_feed.as_ref()) {
+        // Older imports have no feed tag, so keep the mapping they belonged to.
+        if !tags.iter().any(|(name, _)| name == LEGACY_FEED) {
+            tags.push((LEGACY_FEED.into(), old));
+        }
     }
     let text = with_tags(original, &tags);
     let changed = original != text;
@@ -830,15 +860,17 @@ fn dates(
     links: &BTreeMap<String, (String, Option<String>)>,
     body: &SyncBody,
     end: NaiveDate,
+    domain: &str,
 ) -> BTreeMap<String, NaiveDate> {
     let fallback = end.checked_sub_days(Days::new(31)).unwrap_or(end);
     links
-        .keys()
-        .map(|account| {
+        .iter()
+        .map(|(account, (key, _))| {
             let start = body
                 .since
                 .or_else(|| body.starts.get(account).copied())
                 .unwrap_or_else(|| {
+                    let feed = feed(wc, account, domain, key);
                     let account = AccountName::new(account);
                     let prefix = format!(
                         "{}/simplefin:",
@@ -849,9 +881,10 @@ fn dates(
                         .transactions
                         .iter()
                         .filter(|tx| {
-                            tx.tags.iter().any(|(name, value)| {
-                                name == "import-target" && value.starts_with(&prefix)
-                            })
+                            feed.matches(tx)
+                                && tx.tags.iter().any(|(name, value)| {
+                                    name == "import-target" && value.starts_with(&prefix)
+                                })
                         })
                         .map(|tx| tx.date)
                         .max();
@@ -969,7 +1002,7 @@ pub async fn sync(
         })
         .map(|(name, link)| (name.clone(), link.clone()))
         .collect();
-    let mut starts = dates(&wc, &owned, &body, end);
+    let mut starts = dates(&wc, &owned, &body, end, domain);
     let earliest = end.checked_sub_days(Days::new(90)).unwrap_or(end);
     if automatic {
         if owned.is_empty() {
@@ -1023,7 +1056,7 @@ pub async fn sync(
     let starts = if automatic {
         starts
     } else {
-        dates(&wc, &links, &body, end)
+        dates(&wc, &links, &body, end, domain)
     };
     let mut decisions = body.decisions;
     let mut results = Vec::new();
@@ -1064,7 +1097,8 @@ pub async fn sync(
             decisions: decisions.remove(&target).unwrap_or_default(),
             ..Default::default()
         };
-        let mut result = apply_statement(&mut wc, &target, statement, &options)?;
+        let feed = feed(&wc, &target, domain, &key);
+        let mut result = apply_statement(&mut wc, &target, statement, &options, Some(&feed))?;
         result["pending"] = json!(pending);
         result["since"] = json!(options.since);
         let new = result["counts"]["new"].as_u64().unwrap_or_default();

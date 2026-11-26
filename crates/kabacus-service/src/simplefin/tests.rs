@@ -100,6 +100,13 @@ impl Transport for Bridge {
 }
 
 async fn scratch(per_member: bool) -> (Service, LocalCaller, LocalCaller) {
+    scratch_with_history(per_member, "").await
+}
+
+async fn scratch_with_history(
+    per_member: bool,
+    history: &str,
+) -> (Service, LocalCaller, LocalCaller) {
     let store = AnyStore::Sqlite(SqliteStore::in_memory().unwrap());
     let owner = store.local_user("Dana Okafor").await.unwrap();
     let other = store.local_user("Riley Chen").await.unwrap();
@@ -111,7 +118,7 @@ async fn scratch(per_member: bool) -> (Service, LocalCaller, LocalCaller) {
     let source = "/scratch/household.journal".into();
     let journal = kabacus_ledger::MemorySource(BTreeMap::from([(
         source,
-        format!("commodity USD1.00\naccount {TARGET}\naccount {SECOND}\n"),
+        format!("commodity USD1.00\naccount {TARGET}\naccount {SECOND}\n{history}"),
     )]));
     let book = kabacus_ledger::import(&journal, std::path::Path::new("/scratch/household.journal"))
         .unwrap()
@@ -577,4 +584,310 @@ async fn a_books_writer_can_connect_on_first_visit() {
         connection(&state, &writer).await.unwrap(),
         json!({"connected":false})
     );
+}
+
+const CARD: &str = "liabilities:credit-card:Cedar Rewards";
+
+fn setup_request() -> ConnectBody {
+    ConnectBody {
+        token: STANDARD.encode(CLAIM),
+        replace: false,
+        dry_run: false,
+    }
+}
+
+fn mapping(bank: &str, create: Option<NewAccountKind>) -> LinkBody {
+    LinkBody {
+        create,
+        remote: Some(RemoteAccount {
+            conn_id: bank.into(),
+            id: "Everyday Account".into(),
+        }),
+    }
+}
+
+async fn current_head(state: &Service) -> String {
+    state
+        .store
+        .revision(state.ledger)
+        .await
+        .unwrap()
+        .to_string()
+}
+
+async fn import_october(
+    state: &Service,
+    caller: &LocalCaller,
+    bridge: &Bridge,
+    head: &str,
+) -> Value {
+    let mut request = json!({"since":"2026-10-01", "end_date":"2026-11-01"});
+    request["snapshot"] = sync(state, caller, bridge, head, body(request.clone()))
+        .await
+        .unwrap()["snapshot"]
+        .clone();
+    request["dry_run"] = json!(false);
+    sync(state, caller, bridge, head, body(request))
+        .await
+        .unwrap()
+}
+
+#[tokio::test]
+async fn switching_a_card_feed_starts_a_fresh_review_and_keeps_ids_feed_scoped() {
+    let (state, dana, _) = scratch(false).await;
+    let bridge = Bridge::default();
+    connect(&state, &dana, &bridge, setup_request())
+        .await
+        .unwrap();
+    link(
+        &state,
+        &dana,
+        &bridge,
+        CARD,
+        &current_head(&state).await,
+        mapping("Cedar Bank", Some(NewAccountKind::RevolvingDebt)),
+    )
+    .await
+    .unwrap();
+    let imported = import_october(&state, &dana, &bridge, &current_head(&state).await).await;
+    assert_eq!(imported["counts"]["new"], 1);
+
+    let linked = link(
+        &state,
+        &dana,
+        &bridge,
+        CARD,
+        imported["head"].as_str().unwrap(),
+        mapping("Harbor Bank", None),
+    )
+    .await
+    .unwrap();
+    let head = linked["head"].as_str().unwrap();
+    let listings = list_accounts(&state, &dana, &bridge, false).await.unwrap();
+    assert_eq!(listings["accounts"][0]["linked"], Value::Null);
+    assert_eq!(listings["accounts"][1]["linked"], CARD);
+    assert_eq!(
+        sync(
+            &state,
+            &dana,
+            &bridge,
+            head,
+            body(json!({"automatic":true}))
+        )
+        .await
+        .unwrap()["skipped"],
+        "needs_review"
+    );
+
+    let review = sync(
+        &state,
+        &dana,
+        &bridge,
+        head,
+        body(json!({"end_date":"2026-11-01"})),
+    )
+    .await
+    .unwrap();
+    assert_eq!(review["accounts"][0]["since"], "2026-10-01");
+    assert_eq!(review["counts"]["new"], 1);
+    let saved = import_october(&state, &dana, &bridge, head).await;
+    assert_eq!(saved["counts"]["new"], 1);
+
+    let linked = link(
+        &state,
+        &dana,
+        &bridge,
+        CARD,
+        saved["head"].as_str().unwrap(),
+        mapping("Cedar Bank", None),
+    )
+    .await
+    .unwrap();
+    let back = import_october(&state, &dana, &bridge, linked["head"].as_str().unwrap()).await;
+    assert_eq!(back["accounts"][0]["counts"]["duplicate"], 1);
+    assert_eq!(back["head"], linked["head"]);
+}
+
+#[tokio::test]
+async fn disconnecting_keeps_the_card_history_and_reconnect_requires_a_new_preview() {
+    let (state, dana, _) = scratch(false).await;
+    let bridge = Bridge::default();
+    let before = current_head(&state).await;
+    connect(&state, &dana, &bridge, setup_request())
+        .await
+        .unwrap();
+    assert_eq!(current_head(&state).await, before);
+    link(
+        &state,
+        &dana,
+        &bridge,
+        CARD,
+        &before,
+        mapping("Cedar Bank", Some(NewAccountKind::RevolvingDebt)),
+    )
+    .await
+    .unwrap();
+    let saved = import_october(&state, &dana, &bridge, &current_head(&state).await).await;
+    let head = saved["head"].as_str().unwrap();
+    let transactions = state
+        .books_snapshot()
+        .await
+        .unwrap()
+        .book
+        .transactions
+        .clone();
+
+    assert_eq!(disconnect(&state, &dana).await.unwrap()["connected"], false);
+    assert_eq!(disconnect(&state, &dana).await.unwrap()["connected"], false);
+    assert_eq!(current_head(&state).await, head);
+    assert_eq!(connection(&state, &dana).await.unwrap()["connected"], false);
+    assert!(sync(
+        &state,
+        &dana,
+        &bridge,
+        head,
+        body(json!({"automatic":true}))
+    )
+    .await
+    .is_err());
+
+    let mut renewed = Bridge::default();
+    let listed = connect(&state, &dana, &renewed, setup_request())
+        .await
+        .unwrap();
+    assert_eq!(listed["accounts"][0]["linked"], CARD);
+    assert_eq!(
+        sync(
+            &state,
+            &dana,
+            &renewed,
+            head,
+            body(json!({"dry_run":false, "snapshot":saved["snapshot"]}))
+        )
+        .await
+        .unwrap_err()
+        .code(),
+        "snapshot_expired"
+    );
+    assert_eq!(
+        state.books_snapshot().await.unwrap().book.transactions,
+        transactions
+    );
+    let already_linked = link(
+        &state,
+        &dana,
+        &renewed,
+        SECOND,
+        head,
+        mapping("Cedar Bank", None),
+    )
+    .await
+    .unwrap_err();
+    assert_eq!(already_linked.code(), "simplefin_linked");
+    assert_eq!(current_head(&state).await, head);
+
+    let unlinked = link(
+        &state,
+        &dana,
+        &renewed,
+        CARD,
+        head,
+        LinkBody {
+            remote: None,
+            create: None,
+        },
+    )
+    .await
+    .unwrap();
+    let head = unlinked["head"].as_str().unwrap();
+    link(
+        &state,
+        &dana,
+        &renewed,
+        SECOND,
+        head,
+        mapping("Cedar Bank", None),
+    )
+    .await
+    .unwrap();
+    let listed = list_accounts(&state, &dana, &renewed, false).await.unwrap();
+    assert_eq!(listed["accounts"][0]["linked"], SECOND);
+    assert_eq!(
+        state.books_snapshot().await.unwrap().book.transactions,
+        transactions
+    );
+    renewed.recent = Some((1792022400 + 86400, false));
+    let saved = import_october(&state, &dana, &renewed, &current_head(&state).await).await;
+    assert_eq!(saved["counts"]["new"], 1);
+    assert_eq!(saved["accounts"][0]["account"], SECOND);
+    let books = state.books_snapshot().await.unwrap();
+    assert_eq!(books.book.transactions[0], transactions[0]);
+    assert!(books.book.transactions[1]
+        .postings
+        .iter()
+        .any(|posting| posting.account.as_str() == SECOND));
+}
+
+#[tokio::test]
+async fn unlink_preserves_the_feed_identity_of_older_imports() {
+    let id = "simplefin:HH%202386";
+    let target = kabacus_core::bank_import::encode_id(CARD);
+    let journal = format!(
+        "account {CARD}  ; simplefin-account:Cedar%20Bank/Everyday%20Account, simplefin-server:bridge.simplefin.org
+account {TARGET}:card-Cedar Rewards
+account expenses:dining
+
+2026-10-15 * Harbor Street Cafe  ; import-id:{id}, import-target:{target}/{id}
+    expenses:dining  18.40 USD
+    {CARD}  -18.40 USD
+    {TARGET}  -18.40 USD
+    {TARGET}:card-Cedar Rewards  18.40 USD
+"
+    );
+    let (state, dana, _) = scratch_with_history(false, &journal).await;
+    let bridge = Bridge::default();
+    connect(&state, &dana, &bridge, setup_request())
+        .await
+        .unwrap();
+    let head = current_head(&state).await;
+    let replay = import_october(&state, &dana, &bridge, &head).await;
+    assert_eq!(replay["accounts"][0]["counts"]["duplicate"], 1);
+    assert_eq!(replay["head"], head);
+    link(
+        &state,
+        &dana,
+        &bridge,
+        CARD,
+        &head,
+        LinkBody {
+            remote: None,
+            create: None,
+        },
+    )
+    .await
+    .unwrap();
+    link(
+        &state,
+        &dana,
+        &bridge,
+        CARD,
+        &current_head(&state).await,
+        mapping("Harbor Bank", None),
+    )
+    .await
+    .unwrap();
+    let saved = import_october(&state, &dana, &bridge, &current_head(&state).await).await;
+    assert_eq!(saved["counts"]["new"], 1);
+    link(
+        &state,
+        &dana,
+        &bridge,
+        CARD,
+        saved["head"].as_str().unwrap(),
+        mapping("Cedar Bank", None),
+    )
+    .await
+    .unwrap();
+    let replay = import_october(&state, &dana, &bridge, &current_head(&state).await).await;
+    assert_eq!(replay["accounts"][0]["counts"]["duplicate"], 1);
 }
