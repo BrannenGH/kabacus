@@ -157,6 +157,7 @@ export function App({ auth, book, onFileAction }) {
     refresh();
   };
   const simplefinOffered = data?.commands?.commands?.some(command => command.tool === "get_simplefin_connection");
+  const automaticBankSync = bankStatus?.automatic_sync && Number.isInteger(bankStatus?.pending_count);
   const openBankSync = () => bankStatus?.connected ? setOperationForm({kind: "bank-sync"}) : go("Settings");
   const openPendingImport = () => setOperationForm({ kind: "bank-sync", pending: true });
   async function reloadBankStatus(signal) {
@@ -173,7 +174,7 @@ export function App({ auth, book, onFileAction }) {
 
   useEffect(() => {
     setBankSyncProblem("");
-    if (!auth.signedIn || !bankStatus?.automatic_sync) return;
+    if (!auth.signedIn || !automaticBankSync) return;
     const abort = new AbortController();
     let syncing = false;
     async function run() {
@@ -202,7 +203,7 @@ export function App({ auth, book, onFileAction }) {
       clearInterval(timer);
       document.removeEventListener("visibilitychange", run);
     };
-  }, [api, auth.signedIn, bankStatus?.automatic_sync]);
+  }, [api, auth.signedIn, automaticBankSync]);
 
   useEffect(() => {
     if (!auth.signedIn) return;

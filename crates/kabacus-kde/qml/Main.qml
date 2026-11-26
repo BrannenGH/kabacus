@@ -244,7 +244,7 @@ Kirigami.ApplicationWindow {
         repeat: true
         triggeredOnStart: true
         running: root.active && !root.offline && root.canWrite && root.bankStatus?.automatic_sync === true
-            && root.pageStack.layers.depth === 1
+            && typeof root.bankStatus?.pending_count === "number" && root.pageStack.layers.depth === 1
         onTriggered: {
             if (root.bankSyncTicket) return
             root.bankSyncNeedsHead = true
