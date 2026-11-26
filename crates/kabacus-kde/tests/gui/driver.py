@@ -88,7 +88,7 @@ def app():
     return None
 
 
-def find(root, name, role=None, showing=True):
+def find(root, name, role=None, showing=True, enabled=False):
     # Roles are pyatspi constants: their names differ between AT-SPI
     # versions (ROLE_PUSH_BUTTON is "push button", later "button").
     def match(n):
@@ -96,7 +96,8 @@ def find(root, name, role=None, showing=True):
             return False
         if role is not None and n.getRole() != role:
             return False
-        return not showing or n.getState().contains(pyatspi.STATE_SHOWING)
+        return ((not showing or n.getState().contains(pyatspi.STATE_SHOWING))
+                and (not enabled or n.getState().contains(pyatspi.STATE_ENABLED)))
     return pyatspi.findDescendant(root, match, breadth_first=True)
 
 
@@ -759,15 +760,11 @@ def main():
     elif command == "simplefin-sync":
         token, = args
 
-        def enabled_control(name, role):
-            def enabled():
-                control = find(app(), name, role)
-                return control if control and control.getState().contains(pyatspi.STATE_ENABLED) else None
+        def enabled_control(name, role, root=app):
+            return wait_for(name, lambda: find(root(), name, role, enabled=True))
 
-            return wait_for(name, enabled)
-
-        def choose_action(name):
-            press(enabled_control(name, pyatspi.ROLE_PUSH_BUTTON))
+        def choose_action(name, root=app):
+            press(enabled_control(name, pyatspi.ROLE_PUSH_BUTTON, root))
 
         def preview_connection():
             help_link = wait_for("setup instructions", lambda: find(app(), "Get a SimpleFIN setup token", pyatspi.ROLE_PUSH_BUTTON))
@@ -792,15 +789,20 @@ def main():
         choose_action("Refresh accounts")
 
         def mapping(label):
+            roles = {pyatspi.ROLE_MENU_ITEM, pyatspi.ROLE_LIST_ITEM}
             picker = enabled_control("Cedar Everyday", pyatspi.ROLE_COMBO_BOX)
             click(picker)
-            click(wait_for(label, lambda: find(app(), label)))
+            wait_for("the mapping menu", lambda: find_any("Don’t import", roles))
+            click(wait_for(label, lambda: find_any(label, roles)))
+            wait_for("the mapping menu to close", lambda: not find_any("Don’t import", roles))
 
         mapping("Cedar Rewards")
         mapping("Don’t import")
         mapping("New credit card…")
-        set_text(wait_for("card name", lambda: find(app(), "Name", pyatspi.ROLE_TEXT)), "Cedar Travel")
-        choose_action("Add")
+        name = wait_for("card name", lambda: find(app(), "Name", pyatspi.ROLE_TEXT, enabled=True))
+        set_text(name, "Cedar Travel")
+        wait_for("the full card name", lambda: name.queryText().getText(0, -1) == "Cedar Travel")
+        choose_action("Add", lambda: find_any("Bank connections", {pyatspi.ROLE_PANEL, pyatspi.ROLE_PAGE_TAB}))
         choose_action("Sync")
         choose_action("Review")
         wait_for("reviewed transaction", lambda: find(app(), "Harbor Street Cafe"))
@@ -859,8 +861,10 @@ def main():
         open_list_item(f"the {account} account", lambda: find(app(), account, pyatspi.ROLE_LIST_ITEM),
                        lambda: find(app(), "Account type", pyatspi.ROLE_PUSH_BUTTON))
         press(find(app(), "Account type", pyatspi.ROLE_PUSH_BUTTON))
-        combo = wait_for("the account type selector", lambda: find(app(), "Account type", pyatspi.ROLE_COMBO_BOX))
-        click(combo)
+        combo = wait_for("the account type selector", lambda: find(app(), "Account type", pyatspi.ROLE_COMBO_BOX, enabled=True))
+        combo.queryComponent().grabFocus()
+        wait_for("the account type selector to have focus", lambda: combo.getState().contains(pyatspi.STATE_FOCUSED))
+        key(0x20)  # Space opens the selector without relying on its position during the transition.
         click(wait_for(f"the {target} option", lambda: find(app(), target)))
         wait_for(f"{target} selected", lambda: combo.description == target)
         save()
