@@ -303,11 +303,6 @@ msgstr "새 은행 계좌…"
 msgid "New credit card…"
 msgstr "새 신용 카드…"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "This account uses a different currency from your books."
-msgstr "이 계좌의 통화는 장부의 통화와 다릅니다."
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -2776,6 +2771,10 @@ msgstr "거래 %1와 일치"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "오늘 남은 요청: %1"
+
+#, kde-format
+#~ msgid "This account uses a different currency from your books."
+#~ msgstr "이 계좌의 통화는 장부의 통화와 다릅니다."
 
 #, kde-format
 #~ msgid "Load bank accounts"

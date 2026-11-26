@@ -303,11 +303,6 @@ msgstr "Novi bankovni račun…"
 msgid "New credit card…"
 msgstr "Nova kreditna kartica…"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "This account uses a different currency from your books."
-msgstr "Ovaj račun koristi valutu koja se razlikuje od valute vaših knjiga."
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -2790,6 +2785,10 @@ msgstr "Podudaranje s transakcijom %1"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "Preostali zahtjevi za danas: %1"
+
+#, kde-format
+#~ msgid "This account uses a different currency from your books."
+#~ msgstr "Ovaj račun koristi valutu koja se razlikuje od valute vaših knjiga."
 
 #, kde-format
 #~ msgid "Load bank accounts"

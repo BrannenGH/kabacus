@@ -303,11 +303,6 @@ msgstr "Nauja banko sąskaita…"
 msgid "New credit card…"
 msgstr "Nauja kredito kortelė…"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "This account uses a different currency from your books."
-msgstr "Šios sąskaitos valiuta skiriasi nuo jūsų apskaitos knygų valiutos."
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -2797,6 +2792,10 @@ msgstr "Suderinti su sandoriu %1"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "Šiandien likusių užklausų: %1"
+
+#, kde-format
+#~ msgid "This account uses a different currency from your books."
+#~ msgstr "Šios sąskaitos valiuta skiriasi nuo jūsų apskaitos knygų valiutos."
 
 #, kde-format
 #~ msgid "Load bank accounts"

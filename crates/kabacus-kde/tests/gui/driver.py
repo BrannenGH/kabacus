@@ -806,6 +806,7 @@ def main():
         choose_action("Sync")
         choose_action("Review")
         wait_for("reviewed transaction", lambda: find(app(), "Harbor Street Cafe"))
+        wait_for("reviewed amount in the feed currency", lambda: find(app(), "-18.40 CAD"))
         choose_action("Import")
         choose_action("Categorize")
         wait_for("uncategorized transaction", lambda: label_starting("Harbor Street Cafe"))

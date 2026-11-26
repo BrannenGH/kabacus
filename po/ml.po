@@ -303,11 +303,6 @@ msgstr "പുതിയ ബാങ്ക് അക്കൗണ്ട്…"
 msgid "New credit card…"
 msgstr "പുതിയ ക്രെഡിറ്റ് കാർഡ്…"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "This account uses a different currency from your books."
-msgstr "ഈ അക്കൗണ്ടിന്റെ കറൻസി നിങ്ങളുടെ കണക്കുപുസ്തകങ്ങളിലേതിൽ നിന്ന് വ്യത്യസ്തമാണ്."
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -2783,6 +2778,10 @@ msgstr "ഇടപാട് %1-മായി പൊരുത്തപ്പെട�
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "ഇന്ന് ശേഷിക്കുന്ന അഭ്യർത്ഥനകൾ: %1"
+
+#, kde-format
+#~ msgid "This account uses a different currency from your books."
+#~ msgstr "ഈ അക്കൗണ്ടിന്റെ കറൻസി നിങ്ങളുടെ കണക്കുപുസ്തകങ്ങളിലേതിൽ നിന്ന് വ്യത്യസ്തമാണ്."
 
 #, kde-format
 #~ msgid "Load bank accounts"

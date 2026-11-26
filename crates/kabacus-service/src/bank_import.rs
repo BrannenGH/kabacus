@@ -16,6 +16,7 @@ use kabacus_core::funds::UNCATEGORIZED;
 use kabacus_core::{
     AccountKind, AccountName, Amount, Balances, Posting, PostingKind, Status, Transaction,
 };
+use kabacus_ledger::{Commodity, Style};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -94,7 +95,7 @@ impl From<ImportError> for Error {
         let code = match &error {
             ImportError::TooLarge => "import_too_large",
             ImportError::AccountKind(_) => "account_kind",
-            ImportError::CurrencyMismatch { .. } => "currency_mismatch",
+            ImportError::UnsupportedCurrency => "unsupported_currency",
             ImportError::DateFormat => "date_format",
             ImportError::Field { field, .. }
                 if matches!(field.as_str(), "amount" | "balance" | "TRNAMT" | "BALAMT") =>
@@ -152,8 +153,6 @@ pub async fn import_statement(
     let mut wc = WorkingCopy::load(state, head).await?;
     let limits = state.settings.statement_limits;
     let bytes = file_content(&mut body, limits)?;
-    let commodity = wc.commodity();
-    let places = wc.places(&commodity);
     let dry_run = body.options.dry_run.unwrap_or(true);
     let statement = match body.format {
         FileFormat::Csv => {
@@ -164,7 +163,7 @@ pub async fn import_statement(
                 return Ok(json!({"head": wc.head, "dry_run": true, "account": target,
                     "source": {"format": "csv"}, "csv": core::inspect_csv(&bytes, body.skip_rows)?}));
             };
-            core::parse_csv(&bytes, mapping, places, limits.max_rows)?
+            core::parse_csv(&bytes, mapping, wc.places(&wc.commodity()), limits.max_rows)?
         }
         FileFormat::Ofx | FileFormat::Qfx => {
             let mut statements = core::parse_ofx(&bytes, u32::MAX, limits.max_rows)?;
@@ -221,6 +220,43 @@ pub async fn import_statement(
     Ok(result)
 }
 
+fn import_commodity(wc: &WorkingCopy, target: &str, code: &str) -> String {
+    let mut equivalents = wc
+        .book
+        .commodities
+        .keys()
+        .filter(|symbol| core::currency_matches(code, symbol));
+    let Some(first) = equivalents.next() else {
+        return code.to_owned();
+    };
+    if equivalents.next().is_none() {
+        return first.clone();
+    }
+
+    let mut used = wc
+        .book
+        .transactions
+        .iter()
+        .flat_map(|tx| &tx.postings)
+        .filter(|p| p.account.as_str() == target && p.kind == PostingKind::Real)
+        .map(|p| p.amount.commodity.as_str())
+        .filter(|symbol| core::currency_matches(code, symbol));
+    if let Some(symbol) = used
+        .next()
+        .filter(|first| used.all(|other| other == *first))
+    {
+        return symbol.to_owned();
+    }
+    if wc.book.commodities.contains_key(code) {
+        return code.to_owned();
+    }
+    let default = wc.commodity();
+    if core::currency_matches(code, &default) {
+        return default;
+    }
+    first.clone()
+}
+
 /// Applies one statement to a working copy. The caller validates and commits the full copy.
 pub(crate) fn apply_statement(
     wc: &mut WorkingCopy,
@@ -229,17 +265,25 @@ pub(crate) fn apply_statement(
     options: &ImportOptions,
     simplefin_feed: Option<&SimplefinFeed>,
 ) -> Result<Value, Error> {
-    let commodity = wc.commodity();
-    let places = wc.places(&commodity);
-    if let Some(reported) = statement.currency.filter(|reported| reported != &commodity) {
-        return Err(ImportError::CurrencyMismatch {
-            reported,
-            commodity,
-        }
-        .into());
-    }
-    for row in &statement.rows {
-        if row.amount.places() > places {
+    let currency = statement
+        .currency
+        .as_deref()
+        .map(core::currency_code)
+        .transpose()?;
+    let commodity = currency
+        .as_deref()
+        .map_or_else(|| wc.commodity(), |code| import_commodity(wc, target, code));
+    if let Some(places) = wc
+        .book
+        .commodities
+        .get(&commodity)
+        .and_then(|c| c.style.places)
+    {
+        if let Some(row) = statement
+            .rows
+            .iter()
+            .find(|row| row.amount.places() > places)
+        {
             return Err(ImportError::Field {
                 location: row.import_id.clone(),
                 field: "amount".into(),
@@ -365,6 +409,15 @@ pub(crate) fn apply_statement(
         }
         rows.push(result);
     }
+    if counts[0] > 0 && statement.currency.is_some() {
+        wc.book
+            .commodities
+            .entry(commodity.clone())
+            .or_insert_with(|| Commodity {
+                symbol: commodity.clone(),
+                style: Style::default_for(&commodity),
+            });
+    }
     if counts[0] + counts[1] != 0 {
         if let Some(hint) = hint {
             account_tags
@@ -383,7 +436,7 @@ pub(crate) fn apply_statement(
         search::DEFAULT_LIMIT,
     )?;
     let mut result = json!({"head": wc.head, "dry_run": dry_run, "account": target,
-        "source": {"format": statement.source, "account_hint": statement.account_hint, "from": from, "to": to},
+        "source": {"format": statement.source, "account_hint": statement.account_hint, "currency": currency.as_deref().unwrap_or(&commodity), "from": from, "to": to},
         "counts": {"new": counts[0], "matched": counts[1], "duplicate": counts[2], "skipped": counts[3], "error": 0},
         "rows": page.items, "next_cursor": page.next_cursor, "warnings": warnings});
     if let Some(reported) = statement.reported_balance {
@@ -393,8 +446,12 @@ pub(crate) fn apply_statement(
         } else {
             balances.exclusive(&classified.account)
         }
-        .money
-        .rescaled(places);
+        .money;
+        let places = wc
+            .places(&commodity)
+            .max(actual.places())
+            .max(reported.amount.places());
+        let actual = actual.rescaled(places);
         let reported_amount = reported.amount.rescaled(places);
         result["balance_check"] = json!({"date": reported.date, "reported": reported_amount.to_string(),
             "books": actual.to_string(), "difference": (actual - reported_amount).to_string()});

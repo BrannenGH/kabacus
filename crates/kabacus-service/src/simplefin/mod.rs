@@ -744,14 +744,7 @@ pub async fn link(
                     "Choose an account from your SimpleFIN connection",
                 )
             })?;
-        let commodity = wc.commodity();
-        if remote.currency != commodity {
-            return Err(ImportError::CurrencyMismatch {
-                reported: clean_text(&remote.currency),
-                commodity,
-            }
-            .into());
-        }
+        kabacus_core::bank_import::currency_code(&remote.currency)?;
         let (url, _) = credentials(&access, allowlist(state))?;
         let domain = url.host_str().unwrap_or_default();
         if links(&wc.book)

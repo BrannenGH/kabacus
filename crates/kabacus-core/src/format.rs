@@ -10,15 +10,14 @@
 use crate::money::{Amount, Money};
 use num_bigint::BigUint;
 
+pub(crate) const CURRENCY_SYMBOLS: [(&str, &str); 3] = [("USD", "$"), ("EUR", "€"), ("GBP", "£")];
+
 /// A handful of well-known commodity symbols. Anything else falls back to
 /// `<code> <amount>` (e.g. `"JPY 1,234"`).
 fn symbol_for(commodity: &str) -> Option<&'static str> {
-    match commodity {
-        "USD" | "$" => Some("$"),
-        "EUR" | "€" => Some("€"),
-        "GBP" | "£" => Some("£"),
-        _ => None,
-    }
+    CURRENCY_SYMBOLS
+        .into_iter()
+        .find_map(|(code, symbol)| (commodity == code || commodity == symbol).then_some(symbol))
 }
 
 /// Format with digit grouping and, when known, a currency symbol. Negative

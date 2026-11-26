@@ -303,11 +303,6 @@ msgstr "Tài khoản ngân hàng mới…"
 msgid "New credit card…"
 msgstr "Thẻ tín dụng mới…"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "This account uses a different currency from your books."
-msgstr "Tài khoản này dùng đơn vị tiền tệ khác với sổ sách của bạn."
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -2776,6 +2771,10 @@ msgstr "Phù hợp với giao dịch %1"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "Yêu cầu còn lại hôm nay: %1"
+
+#, kde-format
+#~ msgid "This account uses a different currency from your books."
+#~ msgstr "Tài khoản này dùng đơn vị tiền tệ khác với sổ sách của bạn."
 
 #, kde-format
 #~ msgid "Load bank accounts"

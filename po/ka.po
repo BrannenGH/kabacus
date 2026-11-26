@@ -303,11 +303,6 @@ msgstr "ახალი საბანკო ანგარიში…"
 msgid "New credit card…"
 msgstr "ახალი საკრედიტო ბარათი…"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "This account uses a different currency from your books."
-msgstr "ამ ანგარიშის ვალუტა განსხვავდება თქვენი აღრიცხვის წიგნების ვალუტისგან."
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -2783,6 +2778,10 @@ msgstr "ემთხვევა ტრანზაქციას %1"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "დღეს დარჩენილი მოთხოვნები: %1"
+
+#, kde-format
+#~ msgid "This account uses a different currency from your books."
+#~ msgstr "ამ ანგარიშის ვალუტა განსხვავდება თქვენი აღრიცხვის წიგნების ვალუტისგან."
 
 #, kde-format
 #~ msgid "Load bank accounts"

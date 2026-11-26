@@ -303,11 +303,6 @@ msgstr "Ҳисоби нави бонкӣ…"
 msgid "New credit card…"
 msgstr "Корти қарзии нав…"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "This account uses a different currency from your books."
-msgstr "Асъори ин ҳисоб аз асъори дафтарҳои муҳосибии шумо фарқ мекунад."
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -2783,6 +2778,10 @@ msgstr "Бо муомилоти %1 мувофиқат кунед"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "Дархостҳое, ки имрӯз боқӣ мондаанд: %1"
+
+#, kde-format
+#~ msgid "This account uses a different currency from your books."
+#~ msgstr "Асъори ин ҳисоб аз асъори дафтарҳои муҳосибии шумо фарқ мекунад."
 
 #, kde-format
 #~ msgid "Load bank accounts"

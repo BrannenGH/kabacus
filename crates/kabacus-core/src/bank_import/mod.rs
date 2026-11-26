@@ -99,12 +99,29 @@ pub enum ImportError {
     Field { location: String, field: String },
     #[error("Import into a bank or credit card account: {0}")]
     AccountKind(String),
-    #[error("The statement currency {reported} differs from the books' currency {commodity}")]
-    CurrencyMismatch { reported: String, commodity: String },
+    #[error("Bank imports require a currency code or a recognized symbol")]
+    UnsupportedCurrency,
     #[error("The import decision for {0} does not identify an eligible row or transaction")]
     Decision(String),
     #[error(transparent)]
     Funds(#[from] crate::FundsError),
+}
+
+/// Normalize a bank's currency label before choosing a commodity in the books.
+pub fn currency_code(currency: &str) -> Result<String, ImportError> {
+    let currency = currency.trim();
+    if currency.len() == 3 && currency.bytes().all(|byte| byte.is_ascii_alphabetic()) {
+        return Ok(currency.to_ascii_uppercase());
+    }
+    crate::format::CURRENCY_SYMBOLS
+        .into_iter()
+        .find_map(|(code, symbol)| (currency == symbol).then(|| code.to_owned()))
+        .ok_or(ImportError::UnsupportedCurrency)
+}
+
+pub fn currency_matches(code: &str, commodity: &str) -> bool {
+    code.eq_ignore_ascii_case(commodity)
+        || crate::format::CURRENCY_SYMBOLS.contains(&(code, commodity))
 }
 
 pub fn clean_text(value: &str) -> String {

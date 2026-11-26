@@ -303,11 +303,6 @@ msgstr "Nieg Bankkonto…"
 msgid "New credit card…"
 msgstr "Nieg Kreditkoort…"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "This account uses a different currency from your books."
-msgstr "Dit Konto bruukt en anner Wehren as Dien Böker."
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -2783,6 +2778,10 @@ msgstr "Transaktschoon %1 toornen"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "Anfragen för vundaag över: %1"
+
+#, kde-format
+#~ msgid "This account uses a different currency from your books."
+#~ msgstr "Dit Konto bruukt en anner Wehren as Dien Böker."
 
 #, kde-format
 #~ msgid "Load bank accounts"

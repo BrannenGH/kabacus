@@ -989,11 +989,12 @@ async fn statement_import_previews_and_commits_one_revision_over_mcp() {
     let head = support::head(&client).await;
     let mut args = json!({
         "account": "assets:bank:checking", "head": head, "format": "qfx",
-        "content": "<OFX><BANKMSGSRSV1><STMTTRNRS><STMTRS><CURDEF>USD<BANKACCTFROM><ACCTID>3186042</BANKACCTFROM><BANKTRANLIST><STMTTRN><DTPOSTED>20260203<TRNAMT>84.75<FITID>HB0291<NAME>Cedar Neighborhood Market</STMTTRN></BANKTRANLIST><LEDGERBAL><BALAMT>84.75<DTASOF>20260203</LEDGERBAL></STMTRS></STMTTRNRS></BANKMSGSRSV1></OFX>"
+        "content": "<OFX><BANKMSGSRSV1><STMTTRNRS><STMTRS><CURDEF>CAD<BANKACCTFROM><ACCTID>3186042</BANKACCTFROM><BANKTRANLIST><STMTTRN><DTPOSTED>20260203<TRNAMT>84.75<FITID>HB0291<NAME>Cedar Neighborhood Market</STMTTRN></BANKTRANLIST><LEDGERBAL><BALAMT>84.75<DTASOF>20260203</LEDGERBAL></STMTRS></STMTTRNRS></BANKMSGSRSV1></OFX>"
     });
     let preview = call(&client, "import_statement", args.clone()).await;
     assert_eq!(preview["counts"]["new"], 1);
     assert_eq!(preview["source"]["account_hint"], "…6042");
+    assert_eq!(preview["source"]["currency"], "CAD");
     assert_eq!(preview["balance_check"]["difference"], "0.00");
     assert_eq!(support::head(&client).await, head);
     let (committed, saved_head) = support::commit(&client, "import_statement", args.clone()).await;

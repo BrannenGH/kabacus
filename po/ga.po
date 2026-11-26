@@ -303,11 +303,6 @@ msgstr "Cuntas bainc nua…"
 msgid "New credit card…"
 msgstr "Cárta creidmheasa nua…"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "This account uses a different currency from your books."
-msgstr "Úsáideann an cuntas seo airgeadra eile seachas an t-airgeadra i do leabhair."
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -2804,6 +2799,10 @@ msgstr "Meaitseáil leis an idirbheart %1"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "Iarratais fágtha inniu: %1"
+
+#, kde-format
+#~ msgid "This account uses a different currency from your books."
+#~ msgstr "Úsáideann an cuntas seo airgeadra eile seachas an t-airgeadra i do leabhair."
 
 #, kde-format
 #~ msgid "Load bank accounts"

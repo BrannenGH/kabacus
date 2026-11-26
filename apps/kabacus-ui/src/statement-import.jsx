@@ -37,15 +37,17 @@ function Mapping({ inspection, value, onChange }) {
 
 export function ImportReview({ result, decisions, onDecision }) {
   const { counts, balance_check: balance } = result;
+  const currency = result.source?.currency;
+  const amount = value => currency ? `${value} ${currency}` : value;
   return <div className="preview">
     <h3>{t("Review before saving")}</h3>
     <dl className="statement-counts">{[[t("New transactions"), counts.new], [t("Matched"), counts.matched], [t("Already imported"), counts.duplicate], [t("Skipped"), counts.skipped]].map(([label, count]) => <div key={label}><dt>{label}</dt><dd>{count}</dd></div>)}</dl>
     {result.warnings?.map((warning, index) => <p className="banner" key={`${warning.code}:${index}`}>{warning.message}</p>)}
     {balance && <section><h4>{t("Balance check")}</h4><dl className="statement-counts">
-      {[[t("Date"), balance.date], [t("Statement balance"), balance.reported], [t("Books balance"), balance.books], [t("Difference"), balance.difference]].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}
+      {[[t("Date"), balance.date], [t("Statement balance"), amount(balance.reported)], [t("Books balance"), amount(balance.books)], [t("Difference"), amount(balance.difference)]].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}
     </dl></section>}
     <ul className="statement-rows">{result.rows.map((row, index) => <li key={`${row.import_id}:${index}`}>
-      <div className="list-row"><span><strong>{row.description}</strong><small>{row.date}</small></span><span className="amount">{row.amount}</span></div>
+      <div className="list-row"><span><strong>{row.description}</strong><small>{row.date}</small></span><span className="amount">{amount(row.amount)}</span></div>
       {row.outcome !== "duplicate" && <label>{t("Action")}<select aria-label={`${t("Action")} ${row.description}`} value={decisions[row.import_id] ?? (row.transaction ? `match:${row.transaction}` : row.outcome === "skipped" ? "skip" : "add")} onChange={event => onDecision(row.import_id, event.target.value)}>
         {row.candidates?.map(id => <option key={id} value={`match:${id}`}>{t("Match transaction %1", id)}</option>)}
         <option value="add">{t("Import as new")}</option><option value="skip">{t("Skip")}</option>
