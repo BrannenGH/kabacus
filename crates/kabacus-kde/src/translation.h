@@ -18,6 +18,7 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusServiceWatcher>
+#include <QtDBus/QDBusVirtualObject>
 #include <QtGui/QGuiApplication>
 #include <QtWidgets/QApplication>
 #include <QtQml/QQmlApplicationEngine>
@@ -69,6 +70,42 @@ inline void kabacus_setup_menu_state(QQmlApplicationEngine &engine)
     update();
 }
 
+class KabacusPanel : public QDBusVirtualObject
+{
+public:
+    explicit KabacusPanel(QObject *state) : QDBusVirtualObject(state), state(state)
+    {
+        auto bus = QDBusConnection::sessionBus();
+        if (bus.registerService(QStringLiteral("me.hallb.kabacus.Panel"))) {
+            bus.registerVirtualObject(QStringLiteral("/Panel"), this);
+        }
+    }
+
+    QString introspect(const QString &) const override
+    {
+        return QStringLiteral(
+            "<interface name='me.hallb.kabacus.Panel'>"
+            "<method name='Snapshot'><arg type='s' direction='out'/></method>"
+            "</interface>");
+    }
+
+    bool handleMessage(const QDBusMessage &message, const QDBusConnection &bus) override
+    {
+        if (message.interface() != QStringLiteral("me.hallb.kabacus.Panel")
+            || message.member() != QStringLiteral("Snapshot") || !message.arguments().isEmpty()) {
+            return false;
+        }
+        QString snapshot;
+        if (!QMetaObject::invokeMethod(state, "panelSnapshot", Q_RETURN_ARG(QString, snapshot))) {
+            return false;
+        }
+        return bus.send(message.createReply(snapshot));
+    }
+
+private:
+    QObject *state;
+};
+
 // Gives QML i18n(), i18nc(), i18np() and i18ncp().
 inline void kabacus_setup_qml(QQmlApplicationEngine &engine)
 {
@@ -79,6 +116,7 @@ inline void kabacus_setup_qml(QQmlApplicationEngine &engine)
 #endif
     engine.rootContext()->setContextObject(context);
     kabacus_setup_menu_state(engine);
+    new KabacusPanel(engine.singletonInstance<QObject *>("me.hallb.kabacus", "WindowManager"));
 }
 
 inline QByteArray kabacus_bytes(rust::Str text)

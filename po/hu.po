@@ -653,7 +653,7 @@ msgstr "Jelentkezzen be ezzel: %1, hogy lássa a könyvelését."
 msgid "Sign in again"
 msgstr "Újbóli bejelentkezés"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr "Bejelentkezés"
@@ -786,17 +786,17 @@ msgstr "Könyvek váltása…"
 msgid "Refresh"
 msgstr "Frissítés"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr "Az elkölthető pénz nem tölthető be"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr "Betöltés…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Available to spend"
 msgstr "Elkölthető összeg"
@@ -816,7 +816,7 @@ msgstr "Elkölthető pénz"
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr "Szabad pénz, amelyet most elkölthet, a tartalékok és a kártyatartalékok után."
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgctxt "%1 is an amount"
 msgid "Available to spend %1"
@@ -1122,7 +1122,7 @@ msgstr "Nincs a következőnek megfelelő tranzakció: „%1”"
 msgid "No unreserved transactions"
 msgstr "Nincsenek tartalék nélküli tranzakciók"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/RegisterPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr "Nincsenek tranzakciók"
@@ -1812,6 +1812,16 @@ msgstr "Üdvözli a Kabacus"
 #, kde-format
 msgid "Your books, on this computer. Every change is saved."
 msgstr "Könyvei ezen a számítógépen. Minden változás mentésre kerül."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
+#, kde-format
+msgid "Open a book in Kabacus."
+msgstr "Nyisson meg egy könyvelési fájlt a Kabacusban."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
+msgstr "Tranzakciók"
 
 #: crates/kabacus-kde/src/auth.rs
 #, kde-format
@@ -2603,11 +2613,6 @@ msgstr "Pénz"
 #, kde-format
 msgid "Go"
 msgstr "Ugrás"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Transactions"
-msgstr "Tranzakciók"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

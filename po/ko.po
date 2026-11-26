@@ -652,7 +652,7 @@ msgstr "장부를 보려면 %1(으)로 로그인하세요."
 msgid "Sign in again"
 msgstr "다시 로그인"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr "로그인"
@@ -785,17 +785,17 @@ msgstr "장부 전환…"
 msgid "Refresh"
 msgstr "새로 고침"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr "쓸 수 있는 돈을 불러올 수 없음"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr "불러오는 중…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Available to spend"
 msgstr "사용 가능한 금액"
@@ -815,7 +815,7 @@ msgstr "쓸 수 있는 돈"
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr "준비금과 카드 준비금을 뺀, 지금 바로 쓸 수 있는 자유 자금입니다."
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgctxt "%1 is an amount"
 msgid "Available to spend %1"
@@ -1121,7 +1121,7 @@ msgstr "“%1”과(와) 일치하는 거래 없음"
 msgid "No unreserved transactions"
 msgstr "준비금 없는 거래 없음"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/RegisterPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr "거래 없음"
@@ -1810,6 +1810,16 @@ msgstr "Kabacus에 오신 것을 환영합니다"
 #, kde-format
 msgid "Your books, on this computer. Every change is saved."
 msgstr "이 컴퓨터에 있는 장부입니다. 모든 변경 사항이 저장됩니다."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
+#, kde-format
+msgid "Open a book in Kabacus."
+msgstr "Kabacus에서 장부를 여세요."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
+msgstr "거래"
 
 #: crates/kabacus-kde/src/auth.rs
 #, kde-format
@@ -2596,11 +2606,6 @@ msgstr "돈"
 #, kde-format
 msgid "Go"
 msgstr "이동"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Transactions"
-msgstr "거래"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

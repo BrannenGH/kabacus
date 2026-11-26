@@ -652,7 +652,7 @@ msgstr "Đăng nhập bằng %1 để xem sổ sách của bạn."
 msgid "Sign in again"
 msgstr "Đăng nhập lại"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr "Đăng nhập"
@@ -785,17 +785,17 @@ msgstr "Chuyển sổ sách…"
 msgid "Refresh"
 msgstr "Làm mới"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr "Không tải được Tiền có thể tiêu"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr "Đang tải…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Available to spend"
 msgstr "Tiền có thể tiêu"
@@ -815,7 +815,7 @@ msgstr "Tiền có thể tiêu"
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr "Tiền tự do bạn có thể tiêu ngay, sau các khoản dự phòng và dự phòng thẻ."
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgctxt "%1 is an amount"
 msgid "Available to spend %1"
@@ -1121,7 +1121,7 @@ msgstr "Không có giao dịch nào khớp với “%1”"
 msgid "No unreserved transactions"
 msgstr "Không có giao dịch chưa dự phòng"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/RegisterPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr "Không có giao dịch"
@@ -1810,6 +1810,16 @@ msgstr "Chào mừng đến với Kabacus"
 #, kde-format
 msgid "Your books, on this computer. Every change is saved."
 msgstr "Sổ của bạn trên máy tính này. Mọi thay đổi đều được lưu."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
+#, kde-format
+msgid "Open a book in Kabacus."
+msgstr "Mở một sổ kế toán trong Kabacus."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
+msgstr "Giao dịch"
 
 #: crates/kabacus-kde/src/auth.rs
 #, kde-format
@@ -2596,11 +2606,6 @@ msgstr "Tiền"
 #, kde-format
 msgid "Go"
 msgstr "Đi"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Transactions"
-msgstr "Giao dịch"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

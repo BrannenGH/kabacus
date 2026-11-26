@@ -653,7 +653,7 @@ msgstr "Inicie sessão com %1 para ver os seus livros."
 msgid "Sign in again"
 msgstr "Iniciar sessão novamente"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr "Iniciar sessão"
@@ -786,17 +786,17 @@ msgstr "Mudar de livros…"
 msgid "Refresh"
 msgstr "Atualizar"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr "Não foi possível carregar o dinheiro disponível"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr "A carregar…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Available to spend"
 msgstr "Disponível para gastar"
@@ -816,7 +816,7 @@ msgstr "Dinheiro disponível"
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr "Dinheiro livre que pode gastar já, depois das reservas e das reservas dos cartões."
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgctxt "%1 is an amount"
 msgid "Available to spend %1"
@@ -1122,7 +1122,7 @@ msgstr "Nenhum lançamento corresponde a “%1”"
 msgid "No unreserved transactions"
 msgstr "Nenhum lançamento sem reserva"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/RegisterPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr "Nenhum lançamento"
@@ -1812,6 +1812,16 @@ msgstr "Bem-vindo ao Kabacus"
 #, kde-format
 msgid "Your books, on this computer. Every change is saved."
 msgstr "Os seus livros, neste computador. Cada alteração é guardada."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
+#, kde-format
+msgid "Open a book in Kabacus."
+msgstr "Abra um livro de contas no Kabacus."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
+msgstr "Transações"
 
 #: crates/kabacus-kde/src/auth.rs
 #, kde-format
@@ -2603,11 +2613,6 @@ msgstr "Dinheiro"
 #, kde-format
 msgid "Go"
 msgstr "Ir"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Transactions"
-msgstr "Transações"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

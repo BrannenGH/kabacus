@@ -653,7 +653,7 @@ msgstr "स्वपुस्तकानि द्रष्टुं %1 द्�
 msgid "Sign in again"
 msgstr "पुनः प्रविशतु"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr "प्रविशतु"
@@ -786,17 +786,17 @@ msgstr "लेखापुस्तकानि परिवर्तयतु�
 msgid "Refresh"
 msgstr "नवीकरोतु"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr "हस्तस्थं धनं आरोपयितुं न शक्यते"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr "आरोप्यते…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Available to spend"
 msgstr "व्ययार्थम् उपलब्धं धनम्"
@@ -816,7 +816,7 @@ msgstr "हस्तस्थं धनम्"
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr "आरक्षितधनानि पत्राणाम् आरक्षितधनानि च विहाय इदानीं व्ययितुं शक्यं मुक्तधनम्।"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgctxt "%1 is an amount"
 msgid "Available to spend %1"
@@ -1122,7 +1122,7 @@ msgstr "“%1” इत्यनेन मेलन्तः व्यवहा�
 msgid "No unreserved transactions"
 msgstr "आरक्षितधनरहिताः व्यवहाराः न सन्ति"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/RegisterPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr "व्यवहाराः न सन्ति"
@@ -1812,6 +1812,16 @@ msgstr "Kabacus मध्ये स्वागतम्"
 #, kde-format
 msgid "Your books, on this computer. Every change is saved."
 msgstr "अस्मिन् सङ्गणके भवतः लेखापुस्तकानि। प्रत्येकं परिवर्तनं रक्ष्यते।"
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
+#, kde-format
+msgid "Open a book in Kabacus."
+msgstr "Kabacus मध्ये लेखापुस्तकम् उद्घाटयतु।"
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
+msgstr "व्यवहाराः"
 
 #: crates/kabacus-kde/src/auth.rs
 #, kde-format
@@ -2603,11 +2613,6 @@ msgstr "धनम्"
 #, kde-format
 msgid "Go"
 msgstr "गच्छतु"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Transactions"
-msgstr "व्यवहाराः"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format

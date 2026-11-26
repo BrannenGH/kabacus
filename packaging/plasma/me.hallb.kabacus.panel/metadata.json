@@ -1,0 +1,11 @@
+{
+    "KPlugin": {
+        "Id": "me.hallb.kabacus.panel",
+        "Name": "Kabacus",
+        "Icon": "me.hallb.kabacus",
+        "Category": "Utilities",
+        "License": "GPL-3.0-or-later"
+    },
+    "KPackageStructure": "Plasma/Applet",
+    "X-Plasma-API-Minimum-Version": "6.2"
+}

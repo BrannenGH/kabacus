@@ -651,7 +651,7 @@ msgstr ""
 msgid "Sign in again"
 msgstr ""
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr ""
@@ -784,17 +784,17 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr ""
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr ""
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Available to spend"
 msgstr ""
@@ -814,7 +814,7 @@ msgstr ""
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr ""
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgctxt "%1 is an amount"
 msgid "Available to spend %1"
@@ -1120,7 +1120,7 @@ msgstr ""
 msgid "No unreserved transactions"
 msgstr ""
 
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/RegisterPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr ""
@@ -1809,6 +1809,16 @@ msgstr ""
 #: crates/kabacus-kde/qml/WelcomePage.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Your books, on this computer. Every change is saved."
+msgstr ""
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
+#, kde-format
+msgid "Open a book in Kabacus."
+msgstr ""
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
 msgstr ""
 
 #: crates/kabacus-kde/src/auth.rs
@@ -2600,11 +2610,6 @@ msgstr ""
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Go"
-msgstr ""
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Transactions"
 msgstr ""
 
 #: apps/kabacus-ui/src/messages.js

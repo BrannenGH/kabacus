@@ -655,7 +655,7 @@ msgstr "יש להיכנס עם %1 כדי לראות את הספרים שלך."
 msgid "Sign in again"
 msgstr "כניסה מחדש"
 
-#: crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/Main.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Sign in"
 msgstr "כניסה"
@@ -788,17 +788,17 @@ msgstr "החלפת ספרים…"
 msgid "Refresh"
 msgstr "רענון"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"
 msgstr "אי אפשר לטעון את הכסף הזמין"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Loading…"
 msgstr "בטעינה…"
 
-#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Available to spend"
 msgstr "כסף זמין"
@@ -818,7 +818,7 @@ msgstr "כסף זמין"
 msgid "Free money you can spend right now, after reserves and card reserves."
 msgstr "כסף פנוי שאפשר להוציא עכשיו, אחרי הרזרבות ורזרבות הכרטיסים."
 
-#: crates/kabacus-kde/qml/OverviewPage.qml
+#: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgctxt "%1 is an amount"
 msgid "Available to spend %1"
@@ -1124,7 +1124,7 @@ msgstr "אין עסקאות שתואמות ל„%1”"
 msgid "No unreserved transactions"
 msgstr "אין עסקאות ללא רזרבה"
 
-#: crates/kabacus-kde/qml/RegisterPage.qml apps/kabacus-ui/src/messages.js
+#: crates/kabacus-kde/qml/RegisterPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "No transactions"
 msgstr "אין עסקאות"
@@ -1816,6 +1816,16 @@ msgstr "ברוך בואך ל־Kabacus"
 #, kde-format
 msgid "Your books, on this computer. Every change is saved."
 msgstr "הספרים שלך במחשב הזה. כל שינוי נשמר."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
+#, kde-format
+msgid "Open a book in Kabacus."
+msgstr "יש לפתוח ספר חשבונות ב־Kabacus."
+
+#: packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions"
+msgstr "תנועות"
 
 #: crates/kabacus-kde/src/auth.rs
 #, kde-format
@@ -2617,11 +2627,6 @@ msgstr "כסף"
 #, kde-format
 msgid "Go"
 msgstr "מעבר"
-
-#: apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "Transactions"
-msgstr "תנועות"
 
 #: apps/kabacus-ui/src/messages.js
 #, kde-format
