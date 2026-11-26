@@ -45,8 +45,6 @@ impl Limits {
 
 #[derive(Debug, Default, Clone, Deserialize, Serialize, JsonSchema)]
 pub struct ImportOptions {
-    #[serde(skip)]
-    pub(crate) require_unambiguous: bool,
     /// Defaults to true. Save by sending false with the previewed head.
     pub dry_run: Option<bool>,
     pub since: Option<NaiveDate>,
@@ -257,14 +255,19 @@ fn import_commodity(wc: &WorkingCopy, target: &str, code: &str) -> String {
     first.clone()
 }
 
-/// Applies one statement to a working copy. The caller validates and commits the full copy.
-pub(crate) fn apply_statement(
-    wc: &mut WorkingCopy,
+pub(crate) struct StatementPlan {
+    currency: Option<String>,
+    commodity: String,
+    pub(crate) rows: Vec<core::PlannedRow>,
+}
+
+pub(crate) fn plan_statement(
+    wc: &WorkingCopy,
     target: &str,
-    statement: Statement,
+    statement: &mut Statement,
     options: &ImportOptions,
     simplefin_feed: Option<&SimplefinFeed>,
-) -> Result<Value, Error> {
+) -> Result<StatementPlan, Error> {
     let currency = statement
         .currency
         .as_deref()
@@ -303,14 +306,29 @@ pub(crate) fn apply_statement(
             since: options.since,
             decisions: &options.decisions,
         },
-        statement.rows,
+        std::mem::take(&mut statement.rows),
     )?;
-    if options.require_unambiguous && planned.iter().any(|item| item.candidates.len() > 1) {
-        return Err(crate::simplefin::problem(
-            "simplefin_review",
-            "Review bank sync in Settings to choose between matching transactions",
-        ));
-    }
+    Ok(StatementPlan {
+        currency,
+        commodity,
+        rows: planned,
+    })
+}
+
+/// Applies one statement to a working copy. The caller validates and commits the full copy.
+pub(crate) fn apply_statement(
+    wc: &mut WorkingCopy,
+    target: &str,
+    mut statement: Statement,
+    options: &ImportOptions,
+    simplefin_feed: Option<&SimplefinFeed>,
+) -> Result<Value, Error> {
+    let StatementPlan {
+        currency,
+        commodity,
+        rows: planned,
+    } = plan_statement(wc, target, &mut statement, options, simplefin_feed)?;
+    let chart = wc.chart();
     let classified = chart
         .get(target)
         .ok_or_else(|| ImportError::AccountKind(target.into()))?;

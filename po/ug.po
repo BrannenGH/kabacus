@@ -780,6 +780,11 @@ msgstr "ھېساب دەپتەرلىرىنى ئالماشتۇر…"
 msgid "Refresh"
 msgstr "يېڭىلاش"
 
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions to import (%1)"
+msgstr "ئەكىرىدىغان سودا خاتىرىلىرى (%1)"
+
 #: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"

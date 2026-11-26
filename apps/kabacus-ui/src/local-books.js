@@ -71,12 +71,12 @@ export class BrowserApi extends Api {
     const bankRequest=path.startsWith("/simplefin/")||path.endsWith("/simplefin-link");
     const execute=async()=>{
       if(bankRequest||method!=="GET"||path==="/version")await this.reload();
-      const before=method!=="GET"?await this.books.bytes():null;
+      let before=method!=="GET"?await this.books.bytes():null;
       const request=JSON.stringify({method,path,body:body??null,head:head??null});
-      const response=JSON.parse(bankRequest?await this.books.request_with_checkpoint(request,bytes=>this.persist(bytes)):await this.books.request(request));
+      const response=JSON.parse(bankRequest?await this.books.request_with_checkpoint(request,async bytes=>{await this.persist(bytes);before=bytes;}):await this.books.request(request));
       const automatic = body?.automatic && response.status < 400
         ? JSON.parse(decode(response).text) : null;
-      if(method!=="GET"&&response.status<400&&body?.dry_run!==true&&(!automatic||automatic.head!==head)){
+      if(method!=="GET"&&response.status<400&&body?.dry_run!==true&&(!automatic||!automatic.skipped)){
         try{await this.persist(await this.books.bytes());}
         catch(error){const module=await wasm();const old=this.books;this.books=await module.BrowserBooks.open(before,this.record.username||"local");old.free();throw new ApiError(507,{message:t("Can't save these books. Check the folder's permissions and available space."),details:{reason:String(error)}});}
       }

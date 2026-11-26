@@ -153,7 +153,7 @@ export function BankConnections({ data, api, status, automaticProblem, onChanged
   </section>;
 }
 
-export function BankSync({ api, data, disabled, onClose, onUpdated, onCategorize }) {
+export function BankSync({ api, data, disabled, onClose, onUpdated, onCategorize, pending = false }) {
   const dialog = useRef(null);
   const [result, setResult] = useState(null);
   const [confirmed, setConfirmed] = useState(null);
@@ -163,7 +163,10 @@ export function BankSync({ api, data, disabled, onClose, onUpdated, onCategorize
   const [rangeChanged, setRangeChanged] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  useEffect(() => { dialog.current.show(); }, []);
+  useEffect(() => {
+    dialog.current.show();
+    if (pending) review(true);
+  }, []);
   useDialogHistory({ onClose, preview: result, setPreview: setResult, dirty: false, busy });
   function accountName(target) { return data.accounts.find(account => account.account === target)?.display_name || target; }
   function setStart(account, date) {
@@ -188,7 +191,7 @@ export function BankSync({ api, data, disabled, onClose, onUpdated, onCategorize
         const [action, transaction] = value.split(":");
         return { import_id, action, ...(transaction && { transaction: Number(transaction) }) };
       })]));
-      const reply = await api.request("/simplefin/sync", { method: "POST", head, body: { dry_run: dryRun, snapshot: rangeChanged ? null : result?.snapshot, starts, decisions: choices, cursors, limit: 100 } });
+      const reply = await api.request("/simplefin/sync", { method: "POST", head, body: { dry_run: dryRun, snapshot: rangeChanged ? null : result?.snapshot, ...(pending ? { pending } : { starts }), decisions: choices, cursors, limit: 100 } });
       if (dryRun) { setResult(reply); setReviewAgain(false); setRangeChanged(false); }
       else { setConfirmed(reply); onUpdated(); }
     } catch (failure) {
@@ -202,7 +205,7 @@ export function BankSync({ api, data, disabled, onClose, onUpdated, onCategorize
   }
   const canImport = result && !reviewAgain && !rangeChanged && result.counts.new + result.counts.matched > 0;
   return <dialog ref={dialog} className="bookkeeping-dialog" aria-labelledby="sync-title" onCancel={event => { event.preventDefault(); if (!busy) onClose(); }}>
-    <div className="dialog-heading"><h2 id="sync-title">{confirmed ? t("Import complete") : result ? t("Review") : t("Sync bank transactions")}</h2><button className="quiet" disabled={busy} onClick={onClose}>{confirmed ? t("Close") : t("Cancel")}</button></div>
+    <div className="dialog-heading"><h2 id="sync-title">{confirmed ? t("Import complete") : result || pending ? t("Review") : t("Sync bank transactions")}</h2><button className="quiet" disabled={busy} onClick={onClose}>{confirmed ? t("Close") : t("Cancel")}</button></div>
     {error && <p role="alert" className="banner error">{error}</p>}
     {busy && <p role="status">{t("Checking with the server…")}</p>}
     {confirmed ? <><p role="status">{t("Imported %1 new and matched %2 transactions.", confirmed.counts.new, confirmed.counts.matched)}</p><button onClick={onCategorize}>{t("Categorize")}</button></> : <>
@@ -210,7 +213,7 @@ export function BankSync({ api, data, disabled, onClose, onUpdated, onCategorize
       {result?.accounts.map(account => <section className="bank-sync-account" key={account.account}>
         <h3>{accountName(account.account)}</h3>
         {account.other_connection ? <p>{t("Linked through another member’s connection")}</p> : account.unavailable ? <p>{t("This account is unavailable")}</p> : <>
-          <label>{t("Start date")}<input type="date" value={starts[account.account] ?? account.since ?? ""} onChange={event => setStart(account.account, event.target.value)}/></label>
+          {!pending && <label>{t("Start date")}<input type="date" value={starts[account.account] ?? account.since ?? ""} onChange={event => setStart(account.account, event.target.value)}/></label>}
           <ImportReview result={account} decisions={decisions[account.account] || {}} onDecision={(id, choice) => { setDecisions(previous => ({ ...previous, [account.account]: { ...previous[account.account], [id]: choice } })); setReviewAgain(true); }}/>
           {account.next_cursor && !reviewAgain && !rangeChanged && <button className="secondary" onClick={() => review(true, { [account.account]: account.next_cursor })} disabled={busy}>{t("Load more")}</button>}
         </>}

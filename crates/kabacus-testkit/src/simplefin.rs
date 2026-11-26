@@ -6,6 +6,8 @@ use super::{spawn_scratch, TestServer};
 use base64::{engine::general_purpose::STANDARD, Engine as _};
 use kabacus_server::config::Config;
 use kabacus_service::simplefin::{Reply, Request, Response, Transport};
+use kabacus_store::simplefin::{Access, Owner};
+use kabacus_store::BookStore;
 use serde_json::json;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
@@ -37,6 +39,29 @@ pub async fn books_requiring_payment_on_first_fetch() -> TestServer {
 
 pub async fn books_with(customize: impl FnOnce(&mut Config)) -> TestServer {
     books_with_bridge(customize, Bridge::default()).await
+}
+
+pub async fn books_with_reviewed_mapping() -> TestServer {
+    let cutoff = chrono::Utc::now().date_naive() - chrono::Days::new(3);
+    let server = spawn_scratch(
+        &format!(
+            "account assets:bank:checking  ; simplefin-account:Cedar%20Bank/Cedar%20Everyday, simplefin-server:bridge.simplefin.org, simplefin-reviewed:bridge.simplefin.org/Cedar%20Bank/Cedar%20Everyday {cutoff}\n"
+        ),
+        |_| {},
+        Some(Arc::new(Bridge::default())),
+    )
+    .await;
+    let access = Access::new(
+        format!("https://{CEDAR_AUTH}@bridge.simplefin.org/simplefin"),
+        chrono::Utc::now().timestamp() - 86400,
+    );
+    server
+        .state
+        .store
+        .set_simplefin_access(server.state.ledger, Owner::Local, &access)
+        .await
+        .unwrap();
+    server
 }
 
 async fn books_with_bridge(customize: impl FnOnce(&mut Config), bridge: Bridge) -> TestServer {

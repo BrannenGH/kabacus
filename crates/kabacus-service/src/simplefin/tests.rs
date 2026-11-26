@@ -461,8 +461,20 @@ async fn automatic_sync_waits_for_review_and_observes_the_shared_request_interva
         .await
         .unwrap();
     assert_eq!(result["counts"]["new"], 1);
-    assert_ne!(result["head"], head);
-    let head = result["head"].as_str().unwrap();
+    assert_eq!(result["head"], head);
+    assert_eq!(current_head(&state).await, head);
+    let current_access = access(&state, Owner::Local).await.unwrap();
+    let mut next_fetch = state
+        .bank_connections
+        .snapshot(
+            Owner::Local,
+            &current_access,
+            Utc::now().timestamp(),
+            |snapshot| snapshot.window.is_some(),
+        )
+        .unwrap();
+    state.bank_connections.clear(Owner::Local);
+    assert_eq!(connection(&state, &dana).await.unwrap()["pending_count"], 1);
     assert_eq!(bridge.fetched.load(Ordering::Relaxed), 3);
     assert_eq!(
         sync(&state, &dana, &bridge, head, automatic())
@@ -470,6 +482,52 @@ async fn automatic_sync_waits_for_review_and_observes_the_shared_request_interva
             .unwrap()["skipped"],
         "recent_request"
     );
+    let queued = || body(json!({"pending": true}));
+    let preview = sync(&state, &dana, &bridge, head, queued()).await.unwrap();
+    assert_eq!(preview["counts"]["new"], 1);
+    assert_eq!(
+        preview["accounts"][0]["rows"][0]["description"],
+        "Oak Bakery"
+    );
+
+    next_fetch.id = uuid::Uuid::new_v4().to_string();
+    let checking = &mut Arc::make_mut(&mut next_fetch.data).accounts[0];
+    checking.transactions.remove(0);
+    let row = &mut checking.transactions[0];
+    row.id = "HH 2390".into();
+    row.description = "Juniper Hardware".into();
+    row.amount = "-41.08".into();
+    pending::stage(
+        &state,
+        Owner::Local,
+        &current_access,
+        &WorkingCopy::load(&state, head).await.unwrap(),
+        &next_fetch,
+        &BTreeMap::from([(TARGET.into(), first)]),
+        "bridge.simplefin.org",
+    )
+    .await
+    .unwrap();
+
+    let import = |review: Value| {
+        body(json!({"pending": true, "dry_run": false, "snapshot": review["snapshot"]}))
+    };
+    assert_eq!(
+        sync(&state, &dana, &bridge, head, import(preview))
+            .await
+            .unwrap_err()
+            .code(),
+        "snapshot_expired"
+    );
+    let preview = sync(&state, &dana, &bridge, head, queued()).await.unwrap();
+    assert_eq!(preview["counts"]["new"], 2);
+    let saved = sync(&state, &dana, &bridge, head, import(preview))
+        .await
+        .unwrap();
+    assert_eq!(saved["counts"]["new"], 2);
+    assert_ne!(saved["head"], head);
+    assert_eq!(connection(&state, &dana).await.unwrap()["pending_count"], 0);
+    assert_eq!(bridge.fetched.load(Ordering::Relaxed), 3);
 }
 
 #[tokio::test]

@@ -244,7 +244,7 @@ Kirigami.ApplicationWindow {
         repeat: true
         triggeredOnStart: true
         running: root.active && !root.offline && root.canWrite && root.bankStatus?.automatic_sync === true
-            && root.pageStack.layers.depth === 1
+            && typeof root.bankStatus?.pending_count === "number" && root.pageStack.layers.depth === 1
         onTriggered: {
             if (root.bankSyncTicket) return
             root.bankSyncNeedsHead = true
@@ -255,6 +255,9 @@ Kirigami.ApplicationWindow {
     function openBankSync() {
         if (bankStatus?.connected) pageStack.layers.push(statementImportPage, {account:"", accountName:"", syncMode:true})
         else openBankConnections()
+    }
+    function openPendingImport() {
+        pageStack.layers.push(statementImportPage, {account:"", accountName:"", syncMode:true, pendingMode:true})
     }
     onCanWriteChanged: loadBankStatus()
     Connections {
@@ -276,10 +279,9 @@ Kirigami.ApplicationWindow {
                             method:"POST", path:"/simplefin/sync", head:response.body.head, body:{automatic:true}
                         }))
                     }
-                } else if (response.status === 200 && !response.body.skipped) {
-                    root.bankSyncProblem = ""
-                    if (response.body.counts.new + response.body.counts.matched > 0) root.ledger.refresh()
-                    else root.loadBankStatus()
+                } else if (response.status === 200) {
+                    if (!response.body.skipped) root.bankSyncProblem = ""
+                    root.loadBankStatus()
                 } else if (response.status >= 400 && response.status !== 409 && response.status !== 403) {
                     root.bankSyncProblem = response.body.code === "simplefin_payment"
                         ? i18n("Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required")

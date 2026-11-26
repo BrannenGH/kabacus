@@ -22,6 +22,7 @@ use std::collections::{BTreeMap, HashMap};
 use std::sync::{Arc, Mutex};
 use url::Url;
 
+mod pending;
 mod transport;
 #[cfg(target_arch = "wasm32")]
 pub use transport::Checkpoint;
@@ -384,7 +385,7 @@ async fn fetch(
     }
     let snapshot = Snapshot {
         id: uuid::Uuid::new_v4().to_string(),
-        access: access.clone(),
+        access: Access::new(access.url().to_owned(), access.claimed_at),
         at: now,
         window,
         data: Arc::new(data),
@@ -500,9 +501,17 @@ pub async fn connection(state: &Service, caller: &dyn Caller) -> Result<Value, E
         .snapshot(owner, &access, now, |_| true);
     let connections = snapshot.as_ref().map(connection_list).unwrap_or_default();
     let warnings = snapshot.as_ref().map(warning_values).unwrap_or_default();
+    let pending_count = match pending::Pending::load(&access)? {
+        Some(pending) if require(caller, Permission::Write).is_ok() => {
+            let base = state.books_snapshot().await.map_err(Error::Internal)?;
+            let wc = WorkingCopy::from_snapshot(base, state.kind_table());
+            pending.count(&wc, url.host_str().unwrap_or_default())?
+        }
+        _ => 0,
+    };
     Ok(
         json!({"connected": true, "automatic_sync": true, "host": url.host_str(), "claimed_at": access.claimed_at,
-        "remaining": access.remaining(now), "connections": connections, "warnings": warnings}),
+        "remaining": access.remaining(now), "connections": connections, "warnings": warnings, "pending_count": pending_count}),
     )
 }
 
@@ -823,9 +832,12 @@ pub async fn link(
 
 #[derive(Deserialize, Serialize, JsonSchema)]
 pub struct SyncBody {
-    /// Automatically import new rows on mappings that have completed a manual import.
+    /// Fetch and save posted rows from reviewed mappings without importing them.
     #[serde(default)]
     pub automatic: bool,
+    /// Review or import the saved queue without contacting SimpleFIN.
+    #[serde(default)]
+    pub pending: bool,
     pub dry_run: Option<bool>,
     pub snapshot: Option<String>,
     pub since: Option<NaiveDate>,
@@ -914,7 +926,8 @@ pub async fn sync(
     let mut wc = WorkingCopy::load(state, head).await?;
     let automatic = body.automatic;
     if automatic
-        && (body.snapshot.is_some()
+        && (body.pending
+            || body.snapshot.is_some()
             || body.since.is_some()
             || body.end_date.is_some()
             || !body.starts.is_empty()
@@ -928,7 +941,18 @@ pub async fn sync(
             "Use automatic sync without manual review options",
         ));
     }
-    let dry_run = !automatic && body.dry_run.unwrap_or(true);
+    if body.pending
+        && (body.since.is_some()
+            || body.end_date.is_some()
+            || !body.starts.is_empty()
+            || body.refresh)
+    {
+        return Err(problem(
+            "simplefin_pending",
+            "Review saved bank transactions without changing the date range",
+        ));
+    }
+    let dry_run = body.dry_run.unwrap_or(true);
     let (url, _) = credentials(&access, allowlist(state))?;
     let domain = url.host_str().unwrap_or_default();
     let mut links = links(&wc.book);
@@ -959,7 +983,28 @@ pub async fn sync(
         }
     }
     let now = Utc::now();
-    let existing = if let Some(id) = &body.snapshot {
+    let saved = if body.pending {
+        pending::Pending::load(&access)?
+    } else {
+        None
+    };
+    if body.pending && saved.is_none() {
+        if !dry_run || body.snapshot.is_some() {
+            return Err(expired());
+        }
+        return Ok(
+            json!({"head": wc.head, "dry_run": true, "accounts": [], "counts": {"new": 0, "matched": 0}}),
+        );
+    }
+    let existing = if let Some(saved) = &saved {
+        if body.snapshot.as_ref().is_some_and(|id| id != &saved.id)
+            || (!dry_run && body.snapshot.is_none())
+        {
+            return Err(expired());
+        }
+        links.retain(|target, (key, host)| saved.account(target, key, host, domain).is_some());
+        Some(saved.snapshot(&access))
+    } else if let Some(id) = &body.snapshot {
         Some(
             state
                 .bank_connections
@@ -995,7 +1040,11 @@ pub async fn sync(
         })
         .map(|(name, link)| (name.clone(), link.clone()))
         .collect();
-    let mut starts = dates(&wc, &owned, &body, end, domain);
+    let mut starts = if body.pending {
+        BTreeMap::new()
+    } else {
+        dates(&wc, &owned, &body, end, domain)
+    };
     let earliest = end.checked_sub_days(Days::new(90)).unwrap_or(end);
     if automatic {
         if owned.is_empty() {
@@ -1010,15 +1059,15 @@ pub async fn sync(
         }
         links.retain(|account, _| starts.contains_key(account));
     }
-    let since = starts
-        .values()
-        .copied()
-        .min()
-        .or(body.since)
+    let since = saved
+        .as_ref()
+        .map(pending::Pending::since)
+        .or_else(|| starts.values().copied().min().or(body.since))
         .unwrap_or_else(|| end.checked_sub_days(Days::new(31)).unwrap_or(end));
-    if since > end
-        || end.signed_duration_since(since).num_days() > 90
-        || body.since.is_some_and(|since| since > end)
+    if !body.pending
+        && (since > end
+            || end.signed_duration_since(since).num_days() > 90
+            || body.since.is_some_and(|since| since > end))
     {
         return Err(problem(
             "simplefin_window",
@@ -1046,7 +1095,10 @@ pub async fn sync(
             result => result?,
         },
     };
-    let starts = if automatic {
+    if automatic {
+        return pending::stage(state, owner, &access, &wc, &snapshot, &starts, domain).await;
+    }
+    let starts = if body.pending {
         starts
     } else {
         dates(&wc, &links, &body, end, domain)
@@ -1078,12 +1130,11 @@ pub async fn sync(
         let (mut statement, pending) = remote.statement()?;
         statement.rows.retain(|row| row.date < end);
         count += statement.rows.len() + pending;
-        if count > state.settings.statement_limits.max_rows {
+        if !body.pending && count > state.settings.statement_limits.max_rows {
             return Err(ImportError::TooLarge.into());
         }
         let options = ImportOptions {
             dry_run: Some(dry_run),
-            require_unambiguous: automatic,
             since: starts.get(&target).copied(),
             limit: body.limit,
             cursor: body.cursors.get(&target).cloned(),
@@ -1096,7 +1147,7 @@ pub async fn sync(
         result["since"] = json!(options.since);
         let new = result["counts"]["new"].as_u64().unwrap_or_default();
         let matches = result["counts"]["matched"].as_u64().unwrap_or_default();
-        if !dry_run && !automatic && new + matches > 0 {
+        if !dry_run && !body.pending && new + matches > 0 {
             let original = &wc.book.accounts[&target].tags;
             let mut tags = kabacus_core::declared_tags(original);
             let prefix = format!("{domain}/{key} ");
@@ -1141,7 +1192,7 @@ pub async fn sync(
         )
         .await?;
         who.details["source"] =
-            json!({"format":"simplefin", "from": since, "to": end, "automatic": automatic});
+            json!({"format":"simplefin", "from": since, "to": end, "automatic": false});
         let revision = ops::commit(state, wc.changes(), &who, wc.revision).await?;
         ops::remember(state, &wc, revision).await;
         wc.head = revision.to_string();
@@ -1151,9 +1202,10 @@ pub async fn sync(
             }
         }
     }
+    let warnings = saved.map_or_else(|| warning_values(&snapshot), |saved| saved.warnings);
     Ok(
         json!({"head": wc.head, "dry_run": dry_run, "snapshot": snapshot.id, "accounts": results,
-        "counts":{"new":added,"matched":matched}, "warnings":warning_values(&snapshot)}),
+        "counts":{"new":added,"matched":matched}, "warnings":warnings}),
     )
 }
 

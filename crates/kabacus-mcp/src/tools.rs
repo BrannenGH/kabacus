@@ -1055,7 +1055,7 @@ impl KabacusMcp {
     }
 
     #[tool(
-        description = "Review transactions from all of the caller's linked SimpleFIN accounts. Show counts, matches, balance differences and all warnings. Commit the same snapshot on the previewed head after the person explicitly confirms. Set automatic to true to check whether an already reviewed mapping is due and import its new activity at the supplied head.",
+        description = "Review transactions from all of the caller's linked SimpleFIN accounts. Show counts, matches, balance differences and all warnings. Commit the same snapshot on the previewed head after the person explicitly confirms. Set automatic to true to fetch and save new activity for reviewed mappings when due. Set pending to true to review or import the saved queue without contacting SimpleFIN.",
         annotations(read_only_hint = false, destructive_hint = false)
     )]
     async fn sync_simplefin(

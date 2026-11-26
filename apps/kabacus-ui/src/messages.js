@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Brannen Hall <brannen@hallb.me>
 // SPDX-License-Identifier: GPL-3.0-or-later
 export const messages = [
+  "Transactions to import (%1)",
   "Available to spend",
   "Available by account",
   "%1 since %2",

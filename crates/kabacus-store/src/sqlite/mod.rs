@@ -718,12 +718,16 @@ fn restore(conn: &mut Connection, dump: &LedgerDump, owner: UserId) -> Result<Le
 }
 
 fn read_simplefin_access(conn: &Connection, ledger: LedgerId, slot: i64) -> Result<Option<Access>> {
-    let row: Option<(String, i64, String)> = conn.query_row(
-        "SELECT access_url, claimed_at, requests FROM simplefin_access WHERE ledger_id = ?1 AND slot = ?2",
-        params![ledger, slot], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
-    ).optional()?;
-    row.map(|(url, claimed_at, requests)| Access::stored(url, claimed_at, &requests))
-        .transpose()
+    let mut query = conn.prepare(
+        "SELECT access_url, claimed_at, requests, pending FROM simplefin_access WHERE ledger_id = ?1 AND slot = ?2",
+    )?;
+    let mut rows = query.query(params![ledger, slot])?;
+    let Some(row) = rows.next()? else {
+        return Ok(None);
+    };
+    let mut access = Access::stored(row.get(0)?, row.get(1)?, &row.get::<_, String>(2)?)?;
+    access.pending = row.get::<_, Option<String>>(3)?.map(Into::into);
+    Ok(Some(access))
 }
 
 impl BookStore for SqliteStore {
@@ -958,7 +962,7 @@ impl BookStore for SqliteStore {
             conn.execute("INSERT INTO simplefin_access (ledger_id, slot, user_id, access_url, claimed_at, requests)
                 VALUES (?1, ?2, ?3, ?4, ?5, ?6)
                 ON CONFLICT (ledger_id, slot) DO UPDATE SET access_url = excluded.access_url,
-                    claimed_at = excluded.claimed_at, requests = excluded.requests",
+                    claimed_at = excluded.claimed_at, requests = excluded.requests, pending = NULL",
                 params![ledger, slot, user, access.url(), access.claimed_at, access.timestamps()?])?;
             Ok(())
         }).await
@@ -972,6 +976,33 @@ impl BookStore for SqliteStore {
                 params![ledger, slot],
             )?;
             Ok(())
+        })
+        .await
+    }
+
+    async fn save_simplefin_pending(
+        &self,
+        ledger: LedgerId,
+        owner: Owner,
+        expected: &Access,
+        pending: &str,
+    ) -> Result<bool> {
+        let slot = owner.user()?.unwrap_or_default();
+        let expected = expected.clone();
+        let pending = pending.to_owned();
+        self.call(move |conn| {
+            Ok(conn.execute(
+                "UPDATE simplefin_access SET pending = ?6 WHERE ledger_id = ?1 AND slot = ?2
+                 AND access_url = ?3 AND claimed_at = ?4 AND pending IS ?5",
+                params![
+                    ledger,
+                    slot,
+                    expected.url(),
+                    expected.claimed_at,
+                    expected.pending.as_deref(),
+                    pending
+                ],
+            )? == 1)
         })
         .await
     }

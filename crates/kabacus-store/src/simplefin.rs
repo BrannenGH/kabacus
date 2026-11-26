@@ -5,6 +5,7 @@
 //! Credentials and request budgets kept in the live store.
 
 use crate::{Result, StoreError, UserId};
+use std::sync::Arc;
 
 pub const REQUEST_LIMIT: usize = 20;
 const WINDOW: i64 = 24 * 60 * 60;
@@ -30,6 +31,7 @@ pub struct Access {
     url: String,
     pub claimed_at: i64,
     pub(crate) requests: Vec<i64>,
+    pub pending: Option<Arc<str>>,
 }
 
 impl std::fmt::Debug for Access {
@@ -54,6 +56,7 @@ impl Access {
             url,
             claimed_at,
             requests: Vec::new(),
+            pending: None,
         }
     }
 
@@ -81,6 +84,7 @@ impl Access {
             url,
             claimed_at,
             requests,
+            pending: None,
         })
     }
 

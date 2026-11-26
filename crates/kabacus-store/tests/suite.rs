@@ -937,10 +937,32 @@ async fn simplefin_access_contract(fixture: Fixture) {
             .unwrap(),
         RequestBudget::Allowed { remaining: 19 }
     );
+    let pending = r#"{"payee":"Cedar Street Market"}"#;
+    assert!(store
+        .save_simplefin_pending(ledger, dana, &access, pending)
+        .await
+        .unwrap());
+    assert!(!store
+        .save_simplefin_pending(ledger, dana, &access, "{}")
+        .await
+        .unwrap());
+    let saved = store.simplefin_access(ledger, dana).await.unwrap().unwrap();
+    assert_eq!(saved.pending.as_deref(), Some(pending));
+    assert!(store
+        .simplefin_access(ledger, riley)
+        .await
+        .unwrap()
+        .unwrap()
+        .pending
+        .is_none());
+    assert_eq!(store.revision(ledger).await.unwrap(), before);
     let bytes = store.export_bytes(&[ledger]).await.unwrap();
     assert!(!bytes
         .windows(credential.len())
         .any(|window| window == credential.as_bytes()));
+    assert!(!bytes
+        .windows(pending.len())
+        .any(|window| window == pending.as_bytes()));
     let copy = kabacus_store::SqliteStore::from_bytes(&bytes).unwrap();
     let copy_id = copy.ledgers().await.unwrap()[0].id;
     assert!(copy
@@ -985,14 +1007,16 @@ async fn simplefin_local_access_survives_reopening_the_same_file() {
     let user = store.local_user("Dana Okafor").await.unwrap();
     let ledger = store.create_ledger("Cedar household", user).await.unwrap();
     let credential = "https://cedar-ledger:synthetic-access@bridge.example.org/simplefin";
+    let access = Access::new(credential.into(), 1_791_792_000);
+    let pending = r#"{"payee":"Cedar Street Market"}"#;
     store
-        .set_simplefin_access(
-            ledger,
-            Owner::Local,
-            &Access::new(credential.into(), 1_791_792_000),
-        )
+        .set_simplefin_access(ledger, Owner::Local, &access)
         .await
         .unwrap();
+    assert!(store
+        .save_simplefin_pending(ledger, Owner::Local, &access, pending)
+        .await
+        .unwrap());
     drop(store);
     let store = SqliteStore::open(&path).unwrap();
     let access = store
@@ -1001,6 +1025,7 @@ async fn simplefin_local_access_survives_reopening_the_same_file() {
         .unwrap()
         .unwrap();
     assert_eq!(access.url(), credential);
+    assert_eq!(access.pending.as_deref(), Some(pending));
     let copy = folder.path().join("Cedar copy.kabacus");
     store.export_file(&[ledger], &copy).await.unwrap();
     let store = SqliteStore::open(&copy).unwrap();

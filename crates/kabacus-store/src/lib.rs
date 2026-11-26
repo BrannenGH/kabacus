@@ -294,6 +294,14 @@ pub trait BookStore: Send + Sync {
         owner: simplefin::Owner,
     ) -> impl Future<Output = Result<()>> + Send;
 
+    fn save_simplefin_pending(
+        &self,
+        ledger: LedgerId,
+        owner: simplefin::Owner,
+        expected: &simplefin::Access,
+        pending: &str,
+    ) -> impl Future<Output = Result<bool>> + Send;
+
     fn reserve_simplefin_request(
         &self,
         ledger: LedgerId,
@@ -492,6 +500,16 @@ impl BookStore for AnyStore {
     ) -> Result<()> {
         delegate!(self, s => s.delete_simplefin_access(ledger, owner))
     }
+    async fn save_simplefin_pending(
+        &self,
+        ledger: LedgerId,
+        owner: simplefin::Owner,
+        expected: &simplefin::Access,
+        pending: &str,
+    ) -> Result<bool> {
+        delegate!(self, s => s.save_simplefin_pending(ledger, owner, expected, pending))
+    }
+
     async fn reserve_simplefin_request(
         &self,
         ledger: LedgerId,

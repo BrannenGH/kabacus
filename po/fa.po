@@ -781,6 +781,11 @@ msgstr "تغییر دفترها…"
 msgid "Refresh"
 msgstr "تازه‌سازی"
 
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions to import (%1)"
+msgstr "تراکنش‌های آمادهٔ ورود (%1)"
+
 #: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"

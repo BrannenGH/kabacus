@@ -781,6 +781,11 @@ msgstr "கணக்குப் புத்தகங்களை மாற்�
 msgid "Refresh"
 msgstr "புதுப்பி"
 
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions to import (%1)"
+msgstr "இறக்குமதி செய்ய வேண்டிய பரிவர்த்தனைகள் (%1)"
+
 #: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"

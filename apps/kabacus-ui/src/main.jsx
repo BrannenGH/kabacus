@@ -157,7 +157,9 @@ export function App({ auth, book, onFileAction }) {
     refresh();
   };
   const simplefinOffered = data?.commands?.commands?.some(command => command.tool === "get_simplefin_connection");
+  const automaticBankSync = bankStatus?.automatic_sync && Number.isInteger(bankStatus?.pending_count);
   const openBankSync = () => bankStatus?.connected ? setOperationForm({kind: "bank-sync"}) : go("Settings");
+  const openPendingImport = () => setOperationForm({ kind: "bank-sync", pending: true });
   async function reloadBankStatus(signal) {
     if (!simplefinOffered) return;
     try { setBankStatus(await api.request("/simplefin/connection", {signal})); }
@@ -172,7 +174,7 @@ export function App({ auth, book, onFileAction }) {
 
   useEffect(() => {
     setBankSyncProblem("");
-    if (!auth.signedIn || !bankStatus?.automatic_sync) return;
+    if (!auth.signedIn || !automaticBankSync) return;
     const abort = new AbortController();
     let syncing = false;
     async function run() {
@@ -183,9 +185,8 @@ export function App({ auth, book, onFileAction }) {
         const result = await api.request("/simplefin/sync", {
           method: "POST", head, body: { automatic: true }, signal: abort.signal,
         });
-        if (!abort.signal.aborted && !result.skipped) {
-          setBankSyncProblem("");
-          if (result.head !== head) latestRefresh.current();
+        if (!abort.signal.aborted) {
+          if (!result.skipped) setBankSyncProblem("");
           reloadBankStatus(abort.signal);
         }
       } catch (error) {
@@ -202,7 +203,7 @@ export function App({ auth, book, onFileAction }) {
       clearInterval(timer);
       document.removeEventListener("visibilitychange", run);
     };
-  }, [api, auth.signedIn, bankStatus?.automatic_sync]);
+  }, [api, auth.signedIn, automaticBankSync]);
 
   useEffect(() => {
     if (!auth.signedIn) return;
@@ -344,7 +345,14 @@ export function App({ auth, book, onFileAction }) {
                     </button>
                   </div>
                 ))}
-              {page === "Overview" && <Overview data={data} api={api} onFix={fixWarning} onAccount={openRegister} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} />}
+              {page === "Overview" && <>
+                <div aria-live="polite">
+                  {bankStatus?.pending_count > 0 && <button className="banner warning pending-import" onClick={openPendingImport}>
+                    {t("Transactions to import (%1)", bankStatus.pending_count)}
+                  </button>}
+                </div>
+                <Overview data={data} api={api} onFix={fixWarning} onAccount={openRegister} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} />
+              </>}
               {page === "Loans" && (
                 <Loans data={data} onOpen={openRegister} />
               )}
@@ -510,7 +518,7 @@ export function App({ auth, book, onFileAction }) {
           api={api}
           onClose={() => setOperationForm(null)}
           onSaved={(result) => { setOperationForm(null); saved(result); }}
-          onUpdated={saved}
+          onUpdated={() => { saved(); if (operationForm.kind === "bank-sync") reloadBankStatus(); }}
           onCategorize={() => { setOperationForm(null); openRegister(uncategorizedAccount); }}
           onSwitch={(values) => {
             setOperationForm(null);

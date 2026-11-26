@@ -757,6 +757,21 @@ def main():
         if button.getState().contains(pyatspi.STATE_ENABLED):
             fail("SimpleFIN is offered by a server with the feature disabled")
         wait_for("SimpleFIN availability message", lambda: find(app(), "SimpleFIN is unavailable."))
+    elif command == "pending-bank-import":
+        def button(name):
+            return wait_for(name, lambda: find(app(), name, pyatspi.ROLE_PUSH_BUTTON, enabled=True))
+
+        goto("Overview")
+        banner = "Transactions to import (1)"
+        press(button(banner))
+        wait_for("saved bank transaction", lambda: find(app(), "Harbor Street Cafe"))
+        press(button("Cancel"))
+        press(button(banner))
+        wait_for("saved bank transaction", lambda: find(app(), "Harbor Street Cafe"))
+        press(button("Import"))
+        wait_for("successful import", lambda: find(app(), "Imported 1 new and matched 0 transactions."))
+        press(button("Close"))
+        wait_for("cleared Overview banner", lambda: not find(app(), banner, pyatspi.ROLE_PUSH_BUTTON))
     elif command == "simplefin-sync":
         token, = args
 
