@@ -781,6 +781,11 @@ msgstr "Defter değiştir…"
 msgid "Refresh"
 msgstr "Yenile"
 
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions to import (%1)"
+msgstr "İçe aktarılacak işlemler (%1)"
+
 #: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"

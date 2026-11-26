@@ -23,6 +23,7 @@ use tokio_postgres::{IsolationLevel, NoTls, Transaction as PgTx};
 const MIGRATIONS: &[&str] = &[
     include_str!("migrations/0001_initial.sql"),
     include_str!("migrations/0002_simplefin.sql"),
+    include_str!("migrations/0003_simplefin_pending.sql"),
 ];
 
 /// Serializes migrations between replicas starting together.
@@ -977,8 +978,12 @@ impl BookStore for PostgresStore {
     async fn simplefin_access(&self, ledger: LedgerId, owner: Owner) -> Result<Option<Access>> {
         let slot = owner.user()?.unwrap_or_default();
         self.with(Scope::Access(ledger, slot), IsolationLevel::ReadCommitted, move |tx| Box::pin(async move {
-            let row = tx.query_opt("SELECT access_url, claimed_at, requests FROM simplefin_access WHERE ledger_id = $1 AND slot = $2", &[&ledger, &slot]).await?;
-            row.map(|row| Access::stored(row.get(0), row.get(1), row.get(2))).transpose()
+            let row = tx.query_opt("SELECT access_url, claimed_at, requests, pending FROM simplefin_access WHERE ledger_id = $1 AND slot = $2", &[&ledger, &slot]).await?;
+            row.map(|row| {
+                let mut access = Access::stored(row.get(0), row.get(1), row.get(2))?;
+                access.pending = row.get::<_, Option<String>>(3).map(Into::into);
+                Ok(access)
+            }).transpose()
         })).await
     }
 
@@ -995,7 +1000,7 @@ impl BookStore for PostgresStore {
             tx.execute("INSERT INTO simplefin_access (ledger_id, slot, user_id, access_url, claimed_at, requests)
                 VALUES ($1, $2, $3, $4, $5, $6)
                 ON CONFLICT (ledger_id, slot) DO UPDATE SET access_url = excluded.access_url,
-                    claimed_at = excluded.claimed_at, requests = excluded.requests",
+                    claimed_at = excluded.claimed_at, requests = excluded.requests, pending = NULL",
                 &[&ledger, &slot, &user, &access.url(), &access.claimed_at, &access.timestamps()?]).await?;
             Ok(())
         })).await
@@ -1018,6 +1023,25 @@ impl BookStore for PostgresStore {
             },
         )
         .await
+    }
+
+    async fn save_simplefin_pending(
+        &self,
+        ledger: LedgerId,
+        owner: Owner,
+        expected: &Access,
+        pending: &str,
+    ) -> Result<bool> {
+        let slot = owner.user()?.unwrap_or_default();
+        let expected = expected.clone();
+        let pending = pending.to_owned();
+        self.with(Scope::Access(ledger, slot), IsolationLevel::ReadCommitted, move |tx| Box::pin(async move {
+            Ok(tx.execute(
+                "UPDATE simplefin_access SET pending = $6 WHERE ledger_id = $1 AND slot = $2
+                 AND access_url = $3 AND claimed_at = $4 AND pending IS NOT DISTINCT FROM $5",
+                &[&ledger, &slot, &expected.url(), &expected.claimed_at, &expected.pending.as_deref(), &pending],
+            ).await? == 1)
+        })).await
     }
 
     async fn reserve_simplefin_request(

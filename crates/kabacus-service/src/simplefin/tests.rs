@@ -461,8 +461,10 @@ async fn automatic_sync_waits_for_review_and_observes_the_shared_request_interva
         .await
         .unwrap();
     assert_eq!(result["counts"]["new"], 1);
-    assert_ne!(result["head"], head);
-    let head = result["head"].as_str().unwrap();
+    assert_eq!(result["head"], head);
+    assert_eq!(current_head(&state).await, head);
+    state.bank_connections.clear(Owner::Local);
+    assert_eq!(connection(&state, &dana).await.unwrap()["pending_count"], 1);
     assert_eq!(bridge.fetched.load(Ordering::Relaxed), 3);
     assert_eq!(
         sync(&state, &dana, &bridge, head, automatic())
@@ -470,6 +472,27 @@ async fn automatic_sync_waits_for_review_and_observes_the_shared_request_interva
             .unwrap()["skipped"],
         "recent_request"
     );
+    let preview = sync(&state, &dana, &bridge, head, body(json!({"pending": true})))
+        .await
+        .unwrap();
+    assert_eq!(preview["counts"]["new"], 1);
+    assert_eq!(
+        preview["accounts"][0]["rows"][0]["description"],
+        "Oak Bakery"
+    );
+    let saved = sync(
+        &state,
+        &dana,
+        &bridge,
+        head,
+        body(json!({"pending": true, "dry_run": false, "snapshot": preview["snapshot"]})),
+    )
+    .await
+    .unwrap();
+    assert_eq!(saved["counts"]["new"], 1);
+    assert_ne!(saved["head"], head);
+    assert_eq!(connection(&state, &dana).await.unwrap()["pending_count"], 0);
+    assert_eq!(bridge.fetched.load(Ordering::Relaxed), 3);
 }
 
 #[tokio::test]

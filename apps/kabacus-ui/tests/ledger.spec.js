@@ -93,7 +93,8 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
   const writes = [];
   const currentAccounts = structuredClone(suppliedAccounts);
   const currentVersion = { ...version };
-  let bankConnected = false;
+  let bankConnected = simplefin === "pending";
+  let bankPending = 0;
   const bank = { host: "bridge.simplefin.org", connections: [{ conn_id: "Cedar Bank", name: "Cedar Bank" }], accounts: [
     { id: "Everyday Checking", conn_id: "Cedar Bank", name: "Everyday Checking", balance: "-18.40", currency: "CAD", linked: null },
   ], warnings: [] };
@@ -107,7 +108,7 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
     )
       return route.continue();
     if (simplefin && path === "/simplefin/connection") {
-      if (route.request().method() === "GET") return route.fulfill({ json: { connected: bankConnected, automatic_sync: bankConnected, host: bank.host, remaining: 19 } });
+      if (route.request().method() === "GET") return route.fulfill({ json: { connected: bankConnected, automatic_sync: bankConnected, host: bank.host, remaining: 19, pending_count: bankPending } });
       const body = route.request().postDataJSON();
       writes.push({ body, path });
       if (body.dry_run) return route.fulfill({ json: { host: bank.host, connected: false } });
@@ -125,9 +126,14 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
         return route.fulfill({ json: { head: "43", linked: true } });
       }
       if (simplefin && path === "/simplefin/sync") {
-        if (body.automatic) return route.fulfill({ json: { head: currentVersion.head, skipped: "needs_review" } });
+        if (body.automatic) {
+          if (simplefin !== "pending") return route.fulfill({ json: { head: currentVersion.head, skipped: "needs_review" } });
+          if (currentVersion.head === "42") bankPending = 1;
+          return route.fulfill({ json: { head: currentVersion.head, pending_count: bankPending } });
+        }
         const counts = { new: 1, matched: 0, duplicate: 0, skipped: 0 };
         if (!body.dry_run) {
+          bankPending = 0;
           currentVersion.head = "44";
           currentAccounts.push({ account: "expenses:uncategorized", display_name: "Uncategorized", kind: "expense" });
         }
@@ -2177,6 +2183,28 @@ for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 
     await visit(page, "Overview", viewport.width === 390);
     await expect(page.getByRole("heading", { name: "Available to spend" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Sync", exact: true })).toHaveCount(0);
+  });
+
+  test(`Overview opens the background import queue on ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    const writes = await setup(page, false, transaction, accounts, { symbol: "USD", places: 2 }, "pending");
+    const banner = page.getByRole("button", { name: "Transactions to import (1)", exact: true });
+    await expect(banner).toBeVisible();
+    expect(writes.every(write => write.body.automatic)).toBe(true);
+    await banner.click();
+    const review = page.getByRole("dialog");
+    await expect(review.getByText("Harbor Street Cafe", { exact: true })).toBeVisible();
+    await review.getByRole("button", { name: "Cancel", exact: true }).click();
+    await expect(banner).toBeVisible();
+    await page.reload();
+    await banner.click();
+    await review.getByRole("button", { name: "Import", exact: true }).click();
+    await expect(review.getByText("Import complete", { exact: true })).toBeVisible();
+    await review.getByRole("button", { name: "Close", exact: true }).click();
+    await expect(banner).toBeHidden();
+    const reviewWrites = writes.filter(write => write.body.pending);
+    expect(reviewWrites.map(write => write.body.dry_run)).toEqual([true, true, false]);
+    expect(reviewWrites.at(-1).headers["if-match"]).toBe('"42"');
   });
 
   test(`SimpleFIN connects and reviews one snapshot on ${viewport.width}px`, async ({ page }) => {

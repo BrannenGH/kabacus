@@ -5,7 +5,7 @@ use super::{
     clean_text, encode_id, parse_decimal, ImportError, ReportedBalance, Row, SourceKind, Statement,
 };
 use chrono::{DateTime, NaiveDate};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Deserialize)]
 pub struct AccountSet {
@@ -22,7 +22,7 @@ pub struct Connection {
     pub name: String,
 }
 
-#[derive(Clone, Deserialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct Account {
     pub id: String,
     pub conn_id: String,
@@ -35,7 +35,7 @@ pub struct Account {
     pub transactions: Vec<BankTransaction>,
 }
 
-#[derive(Clone, Deserialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct BankTransaction {
     pub id: String,
     pub posted: i64,

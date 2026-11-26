@@ -780,6 +780,11 @@ msgstr "장부 전환…"
 msgid "Refresh"
 msgstr "새로 고침"
 
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions to import (%1)"
+msgstr "가져올 거래 (%1건)"
+
 #: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"

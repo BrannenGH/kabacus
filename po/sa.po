@@ -781,6 +781,11 @@ msgstr "लेखापुस्तकानि परिवर्तयतु�
 msgid "Refresh"
 msgstr "नवीकरोतु"
 
+#: crates/kabacus-kde/qml/OverviewPage.qml apps/kabacus-ui/src/messages.js
+#, kde-format
+msgid "Transactions to import (%1)"
+msgstr "आयातयितव्याः व्यवहाराः (%1)"
+
 #: crates/kabacus-kde/qml/OverviewPage.qml packaging/plasma/me.hallb.kabacus.panel/contents/ui/main.qml
 #, kde-format
 msgid "Can't load Cash on Hand"

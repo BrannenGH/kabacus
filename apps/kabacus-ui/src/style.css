@@ -500,6 +500,28 @@ footer {
   background: #fef1e4;
   color: #a34d00;
 }
+button.pending-import {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 48px;
+  width: 100%;
+  margin-bottom: 16px;
+  text-align: start;
+  border: 1px solid currentColor;
+}
+button.pending-import::after {
+  content: "";
+  flex: 0 0 8px;
+  height: 8px;
+  border-block-start: 2px solid;
+  border-inline-end: 2px solid;
+  transform: rotate(45deg);
+}
+button.pending-import:dir(rtl)::after {
+  transform: rotate(-45deg);
+}
 .filters {
   display: flex;
   gap: 20px;

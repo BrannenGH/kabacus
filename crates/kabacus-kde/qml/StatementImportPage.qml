@@ -12,7 +12,7 @@ import me.hallb.kabacus
 Kirigami.ScrollablePage {
     id: page
     objectName: "statementImport"
-    title: saved ? i18n("Import complete") : result ? i18n("Review") : syncMode ? i18n("Sync bank transactions") : i18n("Import statement…")
+    title: saved ? i18n("Import complete") : result || pendingMode ? i18n("Review") : syncMode ? i18n("Sync bank transactions") : i18n("Import statement…")
     required property var app
     required property string account
     required property string accountName
@@ -24,6 +24,8 @@ Kirigami.ScrollablePage {
     globalToolBarStyle: app.narrow ? Kirigami.ApplicationHeaderStyle.None : Kirigami.ApplicationHeaderStyle.ToolBar
 
     property bool syncMode: false
+    property bool pendingMode: false
+    Component.onCompleted: if (pendingMode) start()
     property var starts: ({})
     property bool rangeChanged: false
     property var file: null
@@ -55,7 +57,7 @@ Kirigami.ScrollablePage {
             for (const account of Object.keys(decisions)) choices[account] = Object.values(decisions[account])
             const cursors = {}
             if (group && cursor) cursors[group] = cursor
-            send("POST", "/simplefin/sync", {dry_run:!commit, limit:100, snapshot:rangeChanged ? null : result?.snapshot, starts, decisions:choices, cursors}, commit ? "commit" : "preview")
+            send("POST", "/simplefin/sync", {dry_run:!commit, pending:pendingMode, limit:100, snapshot:rangeChanged ? null : result?.snapshot, starts, decisions:choices, cursors}, commit ? "commit" : "preview")
             return
         }
         const body = Object.assign({}, file, { dry_run: !commit, limit: 100, cursor: cursor || null, decisions: Object.values(decisions) })
@@ -157,10 +159,10 @@ Kirigami.ScrollablePage {
         RowLayout {
             width: parent.width
             Controls.Button {
-                text: page.saved ? i18n("Close") : page.result ? i18n("Back to edit") : i18n("Cancel")
+                text: page.saved ? i18n("Close") : page.result && !page.pendingMode ? i18n("Back to edit") : i18n("Cancel")
                 enabled: !page.busy
                 onClicked: {
-                    if (page.result) page.result = null
+                    if (page.result && !page.pendingMode) page.result = null
                     else page.app.pageStack.layers.pop()
                 }
             }
@@ -286,9 +288,9 @@ Kirigami.ScrollablePage {
                     text: group.modelData.other_connection ? i18n("Linked through another member’s connection") : i18n("This account is unavailable")
                     Layout.fillWidth: true; wrapMode: Text.Wrap
                 }
-                Controls.Label { text: i18n("Start date"); visible: page.syncMode && !!group.modelData.counts }
+                Controls.Label { text: i18n("Start date"); visible: page.syncMode && !page.pendingMode && !!group.modelData.counts }
                 Controls.TextField {
-                    visible: page.syncMode && !!group.modelData.counts
+                    visible: page.syncMode && !page.pendingMode && !!group.modelData.counts
                     Accessible.name: i18n("Start date")
                     placeholderText: "YYYY-MM-DD"
                     validator: RegularExpressionValidator { regularExpression: /[0-9]{4}-[0-9]{2}-[0-9]{2}/ }

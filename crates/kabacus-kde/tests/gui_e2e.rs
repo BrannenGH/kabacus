@@ -900,6 +900,40 @@ async fn simplefin_reviews_one_snapshot_on_desktop_and_phone() {
     }
 }
 
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
+async fn overview_reviews_background_bank_import_on_desktop_and_phone() {
+    for (i, size) in [DESKTOP, "390x844"].into_iter().enumerate() {
+        let bank = kabacus_testkit::simplefin::books_with_reviewed_mapping().await;
+        let client = KabacusClient::connect_unix(&bank.socket_path);
+        let head = client
+            .version()
+            .await
+            .unwrap()
+            .head
+            .unwrap()
+            .parse::<u64>()
+            .unwrap();
+        let _app = launch_sized(
+            &bank.socket_path,
+            &config_dir(&format!("pending-bank{i}")),
+            size,
+        );
+        drive(&["pending-bank-import"]).await;
+        assert_eq!(
+            client
+                .version()
+                .await
+                .unwrap()
+                .head
+                .unwrap()
+                .parse::<u64>()
+                .unwrap(),
+            head + 1
+        );
+    }
+}
+
 // Setting money aside in a fund.
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]

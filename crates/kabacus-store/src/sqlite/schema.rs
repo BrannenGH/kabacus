@@ -18,6 +18,7 @@ const MIGRATIONS: &[&str] = &[
     include_str!("migrations/0001_initial.sql"),
     include_str!("migrations/0002_kabacus_file.sql"),
     include_str!("migrations/0003_simplefin.sql"),
+    include_str!("migrations/0004_simplefin_pending.sql"),
 ];
 
 /// `PRAGMA application_id` of a `.kabacus` file: ASCII `KBCS`.

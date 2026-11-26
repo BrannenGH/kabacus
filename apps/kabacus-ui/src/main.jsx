@@ -158,6 +158,7 @@ export function App({ auth, book, onFileAction }) {
   };
   const simplefinOffered = data?.commands?.commands?.some(command => command.tool === "get_simplefin_connection");
   const openBankSync = () => bankStatus?.connected ? setOperationForm({kind: "bank-sync"}) : go("Settings");
+  const openPendingImport = () => setOperationForm({ kind: "bank-sync", pending: true });
   async function reloadBankStatus(signal) {
     if (!simplefinOffered) return;
     try { setBankStatus(await api.request("/simplefin/connection", {signal})); }
@@ -183,9 +184,8 @@ export function App({ auth, book, onFileAction }) {
         const result = await api.request("/simplefin/sync", {
           method: "POST", head, body: { automatic: true }, signal: abort.signal,
         });
-        if (!abort.signal.aborted && !result.skipped) {
-          setBankSyncProblem("");
-          if (result.head !== head) latestRefresh.current();
+        if (!abort.signal.aborted) {
+          if (!result.skipped) setBankSyncProblem("");
           reloadBankStatus(abort.signal);
         }
       } catch (error) {
@@ -344,7 +344,14 @@ export function App({ auth, book, onFileAction }) {
                     </button>
                   </div>
                 ))}
-              {page === "Overview" && <Overview data={data} api={api} onFix={fixWarning} onAccount={openRegister} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} />}
+              {page === "Overview" && <>
+                <div aria-live="polite">
+                  {bankStatus?.pending_count > 0 && <button className="banner warning pending-import" onClick={openPendingImport}>
+                    {t("Transactions to import (%1)", bankStatus.pending_count)}
+                  </button>}
+                </div>
+                <Overview data={data} api={api} onFix={fixWarning} onAccount={openRegister} onReserve={(fund)=>setForm({kind:"allocation",from:fund?.home,to:fund?.account})} onCredit={()=>go("Cards")} />
+              </>}
               {page === "Loans" && (
                 <Loans data={data} onOpen={openRegister} />
               )}
@@ -510,7 +517,7 @@ export function App({ auth, book, onFileAction }) {
           api={api}
           onClose={() => setOperationForm(null)}
           onSaved={(result) => { setOperationForm(null); saved(result); }}
-          onUpdated={saved}
+          onUpdated={() => { saved(); if (operationForm.kind === "bank-sync") reloadBankStatus(); }}
           onCategorize={() => { setOperationForm(null); openRegister(uncategorizedAccount); }}
           onSwitch={(values) => {
             setOperationForm(null);

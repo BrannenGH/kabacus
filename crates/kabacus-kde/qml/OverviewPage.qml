@@ -22,6 +22,7 @@ Kirigami.ScrollablePage {
     readonly property var ledger: app.ledger
     readonly property var overview: fetch.value
     readonly property int warningCount: overview ? overview.warnings.length : 0
+    readonly property int pendingCount: page.app.bankStatus?.pending_count || 0
     readonly property string problem: fetch.problem
     property Fetch fetch: Fetch { ledger: page.ledger; view: "overview"; owner: page }
 
@@ -46,6 +47,35 @@ Kirigami.ScrollablePage {
                 Kirigami.Action { text: i18n("Set aside"); icon.name: "folder-text"; enabled: page.app.canWrite; onTriggered: page.app.openForm("set_aside") },
                 Kirigami.Action { text: i18n("Refresh"); icon.name: "view-refresh"; shortcut: StandardKey.Refresh; onTriggered: page.ledger.refresh() }
             ]
+        }
+
+        Controls.Button {
+            id: pendingImport
+            visible: page.app.canWrite && page.pendingCount > 0
+            Layout.fillWidth: true
+            Layout.minimumHeight: 48
+            text: i18n("Transactions to import (%1)", page.pendingCount)
+            Accessible.name: text
+            onClicked: page.app.openPendingImport()
+            contentItem: RowLayout {
+                Controls.Label {
+                    text: pendingImport.text
+                    Layout.fillWidth: true
+                    wrapMode: Text.Wrap
+                }
+                Kirigami.Icon {
+                    source: "go-next"
+                    Layout.preferredWidth: Kirigami.Units.iconSizes.small
+                    Layout.preferredHeight: Kirigami.Units.iconSizes.small
+                }
+            }
+            background: Rectangle {
+                radius: Kirigami.Units.smallSpacing
+                color: pendingImport.down || pendingImport.hovered
+                    ? Kirigami.Theme.backgroundColor : Kirigami.Theme.alternateBackgroundColor
+                border.color: pendingImport.activeFocus ? Kirigami.Theme.highlightColor : Kirigami.Theme.neutralTextColor
+                border.width: pendingImport.activeFocus ? 2 : 1
+            }
         }
 
         Kirigami.PlaceholderMessage {
