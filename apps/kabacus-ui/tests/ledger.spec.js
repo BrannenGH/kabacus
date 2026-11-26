@@ -478,6 +478,24 @@ for (const [locale, direction] of [
   });
 }
 
+for (const [locale, catalog, tag, width, height] of [
+  ["zh-Hant-HK", "zh_TW", "zh-Hant", 1280, 800],
+  ["sr-Latn-RS", "sr@latin", "sr-Latn", 390, 844],
+]) {
+  test.describe(`browser language ${locale}`, () => {
+    test.use({ locale, viewport: { width, height } });
+
+    test("uses the matching KDE translation", async ({ page }) => {
+      await setup(page);
+      const response = await page.request.get(`/app/assets/i18n/${catalog}.json`);
+      const translations = await response.json();
+      await expect(page.locator("html")).toHaveAttribute("lang", tag);
+      await expect(page.getByRole("heading", { name: translations.Overview, exact: true })).toBeVisible();
+      await expectContained(page.locator("html"));
+    });
+  });
+}
+
 test("reports preserve exact strings and switch periods and loan-principal options", async ({
   page,
 }) => {
