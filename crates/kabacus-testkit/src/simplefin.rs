@@ -29,6 +29,7 @@ pub async fn books_requiring_payment_on_first_fetch() -> TestServer {
         |_| {},
         Bridge {
             unpaid: AtomicBool::new(true),
+            currency: Some("CAD"),
         },
     )
     .await
@@ -56,6 +57,7 @@ async fn books_with_bridge(customize: impl FnOnce(&mut Config), bridge: Bridge) 
 #[derive(Default)]
 struct Bridge {
     unpaid: AtomicBool,
+    currency: Option<&'static str>,
 }
 
 impl Transport for Bridge {
@@ -118,7 +120,7 @@ impl Transport for Bridge {
                         "id": account,
                         "conn_id": bank,
                         "name": account,
-                        "currency": "USD",
+                        "currency": self.currency.unwrap_or("USD"),
                         "balance": "981.60",
                         "balance-date": chrono::Utc::now().timestamp(),
                         "transactions": rows

@@ -181,7 +181,6 @@ Kirigami.ScrollablePage {
                         Layout.fillWidth: true
                         Controls.Label { text: remote.modelData.name; textFormat: Text.PlainText; Layout.fillWidth: true; wrapMode: Text.Wrap }
                         Controls.Label { text: remote.modelData.balance + " " + remote.modelData.currency; textFormat: Text.PlainText }
-                        readonly property bool compatible: remote.modelData.currency === page.accounts.value?.commodity
                         property string createKind: ""
                         readonly property var choices: {
                             const skip = {label: i18n("Don’t import"), account: ""}
@@ -205,7 +204,7 @@ Kirigami.ScrollablePage {
                             model: remote.choices
                             textRole: "label"
                             currentIndex: remote.selectedIndex()
-                            enabled: !page.busy && page.app.canWrite && remote.compatible
+                            enabled: !page.busy && page.app.canWrite
                             onActivated: index => {
                                 const choice = remote.choices[index].account
                                 if (choice.startsWith(":")) {
@@ -218,12 +217,6 @@ Kirigami.ScrollablePage {
                                 }
                                 currentIndex = Qt.binding(() => remote.selectedIndex())
                             }
-                        }
-                        Controls.Label {
-                            text: i18n("This account uses a different currency from your books.")
-                            visible: !!page.accounts.value && !remote.compatible
-                            Layout.fillWidth: true
-                            wrapMode: Text.Wrap
                         }
                         ColumnLayout {
                             visible: remote.createKind !== ""

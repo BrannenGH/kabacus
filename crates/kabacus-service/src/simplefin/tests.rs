@@ -19,6 +19,7 @@ struct Bridge {
     synced: AtomicUsize,
     unpaid: bool,
     recent: Option<(i64, bool)>,
+    cedar_currency: Option<&'static str>,
 }
 
 impl Transport for Bridge {
@@ -88,7 +89,7 @@ impl Transport for Bridge {
             let body = json!({ "connections": [{"conn_id":"Cedar Bank","name":"Cedar Bank"},{"conn_id":"Harbor Bank","name":"Harbor Bank"}],
                 "errlist": [{"code":"gen.api","msg": format!("Window warning: {ACCESS}")},{"code":"act.missingdata","msg":"Listing is incomplete","account_id":"Everyday Account"}],
                 "accounts": [
-                {"id":"Everyday Account","conn_id":"Cedar Bank","name":"Checking","currency":"USD","balance":"-18.40","balance-date":1792022400,"transactions": rows, "holdings":[]},
+                {"id":"Everyday Account","conn_id":"Cedar Bank","name":"Checking","currency":self.cedar_currency.unwrap_or("USD"),"balance":"-18.40","balance-date":1792022400,"transactions": rows, "holdings":[]},
                 {"id":"Everyday Account","conn_id":"Harbor Bank","name":"Savings","currency":"USD","balance":"-18.40","balance-date":1792022400,"transactions": rows}
             ]});
             Ok(Response {
@@ -261,6 +262,119 @@ async fn creates_and_links_a_card_in_one_revision() {
     .await
     .unwrap();
     assert_eq!(review["counts"]["new"], 1);
+}
+
+#[tokio::test]
+async fn simplefin_imports_in_the_feed_currency_within_one_revision() {
+    let (state, dana, _) = scratch_with_history(false, &format!(
+        "commodity $1.00\naccount equity:opening\n\n2026-08-01 Opening\n    {SECOND}  $25.00\n    equity:opening\n"
+    )).await;
+    let bridge = Bridge {
+        cedar_currency: Some("cad"),
+        ..Bridge::default()
+    };
+    connect(&state, &dana, &bridge, setup_request())
+        .await
+        .unwrap();
+    let mut head = state
+        .store
+        .revision(state.ledger)
+        .await
+        .unwrap()
+        .to_string();
+    for (target, bank) in [(TARGET, "Cedar Bank"), (SECOND, "Harbor Bank")] {
+        let linked = link(&state, &dana, &bridge, target, &head, mapping(bank, None))
+            .await
+            .unwrap();
+        head = linked["head"].as_str().unwrap().into();
+    }
+
+    let preview = sync(
+        &state,
+        &dana,
+        &bridge,
+        &head,
+        body(json!({"since": "2026-10-01", "end_date": "2026-11-01"})),
+    )
+    .await
+    .unwrap();
+    assert_eq!(preview["counts"]["new"], 2);
+    assert_eq!(preview["accounts"][0]["source"]["currency"], "CAD");
+    assert_eq!(
+        preview["accounts"][0]["balance_check"]["difference"],
+        "0.00"
+    );
+    assert_eq!(preview["accounts"][1]["source"]["currency"], "USD");
+    assert_eq!(preview["accounts"][1]["balance_check"]["books"], "6.60");
+    let stored = state.books_snapshot().await.unwrap();
+    assert_eq!(stored.key, head);
+    assert!(!stored.book.commodities.contains_key("CAD"));
+
+    let committed = sync(
+        &state,
+        &dana,
+        &bridge,
+        &head,
+        body(json!({
+            "since": "2026-10-01", "end_date": "2026-11-01",
+            "snapshot": preview["snapshot"], "dry_run": false
+        })),
+    )
+    .await
+    .unwrap();
+    assert_eq!(
+        committed["head"],
+        (head.parse::<u64>().unwrap() + 1).to_string()
+    );
+    let stored = state.books_snapshot().await.unwrap();
+    assert!(stored.book.commodities.contains_key("CAD"));
+    for (target, currency) in [(TARGET, "CAD"), (SECOND, "$")] {
+        let tx = stored
+            .book
+            .transactions
+            .iter()
+            .find(|tx| tx.postings[0].account.as_str() == target && tx.tag("import-id").is_some())
+            .unwrap();
+        assert!(tx.postings.iter().all(|p| p.amount.commodity == currency));
+        assert_eq!(tx.postings[0].amount.money.to_string(), "-18.40");
+    }
+}
+
+#[tokio::test]
+async fn simplefin_custom_currency_cannot_be_linked() {
+    let (state, dana, _) = scratch(false).await;
+    let bridge = Bridge {
+        cedar_currency: Some("https://cedar.example/currency/rewards"),
+        ..Bridge::default()
+    };
+    connect(
+        &state,
+        &dana,
+        &bridge,
+        ConnectBody {
+            token: STANDARD.encode(CLAIM),
+            replace: false,
+            dry_run: false,
+        },
+    )
+    .await
+    .unwrap();
+    let head = state.store.revision(state.ledger).await.unwrap();
+    let error = link(
+        &state,
+        &dana,
+        &bridge,
+        TARGET,
+        &head.to_string(),
+        serde_json::from_value(json!({
+            "remote": {"conn_id": "Cedar Bank", "id": "Everyday Account"}
+        }))
+        .unwrap(),
+    )
+    .await
+    .unwrap_err();
+    assert_eq!(error.code(), "unsupported_currency");
+    assert_eq!(state.store.revision(state.ledger).await.unwrap(), head);
 }
 
 #[tokio::test]

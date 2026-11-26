@@ -308,6 +308,11 @@ Kirigami.ScrollablePage {
                     }
                 }
                 ColumnLayout {
+                    id: review
+                    function amount(value) {
+                        const currency = group.modelData.source?.currency
+                        return currency ? value + " " + currency : value
+                    }
                     visible: !!group.modelData.counts
                     Layout.fillWidth: true
                     Kirigami.Heading { level: 2; text: i18n("Review before saving") }
@@ -346,7 +351,7 @@ Kirigami.ScrollablePage {
                             required property var modelData
                             Layout.fillWidth: true
                             Controls.Label { text: balanceRow.modelData.label; Layout.fillWidth: true; wrapMode: Text.Wrap }
-                            Controls.Label { text: balanceRow.modelData.value }
+                            Controls.Label { text: review.amount(balanceRow.modelData.value); textFormat: Text.PlainText }
                         }
                     }
                     Repeater {
@@ -358,7 +363,7 @@ Kirigami.ScrollablePage {
                             RowLayout {
                                 Layout.fillWidth: true
                                 Controls.Label { text: row.modelData.description; textFormat: Text.PlainText; Layout.fillWidth: true; wrapMode: Text.WrapAnywhere }
-                                Controls.Label { text: row.modelData.amount }
+                                Controls.Label { text: review.amount(row.modelData.amount); textFormat: Text.PlainText }
                             }
                             Controls.Label { text: row.modelData.date; font: Kirigami.Theme.smallFont }
                             Controls.ComboBox {

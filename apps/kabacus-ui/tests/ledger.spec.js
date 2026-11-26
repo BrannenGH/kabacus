@@ -95,7 +95,7 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
   const currentVersion = { ...version };
   let bankConnected = false;
   const bank = { host: "bridge.simplefin.org", connections: [{ conn_id: "Cedar Bank", name: "Cedar Bank" }], accounts: [
-    { id: "Everyday Checking", conn_id: "Cedar Bank", name: "Everyday Checking", balance: "-18.40", currency: "USD", linked: null },
+    { id: "Everyday Checking", conn_id: "Cedar Bank", name: "Everyday Checking", balance: "-18.40", currency: "CAD", linked: null },
   ], warnings: [] };
   await page.route("**/*", async (route) => {
     const path = new URL(route.request().url()).pathname;
@@ -132,7 +132,7 @@ async function setup(page, conflict = false, shownTransaction = transaction, sup
           currentAccounts.push({ account: "expenses:uncategorized", display_name: "Uncategorized", kind: "expense" });
         }
         return route.fulfill({ json: { head: currentVersion.head, snapshot: "cedar-snapshot", counts, warnings: [], accounts: [{
-          account: accounts[0].account, counts, since: "2026-10-01", warnings: [], rows: [{
+          account: accounts[0].account, counts, since: "2026-10-01", source: { currency: bank.accounts[0].currency }, warnings: [], rows: [{
             import_id: "simplefin:HC7862", date: "2026-10-25", description: "Harbor Street Cafe", amount: "-18.40", outcome: "new",
           }],
         }] } });
@@ -2092,7 +2092,7 @@ for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 
     await expect(bank.getByText("SimpleFIN is unavailable.")).toBeVisible();
   });
 
-  test(`SimpleFIN recovers setup and maps cards on ${viewport.width}px`, async ({ page }) => {
+  test(`SimpleFIN recovers setup and maps cards in a second currency on ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);
     const card = { account: "liabilities:credit-card:cedar", display_name: "Cedar Rewards", kind: "revolving-debt" };
     await setup(page, false, transaction, [...accounts, card], { symbol: "USD", places: 2 }, true);
@@ -2109,7 +2109,7 @@ for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 
     });
     await page.route("**/simplefin/accounts?refresh=true", route => route.fulfill({ json: {
       connections: [{ conn_id: "Cedar Cards", name: "Cedar Cards" }],
-      accounts: ["Harbor Rewards", "Maple Travel"].map(name => ({ id: name, conn_id: "Cedar Cards", name, balance: "-87.71", currency: "USD" })),
+      accounts: ["Harbor Rewards", "Maple Travel"].map(name => ({ id: name, conn_id: "Cedar Cards", name, balance: "-87.71", currency: "CAD" })),
     } }));
     const links = [];
     await page.route("**/accounts/*/simplefin-link", async route => {
@@ -2184,6 +2184,7 @@ for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 
     const review = page.getByRole("dialog");
     await review.getByRole("button", { name: "Review", exact: true }).click();
     await expect(review.getByText("Harbor Street Cafe", { exact: true })).toBeVisible();
+    await expect(review.getByText("-18.40 CAD", { exact: true })).toBeVisible();
     await review.getByRole("button", { name: "Import", exact: true }).click();
     await review.getByRole("button", { name: "Categorize" }).click();
     await expect(review).not.toBeVisible();

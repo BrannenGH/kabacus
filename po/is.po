@@ -303,11 +303,6 @@ msgstr "Nýr bankareikningur…"
 msgid "New credit card…"
 msgstr "Nýtt kreditkort…"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "This account uses a different currency from your books."
-msgstr "Gjaldmiðill þessa reiknings er annar en gjaldmiðill bókhaldsins."
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -2783,6 +2778,10 @@ msgstr "Passa við viðskipti %1"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "Eftirstöðvar í dag: %1"
+
+#, kde-format
+#~ msgid "This account uses a different currency from your books."
+#~ msgstr "Gjaldmiðill þessa reiknings er annar en gjaldmiðill bókhaldsins."
 
 #, kde-format
 #~ msgid "Load bank accounts"

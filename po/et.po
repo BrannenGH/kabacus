@@ -303,11 +303,6 @@ msgstr "Uus pangakonto…"
 msgid "New credit card…"
 msgstr "Uus krediitkaart…"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "This account uses a different currency from your books."
-msgstr "See konto kasutab sinu raamatupidamisest erinevat valuutat."
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -2783,6 +2778,10 @@ msgstr "Sobitage tehinguga %1"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "Tänaseks järelejäänud taotlused: %1"
+
+#, kde-format
+#~ msgid "This account uses a different currency from your books."
+#~ msgstr "See konto kasutab sinu raamatupidamisest erinevat valuutat."
 
 #, kde-format
 #~ msgid "Load bank accounts"

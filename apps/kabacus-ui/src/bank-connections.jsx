@@ -120,10 +120,9 @@ export function BankConnections({ data, api, status, automaticProblem, onChanged
       <h3>{connection.name}</h3>
       {remote.accounts.filter(account => account.conn_id === connection.conn_id).map(account => {
         const creating = newAccount?.account === account ? newAccount : null;
-        const compatible = account.currency === data.commodity.symbol;
         return <div key={account.id} className="statement-link-row">
           <label>{account.name}<small className="muted">{account.balance} {account.currency}</small>
-            <select disabled={busy || !compatible} value={creating ? ":" + creating.kind : account.linked || ""} onChange={event => {
+            <select disabled={busy} value={creating ? ":" + creating.kind : account.linked || ""} onChange={event => {
               const choice = event.target.value;
               if (choice.startsWith(":")) setNewAccount({ account, kind: choice.slice(1), name: "" });
               else if (choice || account.linked) link(account, choice);
@@ -137,7 +136,6 @@ export function BankConnections({ data, api, status, automaticProblem, onChanged
               </>}
             </select>
           </label>
-          {!compatible && <p className="muted">{t("This account uses a different currency from your books.")}</p>}
           {creating && <form className="form-fields" onSubmit={event => {
             event.preventDefault();
             link(account, newAccountPrefixes[creating.kind] + creating.name.trim(), creating.kind);

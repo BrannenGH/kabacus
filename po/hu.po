@@ -303,11 +303,6 @@ msgstr "Új bankszámla…"
 msgid "New credit card…"
 msgstr "Új hitelkártya…"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "This account uses a different currency from your books."
-msgstr "Ez a számla a könyvelésedtől eltérő pénznemet használ."
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -2783,6 +2778,10 @@ msgstr "Egyezés a %1 tranzakcióval"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "Ma fennmaradó kérések: %1"
+
+#, kde-format
+#~ msgid "This account uses a different currency from your books."
+#~ msgstr "Ez a számla a könyvelésedtől eltérő pénznemet használ."
 
 #, kde-format
 #~ msgid "Load bank accounts"

@@ -303,11 +303,6 @@ msgstr "Νέος τραπεζικός λογαριασμός…"
 msgid "New credit card…"
 msgstr "Νέα πιστωτική κάρτα…"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "This account uses a different currency from your books."
-msgstr "Αυτός ο λογαριασμός χρησιμοποιεί διαφορετικό νόμισμα από τα βιβλία σας."
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -2783,6 +2778,10 @@ msgstr "Ταίριασμα με συναλλαγή %1"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "Αιτήματα που απομένουν σήμερα: %1"
+
+#, kde-format
+#~ msgid "This account uses a different currency from your books."
+#~ msgstr "Αυτός ο λογαριασμός χρησιμοποιεί διαφορετικό νόμισμα από τα βιβλία σας."
 
 #, kde-format
 #~ msgid "Load bank accounts"

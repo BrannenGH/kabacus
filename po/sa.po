@@ -303,11 +303,6 @@ msgstr "नूतनं वित्तकोशखातम्…"
 msgid "New credit card…"
 msgstr "नूतनम् ऋणपत्रम्…"
 
-#: crates/kabacus-kde/qml/BankConnectionsPage.qml apps/kabacus-ui/src/messages.js
-#, kde-format
-msgid "This account uses a different currency from your books."
-msgstr "अस्य खातस्य मुद्रा भवतः लेखापुस्तकानां मुद्रातः भिन्ना अस्ति।"
-
 #: crates/kabacus-kde/qml/BankConnectionsPage.qml crates/kabacus-kde/qml/Main.qml apps/kabacus-ui/src/messages.js
 #, kde-format
 msgid "Name"
@@ -2783,6 +2778,10 @@ msgstr "९. लेनदेनेन सह मेलनं %1"
 #, kde-format
 msgid "Requests remaining today: %1"
 msgstr "९. अद्य अवशिष्टाः अनुरोधाः : %1"
+
+#, kde-format
+#~ msgid "This account uses a different currency from your books."
+#~ msgstr "अस्य खातस्य मुद्रा भवतः लेखापुस्तकानां मुद्रातः भिन्ना अस्ति।"
 
 #, kde-format
 #~ msgid "Load bank accounts"

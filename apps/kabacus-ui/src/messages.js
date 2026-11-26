@@ -254,7 +254,6 @@ export const messages = [
   "Refresh accounts",
   "New bank account…",
   "New credit card…",
-  "This account uses a different currency from your books.",
   "Sorry, SimpleFIN is showing that your account with them is not paid. A paid SimpleFIN account is required",
   "Load more",
   "Match CSV columns",
