@@ -8,6 +8,7 @@ use kabacus_server::state::AppState;
 use std::process::ExitCode;
 use std::sync::Arc;
 use tokio::signal::unix::{signal, SignalKind};
+use tracing_journald::{Priority, PriorityMappings};
 use tracing_subscriber::EnvFilter;
 
 /// kabacus-server: the gateway daemon. Only this process touches
@@ -163,7 +164,13 @@ fn init_logging() {
     if !tty {
         // Fails when no journal is listening; then stderr it is.
         if let Ok(journald) = tracing_journald::layer() {
-            registry.with(journald).init();
+            registry
+                .with(journald.with_priority_mappings(PriorityMappings {
+                    info: Priority::Informational,
+                    debug: Priority::Debug,
+                    ..PriorityMappings::new()
+                }))
+                .init();
             return;
         }
     }
