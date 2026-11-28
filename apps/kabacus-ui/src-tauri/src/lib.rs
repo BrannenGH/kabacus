@@ -805,9 +805,52 @@ fn init_logging(app: &tauri::AppHandle) {
     }
 }
 
+fn setup_desktop(app: &mut tauri::App) -> Result<(), &'static str> {
+    let path = app
+        .path()
+        .app_data_dir()
+        .map_err(|_| "locate application data")?
+        .join("windows.json");
+    let mut workspace = Workspace::load(&path);
+    let chosen = std::env::args()
+        .skip(1)
+        .find(|arg| arg.ends_with(".kabacus"));
+    let restored = if let Some(path) = chosen {
+        let mut record = WindowState::welcome("window-main");
+        let path = std::fs::canonicalize(path).map_err(|_| "open startup books")?;
+        record.source = Some(Source::Local {
+            name: path
+                .file_stem()
+                .unwrap_or_default()
+                .to_string_lossy()
+                .into_owned(),
+            path,
+        });
+        vec![record]
+    } else if workspace.reopen && !workspace.windows.is_empty() {
+        workspace.windows.clone()
+    } else {
+        vec![WindowState::welcome("window-main")]
+    };
+    for window in &restored {
+        workspace.remember(window.clone());
+    }
+    workspace.save(&path).map_err(|_| "save workspace")?;
+    app.manage(NativeState {
+        windows: Mutex::new(HashMap::new()),
+        quitting: Mutex::new(None),
+        workspace: Mutex::new(workspace),
+        path,
+    });
+    for window in restored {
+        make_window(app.handle(), &window).map_err(|_| "create window")?;
+    }
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let result = tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             approve_quit,
             configure_menu,
@@ -831,46 +874,20 @@ pub fn run() {
         .setup(|app| {
             init_logging(app.handle());
             log::debug!("starting desktop");
-            let path = app.path().app_data_dir()?.join("windows.json");
-            let mut workspace = Workspace::load(&path);
-            let chosen = std::env::args()
-                .skip(1)
-                .find(|arg| arg.ends_with(".kabacus"));
-            let restored = if let Some(path) = chosen {
-                let mut record = WindowState::welcome("window-main");
-                let path = std::fs::canonicalize(path)?;
-                record.source = Some(Source::Local {
-                    name: path
-                        .file_stem()
-                        .unwrap_or_default()
-                        .to_string_lossy()
-                        .into_owned(),
-                    path,
-                });
-                vec![record]
-            } else if workspace.reopen && !workspace.windows.is_empty() {
-                workspace.windows.clone()
-            } else {
-                vec![WindowState::welcome("window-main")]
-            };
-            for window in &restored {
-                workspace.remember(window.clone());
+            match setup_desktop(app) {
+                Ok(()) => log::info!("desktop ready"),
+                Err(stage) => {
+                    log::error!("desktop startup failed: {stage}");
+                    app.handle().exit(1);
+                }
             }
-            workspace.save(&path)?;
-            app.manage(NativeState {
-                windows: Mutex::new(HashMap::new()),
-                quitting: Mutex::new(None),
-                workspace: Mutex::new(workspace),
-                path,
-            });
-            for window in restored {
-                make_window(app.handle(), &window).map_err(std::io::Error::other)?;
-            }
-            log::info!("desktop ready");
             Ok(())
         })
-        .run(tauri::generate_context!())
-        .expect("Unable to start Kabacus");
+        .run(tauri::generate_context!());
+    if result.is_err() {
+        eprintln!("Kabacus desktop runtime could not start");
+        std::process::exit(1);
+    }
 }
 #[cfg(test)]
 mod tests {

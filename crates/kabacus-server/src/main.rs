@@ -157,9 +157,7 @@ fn init_logging() {
     let filter = EnvFilter::builder()
         .with_default_directive(tracing::Level::INFO.into())
         .from_env_lossy();
-    let registry = tracing_subscriber::registry()
-        .with(tracing_subscriber::filter::filter_fn(kabacus_log_target))
-        .with(filter);
+    let registry = log_registry(filter);
     let tty = std::io::stderr().is_terminal();
     if !tty {
         // Fails when no journal is listening; then stderr it is.
@@ -183,6 +181,15 @@ fn init_logging() {
         .init();
 }
 
+fn log_registry(
+    filter: EnvFilter,
+) -> impl tracing::Subscriber + for<'a> tracing_subscriber::registry::LookupSpan<'a> {
+    use tracing_subscriber::prelude::*;
+    tracing_subscriber::registry()
+        .with(tracing_subscriber::filter::filter_fn(kabacus_log_target))
+        .with(filter)
+}
+
 fn kabacus_log_target(metadata: &tracing::Metadata<'_>) -> bool {
     matches!(
         metadata.target().split("::").next(),
@@ -193,28 +200,89 @@ fn kabacus_log_target(metadata: &tracing::Metadata<'_>) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use axum::{body::Body, http::Request};
+    use kabacus_testkit::{provider::FakeProvider, spawn_oauth_server};
+    use tower::ServiceExt;
+    use tracing::instrument::WithSubscriber;
     use tracing_subscriber::prelude::*;
 
-    #[test]
-    fn trace_only_enables_reviewed_log_targets() {
+    async fn capture(level: &str, exercise: impl std::future::Future<Output = ()>) -> String {
         let output = tempfile::NamedTempFile::new().unwrap();
-        let subscriber = tracing_subscriber::registry()
-            .with(tracing_subscriber::filter::filter_fn(kabacus_log_target))
-            .with(EnvFilter::new("trace"))
-            .with(
-                tracing_subscriber::fmt::layer()
-                    .with_ansi(false)
-                    .with_writer(output.reopen().unwrap()),
-            );
-        tracing::subscriber::with_default(subscriber, || {
+        let subscriber = log_registry(EnvFilter::new(level)).with(
+            tracing_subscriber::fmt::layer()
+                .with_ansi(false)
+                .with_writer(output.reopen().unwrap()),
+        );
+        exercise.with_subscriber(subscriber).await;
+        std::fs::read_to_string(output.path()).unwrap()
+    }
+
+    #[tokio::test]
+    async fn trace_only_enables_reviewed_log_targets() {
+        let logs = capture("trace", async {
             tracing::trace!("server diagnostic");
             tracing::warn!(target: "kabacus_service::simplefin", "service diagnostic");
             tracing::error!(target: "rmcp::transport", "private MCP detail");
             tracing::debug!(target: "hyper::proto", "private HTTP detail");
-        });
-        let logs = std::fs::read_to_string(output.path()).unwrap();
+        })
+        .await;
         assert!(logs.contains("server diagnostic"), "{logs}");
         assert!(logs.contains("service diagnostic"), "{logs}");
         assert!(!logs.contains("private"), "{logs}");
+    }
+
+    #[tokio::test]
+    async fn rejected_credentials_and_permissions_are_safe_at_warn() {
+        let provider = FakeProvider::start(Default::default()).await;
+        let server = spawn_oauth_server(&provider).await;
+        let app = kabacus_server::api::router(server.state.clone());
+        let token = provider.mint("Marina Lopez", "cedar-bookkeeping");
+        let logs = capture("warn", async {
+            for (method, path, authorization, expected) in [
+                ("POST", "/mcp", None, 401),
+                ("POST", "/mcp", Some("north-harbor-expired"), 401),
+                (
+                    "DELETE",
+                    "/transactions/Marina-Coffee-Roasters",
+                    Some(token.as_str()),
+                    403,
+                ),
+                (
+                    "GET",
+                    "/register/Marina-Coffee-Roasters",
+                    Some(token.as_str()),
+                    200,
+                ),
+            ] {
+                let mut request = Request::builder()
+                    .method(method)
+                    .uri(path)
+                    .header("content-type", "application/json");
+                if let Some(authorization) = authorization {
+                    request = request.header("authorization", format!("Bearer {authorization}"));
+                }
+                let request = request.body(Body::from(r#"{"dry_run":true}"#)).unwrap();
+                let response = app.clone().oneshot(request).await.unwrap();
+                assert_eq!(response.status(), expected);
+            }
+        })
+        .await;
+        assert_eq!(logs.lines().count(), 2, "{logs}");
+        assert!(
+            logs.contains("access denied method=POST route=/mcp status=401"),
+            "{logs}"
+        );
+        assert!(
+            logs.contains("access denied method=DELETE route=/transactions/{id} status=403"),
+            "{logs}"
+        );
+        for private in [
+            "Marina",
+            "cedar-bookkeeping",
+            "north-harbor-expired",
+            &token,
+        ] {
+            assert!(!logs.contains(private), "{logs}");
+        }
     }
 }

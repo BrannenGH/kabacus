@@ -57,18 +57,24 @@ fn launch_full(
     env: &[(&str, &str)],
     size: &str,
 ) -> App {
+    App(app_command(socket, config, size)
+        .envs(env.iter().copied())
+        .spawn()
+        .unwrap())
+}
+
+fn app_command(socket: &std::path::Path, config: &std::path::Path, size: &str) -> Command {
     // Only set when the tests are built with --features gui.
     let Some(app) = option_env!("CARGO_BIN_EXE_kabacus") else {
         panic!("build the tests with --features gui (scripts/gui-e2e)");
     };
-    App(Command::new(app)
+    let mut command = Command::new(app);
+    command
         .arg(format!("--size={size}"))
         .env("QT_LINUX_ACCESSIBILITY_ALWAYS_ON", "1")
         .env("KABACUS_SOCKET", socket)
-        .env("XDG_CONFIG_HOME", config)
-        .envs(env.iter().copied())
-        .spawn()
-        .unwrap())
+        .env("XDG_CONFIG_HOME", config);
+    command
 }
 
 /// A stand-in for the system browser: Qt opens URLs with `$BROWSER` (or
@@ -326,12 +332,39 @@ async fn the_secret_service_keeps_the_refresh_token() {
 // A server with authentication off shows a visible warning.
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "needs the gui build and a display; run scripts/gui-e2e"]
-async fn a_no_auth_server_shows_authentication_off() {
+async fn a_no_auth_server_shows_authentication_off_and_desktop_logs_follow_qt_rules() {
     let socket = socket_path("authoff");
     let server = spawn_server(|c| c.socket_path = socket.clone()).await;
-    let _app = launch(&server.socket_path, &config_dir("authoff"));
+    for (size, debug) in [(DESKTOP, false), ("390x844", true)] {
+        let scratch = tempfile::tempdir().unwrap();
+        let output = tempfile::NamedTempFile::new().unwrap();
+        let rule = format!("me.hallb.kabacus.debug={debug}");
+        let _app = App(app_command(&server.socket_path, scratch.path(), size)
+            .env("QT_FORCE_STDERR_LOGGING", "1")
+            .env("QT_MESSAGE_PATTERN", "%{type} %{category} %{message}")
+            .env("QT_LOGGING_RULES", rule)
+            .stderr(output.reopen().unwrap())
+            .spawn()
+            .unwrap());
 
-    drive(&["auth-off"]).await;
+        drive(&["auth-off"]).await;
+        let logs = std::fs::read_to_string(output.path()).unwrap();
+        assert!(
+            logs.contains("info me.hallb.kabacus desktop ready"),
+            "{logs}"
+        );
+        assert_eq!(
+            logs.contains("debug me.hallb.kabacus starting desktop"),
+            debug,
+            "{logs}"
+        );
+        assert_eq!(
+            logs.contains("debug me.hallb.kabacus server request returned HTTP 200"),
+            debug,
+            "{logs}"
+        );
+        assert!(!logs.contains("http://localhost/"), "{logs}");
+    }
 }
 
 // --- the new screens ----------------------------------

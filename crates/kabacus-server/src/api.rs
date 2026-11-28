@@ -128,6 +128,9 @@ async fn log_request(request: axum::extract::Request, next: axum::middleware::Ne
     };
     let matched = request.extensions().get::<MatchedPath>().cloned();
     let route = matched.as_ref().map_or("unmatched", MatchedPath::as_str);
+    let has_authorization = request
+        .headers()
+        .contains_key(axum::http::header::AUTHORIZATION);
     let started = std::time::Instant::now();
     let response = next.run(request).await;
     let status = response.status().as_u16();
@@ -135,6 +138,8 @@ async fn log_request(request: axum::extract::Request, next: axum::middleware::Ne
     let elapsed_ms = elapsed.as_millis() as u64;
     if status >= 500 {
         tracing::error!(%method, %route, status, elapsed_ms, "request failed");
+    } else if status == 403 || (status == 401 && has_authorization) {
+        tracing::warn!(%method, %route, status, elapsed_ms, "access denied");
     } else if elapsed >= SLOW_REQUEST {
         tracing::warn!(%method, %route, status, elapsed_ms, "slow request");
     } else {

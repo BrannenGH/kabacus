@@ -35,7 +35,7 @@ fn main() {
 
     cxx_qt::init_crate!(kabacus_kde);
     kabacus_kde::logging::init();
-    log::info!("starting desktop");
+    log::debug!("starting desktop");
     let mut app = kabacus_kde::translation::application();
     if let Some(mut app) = app.as_mut() {
         // Matches the desktop entry's StartupWMClass; the binary, the
@@ -50,6 +50,13 @@ fn main() {
     let mut engine = QQmlApplicationEngine::new();
     if let Some(mut engine) = engine.as_mut() {
         kabacus_kde::translation::setup_qml(engine.as_mut());
+        let _created = engine.as_mut().on_object_created(|_, object, _| {
+            if object.is_null() {
+                log::error!("desktop startup failed: create window");
+            } else {
+                log::info!("desktop ready");
+            }
+        });
         engine.load(&QUrl::from("qrc:/qt/qml/me/hallb/kabacus/qml/Main.qml"));
     }
     if let Some(app) = app.as_mut() {
