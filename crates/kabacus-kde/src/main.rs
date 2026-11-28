@@ -35,6 +35,7 @@ fn main() {
 
     cxx_qt::init_crate!(kabacus_kde);
     kabacus_kde::logging::init();
+    log::info!("starting desktop");
     let mut app = kabacus_kde::translation::application();
     if let Some(mut app) = app.as_mut() {
         // Matches the desktop entry's StartupWMClass; the binary, the

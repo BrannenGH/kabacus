@@ -110,8 +110,8 @@ async fn sign_in(
         }
     };
     if let Some(refresh) = session.refresh_token().await {
-        if let Err(error) = store.save(&account, &refresh).await {
-            eprintln!("{error}");
+        if store.save(&account, &refresh).await.is_err() {
+            log::warn!("could not store refresh token");
         }
     }
     let hook_store = store.clone();
@@ -121,7 +121,9 @@ async fn sign_in(
         let account = hook_account.clone();
         let token = token.to_string();
         tauri::async_runtime::spawn(async move {
-            let _ = store.save(&account, &token).await;
+            if store.save(&account, &token).await.is_err() {
+                log::warn!("could not store refresh token");
+            }
         });
     });
     Ok(NativeSession {
@@ -770,6 +772,39 @@ async fn approve_quit(
     Ok(())
 }
 
+fn init_logging(app: &tauri::AppHandle) {
+    use tauri_plugin_log::{attach_logger, Builder, Target, TargetKind};
+
+    let level = std::env::var("RUST_LOG")
+        .ok()
+        .and_then(|value| value.parse().ok())
+        .unwrap_or(log::LevelFilter::Info);
+    let builder = || {
+        Builder::new().level(level).filter(|metadata| {
+            matches!(
+                metadata.target().split("::").next(),
+                Some("kabacus_desktop_lib" | "kabacus_client")
+            )
+        })
+    };
+    let stderr = || Target::new(TargetKind::Stderr);
+    let logger = builder()
+        .targets([
+            Target::new(TargetKind::LogDir {
+                file_name: Some("kabacus-desktop".into()),
+            }),
+            stderr(),
+        ])
+        .split(app)
+        .or_else(|_| {
+            eprintln!("Kabacus could not open its desktop log file");
+            builder().targets([stderr()]).split(app)
+        });
+    if let Ok((_, max_level, logger)) = logger {
+        let _ = attach_logger(max_level, logger);
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -794,6 +829,8 @@ pub fn run() {
             quit
         ])
         .setup(|app| {
+            init_logging(app.handle());
+            log::debug!("starting desktop");
             let path = app.path().app_data_dir()?.join("windows.json");
             let mut workspace = Workspace::load(&path);
             let chosen = std::env::args()
@@ -829,6 +866,7 @@ pub fn run() {
             for window in restored {
                 make_window(app.handle(), &window).map_err(std::io::Error::other)?;
             }
+            log::info!("desktop ready");
             Ok(())
         })
         .run(tauri::generate_context!())

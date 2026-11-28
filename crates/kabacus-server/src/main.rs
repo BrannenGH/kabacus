@@ -5,8 +5,11 @@
 use clap::Parser;
 use kabacus_server::config::{AuthMode, Config};
 use kabacus_server::state::AppState;
+use std::process::ExitCode;
 use std::sync::Arc;
 use tokio::signal::unix::{signal, SignalKind};
+use tracing_journald::{Priority, PriorityMappings};
+use tracing_subscriber::EnvFilter;
 
 /// kabacus-server: the gateway daemon. Only this process touches
 /// the books.
@@ -40,17 +43,28 @@ struct Args {
 }
 
 #[tokio::main]
-async fn main() -> anyhow::Result<()> {
-    init_logging();
+async fn main() -> ExitCode {
     let args = Args::parse();
+    init_logging();
+    std::panic::set_hook(Box::new(|_| tracing::error!("server task panicked")));
+    match run(args).await {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(stage) => {
+            tracing::error!(stage, "server failed");
+            ExitCode::FAILURE
+        }
+    }
+}
+
+async fn run(args: Args) -> Result<(), &'static str> {
     // In a container this is PID 1, which gets no default action for these
     // signals: without handlers, stopping the container hangs.
-    let mut sigterm = signal(SignalKind::terminate())?;
-    let mut sigint = signal(SignalKind::interrupt())?;
-    let mut sighup = signal(SignalKind::hangup())?;
+    let mut sigterm = signal(SignalKind::terminate()).map_err(|_| "register SIGTERM")?;
+    let mut sigint = signal(SignalKind::interrupt()).map_err(|_| "register SIGINT")?;
+    let mut sighup = signal(SignalKind::hangup()).map_err(|_| "register SIGHUP")?;
 
     let mut config = match &args.config {
-        Some(path) => Config::load_from_file(path)?,
+        Some(path) => Config::load_from_file(path).map_err(|_| "read configuration")?,
         None => Config::default(),
     };
     if args.auth.as_deref() == Some("none") {
@@ -69,34 +83,37 @@ async fn main() -> anyhow::Result<()> {
         config.database = Some(database);
         config.database_url = None;
     }
-    config.resolve_store()?;
+    config.resolve_store().map_err(|_| "resolve book store")?;
 
-    config.validate()?;
+    config.validate().map_err(|_| "validate configuration")?;
 
-    let state = Arc::new(AppState::new(config.clone()).await?);
+    let state = Arc::new(
+        AppState::new(config.clone())
+            .await
+            .map_err(|_| "initialize book store or authentication")?,
+    );
 
     if let Some(parent) = config.socket_path.parent() {
-        std::fs::create_dir_all(parent)?;
+        std::fs::create_dir_all(parent).map_err(|_| "create socket directory")?;
     }
     let _ = std::fs::remove_file(&config.socket_path);
-    let listener = tokio::net::UnixListener::bind(&config.socket_path)?;
+    let listener =
+        tokio::net::UnixListener::bind(&config.socket_path).map_err(|_| "bind local socket")?;
     // Mode 0600 on the unix socket.
     std::fs::set_permissions(
         &config.socket_path,
         std::os::unix::fs::PermissionsExt::from_mode(0o600),
-    )?;
+    )
+    .map_err(|_| "set socket permissions")?;
 
-    tracing::info!(
-        "kabacus-server listening on {}",
-        config.socket_path.display()
-    );
+    tracing::info!("local listener ready");
     // SIGHUP re-reads the account kind rules from the config.
     let reloading = state.clone();
     tokio::spawn(async move {
         while sighup.recv().await.is_some() {
             match reloading.reload_kinds() {
                 Ok(()) => tracing::info!("reloaded the account kind rules"),
-                Err(e) => tracing::warn!("kept the account kind rules; reload failed: {e}"),
+                Err(_) => tracing::warn!("could not reload account kind rules"),
             }
         }
     });
@@ -105,12 +122,11 @@ async fn main() -> anyhow::Result<()> {
     // Off by default; when configured, the same API is also
     // served over HTTPS for phones and tablets.
     if let Some(remote) = &config.remote {
-        let tls = kabacus_server::remote::tls_config(remote)?;
-        let tcp = tokio::net::TcpListener::bind(&remote.bind_addr).await?;
-        tracing::info!(
-            "kabacus-server also listening on https://{}",
-            remote.bind_addr
-        );
+        let tls = kabacus_server::remote::tls_config(remote).map_err(|_| "configure TLS")?;
+        let tcp = tokio::net::TcpListener::bind(&remote.bind_addr)
+            .await
+            .map_err(|_| "bind HTTPS listener")?;
+        tracing::info!("HTTPS listener ready");
         tokio::spawn(kabacus_server::remote::serve(tcp, tls, app.clone()));
     }
 
@@ -122,7 +138,8 @@ async fn main() -> anyhow::Result<()> {
             }
             tracing::info!("kabacus-server stopping");
         })
-        .await?;
+        .await
+        .map_err(|_| "serve local requests")?;
     let _ = std::fs::remove_file(&config.socket_path);
     Ok(())
 }
@@ -137,14 +154,23 @@ async fn main() -> anyhow::Result<()> {
 fn init_logging() {
     use std::io::IsTerminal;
     use tracing_subscriber::prelude::*;
-    use tracing_subscriber::EnvFilter;
-    let filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"));
-    let registry = tracing_subscriber::registry().with(filter);
+    let filter = EnvFilter::builder()
+        .with_default_directive(tracing::Level::INFO.into())
+        .from_env_lossy();
+    let registry = tracing_subscriber::registry()
+        .with(tracing_subscriber::filter::filter_fn(kabacus_log_target))
+        .with(filter);
     let tty = std::io::stderr().is_terminal();
     if !tty {
         // Fails when no journal is listening; then stderr it is.
         if let Ok(journald) = tracing_journald::layer() {
-            registry.with(journald).init();
+            registry
+                .with(journald.with_priority_mappings(PriorityMappings {
+                    info: Priority::Informational,
+                    debug: Priority::Debug,
+                    ..PriorityMappings::new()
+                }))
+                .init();
             return;
         }
     }
@@ -155,4 +181,40 @@ fn init_logging() {
                 .with_ansi(tty),
         )
         .init();
+}
+
+fn kabacus_log_target(metadata: &tracing::Metadata<'_>) -> bool {
+    matches!(
+        metadata.target().split("::").next(),
+        Some("kabacus_server" | "kabacus_service")
+    )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tracing_subscriber::prelude::*;
+
+    #[test]
+    fn trace_only_enables_reviewed_log_targets() {
+        let output = tempfile::NamedTempFile::new().unwrap();
+        let subscriber = tracing_subscriber::registry()
+            .with(tracing_subscriber::filter::filter_fn(kabacus_log_target))
+            .with(EnvFilter::new("trace"))
+            .with(
+                tracing_subscriber::fmt::layer()
+                    .with_ansi(false)
+                    .with_writer(output.reopen().unwrap()),
+            );
+        tracing::subscriber::with_default(subscriber, || {
+            tracing::trace!("server diagnostic");
+            tracing::warn!(target: "kabacus_service::simplefin", "service diagnostic");
+            tracing::error!(target: "rmcp::transport", "private MCP detail");
+            tracing::debug!(target: "hyper::proto", "private HTTP detail");
+        });
+        let logs = std::fs::read_to_string(output.path()).unwrap();
+        assert!(logs.contains("server diagnostic"), "{logs}");
+        assert!(logs.contains("service diagnostic"), "{logs}");
+        assert!(!logs.contains("private"), "{logs}");
+    }
 }

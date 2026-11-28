@@ -177,3 +177,23 @@ Hard rules:
   setup: no paths to their books, no names from them, no deployment files.
   Personal notes go in `CLAUDE.local.md` (gitignored); deployments live
   outside the repository.
+
+## Logging
+
+- Use the framework's logging facilities. KDE uses Qt categories and
+  `QT_LOGGING_RULES`. Tauri uses bounded, per-user logs in the platform
+  log directory. The server uses structured `tracing` events, with native
+  journal priorities on Linux and stderr for container or terminal capture.
+- Default to info and let operators change verbosity (`RUST_LOG` for the
+  server and Tauri). Use error for failures, warn for degraded operation,
+  info for normal events and debug or trace for opt-in diagnostics.
+- Keep diagnostic text, event names and field keys stable and locale-neutral.
+  Translate user-facing messages through the application's catalog using
+  whole strings and locale-aware formatting.
+- Allowlist safe fields before logging at every level. On the multi-tenant
+  server keep PII, tenant and book data, credentials, IP addresses, raw URLs,
+  headers, bodies and raw errors out of logs, including dependency logs.
+  Use route templates, status codes, timings and stable error categories.
+  Escape control characters in any permitted external value before emission.
+- Use synthetic values to test verbosity and verify that sensitive data
+  stays out of logs on both successful and failed operations.

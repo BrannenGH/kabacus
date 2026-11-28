@@ -49,10 +49,10 @@ pub async fn serve(listener: TcpListener, tls: Arc<rustls::ServerConfig>, app: a
     // So `/mcp` advertises an https:// resource URL here.
     let app = app.layer(axum::Extension(crate::mcp::ViaHttps));
     loop {
-        let (tcp, peer) = match listener.accept().await {
+        let (tcp, _) = match listener.accept().await {
             Ok(accepted) => accepted,
             Err(e) => {
-                tracing::warn!("remote listener: accept failed: {e}");
+                tracing::warn!(kind = ?e.kind(), "remote listener could not accept a connection");
                 tokio::time::sleep(std::time::Duration::from_millis(100)).await;
                 continue;
             }
@@ -65,19 +65,20 @@ pub async fn serve(listener: TcpListener, tls: Arc<rustls::ServerConfig>, app: a
             let stream = match tokio::time::timeout(HANDSHAKE_TIMEOUT, acceptor.accept(tcp)).await {
                 Ok(Ok(stream)) => stream,
                 Ok(Err(e)) => {
-                    tracing::debug!("remote listener: TLS handshake with {peer} failed: {e}");
+                    tracing::debug!(kind = ?e.kind(), "TLS handshake failed");
                     return;
                 }
                 Err(_) => {
-                    tracing::debug!("remote listener: TLS handshake with {peer} timed out");
+                    tracing::debug!("TLS handshake timed out");
                     return;
                 }
             };
-            if let Err(e) = hyper_util::server::conn::auto::Builder::new(TokioExecutor::new())
+            if hyper_util::server::conn::auto::Builder::new(TokioExecutor::new())
                 .serve_connection(TokioIo::new(stream), service)
                 .await
+                .is_err()
             {
-                tracing::debug!("remote listener: connection from {peer} ended: {e}");
+                tracing::debug!("remote connection ended with an error");
             }
         });
     }

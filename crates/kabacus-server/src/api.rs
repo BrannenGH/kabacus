@@ -11,8 +11,8 @@ use crate::auth::roles::{Principal, Role};
 use crate::ops::OpError;
 use crate::service::{self, invalid, RewriteBody};
 use crate::state::AppState;
-use axum::extract::{Path, Query, State};
-use axum::http::{HeaderMap, StatusCode};
+use axum::extract::{MatchedPath, Path, Query, State};
+use axum::http::{HeaderMap, Method, StatusCode};
 use axum::response::{IntoResponse, Response};
 use axum::routing::{get, patch, post};
 use axum::{Json, Router};
@@ -115,22 +115,30 @@ pub fn router(state: Arc<AppState>) -> Router {
 /// on reads after 30 s, so a slow one is worth seeing before it fails.
 pub(crate) const SLOW_REQUEST: std::time::Duration = std::time::Duration::from_secs(5);
 
-/// One log line per request: method, path, status and time taken. The
-/// query is left out; it can hold account names and amounts.
 async fn log_request(request: axum::extract::Request, next: axum::middleware::Next) -> Response {
-    let method = request.method().clone();
-    let path = request.uri().path().to_string();
+    let method = match *request.method() {
+        Method::GET => "GET",
+        Method::HEAD => "HEAD",
+        Method::POST => "POST",
+        Method::PUT => "PUT",
+        Method::PATCH => "PATCH",
+        Method::DELETE => "DELETE",
+        Method::OPTIONS => "OPTIONS",
+        _ => "OTHER",
+    };
+    let matched = request.extensions().get::<MatchedPath>().cloned();
+    let route = matched.as_ref().map_or("unmatched", MatchedPath::as_str);
     let started = std::time::Instant::now();
     let response = next.run(request).await;
     let status = response.status().as_u16();
     let elapsed = started.elapsed();
-    let ms = elapsed.as_millis();
+    let elapsed_ms = elapsed.as_millis() as u64;
     if status >= 500 {
-        tracing::error!("{method} {path} -> {status} in {ms} ms");
+        tracing::error!(%method, %route, status, elapsed_ms, "request failed");
     } else if elapsed >= SLOW_REQUEST {
-        tracing::warn!("{method} {path} -> {status} in {ms} ms (slow)");
+        tracing::warn!(%method, %route, status, elapsed_ms, "slow request");
     } else {
-        tracing::info!("{method} {path} -> {status} in {ms} ms");
+        tracing::info!(%method, %route, status, elapsed_ms, "request completed");
     }
     response
 }

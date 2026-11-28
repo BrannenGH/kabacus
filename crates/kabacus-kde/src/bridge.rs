@@ -319,8 +319,8 @@ async fn connect_auth_async(
     let connecting = Auth::connect(base, &server, store.clone());
     match tokio::time::timeout(AUTH_TIMEOUT, connecting).await {
         Ok(Ok(auth)) => Some(auth),
-        Ok(Err(e)) => {
-            log::warn!("can't set up sign-in: {e}");
+        Ok(Err(_)) => {
+            log::warn!("could not set up sign-in");
             None
         }
         Err(_) => None,
@@ -539,7 +539,7 @@ impl qobject::Ledger {
             let message = if signed_out {
                 String::new()
             } else {
-                log::warn!("{e}");
+                log::warn!("could not refresh books");
                 e.user_message(&self.rust().server())
             };
             let details = QString::from(e.to_string().as_str());
