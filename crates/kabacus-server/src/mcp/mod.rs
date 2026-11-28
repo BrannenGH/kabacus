@@ -142,8 +142,7 @@ async fn authenticate(
             req.extensions_mut().insert(principal);
             next.run(req).await
         }
-        Err(e) => {
-            tracing::debug!("mcp: refused a request: {e}");
+        Err(_) => {
             let https = req.extensions().get::<ViaHttps>().is_some();
             let resource = resource_url(&state, &req, https);
             let mut challenge = format!("Bearer resource_metadata=\"{}\"", metadata_url(&resource));

@@ -83,6 +83,58 @@ async fn web_hosting_is_opt_in() {
     assert_eq!(response.status(), 404);
 }
 
+#[tokio::test]
+async fn request_logs_use_route_templates_and_allowlisted_methods() {
+    let app = app(None).await;
+    let output = tempfile::NamedTempFile::new().unwrap();
+    let subscriber = tracing_subscriber::fmt()
+        .with_ansi(false)
+        .with_writer(output.reopen().unwrap())
+        .finish();
+    tracing::subscriber::set_global_default(subscriber).unwrap();
+
+    for (method, path, status) in [
+        ("GET", "/register/Marina%20Lopez?memo=GardenClub", 200),
+        ("GET", "/app/assets/PrivateInvoice.pdf", 404),
+        ("GET", "/Marina%40example.org", 404),
+        ("PrivateClient", "/version", 405),
+        ("POST", "/mcp", 400),
+    ] {
+        let request = Request::builder()
+            .method(method)
+            .uri(path)
+            .header("authorization", "Bearer synthetic-bearer-token")
+            .header("kabacus-client-hint", "Marina-Lopez")
+            .body(Body::from("synthetic-private-body"))
+            .unwrap();
+        let response = app.clone().oneshot(request).await.unwrap();
+        assert_eq!(response.status(), status, "{method} {path}");
+    }
+
+    let logs = std::fs::read_to_string(output.path()).unwrap();
+    for expected in [
+        "route=/register/{account}",
+        "route=/app/{*path}",
+        "route=unmatched",
+        "method=OTHER",
+        "route=/mcp",
+        "status=405",
+        "elapsed_ms=",
+    ] {
+        assert!(logs.contains(expected), "missing {expected} in {logs}");
+    }
+    for private in [
+        "Marina",
+        "GardenClub",
+        "PrivateInvoice",
+        "PrivateClient",
+        "synthetic-bearer-token",
+        "synthetic-private-body",
+    ] {
+        assert!(!logs.contains(private), "logged {private} in {logs}");
+    }
+}
+
 #[cfg(unix)]
 #[tokio::test]
 async fn refuses_symlinks_outside_the_bundle() {

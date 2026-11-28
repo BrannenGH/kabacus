@@ -43,8 +43,9 @@ such as an AI assistant can work with the books: point it at
 as the app. To start it at login, wrap the same settings in a systemd
 unit, e.g. a Quadlet `.container` file.
 
-The server logs one line per request (`RUST_LOG` changes the level;
-default `info`). To give the host journal each line's priority, so
+The server logs the route template, method, HTTP status and duration for
+each request. `RUST_LOG` changes the level (default `info`). To give the
+host journal each line's priority, so
 `journalctl -p warning` works, mount the journal's socket and the
 server writes to it directly; without it, logs go to stderr:
 

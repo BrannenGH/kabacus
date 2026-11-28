@@ -228,8 +228,6 @@ impl KabacusClient {
             return Ok((response.status, response.body, headers));
         }
         let read = method == Method::GET;
-        // Logged without the query: it can hold account names and amounts.
-        let what = format!("{method} {}", path.split('?').next().unwrap_or(path));
         let started = std::time::Instant::now();
         let mut builder = self
             .http
@@ -253,21 +251,21 @@ impl KabacusClient {
                 .body(body);
         }
         let response = builder.send().await.map_err(|e| {
-            log::warn!(
-                "{what}: failed after {} ms: {e}",
-                started.elapsed().as_millis()
-            );
-            match e.is_timeout() {
-                true => ClientError::Timeout,
-                false => ClientError::Request(format!("{e:?}")),
+            let ms = started.elapsed().as_millis();
+            if e.is_timeout() {
+                log::warn!("server request timed out after {ms} ms");
+                ClientError::Timeout
+            } else {
+                log::warn!("server request failed after {ms} ms");
+                ClientError::Request(format!("{e:?}"))
             }
         })?;
         let status = response.status().as_u16();
         let ms = started.elapsed().as_millis();
         if status >= 500 {
-            log::warn!("{what} -> {status} in {ms} ms");
+            log::warn!("server request failed with HTTP {status} after {ms} ms");
         } else {
-            log::debug!("{what} -> {status} in {ms} ms");
+            log::debug!("server request returned HTTP {status} after {ms} ms");
         }
         let headers = response.headers().clone();
         let body = response

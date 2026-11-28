@@ -54,20 +54,27 @@ def stop(process):
 
 with tempfile.TemporaryDirectory(prefix="kabacus-native-smoke-") as folder:
     root = Path(folder)
-    env = dict(os.environ, LANGUAGE="en", LANG="C.UTF-8", MESA_SHADER_CACHE_DISABLE="true", XDG_CONFIG_HOME=str(root / "config"), XDG_DATA_HOME=str(root / "data"), XDG_CACHE_HOME=str(root / "cache"))
+    env = dict(os.environ, LANGUAGE="en", LANG="C.UTF-8", RUST_LOG="info", MESA_SHADER_CACHE_DISABLE="true", XDG_CONFIG_HOME=str(root / "config"), XDG_DATA_HOME=str(root / "data"), XDG_CACHE_HOME=str(root / "cache"))
     binary = str(Path(sys.argv[1]).resolve())
     process = subprocess.Popen([binary], env=env)
     try:
         require_window(process, {"Welcome to Kabacus", "New Books…", "Open Books…", "Connect to a Server…"})
     finally:
         stop(process)
+    desktop_log = root / "data" / "me.hallb.kabacus.web" / "logs" / "kabacus-desktop.log"
+    logs = desktop_log.read_text(encoding="utf-8")
+    assert "[INFO]" in logs and "desktop ready" in logs, logs
+    assert "starting desktop" not in logs, logs
     sidecars = list((Path(__file__).resolve().parents[1] / "src-tauri" / "binaries").glob("kabacus-cli-*"))
     assert sidecars, "Build the packaged CLI first"
     books = root / "Household.kabacus"
     subprocess.run([str(sidecars[0]), "new", str(books), "--name", "Cedar Household"], check=True, stdout=subprocess.DEVNULL)
-    process = subprocess.Popen([binary, str(books)], env=env)
+    process = subprocess.Popen([binary, str(books)], env=dict(env, RUST_LOG="debug"))
     try:
         require_window(process, {"Overview", "Available to spend", "On this computer"})
         print("Native WebKit Welcome and real local books rendered successfully")
     finally:
         stop(process)
+    logs = desktop_log.read_text(encoding="utf-8")
+    assert "[DEBUG]" in logs and "starting desktop" in logs, logs
+    assert "Household" not in logs, logs

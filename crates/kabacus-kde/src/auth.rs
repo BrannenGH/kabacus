@@ -68,8 +68,8 @@ fn keep_stored(session: &UserSession, store: &Arc<dyn SecretStore>, account: &Se
     session.on_new_refresh_token(move |token| {
         let (store, account, token) = (store.clone(), account.clone(), token.to_string());
         tokio::spawn(async move {
-            if let Err(e) = store.save(&account, &token).await {
-                log::warn!("couldn't store the new refresh token: {e}");
+            if store.save(&account, &token).await.is_err() {
+                log::warn!("could not store refresh token");
             }
         });
     });

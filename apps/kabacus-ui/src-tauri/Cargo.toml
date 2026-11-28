@@ -23,6 +23,8 @@ tauri-build = { version = "2", features = [] }
 
 [dependencies]
 tauri = { version = "2", features = [] }
+tauri-plugin-log = "2.10.1"
+log = "0.4"
 url = "2"
 kabacus-client = { path = "../../../crates/kabacus-client" }
 open = "5"
