@@ -4,6 +4,10 @@ pragma Singleton
 import QtQuick
 import QtQuick.Window
 QtObject {
+    readonly property LoggingCategory diagnostics: LoggingCategory {
+        name: "me.hallb.kabacus"
+        defaultLogLevel: LoggingCategory.Info
+    }
     property var windows: []
     property var lastActive: null
     function panelSnapshot(): string {
@@ -33,9 +37,13 @@ QtObject {
     }
     function create(state) {
         const component = Qt.createComponent("Main.qml")
-        if (component.status !== Component.Ready) { console.warn(component.errorString()); return null }
+        if (component.status !== Component.Ready) {
+            console.warn(diagnostics, "could not load desktop window component")
+            return null
+        }
         const window = component.createObject(null, { initialState: state || null }) as Window
         if (window) { add(window); window.show(); window.raise(); window.requestActivate() }
+        else console.warn(diagnostics, "could not create desktop window")
         return window
     }
 }

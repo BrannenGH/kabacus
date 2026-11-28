@@ -78,3 +78,19 @@ with tempfile.TemporaryDirectory(prefix="kabacus-native-smoke-") as folder:
     logs = desktop_log.read_text(encoding="utf-8")
     assert "[DEBUG]" in logs and "starting desktop" in logs, logs
     assert "Household" not in logs, logs
+
+    # Fail startup with a synthetic book path while the file log is unavailable.
+    desktop_log.unlink()
+    desktop_log.parent.rmdir()
+    desktop_log.parent.touch()
+    failed = subprocess.run(
+        [binary, str(root / "Marina-Lopez.kabacus")],
+        env=dict(env, RUST_LOG="warn"),
+        stderr=subprocess.PIPE,
+        text=True,
+        timeout=20,
+    )
+    assert failed.returncode == 1, failed.stderr
+    assert "[ERROR] desktop startup failed: open startup books" in failed.stderr, failed.stderr
+    assert "Marina-Lopez" not in failed.stderr, failed.stderr
+    assert "starting desktop" not in failed.stderr and "desktop ready" not in failed.stderr, failed.stderr
